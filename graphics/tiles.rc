@@ -231,7 +231,7 @@
 # BEGIN WIRES #
 208   wires@0,0                 (bulldozable)(noburn)(overwater)(conducts)(description=#8)
 209   wires@0,16                (bulldozable)(noburn)(overwater)(conducts)(description=#8)
-210   clear |wires@0,32         (bulldozable)(conducts)(description=#8)
+210   clear |new_wire_01        (bulldozable)(conducts)(description=#8)
 211   clear |wires@0,48         (bulldozable)(conducts)(description=#8)
 212   clear |wires@0,64         (bulldozable)(conducts)(description=#8)
 213   clear |wires@0,80         (bulldozable)(conducts)(description=#8)
