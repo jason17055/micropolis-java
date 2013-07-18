@@ -35,3 +35,13 @@ Draw-Bridge-
 Scenarios-
  *Implement. See original C/Tcl code, src/sim/s_fileio.c LoadScenario(),
   and res/snro.111, res/snro.222, etc.
+
+Animation-
+ *New syntax in tiles.rc for specifying animation
+    # light traffic
+    82 (66) [[ traffic/0-0 T=10; traffic/0-1 T=10; traffic/0-2 T=10; traffic/0-3 T=10 ]]
+ *Or, define an .ani file (that takes precedence over .svg and .png as image source) with a format like
+    T=10 traffic/0-0
+    T=10 traffic/0-1
+    T=10 traffic/0-2
+    T=10 traffic/0-3
