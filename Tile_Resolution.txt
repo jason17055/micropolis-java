@@ -1,0 +1,14 @@
+Resolution
+
+SNES version had 32 tiles across and 28 tiles vertically.
+
+
+
+In contrast,
+MicropolisJ, full screen, at 32px resolution, has 29 tiles across (plus a
+huge amount of real-estate taken up by the tool bar and mini-map) and 24
+tiles vertically.
+
+
+In conclusion, I think 32px tiles are a bit big but closer to an ideal
+resolution than 16px tiles.
