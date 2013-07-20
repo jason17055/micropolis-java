@@ -1,0 +1,15 @@
+Style 1 (Classic)
+ * X- and Y- axes laid out at 90 degree angles, lined with screen,
+   with 1px = 1m
+ * Z-axis is at a 45 degree angle going to the upper-right, with 1px = 1m
+ * Light source is in the upper-left (casting shadows to the lower-right)
+   Shadow length on ground is equal to height of object
+   (i.e. the sun is at a 45 degree angle above the horizon).
+
+Style 2 (Jason)
+ * X- and Y- axes laid out at 90 degree angles, lined with screen,
+   with 1px = 1m
+ * Z-axis is displayed same as Y-axis, i.e. upward, with 1px = 1m
+ * Light source is in the upper-left (casting shadows to the lower-right).
+   Shadow length on ground is 71% of the height of the object casting the
+   shadow (i.e. the sun is at a 55 degree angle above the horizon).
