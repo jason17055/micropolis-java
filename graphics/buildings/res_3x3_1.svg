@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="48px"
@@ -25,17 +24,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="9.8994949"
-     inkscape:cx="22.436203"
-     inkscape:cy="21.833384"
-     inkscape:current-layer="layer2"
+     inkscape:zoom="16"
+     inkscape:cx="25.268064"
+     inkscape:cy="27.293537"
+     inkscape:current-layer="layer9"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
-     inkscape:window-width="1087"
-     inkscape:window-height="586"
-     inkscape:window-x="208"
-     inkscape:window-y="168"
+     inkscape:window-width="1152"
+     inkscape:window-height="804"
+     inkscape:window-x="67"
+     inkscape:window-y="67"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata2990">
@@ -45,16 +44,29 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="Gravel"
+     sodipodi:insensitive="true">
+    <path
+       inkscape:connector-curvature="0"
+       id="path3154"
+       d="M 10.291379,41.796551 C 9.7239614,39.235081 8.7745564,37.5 7.9403854,37.5 c -1.880702,0 -2.945498,-3.03138 -3.030495,-8.627555 -0.103003,-6.781684 0.289103,-6.97199 16.8793686,-8.192264 3.247193,-0.238843 5.149617,3.447031 4.810326,9.319819 -0.22859,3.95666 -0.631676,4.663816 -3.338403,5.856743 -2.748193,1.211202 -3.07001,1.801198 -3,5.5 0,0 0.01141,2.76355 0.07842,4.143257 0.04111,0.846383 0.198412,2.5 0.198412,2.5 l -9.292322,0 c 0,0 0.06771,-1.268826 -0.0025,-1.906899 -0.160537,-1.458091 -0.951775,-4.29655 -0.951775,-4.29655 z"
+       style="fill:#d1d1d1"
+       sodipodi:nodetypes="ssssssssccss" />
+  </g>
+  <g
      id="layer1"
      inkscape:label="Foundation"
-     inkscape:groupmode="layer">
+     inkscape:groupmode="layer"
+     sodipodi:insensitive="true">
     <path
-       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none"
+       style="fill:#000000;fill-opacity:1;stroke:none"
        d="m 12,10 0,11 16,0 0,15 12,0 0,-26 z"
        id="rect3006"
        inkscape:connector-curvature="0"
@@ -62,8 +74,27 @@
   </g>
   <g
      inkscape:groupmode="layer"
+     id="layer8"
+     inkscape:label="Shadow(Ground)">
+    <path
+       style="opacity:0.36600001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 28,36 12,0 0,-26 3.5,3.5 0,11 -1.5,0 0,13.5 -12,0 z"
+       id="rect3197"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccc" />
+    <path
+       style="opacity:0.36600001;fill:#000000;fill-opacity:1;stroke:none"
+       d="M 11.999999,21 28,21 l 0,3.5 -12.5,0 z"
+       id="rect4010"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
      id="layer3"
-     inkscape:label="Walls">
+     inkscape:label="Walls"
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#3f3f3f;fill-opacity:1;stroke:none"
        id="rect3780"
@@ -75,14 +106,16 @@
        style="fill:#3f3f3f;fill-opacity:1;stroke:none"
        id="rect3780-1"
        width="12"
-       height="4"
+       height="3.5"
        x="28"
-       y="32" />
+       y="32.5" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer5"
-     inkscape:label="Windows">
+     inkscape:label="Windows"
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:#bfbfbf;fill-opacity:1;stroke:none"
        id="rect3824"
@@ -219,7 +252,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer4"
-     inkscape:label="Roof">
+     inkscape:label="Roof"
+     style="display:inline">
     <rect
        style="fill:#bfbfbf;fill-opacity:1;stroke:none"
        id="rect3801"
@@ -227,18 +261,16 @@
        height="9"
        x="12"
        y="5" />
-    <rect
+    <path
        style="fill:#bfbfbf;fill-opacity:1;stroke:none"
+       d="m 28,17.5 12,0 0,15 -12,0 z"
        id="rect3801-2"
-       width="12"
-       height="14.5"
-       x="28"
-       y="17.5" />
+       inkscape:connector-curvature="0" />
     <rect
        style="fill:#7f7f7f;fill-opacity:1;stroke:none"
        id="rect3801-7"
        width="10"
-       height="12"
+       height="12.5"
        x="29"
        y="19" />
     <rect
@@ -262,12 +294,54 @@
        height="0.5"
        x="29"
        y="18.5" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer9"
+     inkscape:label="Shadow(Roof)">
+    <path
+       style="opacity:0.36600001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 28.000001,17.499999 12,1e-6 -10e-7,1.75 -1,0 0,-0.75 -10,0 0,0.75 -1,0 z"
+       id="rect3197-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccc" />
+    <path
+       style="opacity:0.36600001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 29,19 10,0 0,0.5 -10,0 z"
+       id="rect3197-1-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="opacity:0.36600001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="M 25.142857,10.84375 26,10.5 c 0,0 0.490869,0.466861 0.897321,0.825893 0.142528,0.1259 0.11524,0.349189 -0.0814,0.41793 -0.196641,0.06874 -0.510807,0.109228 -0.704313,-0.06971 -0.553697,-0.512026 -0.968751,-0.830359 -0.968751,-0.830359 z"
+       id="rect3197-1-7-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccszsc" />
+    <path
+       style="opacity:0.36600001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 31.147351,10.854253 0.857143,-0.343751 c 0,0 0.490869,0.466862 0.897321,0.825894 0.142528,0.1259 0.11524,0.349189 -0.0814,0.41793 -0.196641,0.06874 -0.510807,0.109228 -0.704313,-0.06971 -0.553697,-0.512026 -0.968751,-0.830359 -0.968751,-0.830359 z"
+       id="rect3197-1-7-4-0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccszsc" />
+    <path
+       style="opacity:0.36600001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 13,6.5 26,0 0,0.25 -26,0 z"
+       id="rect3197-1-7-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer10"
+     inkscape:label="Chimney">
     <g
+       style="display:inline"
        id="g4143">
       <path
          id="rect4102"
-         d="M 25 8.5 L 25 10.5 C 25 10.776142 25.223858 11 25.5 11 C 25.776142 11 26 10.776142 26 10.5 L 26 8.5 L 25 8.5 z "
-         style="fill:#404040;fill-opacity:1;stroke:none" />
+         d="m 25,8.5 0,2 c 0,0.276142 0.223858,0.5 0.5,0.5 0.276142,0 0.5,-0.223858 0.5,-0.5 l 0,-2 -1,0 z"
+         style="fill:#404040;fill-opacity:1;stroke:none"
+         inkscape:connector-curvature="0" />
       <path
          transform="matrix(0.96551726,0,0,1.1666667,0.86206855,-1.6250002)"
          d="m 26.035714,8.6785717 a 0.51785713,0.42857143 0 1 1 -1.035715,0 0.51785713,0.42857143 0 1 1 1.035715,0 z"
@@ -280,6 +354,7 @@
          sodipodi:type="arc" />
     </g>
     <g
+       style="display:inline"
        transform="translate(6.0000005,0)"
        id="g4143-1">
       <path
@@ -302,7 +377,9 @@
   <g
      inkscape:groupmode="layer"
      id="layer6"
-     inkscape:label="ZoneSym">
+     inkscape:label="ZoneSym"
+     style="display:none"
+     sodipodi:insensitive="true">
     <flowRoot
        xml:space="preserve"
        id="flowRoot4172"
@@ -314,41 +391,6 @@
            height="29.071428"
            x="22.357143"
            y="13.5"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Times New Roman;-inkscape-font-specification:'Times New Roman, Bold';fill:#007f00;fill-opacity:1" /></flowRegion><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#007f00;fill-opacity:1;font-family:Times New Roman;-inkscape-font-specification:'Times New Roman, Bold'" /></flowRegion><flowPara
          id="flowPara4178">R</flowPara></flowRoot>  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="RefImage"
-     style="display:none"
-     sodipodi:insensitive="true">
-    <image
-       y="0"
-       x="-3"
-       id="image3001"
-       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABHNCSVQICAgIfAhkiAAABB9JREFU
-eJztnc1x2zAQhZ8zuaYAu4EUIN9F3+MGUkBSgAvgqIAUYBegBpy75XtUgBuwC0gByUGzmtFK0OKX
-C9rvuzgURIoZvgcsgAV4gRH/QNz45H0DHx0+AGf4AJz5rD/4gx8e9/FhuMbDwTEd4Ez3D+AaD0eq
-mfL81nT/AN47R22AsMUrAGCBq5PloqpQmyHnrzd/AQC/hq9ZN1jaJvXeptEBzgQdEFK+YClLzl8M
-cTdyt3mJ++JMCdUAdIAzQQdMhVb+MAw+N9KI1Wq1+wcd0CduDnjvdX4sdIAz0Q4QxYZac6tfoK9D
-dtABzpgO2Ct7OK/suSl/s9kAiI+6Ur8fCx3gjOkArexHXAIAbvEW9QNU/nnoAGeS+wGxyu+VVCW3
-7pnTAc5kP4C7zUt39fscoQOcyR4LKu0Rkx10gDPVRkOp/PPIHLmGDnCmmgNqKX8/g/RBoAOcyXaA
-lTeUyvPz88HxOI4Awo7ovVy4H7+dLacDnLnQK2R0XV6qdKu3LMovVdzT0xMA4ObmJur85XJ59r5y
-kf9PSPk/8fvgmA5wxnRAKSEHyCjj1HW0Vn7t0U75PTpgJjTLCwopX+pIK+rRyi0tb1Xnl0IHOFPc
-BlhRkjhBK34qLOXrNmCFuJ74iPHk52wDZkZyG6CzIqz+gcwbbIcvqT91Ellx8z3yevL9XLTSxSHy
-N+SEWOgAZ44coMf1dU5oblbEKxYAgCtsT5ZL3XiPw7pTK1grP9URvUEHOGOulA/N/eq2QI412jHa
-CaLgJXbRyhrn62zLEbUJRUWldb9ABziT3RO2lC+EyiV6WmNeuUW1lC/QAc5kO8BSfuz5w1B2Hck1
-CEVnpQ4TxefG/1Y/iQ5w5sgB1thOqfJro9uiVtnbpU4IQQc4c+SAWlkOU1Fb+ZaiUxVvZQzSAc5k
-r5CJ7QlPRes2IBdrfoUOcKZ4TlgrvxdHzAU6wJnsGbHc8lb0VvfHQgc4k/wAbvHWpdoecdllu2Pt
-W0oHOJM8FlRKbJQ0VTTVekUO+wGdM/lYUKyiYx2SS+0VOYK1IkZDBzhT3BMuratT2wRN6hhQaEVO
-aTZ2qvIFOsCZaitkSkdHLQVbSg+Nu7fOzraUr9tUvkGjM4qzIkSRIWXWiucth4ScWzs7uzZ0gDPF
-mXG55Rqrjtc99NTdWeS80K4lXtABzjRbJVk7CtLRhPXumlCPvjcn0AHONHNAavZE6HupbUnsWFYv
-+U90gDPN94zLzSPKHe203nNQSu3r0wHORI8F5c6Upc58TZXt7AXHgjqj+VuUYqMffTyV8mvtd5pb
-Q9ABzkQ7wNoNxYoKUkdFQ04IKTZVgXJ9S/mx183tV9ABzjTfM86K/99blGPBKKgz3N4l6e2IqXd7
-3++hNxx+Tgc4c9QGkGmhA5zhA3CGD8CZ/7WXv3v2Mo6aAAAAAElFTkSuQmCC
-"
-       height="48"
-       width="48"
-       style="opacity:0.5" />
-  </g>
 </svg>
