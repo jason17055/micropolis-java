@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="16"
-     inkscape:cx="14.984716"
-     inkscape:cy="2.211422"
+     inkscape:zoom="32"
+     inkscape:cx="14.023296"
+     inkscape:cy="1.9517281"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -61,9 +61,9 @@
     <path
        inkscape:connector-curvature="0"
        style="fill:#3f3f3f;fill-opacity:1;stroke:none"
-       d="M 16,28 C 10.333997,28 3,19.318 3,19.318 3,19.318 3,16.513699 3,15 3,7.820298 8.8202981,2 16,2 c 7.179702,0 13,5.820298 13,13 0,7.179702 -5.820298,13 -13,13 z m 0,-11 c 1.10457,0 2,-0.895431 2,-2 0,-1.10457 -0.89543,-2 -2,-2 -1.10457,0 -2,0.89543 -2,2 0,1.104569 0.89543,2 2,2 z"
+       d="M 16,28 C 10.333997,28 3,19.318 3,19.318 3,19.318 3,16.513699 3,15 3,7.820298 8.8202981,2 16,2 c 7.179702,0 13,5.820298 13,13 0,7.179702 -5.820298,13 -13,13 z m 0,-11 c 1.10457,0 2,-0.895431 2,-2 0,-1.10457 -0.89543,-2 -2,-2 -1.10457,0 -1.991552,0.895462 -2,2 -0.0078,1.021392 0,1.539 0,1.539 0,0 1.463697,0.461 2,0.461 z"
        id="path4376-9"
-       sodipodi:nodetypes="scsssssssss" />
+       sodipodi:nodetypes="scsssssssscs" />
   </g>
   <g
      inkscape:groupmode="layer"
