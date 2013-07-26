@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16px"
+   height="16px"
+   id="svg3033"
+   version="1.1"
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="New document 2">
+  <defs
+     id="defs3035" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.098901"
+     inkscape:cx="7.0951234"
+     inkscape:cy="6.7749572"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     inkscape:window-width="1119"
+     inkscape:window-height="617"
+     inkscape:window-x="1735"
+     inkscape:window-y="83"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata3038">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Shadow"
+     style="display:inline">
+    <rect
+       style="opacity:0.35;fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3813-7"
+       width="16"
+       height="1"
+       x="0"
+       y="11" />
+    <rect
+       style="opacity:0.35;fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3813-1-4"
+       width="16"
+       height="1"
+       x="0"
+       y="5.999999" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Ties">
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3811-0"
+       width="3"
+       height="11"
+       x="4"
+       y="3" />
+    <rect
+       style="fill:#997f4c;fill-opacity:1;stroke:none"
+       id="rect3041-9"
+       width="2"
+       height="10"
+       x="5"
+       y="3" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3811-4"
+       width="3"
+       height="11"
+       x="8"
+       y="3" />
+    <rect
+       style="fill:#997f4c;fill-opacity:1;stroke:none"
+       id="rect3041-8"
+       width="2"
+       height="10"
+       x="9"
+       y="2.9999995" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3811-8"
+       width="3"
+       height="11"
+       x="12"
+       y="3" />
+    <rect
+       style="fill:#997f4c;fill-opacity:1;stroke:none"
+       id="rect3041-2"
+       width="2"
+       height="10"
+       x="13"
+       y="2.9999995" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3811"
+       width="3"
+       height="11"
+       x="0"
+       y="3.0000005" />
+    <rect
+       style="fill:#997f4c;fill-opacity:1;stroke:none"
+       id="rect3041"
+       width="2"
+       height="10"
+       x="1"
+       y="3" />
+  </g>
+  <g
+     id="layer1"
+     inkscape:label="Rails"
+     inkscape:groupmode="layer"
+     style="display:inline">
+    <rect
+       style="fill:#7f7f7f;fill-opacity:1;stroke:none"
+       id="rect3813"
+       width="16"
+       height="1"
+       x="0"
+       y="10" />
+    <rect
+       style="fill:#7f7f7f;fill-opacity:1;stroke:none"
+       id="rect3813-1"
+       width="16"
+       height="1"
+       x="0"
+       y="5" />
+  </g>
+</svg>
