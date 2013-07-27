@@ -11,6 +11,10 @@ package micropolisj.engine;
 import java.io.*;
 import java.util.*;
 
+// for XML load/save
+import java.util.zip.GZIPOutputStream;
+import javax.xml.stream.*;
+
 import static micropolisj.engine.TileConstants.*;
 
 /**
@@ -1911,13 +1915,16 @@ public class Micropolis
 		}
 	}
 
-	void writeHistoryArray(int [] array, DataOutputStream out)
-		throws IOException
+	void writeHistoryArray(String tagName, int [] array, XMLStreamWriter out)
+		throws XMLStreamException
 	{
+		out.writeStartElement(tagName);
 		for (int i = 0; i < 240; i++)
 		{
-			out.writeShort(array[i]);
+			if (i != 0) { out.writeCharacters(","); }
+			out.writeCharacters(Integer.toString(array[i]));
 		}
+		out.writeEndElement();
 	}
 
 	void loadMisc(DataInputStream dis)
@@ -1985,52 +1992,47 @@ public class Micropolis
 		indCap = false;
 	}
 
-	void writeMisc(DataOutputStream out)
-		throws IOException
+	void writeMisc(XMLStreamWriter out)
+		throws XMLStreamException
 	{
-		out.writeShort(0);
-		out.writeShort(0);
-		out.writeShort(resPop);
-		out.writeShort(comPop);
-		out.writeShort(indPop);
-		out.writeShort(resValve);
-		out.writeShort(comValve);
-		out.writeShort(indValve);
-		//8
-		out.writeInt(cityTime);
-		out.writeShort(crimeRamp);
-		out.writeShort(polluteRamp);
-		//12
-		out.writeShort(landValueAverage);
-		out.writeShort(crimeAverage);
-		out.writeShort(pollutionAverage);
-		out.writeShort(gameLevel);
-		//16
-		out.writeShort(evaluation.cityClass);
-		out.writeShort(evaluation.cityScore);
-		//18
-		for (int i = 18; i < 50; i++) {
-			out.writeShort(0);
-		}
-		//50
-		out.writeInt(budget.totalFunds);
-		out.writeShort(autoBulldoze ? 1 : 0);
-		out.writeShort(autoBudget ? 1 : 0);
-		//54
-		out.writeShort(autoGo ? 1 : 0);
-		out.writeShort(1); //userSoundOn
-		out.writeShort(cityTax);
-		out.writeShort(simSpeed.ordinal());
+		out.writeStartElement("population");
+		out.writeAttribute("resPop", Integer.toString(resPop));
+		out.writeAttribute("comPop", Integer.toString(comPop));
+		out.writeAttribute("indPop", Integer.toString(indPop));
+		out.writeEndElement();
 
-		//58
-		out.writeInt((int)(policePercent * 65536));
-		out.writeInt((int)(firePercent * 65536));
-		out.writeInt((int)(roadPercent * 65536));
+		out.writeStartElement("valves");
+		out.writeAttribute("resValve", Integer.toString(resValve));
+		out.writeAttribute("comValve", Integer.toString(comValve));
+		out.writeAttribute("indValve", Integer.toString(indValve));
+		out.writeEndElement();
 
-		//64
-		for (int i = 64; i < 120; i++) {
-			out.writeShort(0);
-		}
+		out.writeStartElement("misc");
+		out.writeAttribute("cityTime", Integer.toString(cityTime));
+		out.writeAttribute("crimeRamp", Integer.toString(crimeRamp));
+		out.writeAttribute("polluteRamp", Integer.toString(polluteRamp));
+		out.writeAttribute("landValueAverage", Integer.toString(landValueAverage));
+		out.writeAttribute("crimeAverage", Integer.toString(crimeAverage));
+		out.writeAttribute("pollutionAverage", Integer.toString(pollutionAverage));
+		out.writeAttribute("gameLevel", Integer.toString(gameLevel));
+		out.writeAttribute("autoBulldoze", autoBulldoze ? "true" : "false");
+		out.writeAttribute("autoBudget", autoBudget ? "true" : "false");
+		out.writeAttribute("autoGo", autoGo ? "true" : "false");
+		out.writeAttribute("cityTax", Integer.toString(cityTax));
+		out.writeAttribute("simSpeed", simSpeed.name());
+		out.writeAttribute("policePercent", Double.toString(policePercent*100));
+		out.writeAttribute("firePercent", Double.toString(firePercent*100));
+		out.writeAttribute("roadPercent", Double.toString(roadPercent*100));
+		out.writeEndElement();
+
+		out.writeStartElement("evaluation");
+		out.writeAttribute("cityClass", Integer.toString(evaluation.cityClass));
+		out.writeAttribute("cityScore", Integer.toString(evaluation.cityScore));
+		out.writeEndElement();
+
+		out.writeStartElement("budget");
+		out.writeAttribute("funds", Integer.toString(budget.totalFunds));
+		out.writeEndElement();
 	}
 
 	void loadMap(DataInputStream dis)
@@ -2047,9 +2049,10 @@ public class Micropolis
 		}
 	}
 
-	void writeMap(DataOutputStream out)
-		throws IOException
+	void writeMap(XMLStreamWriter out)
+		throws XMLStreamException
 	{
+		out.writeStartElement("map");
 		for (int x = 0; x < DEFAULT_WIDTH; x++)
 		{
 			for (int y = 0; y < DEFAULT_HEIGHT; y++)
@@ -2070,9 +2073,13 @@ public class Micropolis
 				if (isZoneCenter(z & LOMASK)) {
 					z |= 1024;   //synthesize ZONEBIT
 				}
-				out.writeShort(z);
+				if (!(x==0 && y==0)) {
+					out.writeCharacters(",");
+				}
+				out.writeCharacters(Integer.toString(z));
 			}
 		}
+		out.writeEndElement();
 	}
 
 	public void load(File filename)
@@ -2145,16 +2152,28 @@ public class Micropolis
 	public void save(OutputStream outStream)
 		throws IOException
 	{
-		DataOutputStream out = new DataOutputStream(outStream);
-		writeHistoryArray(history.res, out);
-		writeHistoryArray(history.com, out);
-		writeHistoryArray(history.ind, out);
-		writeHistoryArray(history.crime, out);
-		writeHistoryArray(history.pollution, out);
-		writeHistoryArray(history.money, out);
+		try{
+
+		GZIPOutputStream z_out = new GZIPOutputStream(outStream);
+		XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(z_out, "UTF-8");
+		out.writeStartDocument();
+		out.writeStartElement("micropolis");
+		writeHistoryArray("res-history", history.res, out);
+		writeHistoryArray("com-history", history.com, out);
+		writeHistoryArray("ind-history", history.ind, out);
+		writeHistoryArray("crime-history", history.crime, out);
+		writeHistoryArray("pollution-history", history.pollution, out);
+		writeHistoryArray("money-history", history.money, out);
 		writeMisc(out);
 		writeMap(out);
+		out.writeEndElement(); //micropolis
+		out.writeEndDocument();
 		out.close();
+		z_out.close(); //because XMLStreamWriter does not call it for us
+		}
+		catch (XMLStreamException e) {
+			throw new IOException(e);
+		}
 	}
 
 	public void toggleAutoBudget()
