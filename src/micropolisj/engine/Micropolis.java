@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.*;
 
 // for XML load/save
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.xml.stream.*;
 
@@ -1894,7 +1895,7 @@ public class Micropolis
 
 	static final int [] MltdwnTab = { 30000, 20000, 10000 };
 
-	void loadHistoryArray(int [] array, DataInputStream dis)
+	void loadHistoryArray_v1(int [] array, DataInputStream dis)
 		throws IOException
 	{
 		for (int i = 0; i < 240; i++)
@@ -1903,13 +1904,25 @@ public class Micropolis
 		}
 	}
 
+	void loadHistoryArray_v2(int [] array, XMLStreamReader in)
+		throws XMLStreamException
+	{
+		Reader r = XML_Helper.readElementText(in);
+		Scanner s = new Scanner(r);
+		for (int i = 0; i < 240; i++)
+		{
+			array[i] = s.nextShort();
+		}
+		s.close();
+	}
+
 	void writeHistoryArray(String tagName, int [] array, XMLStreamWriter out)
 		throws XMLStreamException
 	{
 		out.writeStartElement(tagName);
 		for (int i = 0; i < 240; i++)
 		{
-			if (i != 0) { out.writeCharacters(","); }
+			if (i != 0) { out.writeCharacters(" "); }
 			out.writeCharacters(Integer.toString(array[i]));
 		}
 		out.writeEndElement();
@@ -2115,13 +2128,68 @@ public class Micropolis
 	public void load(InputStream inStream)
 		throws IOException
 	{
+		try {
+		GZIPInputStream z_in = new GZIPInputStream(inStream);
+		XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(z_in, "UTF-8");
+
+		in.nextTag();
+		if (!(in.getEventType() == XMLStreamConstants.START_ELEMENT &&
+			in.getLocalName().equals("micropolis"))) {
+			throw new IOException("Unrecognized file format");
+		}
+
+		while (in.next() != XMLStreamConstants.END_ELEMENT) {
+			if (!in.isStartElement()) {
+				// skip over comments, text, etc.
+				continue;
+			}
+
+			String tagName = in.getLocalName();
+			if (tagName.equals("res-history")) {
+				loadHistoryArray_v2(history.res, in);
+			}
+			else if (tagName.equals("com-history")) {
+				loadHistoryArray_v2(history.com, in);
+			}
+			else if (tagName.equals("ind-history")) {
+				loadHistoryArray_v2(history.ind, in);
+			}
+			else if (tagName.equals("crime-history")) {
+				loadHistoryArray_v2(history.crime, in);
+			}
+			else if (tagName.equals("pollution-history")) {
+				loadHistoryArray_v2(history.pollution, in);
+			}
+			else if (tagName.equals("money-history")) {
+				loadHistoryArray_v2(history.money, in);
+			}
+			else {
+				// unrecognized tag
+				XML_Helper.skipToEndElement(in);
+			}
+		}
+		in.close();
+		} catch (XMLStreamException e) {
+			throw new IOException(e);
+		}
+
+		checkPowerMap();
+
+		fireWholeMapChanged();
+		fireDemandChanged();
+		fireFundsChanged();
+	}
+
+	public void load_v1(InputStream inStream)
+		throws IOException
+	{
 		DataInputStream dis = new DataInputStream(inStream);
-		loadHistoryArray(history.res, dis);
-		loadHistoryArray(history.com, dis);
-		loadHistoryArray(history.ind, dis);
-		loadHistoryArray(history.crime, dis);
-		loadHistoryArray(history.pollution, dis);
-		loadHistoryArray(history.money, dis);
+		loadHistoryArray_v1(history.res, dis);
+		loadHistoryArray_v1(history.com, dis);
+		loadHistoryArray_v1(history.ind, dis);
+		loadHistoryArray_v1(history.crime, dis);
+		loadHistoryArray_v1(history.pollution, dis);
+		loadHistoryArray_v1(history.money, dis);
 		loadMisc(dis);
 		loadMap(dis);
 		dis.close();
