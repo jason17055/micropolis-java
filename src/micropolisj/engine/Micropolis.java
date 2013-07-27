@@ -2041,9 +2041,10 @@ public class Micropolis
 		throws XMLStreamException
 	{
 		out.writeStartElement("map");
-		for (int x = 0; x < DEFAULT_WIDTH; x++)
+		for (int y = 0; y < DEFAULT_HEIGHT; y++)
 		{
-			for (int y = 0; y < DEFAULT_HEIGHT; y++)
+			out.writeStartElement("mapRow");
+			for (int x = 0; x < DEFAULT_WIDTH; x++)
 			{
 				int z = map[y][x];
 				if (isConductive(z & LOMASK)) {
@@ -2061,13 +2062,14 @@ public class Micropolis
 				if (isZoneCenter(z & LOMASK)) {
 					z |= 1024;   //synthesize ZONEBIT
 				}
-				if (!(x==0 && y==0)) {
-					out.writeCharacters(",");
+				if (x != 0) {
+					out.writeCharacters(" ");
 				}
 				out.writeCharacters(Integer.toString(z));
 			}
+			out.writeEndElement(); //mapRow
 		}
-		out.writeEndElement();
+		out.writeEndElement(); //map
 	}
 
 	public void load(File filename)
