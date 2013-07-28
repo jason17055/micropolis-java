@@ -81,7 +81,7 @@ public class XML_Helper
 
 				if (tagDepth == 0) {
 					// reached closing tag
-					return 0;
+					return -1;
 				}
 			}
 
