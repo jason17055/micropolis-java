@@ -1949,6 +1949,9 @@ public class Micropolis
 		crimeAverage = Integer.parseInt(in.getAttributeValue(null, "crimeAverage"));
 		pollutionAverage = Integer.parseInt(in.getAttributeValue(null, "pollutionAverage"));
 		gameLevel = Integer.parseInt(in.getAttributeValue(null, "gameLevel"));
+		if (!GameLevel.isValid(gameLevel)) {
+			gameLevel = 0;
+		}
 		autoBulldoze = Boolean.parseBoolean(in.getAttributeValue(null, "autoBulldoze"));
 		autoBudget = Boolean.parseBoolean(in.getAttributeValue(null, "autoBudget"));
 		autoGo = Boolean.parseBoolean(in.getAttributeValue(null, "autoGo"));
