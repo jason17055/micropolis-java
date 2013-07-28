@@ -1932,11 +1932,18 @@ public class Micropolis
 		throws XMLStreamException
 	{
 		out.writeStartElement(tagName);
-		for (int i = 0; i < 240; i++)
+		out.writeStartElement("shortTerm");
+		for (int i = 0; i < 120; i++)
 		{
-			if (i != 0) { out.writeCharacters(" "); }
-			out.writeCharacters(Integer.toString(array[i]));
+			out.writeCharacters(" " + Integer.toString(array[i]));
 		}
+		out.writeEndElement(); //shortTerm
+		out.writeStartElement("longTerm");
+		for (int i = 120; i < 240; i++)
+		{
+			out.writeCharacters(" " + Integer.toString(array[i]));
+		}
+		out.writeEndElement(); //longTerm
 		out.writeEndElement();
 	}
 
