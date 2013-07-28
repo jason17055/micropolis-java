@@ -2041,9 +2041,9 @@ public class Micropolis
 		out.writeAttribute("crimeAverage", Integer.toString(crimeAverage));
 		out.writeAttribute("pollutionAverage", Integer.toString(pollutionAverage));
 		out.writeAttribute("gameLevel", Integer.toString(gameLevel));
-		out.writeAttribute("autoBulldoze", autoBulldoze ? "true" : "false");
-		out.writeAttribute("autoBudget", autoBudget ? "true" : "false");
-		out.writeAttribute("autoGo", autoGo ? "true" : "false");
+		out.writeAttribute("autoBulldoze", Boolean.toString(autoBulldoze));
+		out.writeAttribute("autoBudget", Boolean.toString(autoBudget));
+		out.writeAttribute("autoGo", Boolean.toString(autoGo));
 		out.writeAttribute("cityTax", Integer.toString(cityTax));
 		out.writeAttribute("simSpeed", simSpeed.name());
 		out.writeAttribute("policePercent", Double.toString(policePercent*100));
