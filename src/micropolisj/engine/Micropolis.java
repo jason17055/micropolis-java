@@ -1928,6 +1928,17 @@ public class Micropolis
 		out.writeEndElement();
 	}
 
+	void loadBudget_v2(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		budget.totalFunds = Integer.parseInt(in.getAttributeValue(null, "funds"));
+		cityTax = Integer.parseInt(in.getAttributeValue(null, "cityTax"));
+		policePercent = Double.parseDouble(in.getAttributeValue(null, "policePercent")) / 100.0;
+		firePercent = Double.parseDouble(in.getAttributeValue(null, "firePercent")) / 100.0;
+		roadPercent = Double.parseDouble(in.getAttributeValue(null, "roadPercent")) / 100.0;
+		XML_Helper.skipToEndElement(in);
+	}
+
 	void loadMisc_v2(XMLStreamReader in)
 		throws XMLStreamException
 	{
@@ -1941,11 +1952,7 @@ public class Micropolis
 		autoBulldoze = Boolean.parseBoolean(in.getAttributeValue(null, "autoBulldoze"));
 		autoBudget = Boolean.parseBoolean(in.getAttributeValue(null, "autoBudget"));
 		autoGo = Boolean.parseBoolean(in.getAttributeValue(null, "autoGo"));
-		cityTax = Integer.parseInt(in.getAttributeValue(null, "cityTax"));
 		simSpeed = Speed.valueOf(in.getAttributeValue(null, "simSpeed"));
-		policePercent = Double.parseDouble(in.getAttributeValue(null, "policePercent")) / 100.0;
-		firePercent = Double.parseDouble(in.getAttributeValue(null, "firePercent")) / 100.0;
-		roadPercent = Double.parseDouble(in.getAttributeValue(null, "roadPercent")) / 100.0;
 		XML_Helper.skipToEndElement(in);
 
 		resCap = false;
@@ -2044,11 +2051,7 @@ public class Micropolis
 		out.writeAttribute("autoBulldoze", Boolean.toString(autoBulldoze));
 		out.writeAttribute("autoBudget", Boolean.toString(autoBudget));
 		out.writeAttribute("autoGo", Boolean.toString(autoGo));
-		out.writeAttribute("cityTax", Integer.toString(cityTax));
 		out.writeAttribute("simSpeed", simSpeed.name());
-		out.writeAttribute("policePercent", Double.toString(policePercent*100));
-		out.writeAttribute("firePercent", Double.toString(firePercent*100));
-		out.writeAttribute("roadPercent", Double.toString(roadPercent*100));
 		out.writeEndElement();
 
 		out.writeStartElement("evaluation");
@@ -2058,6 +2061,10 @@ public class Micropolis
 
 		out.writeStartElement("budget");
 		out.writeAttribute("funds", Integer.toString(budget.totalFunds));
+		out.writeAttribute("cityTax", Integer.toString(cityTax));
+		out.writeAttribute("policePercent", Double.toString(policePercent*100));
+		out.writeAttribute("firePercent", Double.toString(firePercent*100));
+		out.writeAttribute("roadPercent", Double.toString(roadPercent*100));
 		out.writeEndElement();
 	}
 
@@ -2262,8 +2269,7 @@ public class Micropolis
 				XML_Helper.skipToEndElement(in);
 			}
 			else if (tagName.equals("budget")) {
-				budget.totalFunds = Integer.parseInt(in.getAttributeValue(null, "funds"));
-				XML_Helper.skipToEndElement(in);
+				loadBudget_v2(in);
 			}
 			else if (tagName.equals("map")) {
 				loadMap_v2(in);
