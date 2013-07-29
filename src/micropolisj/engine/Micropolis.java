@@ -1961,15 +1961,16 @@ public class Micropolis
 		crimeAverage = Integer.parseInt(in.getAttributeValue(null, "crimeAverage"));
 		pollutionAverage = Integer.parseInt(in.getAttributeValue(null, "pollutionAverage"));
 		gameLevel = Integer.parseInt(in.getAttributeValue(null, "gameLevel"));
-		if (!GameLevel.isValid(gameLevel)) {
-			gameLevel = 0;
-		}
 		autoBulldoze = Boolean.parseBoolean(in.getAttributeValue(null, "autoBulldoze"));
 		autoBudget = Boolean.parseBoolean(in.getAttributeValue(null, "autoBudget"));
 		autoGo = Boolean.parseBoolean(in.getAttributeValue(null, "autoGo"));
 		noDisasters = !Boolean.parseBoolean(nvl(in.getAttributeValue(null, "allowDisasters"), "true"));
 		simSpeed = Speed.valueOf(in.getAttributeValue(null, "simSpeed"));
 		XML_Helper.skipToEndElement(in);
+
+		if (cityTime < 0) { cityTime = 0; }
+		if (cityTax < 0 || cityTax > 20) { cityTax = 7; }
+		if (gameLevel < 0 || gameLevel > 2) { gameLevel = 0; }
 
 		resCap = false;
 		comCap = false;
