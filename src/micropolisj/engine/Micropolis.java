@@ -1958,6 +1958,11 @@ public class Micropolis
 		XML_Helper.skipToEndElement(in);
 	}
 
+	static String nvl(String x, String d)
+	{
+		return x != null ? x : d;
+	}
+
 	void loadMisc_v2(XMLStreamReader in)
 		throws XMLStreamException
 	{
@@ -1974,6 +1979,7 @@ public class Micropolis
 		autoBulldoze = Boolean.parseBoolean(in.getAttributeValue(null, "autoBulldoze"));
 		autoBudget = Boolean.parseBoolean(in.getAttributeValue(null, "autoBudget"));
 		autoGo = Boolean.parseBoolean(in.getAttributeValue(null, "autoGo"));
+		noDisasters = !Boolean.parseBoolean(nvl(in.getAttributeValue(null, "allowDisasters"), "true"));
 		simSpeed = Speed.valueOf(in.getAttributeValue(null, "simSpeed"));
 		XML_Helper.skipToEndElement(in);
 
@@ -2074,6 +2080,7 @@ public class Micropolis
 		out.writeAttribute("autoBudget", Boolean.toString(autoBudget));
 		out.writeAttribute("autoGo", Boolean.toString(autoGo));
 		out.writeAttribute("simSpeed", simSpeed.name());
+		out.writeAttribute("allowDisasters", Boolean.toString(!noDisasters));
 		out.writeEndElement();
 
 		out.writeStartElement("evaluation");
