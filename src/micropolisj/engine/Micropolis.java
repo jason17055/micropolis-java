@@ -1944,6 +1944,14 @@ public class Micropolis
 		firePercent = Double.parseDouble(in.getAttributeValue(null, "firePercent")) / 100.0;
 		roadPercent = Double.parseDouble(in.getAttributeValue(null, "roadPercent")) / 100.0;
 		XML_Helper.skipToEndElement(in);
+
+		if (cityTax < 0 || cityTax > 20) { cityTax = 7; }
+		if (policePercent < 0.0) { policePercent = 0.0; }
+		if (policePercent > 1.0) { policePercent = 1.0; }
+		if (firePercent < 0.0) { firePercent = 0.0; }
+		if (firePercent > 1.0) { firePercent = 1.0; }
+		if (roadPercent < 0.0) { roadPercent = 0.0; }
+		if (roadPercent > 1.0) { roadPercent = 1.0; }
 	}
 
 	static String nvl(String x, String d)
@@ -1951,10 +1959,22 @@ public class Micropolis
 		return x != null ? x : d;
 	}
 
+	void loadCityTime_v2(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		cityTime = Integer.parseInt(in.getAttributeValue(null, "time"));
+		fcycle = Integer.parseInt(in.getAttributeValue(null, "fcycle"));
+		acycle = Integer.parseInt(in.getAttributeValue(null, "acycle"));
+		XML_Helper.skipToEndElement(in);
+
+		if (cityTime < 0) {
+			cityTime = 0;
+		}
+	}
+
 	void loadMisc_v2(XMLStreamReader in)
 		throws XMLStreamException
 	{
-		cityTime = Integer.parseInt(in.getAttributeValue(null, "cityTime"));
 		crimeRamp = Integer.parseInt(in.getAttributeValue(null, "crimeRamp"));
 		polluteRamp = Integer.parseInt(in.getAttributeValue(null, "polluteRamp"));
 		landValueAverage = Integer.parseInt(in.getAttributeValue(null, "landValueAverage"));
@@ -1968,8 +1988,6 @@ public class Micropolis
 		simSpeed = Speed.valueOf(in.getAttributeValue(null, "simSpeed"));
 		XML_Helper.skipToEndElement(in);
 
-		if (cityTime < 0) { cityTime = 0; }
-		if (cityTax < 0 || cityTax > 20) { cityTax = 7; }
 		if (gameLevel < 0 || gameLevel > 2) { gameLevel = 0; }
 
 		resCap = false;
@@ -2057,8 +2075,13 @@ public class Micropolis
 		out.writeAttribute("indValve", Integer.toString(indValve));
 		out.writeEndElement();
 
+		out.writeStartElement("cityTime");
+		out.writeAttribute("time", Integer.toString(cityTime));
+		out.writeAttribute("fcycle", Integer.toString(fcycle));
+		out.writeAttribute("acycle", Integer.toString(acycle));
+		out.writeEndElement();
+
 		out.writeStartElement("misc");
-		out.writeAttribute("cityTime", Integer.toString(cityTime));
 		out.writeAttribute("crimeRamp", Integer.toString(crimeRamp));
 		out.writeAttribute("polluteRamp", Integer.toString(polluteRamp));
 		out.writeAttribute("landValueAverage", Integer.toString(landValueAverage));
@@ -2275,6 +2298,9 @@ public class Micropolis
 				comValve = Integer.parseInt(in.getAttributeValue(null, "comValve"));
 				indValve = Integer.parseInt(in.getAttributeValue(null, "indValve"));
 				XML_Helper.skipToEndElement(in);
+			}
+			else if (tagName.equals("cityTime")) {
+				loadCityTime_v2(in);
 			}
 			else if (tagName.equals("misc")) {
 				loadMisc_v2(in);
