@@ -21,13 +21,11 @@ import static micropolisj.engine.TrafficGen.ZoneType;
 class MapScanner extends TileBehavior
 {
 	final B behavior;
-	TrafficGen traffic;
 
 	MapScanner(Micropolis city, B behavior)
 	{
 		super(city);
 		this.behavior = behavior;
-		this.traffic = new TrafficGen(city);
 	}
 
 	public static enum B
@@ -224,6 +222,7 @@ class MapScanner extends TileBehavior
 			z = city.fireEffect/2; // from the funding ratio
 		}
 
+		TrafficGen traffic = new TrafficGen(city);
 		traffic.mapX = xpos;
 		traffic.mapY = ypos;
 		if (!traffic.findPerimeterRoad()) {
@@ -248,6 +247,7 @@ class MapScanner extends TileBehavior
 			z = city.policeEffect / 2;
 		}
 
+		TrafficGen traffic = new TrafficGen(city);
 		traffic.mapX = xpos;
 		traffic.mapY = ypos;
 		if (!traffic.findPerimeterRoad()) {
@@ -975,9 +975,46 @@ class MapScanner extends TileBehavior
 	 */
 	int makeTraffic(ZoneType zoneType)
 	{
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		traffic.sourceZone = zoneType;
-		return traffic.makeTraffic();
+		TrafficGen2 traffic = new TrafficGen2(city, new CityLocation(xpos, ypos));
+		traffic.prepare();
+
+		TrafficGen2.FitnessFunction f;
+		switch (zoneType) {
+		case RESIDENTIAL:
+			f = new TrafficGen2.FitnessFunction() {
+			public double fitness(int xpos, int ypos, int dist) {
+				int tile = city.getTile(xpos, ypos);
+				return isCommercialZone(tile) || isIndustrialZone(tile) ? 1 : 0;
+			}};
+			break;
+		case COMMERCIAL:
+			f = new TrafficGen2.FitnessFunction() {
+			public double fitness(int xpos, int ypos, int dist) {
+				int tile = city.getTile(xpos, ypos);
+				return isResidentialZoneAny(tile) || isIndustrialZone(tile) ? 1 : 0;
+			}};
+			break;
+		case INDUSTRIAL:
+			f = new TrafficGen2.FitnessFunction() {
+			public double fitness(int xpos, int ypos, int dist) {
+				int tile = city.getTile(xpos, ypos);
+				return isResidentialZoneAny(tile) || isCommercialZone(tile) ? 1 : 0;
+			}};
+			break;
+		default:
+			throw new Error("unreachable");
+		}
+
+		CityLocation destLoc = traffic.findBest(f);
+		if (destLoc == null) {
+			return 0;
+		}
+
+		int [] pathToJob = traffic.getPathTo(destLoc);
+		city.setTileExtra(xpos, ypos, "pathToJob",
+				Traffic.pathAsString(pathToJob)
+				);
+		city.applyTraffic(traffic.origin, pathToJob, 1);
+		return 1;
 	}
 }
