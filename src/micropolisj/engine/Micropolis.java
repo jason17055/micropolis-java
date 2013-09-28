@@ -206,6 +206,8 @@ public class Micropolis
 	public static final int CENSUSRATE = 4;
 	static final int TAXFREQ = 48;
 
+	Map<CityLocation, Map<String,String> > extraData = new HashMap<CityLocation, Map<String,String> >();
+
 	public void spend(int amount)
 	{
 		budget.totalFunds -= amount;
@@ -478,6 +480,22 @@ public class Micropolis
 		return (getTileRaw(xpos, ypos) & PWRBIT) == PWRBIT;
 	}
 
+	public String getTileExtra(int xpos, int ypos, String key)
+	{
+		CityLocation loc = new CityLocation(xpos, ypos);
+		return getTileExtra(loc, key);
+	}
+
+	public String getTileExtra(CityLocation loc, String key)
+	{
+		if (extraData.containsKey(loc)) {
+			return extraData.get(loc).get(key);
+		}
+		else {
+			return null;
+		}
+	}
+
 	/**
 	 * Note: this method clears the PWRBIT of the given location.
 	 */
@@ -490,7 +508,36 @@ public class Micropolis
 		if (map[ypos][xpos] != newTile)
 		{
 			map[ypos][xpos] = newTile;
+			extraData.remove(new CityLocation(xpos, ypos));
 			fireTileChanged(xpos, ypos);
+		}
+	}
+
+	public void setTileExtra(int xpos, int ypos, String key, String value)
+	{
+		setTileExtra(new CityLocation(xpos, ypos), key, value);
+	}
+
+	public void setTileExtra(CityLocation loc, String key, String value)
+	{
+		Map<String,String> m = extraData.get(loc);
+		if (value != null) {
+			if (m != null) {
+				m.put(key, value);
+			}
+			else {
+				m = new HashMap<String,String>();
+				m.put(key, value);
+				extraData.put(loc, m);
+			}
+		}
+		else {
+			if (m != null) {
+				m.remove(key);
+				if (m.isEmpty()) {
+					extraData.remove(loc);
+				}
+			}
 		}
 	}
 
