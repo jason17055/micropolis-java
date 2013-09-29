@@ -221,6 +221,21 @@ public class Micropolis
 		connections.remove(conn);
 	}
 
+	/**
+	 * Removes all traffic that starts or ends at a location.
+	 */
+	void removeTrafficWithEndpoint(CityLocation loc)
+	{
+		for (Iterator<Traffic> it = connections.iterator();
+				it.hasNext(); )
+		{
+			Traffic t = it.next();
+			if (loc.equals(t.from) || loc.equals(t.to)) {
+				it.remove();
+			}
+		}
+	}
+
 	public Collection<Traffic> enumIncomingConnections(CityLocation destLoc, TrafficType type)
 	{
 		ArrayList<Traffic> rv = new ArrayList<Traffic>();
@@ -566,6 +581,7 @@ public class Micropolis
 		{
 			map[ypos][xpos] = newTile;
 			extraData.remove(new CityLocation(xpos, ypos));
+			removeTrafficWithEndpoint(new CityLocation(xpos, ypos));
 			fireTileChanged(xpos, ypos);
 		}
 	}
