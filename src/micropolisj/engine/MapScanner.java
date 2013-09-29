@@ -12,6 +12,8 @@ import java.util.*;
 
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.engine.TrafficGen.ZoneType;
+import static micropolisj.engine.TrafficGen2.*;
+import static micropolisj.engine.Traffic.TrafficType;
 
 /**
  * Process individual tiles of the map for each cycle.
@@ -449,7 +451,7 @@ class MapScanner extends TileBehavior
 		int trafficGood;
 		if (tpop > PRNG.nextInt(6))
 		{
-			trafficGood = makeTraffic(ZoneType.COMMERCIAL);
+			trafficGood = makeTraffic(ZoneType.COMMERCIAL, tpop*8);
 		}
 		else
 		{
@@ -484,8 +486,11 @@ class MapScanner extends TileBehavior
 			{
 				int value = getCRValue();
 				doCommercialOut(tpop, value);
+				return;
 			}
 		}
+
+		adjustPrices(tpop*8);
 	}
 
 	/**
@@ -503,7 +508,7 @@ class MapScanner extends TileBehavior
 		int trafficGood;
 		if (tpop > PRNG.nextInt(6))
 		{
-			trafficGood = makeTraffic(ZoneType.INDUSTRIAL);
+			trafficGood = makeTraffic(ZoneType.INDUSTRIAL, tpop*8);
 		}
 		else
 		{
@@ -536,8 +541,11 @@ class MapScanner extends TileBehavior
 			{
 				int value = PRNG.nextInt(2);
 				doIndustrialOut(tpop, value);
+				return;
 			}
 		}
+
+		adjustPrices(tpop*8);
 	}
 
 	/**
@@ -564,7 +572,7 @@ class MapScanner extends TileBehavior
 		int trafficGood;
 		if (tpop > PRNG.nextInt(36))
 		{
-			trafficGood = makeTraffic(ZoneType.RESIDENTIAL);
+			trafficGood = makeTraffic(ZoneType.RESIDENTIAL, tpop);
 		}
 		else
 		{
@@ -603,6 +611,67 @@ class MapScanner extends TileBehavior
 			{
 				int value = getCRValue();
 				doResidentialOut(tpop, value);
+				return;
+			}
+		}
+
+		adjustPrices(tpop);
+	}
+
+	int countIncomingTraffic(TrafficType type)
+	{
+		int sum = 0;
+		for (Traffic c : city.enumIncomingConnections(
+						new CityLocation(xpos, ypos),
+						type))
+		{
+			sum += c.count;
+		}
+		return sum;
+	}
+
+	void adjustPrices(int tpop)
+	{
+		if (tpop == 0) {
+			city.setTileExtra(xpos, ypos, "laborPrice", null);
+			city.setTileExtra(xpos, ypos, "goodsPrice", null);
+			city.setTileExtra(xpos, ypos, "resourcePrice", null);
+			city.setTileExtra(xpos, ypos, "earnings", null);
+			return;
+		}
+
+		if (PRNG.nextInt(4) != 0) {
+			return;
+		}
+
+		if (behavior == B.RESIDENTIAL) {
+			int demand = countIncomingTraffic(TrafficType.EMPLOYMENT);
+			int supply = tpop;
+			if (demand != supply) {
+				int adj = supply < demand ? 1 : -1;
+				int price = city.getTileExtraInt(xpos, ypos, "laborPrice", 0);
+				price += adj;
+				city.setTileExtra(xpos, ypos, "laborPrice", Integer.toString(price));
+			}
+		}
+		if (behavior == B.COMMERCIAL) {
+			int demand = countIncomingTraffic(TrafficType.RETAIL);
+			int supply = tpop*2;
+			if (demand != supply) {
+				int adj = supply < demand ? 1 : -1;
+				int price = city.getTileExtraInt(xpos, ypos, "goodsPrice", 0);
+				price += adj;
+				city.setTileExtra(xpos, ypos, "goodsPrice", Integer.toString(price));
+			}
+		}
+		if (behavior == B.INDUSTRIAL) {
+			int demand = countIncomingTraffic(TrafficType.WHOLESALE);
+			int supply = tpop;
+			if (demand != supply) {
+				int adj = supply < demand ? 1 : -1;
+				int price = city.getTileExtraInt(xpos, ypos, "resourcePrice", 0);
+				price += adj;
+				city.setTileExtra(xpos, ypos, "resourcePrice", Integer.toString(price));
 			}
 		}
 	}
@@ -752,18 +821,21 @@ class MapScanner extends TileBehavior
 	{
 		int base = (value * 5 + density) * 9 + CZB;
 		zonePlop(Tiles.loadByOrdinal(base));
+		city.setTileExtra(xpos, ypos, "goodsPrice", "0");
 	}
 
 	void indPlop(int density, int value)
 	{
 		int base = (value * 4 + density) * 9 + IZB;
 		zonePlop(Tiles.loadByOrdinal(base));
+		city.setTileExtra(xpos, ypos, "resourcePrice", "0");
 	}
 
 	void residentialPlop(int density, int value)
 	{
 		int base = (value * 4 + density) * 9 + RZB;
 		zonePlop(Tiles.loadByOrdinal(base));
+		city.setTileExtra(xpos, ypos, "laborPrice", "0");
 	}
 
 	private void doCommercialOut(int pop, int value)
@@ -970,51 +1042,175 @@ class MapScanner extends TileBehavior
 		city.setTilePower(xpos, ypos, true);
 	}
 
+	boolean hasResources(int x, int y)
+	{
+		int tile = city.getTile(x, y);
+		return (isZoneCenter(tile) && isIndustrialZone(tile));
+	}
+
+	int getResourcePrice(int x, int y)
+	{
+		int tile = city.getTile(x, y);
+		assert (isZoneCenter(tile) && isIndustrialZone(tile));
+
+		return city.getTileExtraInt(x, y, "resourcePrice", 0);
+	}
+
+	boolean hasLabor(int x, int y)
+	{
+		int tile = city.getTile(x, y);
+		return (isZoneCenter(tile) && isResidentialZoneAny(tile));
+	}
+
+	int getLaborPrice(int x, int y)
+	{
+		int tile = city.getTile(x, y);
+		assert (isZoneCenter(tile) && isResidentialZoneAny(tile));
+
+		return city.getTileExtraInt(x, y, "laborPrice", 0);
+	}
+
+	boolean hasGoods(int x, int y)
+	{
+		int tile = city.getTile(x, y);
+		return (isZoneCenter(tile) && isCommercialZone(tile));
+	}
+
+	int getGoodsPrice(int x, int y)
+	{
+		int tile = city.getTile(x, y);
+		assert (isZoneCenter(tile) && isCommercialZone(tile));
+
+		return city.getTileExtraInt(x, y, "goodsPrice", 0);
+	}
+
 	/**
 	 * @return 1 if traffic "passed", 0 if traffic "failed", -1 if no roads found
 	 */
-	int makeTraffic(ZoneType zoneType)
+	int makeTraffic(ZoneType zoneType, int pop)
 	{
 		TrafficGen2 traffic = new TrafficGen2(city, new CityLocation(xpos, ypos));
 		traffic.prepare();
 
-		TrafficGen2.FitnessFunction f;
+		int slot = (city.cityTime + xpos + ypos) % JOB_SLOT_COUNT;
+		int count = (pop + JOB_SLOT_COUNT - slot - 1) / JOB_SLOT_COUNT;
+
+		int cost = 0;
 		switch (zoneType) {
 		case RESIDENTIAL:
-			f = new TrafficGen2.FitnessFunction() {
-			public double fitness(int xpos, int ypos, int dist) {
-				int tile = city.getTile(xpos, ypos);
-				return isCommercialZone(tile) || isIndustrialZone(tile) ? 1 : 0;
-			}};
+			cost += seekJob(traffic, TrafficType.RETAIL, slot, count);
 			break;
+
 		case COMMERCIAL:
+			cost += seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
+			cost += seekJob(traffic, TrafficType.WHOLESALE, slot, count);
+			cost /= 2;
+			break;
+
+		case INDUSTRIAL:
+			cost += seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
+			break;
+		}
+
+		return cost < 50 ? 1 :         //traffic good
+			cost < MAX_COST ? 0 :  //traffic bad
+			-1;                    //  no routes found
+	}
+
+	static final int MAX_COST = 256;
+
+	/**
+	 * Given a traffic map analysis, generate a route of a particular type,
+	 * and add traffic onto the city map.
+	 * @return the COST of the route (or MAX_COST if no route found)
+	 */
+	private int seekJob(TrafficGen2 traffic, TrafficType connType,
+			int slot, int count)
+	{
+		TrafficGen2.FitnessFunction f;
+		switch (connType) {
+		case EMPLOYMENT:
 			f = new TrafficGen2.FitnessFunction() {
 			public double fitness(int xpos, int ypos, int dist) {
-				int tile = city.getTile(xpos, ypos);
-				return isResidentialZoneAny(tile) || isIndustrialZone(tile) ? 1 : 0;
+				return hasLabor(xpos, ypos) ?
+					Math.exp(-(dist + getLaborPrice(xpos, ypos))) :
+					0.0;
 			}};
 			break;
-		case INDUSTRIAL:
+		case RETAIL:
 			f = new TrafficGen2.FitnessFunction() {
 			public double fitness(int xpos, int ypos, int dist) {
-				int tile = city.getTile(xpos, ypos);
-				return isResidentialZoneAny(tile) || isCommercialZone(tile) ? 1 : 0;
+				return hasGoods(xpos, ypos) ?
+					Math.exp(-(dist + getGoodsPrice(xpos, ypos))) :
+					0.0;
+			}};
+			break;
+		case WHOLESALE:
+			f = new TrafficGen2.FitnessFunction() {
+			public double fitness(int xpos, int ypos, int dist) {
+				return hasResources(xpos, ypos) ?
+					Math.exp(-(dist + getResourcePrice(xpos, ypos))) :
+					0.0;
 			}};
 			break;
 		default:
 			throw new Error("unreachable");
 		}
 
-		CityLocation destLoc = traffic.findBest(f);
-		if (destLoc == null) {
-			return 0;
+		Traffic conn = city.findConnection(
+				new CityLocation(xpos, ypos),
+				connType,
+				slot);
+		if (conn != null &&
+			conn.count == count &&
+			PRNG.nextInt(4) != 0)
+		{
+			// keep old job, assuming there's still a path to get there
+			double x = f.fitness(conn.to.x, conn.to.y, traffic.getDist(conn.to.x, conn.to.y));
+			int pathCost = (int)Math.round(Math.min(-Math.log(x), MAX_COST));
+			if (pathCost < MAX_COST) {
+				// keep old job, but still update how to get there
+				city.applyTraffic(conn.from, conn.pathTaken, -conn.count);
+				conn.pathTaken = traffic.getPathTo(conn.to);
+				city.applyTraffic(conn.from, conn.pathTaken, conn.count);
+				return pathCost;
+			}
 		}
 
-		int [] pathToJob = traffic.getPathTo(destLoc);
-		city.setTileExtra(xpos, ypos, "pathToJob",
-				Traffic.pathAsString(pathToJob)
-				);
-		city.applyTraffic(traffic.origin, pathToJob, 1);
-		return 1;
+		if (conn != null) {
+			// remove old connection
+			city.removeConnection(conn);
+		}
+
+		CityLocation employer = traffic.findBest(f);
+		if (employer != null && count != 0) {
+			double x = f.fitness(employer.x, employer.y, traffic.getDist(employer.x, employer.y));
+			int pathCost = (int)Math.round(Math.min(-Math.log(x), MAX_COST));
+			if (pathCost < MAX_COST) {
+				setJob(connType, slot, count, employer, traffic.getPathTo(employer));
+				return pathCost;
+			}
+		}
+
+		// no supply found, set cost to ~infinite
+		return MAX_COST;
+	}
+
+	static final int JOB_SLOT_COUNT = 4;
+
+	void setJob(TrafficType connType, int slot, int count, CityLocation dest, int [] pathTaken)
+	{
+		if (count != 0 && dest != null && pathTaken != null) {
+
+			Traffic conn = new Traffic(
+					new CityLocation(xpos, ypos),
+					dest);
+			conn.type = connType;
+			conn.slot = slot;
+			conn.count = count;
+			conn.pathTaken = pathTaken;
+
+			city.addConnection(conn);
+		}
 	}
 }
