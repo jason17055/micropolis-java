@@ -217,6 +217,34 @@ public class MicropolisDrawingArea extends JComponent
 			}
 		}
 
+		for (int y = minY; y < maxY; y++)
+		{
+			for (int x = minX; x < maxX; x++)
+			{
+				int yy = y*TILE_HEIGHT;
+				String xR = m.getTileExtra(x, y, "laborPrice");
+				if (xR != null) {
+					drawTag(gr, x*TILE_WIDTH+TILE_WIDTH, yy, "R:"+xR);
+					yy+=11;
+				}
+				String xC = m.getTileExtra(x, y, "goodsPrice");
+				if (xC != null) {
+					drawTag(gr, x*TILE_WIDTH+TILE_WIDTH, yy, "C:"+xC);
+					yy+=11;
+				}
+				String xI = m.getTileExtra(x, y, "resourcePrice");
+				if (xI != null) {
+					drawTag(gr, x*TILE_WIDTH+TILE_WIDTH, yy, "I:"+xI);
+					yy+=11;
+				}
+				String xE = m.getTileExtra(x, y, "earnings");
+				if (xE != null) {
+					drawTag(gr, x*TILE_WIDTH+TILE_WIDTH, yy, "$:"+xE);
+					yy+=11;
+				}
+			}
+		}
+
 		if (toolCursor != null)
 		{
 			int x0 = toolCursor.rect.x * TILE_WIDTH;
@@ -247,6 +275,19 @@ public class MicropolisDrawingArea extends JComponent
 				gr.fillRect(x0,y0,x1-x0,y1-y0);
 			}
 		}
+	}
+
+	private void drawTag(Graphics gr1, int x, int y, String s)
+	{
+		Graphics2D gr = (Graphics2D) gr1;
+		FontMetrics fm = gr.getFontMetrics();
+
+		Paint oldPaint = gr.getPaint();
+		gr.setColor(Color.WHITE);
+		gr.fillRect(x, y, fm.stringWidth(s), fm.getAscent()-3);
+		gr.setColor(Color.BLACK);
+		gr.drawString(s, x,y+fm.getAscent()-3);
+		gr.setPaint(oldPaint);
 	}
 
 	static class ToolCursor
