@@ -448,33 +448,26 @@ class MapScanner extends TileBehavior
 		int tpop = commercialZonePop(tile);
 		city.comPop += tpop;
 
-		int trafficGood;
+		int trafficModifier;
 		if (tpop > PRNG.nextInt(6))
 		{
-			trafficGood = makeTraffic(ZoneType.COMMERCIAL, tpop*8);
+			int earnings = makeTraffic(ZoneType.COMMERCIAL, tpop*8);
+			trafficModifier = earnings * 60;
 		}
 		else
 		{
-			trafficGood = 1;
-		}
-
-		if (trafficGood == -1)
-		{
-			int value = getCRValue();
-			doCommercialOut(tpop, value);
-			return;
+			trafficModifier = 0;
 		}
 
 		if (PRNG.nextInt(8) == 0)
 		{
-			int locValve = evalCommercial(trafficGood);
+			int locValve = evalCommercial(trafficModifier);
 			int zscore = city.comValve + locValve;
 
 			if (!powerOn)
 				zscore = -500;
 
-			if (trafficGood != 0 &&
-				zscore > -350 &&
+			if (zscore > -350 &&
 				zscore - 26380 > (PRNG.nextInt(0x10000)-0x8000))
 			{
 				int value = getCRValue();
@@ -505,25 +498,20 @@ class MapScanner extends TileBehavior
 		int tpop = industrialZonePop(tile);
 		city.indPop += tpop;
 
-		int trafficGood;
+		int trafficModifier;
 		if (tpop > PRNG.nextInt(6))
 		{
-			trafficGood = makeTraffic(ZoneType.INDUSTRIAL, tpop*8);
+			int earnings = makeTraffic(ZoneType.INDUSTRIAL, tpop*8);
+			trafficModifier = earnings * 60;
 		}
 		else
 		{
-			trafficGood = 1;
-		}
-
-		if (trafficGood == -1)
-		{
-			doIndustrialOut(tpop, PRNG.nextInt(2));
-			return;
+			trafficModifier = 0;
 		}
 
 		if (PRNG.nextInt(8) == 0)
 		{
-			int locValve = evalIndustrial(trafficGood);
+			int locValve = evalIndustrial(trafficModifier);
 			int zscore = city.indValve + locValve;
 
 			if (!powerOn)
@@ -569,26 +557,20 @@ class MapScanner extends TileBehavior
 
 		city.resPop += tpop;
 
-		int trafficGood;
+		int trafficModifier;
 		if (tpop > PRNG.nextInt(36))
 		{
-			trafficGood = makeTraffic(ZoneType.RESIDENTIAL, tpop);
+			int earnings = makeTraffic(ZoneType.RESIDENTIAL, tpop);
+			trafficModifier = earnings * 60;
 		}
 		else
 		{
-			trafficGood = 1;
-		}
-
-		if (trafficGood == -1)
-		{
-			int value = getCRValue();
-			doResidentialOut(tpop, value);
-			return;
+			trafficModifier = 0;
 		}
 
 		if (tile == RESCLR || PRNG.nextInt(8) == 0)
 		{
-			int locValve = evalResidential(trafficGood);
+			int locValve = evalResidential(trafficModifier);
 			int zscore = city.resValve + locValve;
 
 			if (!powerOn)
@@ -943,10 +925,11 @@ class MapScanner extends TileBehavior
 	 */
 	int evalCommercial(int traf)
 	{
-		if (traf < 0)
-			return -3000;
+		int value = city.comRate[ypos/8][xpos/8];
+		value += traf;
 
-		return city.comRate[ypos/8][xpos/8];
+		// clamp result between -3000 and 3000
+		return Math.min(Math.max(value, -3000), 3000);
 	}
 
 	/**
@@ -956,10 +939,8 @@ class MapScanner extends TileBehavior
 	 */
 	int evalIndustrial(int traf)
 	{
-		if (traf < 0)
-			return -1000;
-		else
-			return 0;
+		// traffic less important for industry
+		return traf / 3;
 	}
 
 	/**
@@ -970,21 +951,15 @@ class MapScanner extends TileBehavior
 	 */
 	int evalResidential(int traf)
 	{
-		if (traf < 0)
-			return -3000;
-
 		int value = city.getLandValue(xpos, ypos);
 		value -= city.pollutionMem[ypos/2][xpos/2];
+		value *= 32;
+		value -= 3000;
 
-		if (value < 0)
-			value = 0;    //cap at 0
-		else
-			value *= 32;
+		value += traf;
 
-		if (value > 6000)
-			value = 6000; //cap at 6000
-
-		return value - 3000;
+		// clamp result between -3000 and 3000
+		return Math.min(Math.max(value, -3000), 3000);
 	}
 
 	/**
@@ -1085,7 +1060,7 @@ class MapScanner extends TileBehavior
 	}
 
 	/**
-	 * @return 1 if traffic "passed", 0 if traffic "failed", -1 if no roads found
+	 * @return the revenue less expenses for living in this zone
 	 */
 	int makeTraffic(ZoneType zoneType, int pop)
 	{
@@ -1095,26 +1070,29 @@ class MapScanner extends TileBehavior
 		int slot = (city.cityTime + xpos + ypos) % JOB_SLOT_COUNT;
 		int count = (pop + JOB_SLOT_COUNT - slot - 1) / JOB_SLOT_COUNT;
 
-		int cost = 0;
+		int earnings = 50; //base earnings
 		switch (zoneType) {
 		case RESIDENTIAL:
-			cost += seekJob(traffic, TrafficType.RETAIL, slot, count);
+			earnings += getLaborPrice(xpos, ypos);
+			earnings -= seekJob(traffic, TrafficType.RETAIL, slot, count);
 			break;
 
 		case COMMERCIAL:
-			cost += seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
-			cost += seekJob(traffic, TrafficType.WHOLESALE, slot, count);
-			cost /= 2;
+			earnings += getGoodsPrice(xpos, ypos);
+			earnings -= seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
+			earnings -= seekJob(traffic, TrafficType.WHOLESALE, slot, count);
 			break;
 
 		case INDUSTRIAL:
-			cost += seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
+			earnings += getResourcePrice(xpos, ypos);
+			earnings -= seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
 			break;
 		}
 
-		return cost < 50 ? 1 :         //traffic good
-			cost < MAX_COST ? 0 :  //traffic bad
-			-1;                    //  no routes found
+		int oldEarnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
+		int newEarnings = (oldEarnings * 3 + earnings) / 4;
+		city.setTileExtra(xpos, ypos, "earnings", Integer.toString(newEarnings));
+		return newEarnings;
 	}
 
 	static final int MAX_COST = 256;
