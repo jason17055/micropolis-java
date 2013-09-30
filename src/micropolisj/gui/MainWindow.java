@@ -1116,6 +1116,19 @@ public class MainWindow extends JFrame
 
 		ZoneStatus z = engine.queryZoneStatus(xpos, ypos);
 		notificationPane.showZoneStatus(engine, xpos, ypos, z);
+
+		CityLocation loc = new CityLocation(xpos, ypos);
+		System.out.println("=="+loc+"==");
+		String x2 = engine.getTileExtra(xpos, ypos, "wage");
+		if (x2 != null) {
+			System.out.println("wage: "+x2);
+		}
+		engine.debugZoneConnections(loc);
+
+		int trf = engine.getTrafficDensity(xpos, ypos);
+		if (trf != 0) {
+			System.out.println("traffic: "+trf);
+		}
 	}
 
 	private void doZoom(int dir, Point mousePt)
