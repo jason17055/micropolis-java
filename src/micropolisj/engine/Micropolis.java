@@ -64,7 +64,7 @@ public class Micropolis
 	public int [][] popDensity;
 
 	/**
-	 * For each 2x2 section of the city, the traffic density (0-255).
+	 * For each tile of the city, the traffic density (0-255).
 	 * If less than 64, no cars are animated.
 	 * If between 64 and 192, then the "light traffic" animation is used.
 	 * If 192 or higher, then the "heavy traffic" animation is used.
@@ -287,6 +287,7 @@ public class Micropolis
 	{
 		map = new char[height][width];
 		powerMap = new boolean[height][width];
+		trfDensity = new int[height][width];
 
 		int hX = (width+1)/2;
 		int hY = (height+1)/2;
@@ -295,7 +296,6 @@ public class Micropolis
 		pollutionMem = new int[hY][hX];
 		crimeMem = new int[hY][hX];
 		popDensity = new int[hY][hX];
-		trfDensity = new int[hY][hX];
 
 		int qX = (width+3)/4;
 		int qY = (height+3)/4;
@@ -1190,13 +1190,13 @@ public class Micropolis
 	}
 
 	/**
-	 * Increase the traffic-density measurement at a particular
+	 * Adjust the traffic-density measurement at a particular
 	 * spot.
 	 * @param traffic the amount to add to the density
 	 */
 	void addTraffic(int mapX, int mapY, int traffic)
 	{
-		int z = trfDensity[mapY/2][mapX/2];
+		int z = trfDensity[mapY][mapX];
 		z += traffic;
 
 		//FIXME- why is this only capped to 240
@@ -1216,7 +1216,7 @@ public class Micropolis
 			}
 		}
 
-		trfDensity[mapY/2][mapX/2] = z;
+		trfDensity[mapY][mapX] = z;
 	}
 
 	/** Accessor method for fireRate[]. */
@@ -1239,7 +1239,7 @@ public class Micropolis
 	public int getTrafficDensity(int xpos, int ypos)
 	{
 		if (testBounds(xpos, ypos)) {
-			return trfDensity[ypos/2][xpos/2];
+			return trfDensity[ypos][xpos];
 		} else {
 			return 0;
 		}
