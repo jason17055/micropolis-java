@@ -776,6 +776,7 @@ public class Micropolis
 			if (scycle % 5 == 0) {  // every ~10 weeks
 				decROGMem();
 			}
+			checkTrafficDensity();
 			fireMapOverlayDataChanged(MapState.TRAFFIC_OVERLAY); //TDMAP
 			fireMapOverlayDataChanged(MapState.TRANSPORT);       //RDMAP
 			fireMapOverlayDataChanged(MapState.ALL);             //ALMAP
@@ -810,6 +811,47 @@ public class Micropolis
 
 		default:
 			throw new Error("unreachable");
+		}
+	}
+
+	private void checkTrafficDensity()
+	{
+		int width = getWidth();
+		int height = getHeight();
+
+		int [][] oldMap = trfDensity;
+		trfDensity = new int[height][width];
+
+		for (Traffic t : connections) {
+			applyTraffic(t.from, t.pathTaken, t.count);
+		}
+
+		CityLocation worstTraffic = null;
+		int worstTrafficLevel = 0;
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if (trfDensity[y][x] != oldMap[y][x]) {
+					System.out.println(new CityLocation(x,y) + ": traffic was "+oldMap[y][x]+" but should be "+trfDensity[y][x]);
+				}
+				if (trfDensity[y][x] > worstTrafficLevel) {
+					worstTrafficLevel = trfDensity[y][x];
+					worstTraffic = new CityLocation(x,y);
+				}
+			}
+		}
+
+		if (worstTrafficLevel > 240 && worstTraffic != null && PRNG.nextInt(6) == 0)
+		{
+			trafficMaxLocationX = worstTraffic.x;
+			trafficMaxLocationY = worstTraffic.y;
+
+			HelicopterSprite copter = (HelicopterSprite) getSprite(SpriteKind.COP);
+			if (copter != null) {
+				copter.destX = worstTraffic.x;
+				copter.destY = worstTraffic.y;
+			}
 		}
 	}
 
@@ -1222,24 +1264,6 @@ public class Micropolis
 	{
 		int z = trfDensity[mapY][mapX];
 		z += traffic;
-
-		//FIXME- why is this only capped to 240
-		// by random chance. why is there no cap
-		// the rest of the time?
-
-		if (z > 240 && PRNG.nextInt(6) == 0)
-		{
-			z = 240;
-			trafficMaxLocationX = mapX;
-			trafficMaxLocationY = mapY;
-
-			HelicopterSprite copter = (HelicopterSprite) getSprite(SpriteKind.COP);
-			if (copter != null) {
-				copter.destX = mapX;
-				copter.destY = mapY;
-			}
-		}
-
 		trfDensity[mapY][mapX] = z;
 	}
 
