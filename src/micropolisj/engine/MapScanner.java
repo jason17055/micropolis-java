@@ -456,7 +456,8 @@ class MapScanner extends TileBehavior
 		}
 		else
 		{
-			trafficModifier = 0;
+			int earnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
+			trafficModifier = earnings * 60;
 		}
 
 		if (PRNG.nextInt(8) == 0)
@@ -506,7 +507,8 @@ class MapScanner extends TileBehavior
 		}
 		else
 		{
-			trafficModifier = 0;
+			int earnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
+			trafficModifier = earnings * 60;
 		}
 
 		if (PRNG.nextInt(8) == 0)
@@ -565,7 +567,8 @@ class MapScanner extends TileBehavior
 		}
 		else
 		{
-			trafficModifier = 0;
+			int earnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
+			trafficModifier = earnings * 60;
 		}
 
 		if (tile == RESCLR || PRNG.nextInt(8) == 0)
