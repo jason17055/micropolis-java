@@ -214,11 +214,32 @@ public class Micropolis
 		assert conn.to != null;
 		assert conn.type != null;
 		connections.add(conn);
+		applyTraffic(conn.from, conn.pathTaken, conn.count);
+	}
+
+	void applyTraffic(CityLocation srcLoc, int [] path, int delta)
+	{
+		int x = srcLoc.x;
+		int y = srcLoc.y;
+		for (int i = 0; i < path.length; i++) {
+			switch(path[i]) {
+			case Traffic.EAST: x++; break;
+			case Traffic.SOUTH: y++; break;
+			case Traffic.WEST: x--; break;
+			case Traffic.NORTH: y--; break;
+			default: throw new Error("invalid direction");
+			}
+			if (testBounds(x,y)) {
+				addTraffic(x, y, delta);
+			}
+		}
 	}
 
 	public void removeConnection(Traffic conn)
 	{
-		connections.remove(conn);
+		if (connections.remove(conn)) {
+			applyTraffic(conn.from, conn.pathTaken, -conn.count);
+		}
 	}
 
 	/**
@@ -231,6 +252,7 @@ public class Micropolis
 		{
 			Traffic t = it.next();
 			if (loc.equals(t.from) || loc.equals(t.to)) {
+				applyTraffic(t.from, t.pathTaken, -t.count);
 				it.remove();
 			}
 		}
