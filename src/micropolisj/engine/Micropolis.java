@@ -754,7 +754,6 @@ public class Micropolis
 			if (scycle % 5 == 0) {  // every ~10 weeks
 				decROGMem();
 			}
-			decTrafficMem();
 			fireMapOverlayDataChanged(MapState.TRAFFIC_OVERLAY); //TDMAP
 			fireMapOverlayDataChanged(MapState.TRANSPORT);       //RDMAP
 			fireMapOverlayDataChanged(MapState.ALL);             //ALMAP
@@ -943,27 +942,6 @@ public class Micropolis
 						rateOGMem[y][x] = -200;
 					}
 					continue;
-				}
-			}
-		}
-	}
-
-	//tends to empty trfDensity
-	private void decTrafficMem()
-	{
-		for (int y = 0; y < trfDensity.length; y++)
-		{
-			for (int x = 0; x < trfDensity[y].length; x++)
-			{
-				int z = trfDensity[y][x];
-				if (z != 0)
-				{
-					if (z > 200)
-						trfDensity[y][x] = z - 34;
-					else if (z > 24)
-						trfDensity[y][x] = z - 24;
-					else
-						trfDensity[y][x] = 0;
 				}
 			}
 		}
