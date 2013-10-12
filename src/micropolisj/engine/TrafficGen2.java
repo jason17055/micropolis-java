@@ -135,14 +135,14 @@ public class TrafficGen2
 			if (getDist(cur.xpos, cur.ypos) != cur.distance)
 				continue; //already visited
 
-			tryNeighbor(cur.distance, cur.xpos+1, cur.ypos,   WEST);
-			tryNeighbor(cur.distance, cur.xpos,   cur.ypos+1, NORTH);
-			tryNeighbor(cur.distance, cur.xpos-1, cur.ypos,   EAST);
-			tryNeighbor(cur.distance, cur.xpos,   cur.ypos-1, SOUTH);
+			tryNeighbor(cur, cur.xpos+1, cur.ypos,   WEST);
+			tryNeighbor(cur, cur.xpos,   cur.ypos+1, NORTH);
+			tryNeighbor(cur, cur.xpos-1, cur.ypos,   EAST);
+			tryNeighbor(cur, cur.xpos,   cur.ypos-1, SOUTH);
 		}
 	}
 
-	void tryNeighbor(int dist, int x, int y, int cameFrom)
+	void tryNeighbor(Path cur, int x, int y, int cameFrom)
 	{
 		if (!city.testBounds(x,y))
 			return;
@@ -155,12 +155,25 @@ public class TrafficGen2
 		if (y - origin.y > MAX_DIST)
 			return;
 
-		char tile = city.getTile(x, y);
+		int dist = cur.distance;
+		char fromTile = city.getTile(cur.xpos, cur.ypos);
+		char toTile = city.getTile(x, y);
+
 		int adist;
-		if (isRoad(tile)) {
+		if (isRoad(toTile)) {
+			int congestion = city.getTrafficDensity(x, y);
+			adist = dist + (
+				congestion < 128 ? 1 :
+				congestion < 192 ? 2 :
+				congestion < 256 ? 4 :
+				congestion < 384 ? 6 :
+				8);
+		} else if (isRail(toTile)) {
 			adist = dist + 1;
-		} else {
+		} else if (!isOverWater(toTile)) {
 			adist = dist + 8;
+		} else {
+			adist = Integer.MAX_VALUE;
 		}
 
 		if (adist < getDist(x, y)) {
