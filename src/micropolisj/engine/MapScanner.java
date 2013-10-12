@@ -1022,8 +1022,7 @@ class MapScanner extends TileBehavior
 
 	boolean hasResources(int x, int y)
 	{
-		int tile = city.getTile(x, y);
-		return (isZoneCenter(tile) && isIndustrialZone(tile));
+		return city.getTileExtra(x, y, "resourcePrice") != null;
 	}
 
 	int getResourcePrice(int x, int y)
@@ -1036,8 +1035,7 @@ class MapScanner extends TileBehavior
 
 	boolean hasLabor(int x, int y)
 	{
-		int tile = city.getTile(x, y);
-		return (isZoneCenter(tile) && isResidentialZoneAny(tile));
+		return city.getTileExtra(x, y, "laborPrice") != null;
 	}
 
 	int getLaborPrice(int x, int y)
@@ -1050,8 +1048,7 @@ class MapScanner extends TileBehavior
 
 	boolean hasGoods(int x, int y)
 	{
-		int tile = city.getTile(x, y);
-		return (isZoneCenter(tile) && isCommercialZone(tile));
+		return city.getTileExtra(x, y, "goodsPrice") != null;
 	}
 
 	int getGoodsPrice(int x, int y)
