@@ -133,8 +133,10 @@ public class TrafficGen2
 		else {
 			for (int y = origin.y-1; y < origin.y-1+bi.height; y++) {
 				for (int x = origin.x-1; x < origin.x-1+bi.width; x++) {
-					Q.add(new Path(x, y, 0));
-					setDist(x, y, 0);
+					if (isIntactPartOf(x, y, origin.x, origin.y)) {
+						Q.add(new Path(x, y, 0));
+						setDist(x, y, 0);
+					}
 				}
 			}
 		}
@@ -186,11 +188,29 @@ public class TrafficGen2
 		else {
 			for (int y = ypos-1; y < ypos-1+bi.height; y++) {
 				for (int x = xpos-1; x < xpos-1+bi.width; x++) {
-					best = Math.min(best, getDist(x, y));
+					if (isIntactPartOf(x, y, xpos, ypos)) {
+						best = Math.min(best, getDist(x, y));
+					}
 				}
 			}
 			setDist(xpos, ypos, best);
 		}
+	}
+
+	boolean isIntactPartOf(int x, int y, int xpos, int ypos)
+	{
+		if (x == xpos && y == ypos) {
+			return true;
+		}
+
+		int myTile = city.getTile(x, y) & LOMASK;
+		int baseTile = city.getTile(xpos, ypos) & LOMASK;
+
+		TileSpec ts = Tiles.get(myTile);
+		return (ts.owner != null &&
+			ts.owner.tileNumber == baseTile &&
+			ts.ownerOffsetX == x - xpos &&
+			ts.ownerOffsetY == y - ypos);
 	}
 
 	void tryNeighbor(Path cur, int x, int y, int cameFrom)
