@@ -1129,6 +1129,17 @@ public class MainWindow extends JFrame
 		if (trf != 0) {
 			System.out.println("traffic: "+trf);
 		}
+
+		TrafficGen2 traf = new TrafficGen2(engine, loc);
+		traf.prepare();
+		for (int y = ypos-10; y <= ypos+10; y++) {
+			for (int x = xpos-10; x <= xpos+10; x++) {
+				System.out.printf("%3x",
+					traf.getDist(x,y) % 0x100
+					);
+			}
+			System.out.println();
+		}
 	}
 
 	private void doZoom(int dir, Point mousePt)
