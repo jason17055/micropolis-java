@@ -158,6 +158,39 @@ public class TrafficGen2
 			tryNeighbor(cur, cur.xpos-1, cur.ypos,   EAST);
 			tryNeighbor(cur, cur.xpos,   cur.ypos-1, SOUTH);
 		}
+
+		adjustEndZoneDistances();
+	}
+
+	void adjustEndZoneDistances()
+	{
+		for (int y = origin.y - MAX_DIST; y <= origin.y + MAX_DIST; y++) {
+			for (int x = origin.x - MAX_DIST; x <= origin.x + MAX_DIST; x++) {
+				if (city.testBounds(x,y) && isZoneCenter(city.getTile(x, y))) {
+					adjustEndZoneDistance(x, y);
+				}
+			}
+		}
+	}
+
+	void adjustEndZoneDistance(int xpos, int ypos)
+	{
+		int best = Integer.MAX_VALUE;
+
+		int baseTile = city.getTile(xpos, ypos) & LOMASK;
+		TileSpec.BuildingInfo bi = Tiles.get(baseTile).getBuildingInfo();
+
+		if (bi == null) {
+			return;
+		}
+		else {
+			for (int y = ypos-1; y < ypos-1+bi.height; y++) {
+				for (int x = xpos-1; x < xpos-1+bi.width; x++) {
+					best = Math.min(best, getDist(x, y));
+				}
+			}
+			setDist(xpos, ypos, best);
+		}
 	}
 
 	void tryNeighbor(Path cur, int x, int y, int cameFrom)
