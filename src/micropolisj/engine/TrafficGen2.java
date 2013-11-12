@@ -121,13 +121,31 @@ public class TrafficGen2
 		dist[MAX_DIST + dy][MAX_DIST + dx] = d;
 	}
 
+	void setStartingZone()
+	{
+		int baseTile = city.getTile(origin.x, origin.y) & LOMASK;
+		TileSpec.BuildingInfo bi = Tiles.get(baseTile).getBuildingInfo();
+
+		if (bi == null) {
+			Q.add(new Path(origin.x, origin.y, 0));
+			setDist(origin.x, origin.y, 0);
+		}
+		else {
+			for (int y = origin.y-1; y < origin.y-1+bi.height; y++) {
+				for (int x = origin.x-1; x < origin.x-1+bi.width; x++) {
+					Q.add(new Path(x, y, 0));
+					setDist(x, y, 0);
+				}
+			}
+		}
+	}
+
 	public void prepare()
 	{
 		Q.clear();
-		Q.add(new Path(origin.x, origin.y, 0));
 
 		resetDist();
-		setDist(origin.x, origin.y, 0);
+		setStartingZone();
 
 		while (!Q.isEmpty())
 		{
