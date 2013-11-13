@@ -641,7 +641,7 @@ class MapScanner extends TileBehavior
 		}
 		if (behavior == B.COMMERCIAL) {
 			int demand = countIncomingTraffic(TrafficType.RETAIL);
-			int supply = tpop*2;
+			int supply = tpop*COM_FACTOR;
 			if (demand != supply) {
 				int adj = supply < demand ? 1 : -1;
 				int price = city.getTileExtraInt(xpos, ypos, "goodsPrice", 0);
@@ -660,6 +660,9 @@ class MapScanner extends TileBehavior
 			}
 		}
 	}
+
+	/** Indicates how many residences each commercial zone supplies. */
+	static final int COM_FACTOR = 2;
 
 	/**
 	 * Consider the value of building a single-lot house at certain
@@ -1078,7 +1081,7 @@ class MapScanner extends TileBehavior
 			break;
 
 		case COMMERCIAL:
-			earnings += getGoodsPrice(xpos, ypos);
+			earnings += COM_FACTOR * getGoodsPrice(xpos, ypos);
 			earnings -= seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
 			earnings -= seekJob(traffic, TrafficType.WHOLESALE, slot, count);
 			break;
