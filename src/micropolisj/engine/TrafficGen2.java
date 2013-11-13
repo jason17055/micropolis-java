@@ -129,17 +129,43 @@ public class TrafficGen2
 		if (bi == null) {
 			Q.add(new Path(origin.x, origin.y, 0));
 			setDist(origin.x, origin.y, 0);
+			return;
 		}
-		else {
-			for (int y = origin.y-1; y < origin.y-1+bi.height; y++) {
-				for (int x = origin.x-1; x < origin.x-1+bi.width; x++) {
-					if (isIntactPartOf(x, y, origin.x, origin.y)) {
-						Q.add(new Path(x, y, 0));
-						setDist(x, y, 0);
-					}
-				}
+
+		setDist(origin.x, origin.y, 0);
+
+		ArrayDeque<CityLocation> aQ = new ArrayDeque<CityLocation>();
+		aQ.add(origin);
+		while (!aQ.isEmpty()) {
+			CityLocation l = aQ.remove();
+			Q.add(new Path(l.x, l.y, 0));
+
+			//west
+			if (l.x-1 >= origin.x-1 && isIntactPartOf(l.x-1,l.y, origin.x, origin.y) && getDist(l.x-1, l.y) != 0) {
+				setCameFrom(l.x-1, l.y, EAST);
+				setDist(l.x-1, l.y, 0);
+				aQ.add(new CityLocation(l.x-1, l.y));
+			}
+			//east
+			if (l.x+1 < origin.x-1+bi.width && isIntactPartOf(l.x+1,l.y,origin.x, origin.y) && getDist(l.x+1, l.y) != 0) {
+				setCameFrom(l.x+1, l.y, WEST);
+				setDist(l.x+1, l.y, 0);
+				aQ.add(new CityLocation(l.x+1, l.y));
+			}
+			//north
+			if (l.y-1 >= origin.y-1 && isIntactPartOf(l.x, l.y-1, origin.x, origin.y) && getDist(l.x, l.y-1) != 0) {
+				setCameFrom(l.x, l.y-1, SOUTH);
+				setDist(l.x, l.y-1, 0);
+				aQ.add(new CityLocation(l.x, l.y-1));
+			}
+			//south
+			if (l.y+1 < origin.y-1+bi.height && isIntactPartOf(l.x, l.y+1, origin.x, origin.y) && getDist(l.x, l.y+1) != 0) {
+				setCameFrom(l.x, l.y+1, NORTH);
+				setDist(l.x, l.y+1, 0);
+				aQ.add(new CityLocation(l.x, l.y+1));
 			}
 		}
+		return;
 	}
 
 	public void prepare()
