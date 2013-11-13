@@ -1077,7 +1077,8 @@ class MapScanner extends TileBehavior
 		switch (zoneType) {
 		case RESIDENTIAL:
 			earnings += getLaborPrice(xpos, ypos);
-			earnings -= seekJob(traffic, TrafficType.RETAIL, slot, count);
+			int resPop = city.history.res[0] * 8;
+			earnings -= seekJob(traffic, TrafficType.RETAIL, slot, count, Math.min(resPop * 3 / 8, MAX_COST));
 			break;
 
 		case COMMERCIAL:
@@ -1100,13 +1101,20 @@ class MapScanner extends TileBehavior
 
 	static final int MAX_COST = 256;
 
+	private int seekJob(TrafficGen2 traffic, TrafficType connType,
+			int slot, int count)
+	{
+		return seekJob(traffic, connType, slot, count, MAX_COST);
+	}
+
 	/**
 	 * Given a traffic map analysis, generate a route of a particular type,
 	 * and add traffic onto the city map.
-	 * @return the COST of the route (or MAX_COST if no route found)
+	 * @param maxCost the maximum destination cost tolerated
+	 * @return the COST of the route (or maxCost if no route found)
 	 */
 	private int seekJob(TrafficGen2 traffic, TrafficType connType,
-			int slot, int count)
+			int slot, int count, int maxCost)
 	{
 		TrafficGen2.FitnessFunction f;
 		switch (connType) {
@@ -1148,8 +1156,8 @@ class MapScanner extends TileBehavior
 		{
 			// keep old job, assuming there's still a path to get there
 			double x = f.fitness(conn.to.x, conn.to.y, traffic.getDist(conn.to.x, conn.to.y));
-			int pathCost = (int)Math.round(Math.min(-Math.log(x), MAX_COST));
-			if (pathCost < MAX_COST) {
+			int pathCost = (int)Math.round(Math.min(-Math.log(x), maxCost));
+			if (pathCost < maxCost) {
 				// keep old job, but still update how to get there
 				city.applyTraffic(conn.from, conn.pathTaken, -conn.count);
 				conn.pathTaken = traffic.getPathTo(conn.to);
@@ -1166,15 +1174,15 @@ class MapScanner extends TileBehavior
 		CityLocation employer = traffic.findBest(f);
 		if (employer != null && count != 0) {
 			double x = f.fitness(employer.x, employer.y, traffic.getDist(employer.x, employer.y));
-			int pathCost = (int)Math.round(Math.min(-Math.log(x), MAX_COST));
-			if (pathCost < MAX_COST) {
+			int pathCost = (int)Math.round(Math.min(-Math.log(x), maxCost));
+			if (pathCost < maxCost) {
 				setJob(connType, slot, count, employer, traffic.getPathTo(employer));
 				return pathCost;
 			}
 		}
 
 		// no supply found, set cost to ~infinite
-		return MAX_COST;
+		return maxCost;
 	}
 
 	static final int JOB_SLOT_COUNT = 4;
