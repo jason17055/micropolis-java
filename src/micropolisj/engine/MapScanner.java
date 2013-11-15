@@ -1131,6 +1131,8 @@ class MapScanner extends TileBehavior
 			public double fitness(int xpos, int ypos, int dist) {
 				return hasGoods(xpos, ypos) ?
 					Math.exp(-(dist + getGoodsPrice(xpos, ypos))) :
+					hasResources(xpos, ypos) ?
+					Math.exp(-(dist + 15 + getResourcePrice(xpos, ypos))) :
 					0.0;
 			}};
 			break;
