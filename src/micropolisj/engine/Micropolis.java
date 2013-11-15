@@ -17,6 +17,7 @@ import java.util.zip.GZIPOutputStream;
 import javax.xml.stream.*;
 
 import static micropolisj.engine.TileConstants.*;
+import static micropolisj.engine.Traffic.TrafficType;
 
 /**
  * The main simulation engine for Micropolis.
@@ -205,6 +206,48 @@ public class Micropolis
 	static final int TAXFREQ = 48;
 
 	Map<CityLocation, Map<String,String> > extraData = new HashMap<CityLocation, Map<String,String> >();
+	Collection<Traffic> connections = new ArrayList<Traffic>();
+
+	public void addConnection(Traffic conn)
+	{
+		assert conn.from != null;
+		assert conn.to != null;
+		assert conn.type != null;
+		connections.add(conn);
+	}
+
+	public void removeConnection(Traffic conn)
+	{
+		connections.remove(conn);
+	}
+
+	public Collection<Traffic> enumIncomingConnections(CityLocation destLoc, TrafficType type)
+	{
+		ArrayList<Traffic> rv = new ArrayList<Traffic>();
+		for (Traffic zc : connections)
+		{
+			if (zc.to.equals(destLoc) &&
+				zc.type == type)
+			{
+				rv.add(zc);
+			}
+		}
+		return rv;
+	}
+
+	public Traffic findConnection(CityLocation srcLoc, TrafficType type, int slot)
+	{
+		for (Traffic t : connections)
+		{
+			if (t.from.equals(srcLoc) &&
+				t.type == type &&
+				t.slot == slot)
+			{
+				return t;
+			}
+		}
+		return null;
+	}
 
 	public void spend(int amount)
 	{
