@@ -34,4 +34,29 @@ public class Traffic
 		this.from = from;
 		this.to = to;
 	}
+
+	public static int [] parsePath(String s)
+	{
+		int [] els = new int[s.length()];
+		for (int i = 0; i < els.length; i++) {
+			char c = s.charAt(i);
+			els[i] = c == 'E' ? EAST :
+				c == 'W' ? WEST :
+				c == 'N' ? NORTH :
+				c == 'S' ? SOUTH : 0;
+		}
+		return els;
+	}
+
+	public static String pathAsString(int [] path)
+	{
+		char [] cc = new char[path.length];
+		for (int i = 0; i < path.length; i++) {
+			cc[i] = path[i] == EAST ? 'E' :
+				path[i] == NORTH ? 'N' :
+				path[i] == WEST ? 'W' :
+				path[i] == SOUTH ? 'S' : '?';
+		}
+		return new String(cc);
+	}
 }
