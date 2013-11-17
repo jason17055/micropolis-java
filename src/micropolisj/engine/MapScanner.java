@@ -807,23 +807,38 @@ class MapScanner extends TileBehavior
 
 	void comPlop(int density, int value)
 	{
+		int oldPrice = city.getTileExtraInt(xpos, ypos, "goodsPrice", 0);
+		int oldEarnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
+
 		int base = (value * 5 + density) * 9 + CZB;
 		zonePlop(Tiles.loadByOrdinal(base));
-		city.setTileExtra(xpos, ypos, "goodsPrice", "0");
+
+		city.setTileExtra(xpos, ypos, "goodsPrice", Integer.toString(oldPrice));
+		city.setTileExtra(xpos, ypos, "earnings", Integer.toString(oldEarnings));
 	}
 
 	void indPlop(int density, int value)
 	{
+		int oldPrice = city.getTileExtraInt(xpos, ypos, "resourcePrice", 0);
+		int oldEarnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
+
 		int base = (value * 4 + density) * 9 + IZB;
 		zonePlop(Tiles.loadByOrdinal(base));
-		city.setTileExtra(xpos, ypos, "resourcePrice", "0");
+
+		city.setTileExtra(xpos, ypos, "resourcePrice", Integer.toString(oldPrice));
+		city.setTileExtra(xpos, ypos, "earnings", Integer.toString(oldEarnings));
 	}
 
 	void residentialPlop(int density, int value)
 	{
+		int oldPrice = city.getTileExtraInt(xpos, ypos, "laborPrice", 0);
+		int oldEarnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
+
 		int base = (value * 4 + density) * 9 + RZB;
 		zonePlop(Tiles.loadByOrdinal(base));
-		city.setTileExtra(xpos, ypos, "laborPrice", "0");
+
+		city.setTileExtra(xpos, ypos, "laborPrice", Integer.toString(oldPrice));
+		city.setTileExtra(xpos, ypos, "earnings", Integer.toString(oldEarnings));
 	}
 
 	private void doCommercialOut(int pop, int value)
