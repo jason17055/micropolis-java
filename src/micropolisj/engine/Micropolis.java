@@ -272,6 +272,7 @@ public class Micropolis
 		for (Traffic t : trafficByOrigin.get(loc))
 		{
 			removeTrafficPartialTo(t);
+			applyTraffic(t.from, t.pathTaken, -t.count);
 		}
 		trafficByOrigin.remove(loc);
 	}
@@ -284,6 +285,7 @@ public class Micropolis
 		for (Traffic t : trafficByDest.get(loc))
 		{
 			removeTrafficPartialFrom(t);
+			applyTraffic(t.from, t.pathTaken, -t.count);
 		}
 		trafficByDest.remove(loc);
 	}

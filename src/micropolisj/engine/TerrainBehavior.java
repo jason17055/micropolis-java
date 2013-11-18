@@ -196,8 +196,8 @@ class TerrainBehavior extends TileBehavior
 		}
 
 		int trafficDensity = city.getTrafficDensity(xpos, ypos);
-		int newLevel = trafficDensity < 64 ? 0 :
-			trafficDensity < 192 ? 1 : 2;
+		int newLevel = trafficDensity < 96 ? 0 :
+			trafficDensity < 256 ? 1 : 2;
 		
 		assert newLevel >= 0 && newLevel < TRAFFIC_DENSITY_TAB.length;
 
