@@ -246,6 +246,35 @@ public class Micropolis
 		}
 	}
 
+	public void debugZoneConnections(CityLocation loc)
+	{
+		Collection<Traffic> col1 = trafficByOrigin.get(loc);
+		if (col1 != null) {
+
+		for (Traffic t : col1) {
+			System.out.print(" => "+t.to);
+			System.out.print(" ("+t.slot+")");
+			System.out.print(" "+t.count);
+			System.out.print(" "+t.type);
+			System.out.println(" ("+Traffic.pathAsString(t.pathTaken)+")");
+		}
+
+		}
+
+		Collection<Traffic> col2 = trafficByDest.get(loc);
+		if (col2 != null) {
+
+		for (Traffic t : col2) {
+			System.out.print(" <= "+t.from);
+			System.out.print(" ("+t.slot+")");
+			System.out.print(" "+t.count);
+			System.out.print(" "+t.type);
+			System.out.println(" ("+Traffic.pathAsString(t.pathTaken)+")");
+		}
+
+		}
+	}
+
 	public void removeConnection(Traffic conn)
 	{
 		if (removeTrafficPartialFrom(conn)
