@@ -206,14 +206,25 @@ public class Micropolis
 	static final int TAXFREQ = 48;
 
 	Map<CityLocation, Map<String,String> > extraData = new HashMap<CityLocation, Map<String,String> >();
-	Collection<Traffic> connections = new ArrayList<Traffic>();
+	Map<CityLocation, Collection<Traffic> > trafficByOrigin = new HashMap<CityLocation, Collection<Traffic> >();
+	Map<CityLocation, Collection<Traffic> > trafficByDest = new HashMap<CityLocation, Collection<Traffic> >();
 
 	public void addConnection(Traffic conn)
 	{
 		assert conn.from != null;
 		assert conn.to != null;
 		assert conn.type != null;
-		connections.add(conn);
+
+		if (!trafficByOrigin.containsKey(conn.from)) {
+			trafficByOrigin.put(conn.from, new ArrayList<Traffic>());
+		}
+		trafficByOrigin.get(conn.from).add(conn);
+
+		if (!trafficByDest.containsKey(conn.to)) {
+			trafficByDest.put(conn.to, new ArrayList<Traffic>());
+		}
+		trafficByDest.get(conn.to).add(conn);
+
 		applyTraffic(conn.from, conn.pathTaken, conn.count);
 	}
 
@@ -237,7 +248,9 @@ public class Micropolis
 
 	public void removeConnection(Traffic conn)
 	{
-		if (connections.remove(conn)) {
+		if (removeTrafficPartialFrom(conn)
+			&& removeTrafficPartialTo(conn))
+		{
 			applyTraffic(conn.from, conn.pathTaken, -conn.count);
 		}
 	}
@@ -247,40 +260,95 @@ public class Micropolis
 	 */
 	void removeTrafficWithEndpoint(CityLocation loc)
 	{
-		for (Iterator<Traffic> it = connections.iterator();
-				it.hasNext(); )
+		removeTrafficFrom(loc);
+		removeTrafficTo(loc);
+	}
+
+	private void removeTrafficFrom(CityLocation loc)
+	{
+		if (!trafficByOrigin.containsKey(loc))
+			return;
+
+		for (Traffic t : trafficByOrigin.get(loc))
 		{
-			Traffic t = it.next();
-			if (loc.equals(t.from) || loc.equals(t.to)) {
-				applyTraffic(t.from, t.pathTaken, -t.count);
-				it.remove();
+			removeTrafficPartialTo(t);
+		}
+		trafficByOrigin.remove(loc);
+	}
+
+	private void removeTrafficTo(CityLocation loc)
+	{
+		if (!trafficByDest.containsKey(loc))
+			return;
+
+		for (Traffic t : trafficByDest.get(loc))
+		{
+			removeTrafficPartialFrom(t);
+		}
+		trafficByDest.remove(loc);
+	}
+
+	private boolean removeTrafficPartialFrom(Traffic t)
+	{
+		Collection<Traffic> col = trafficByOrigin.get(t.from);
+		if (col != null) {
+			boolean found = col.remove(t);
+			if (col.isEmpty()) {
+				trafficByOrigin.remove(t.from);
 			}
+			return found;
+		}
+		else {
+			return false;
+		}
+	}
+
+	private boolean removeTrafficPartialTo(Traffic t)
+	{
+		Collection<Traffic> col = trafficByDest.get(t.to);
+		if (col != null) {
+			boolean found = col.remove(t);
+			if (col.isEmpty()) {
+				trafficByDest.remove(t.to);
+			}
+			return found;
+		}
+		else {
+			return false;
 		}
 	}
 
 	public Collection<Traffic> enumIncomingConnections(CityLocation destLoc, TrafficType type)
 	{
 		ArrayList<Traffic> rv = new ArrayList<Traffic>();
-		for (Traffic zc : connections)
-		{
-			if (zc.to.equals(destLoc) &&
-				zc.type == type)
+
+		Collection<Traffic> col = trafficByDest.get(destLoc);
+		if (col != null) {
+			for (Traffic zc : col)
 			{
-				rv.add(zc);
+				assert zc.to.equals(destLoc);
+
+				if (zc.type == type)
+				{
+					rv.add(zc);
+				}
 			}
 		}
+
 		return rv;
 	}
 
 	public Traffic findConnection(CityLocation srcLoc, TrafficType type, int slot)
 	{
-		for (Traffic t : connections)
-		{
-			if (t.from.equals(srcLoc) &&
-				t.type == type &&
-				t.slot == slot)
-			{
-				return t;
+		Collection<Traffic> col = trafficByOrigin.get(srcLoc);
+		if (col != null) {
+			for (Traffic t : col) {
+				assert t.from.equals(srcLoc);
+
+				if (t.type == type && t.slot == slot)
+				{
+					return t;
+				}
 			}
 		}
 		return null;
@@ -820,8 +888,10 @@ public class Micropolis
 		int [][] oldMap = trfDensity;
 		trfDensity = new int[height][width];
 
-		for (Traffic t : connections) {
-			applyTraffic(t.from, t.pathTaken, t.count);
+		for (Collection<Traffic> col : trafficByOrigin.values()) {
+			for (Traffic t : col) {
+				applyTraffic(t.from, t.pathTaken, t.count);
+			}
 		}
 
 		CityLocation worstTraffic = null;
