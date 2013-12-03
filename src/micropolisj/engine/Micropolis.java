@@ -2178,21 +2178,6 @@ public class Micropolis
 			for (int x = 0; x < DEFAULT_WIDTH; x++)
 			{
 				int z = map[y][x];
-				if (isConductive(z & LOMASK)) {
-					z |= 16384;  //synthesize CONDBIT on export
-				}
-				if (isCombustible(z & LOMASK)) {
-					z |= 8192;   //synthesize BURNBIT on export
-				}
-				if (isTileDozeable(x, y)) {
-					z |= 4096;   //synthesize BULLBIT on export
-				}
-				if (isAnimated(z & LOMASK)) {
-					z |= 2048;   //synthesize ANIMBIT on export
-				}
-				if (isZoneCenter(z & LOMASK)) {
-					z |= 1024;   //synthesize ZONEBIT
-				}
 				if (x != 0) {
 					out.writeCharacters(" ");
 				}
