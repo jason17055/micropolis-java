@@ -98,6 +98,9 @@ public class ToolStroke
 		case AIRPORT:
 			return applyZone(eff, AIRPORT);
 
+		case RAIL_CURVE_1:
+			return applyRailZone(eff, 960, 3, 3);
+
 		default:
 			// not expected
 			throw new Error("unexpected tool: "+tool);
@@ -144,6 +147,21 @@ public class ToolStroke
 	public CityLocation getLocation()
 	{
 		return new CityLocation(xpos, ypos);
+	}
+
+	boolean applyRailZone(ToolEffectIfc eff, int baseTile, int width, int height)
+	{
+		int i = baseTile;
+		for (int rowNum = 0; rowNum < height; rowNum++)
+		{
+			for (int columnNum = 0; columnNum < width; columnNum++)
+			{
+				eff.setTile(columnNum, rowNum, (char) i);
+				i++;
+			}
+		}
+
+		return true;
 	}
 
 	boolean applyZone(ToolEffectIfc eff, int base)
