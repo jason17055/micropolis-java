@@ -1010,12 +1010,12 @@
 958   misc_animation@0,2096
 959   misc_animation@0,2112
 # NEW CURVED RAILS #
-960   clear |rails/curves90@0,0
-961   clear |rails/curves90@16,0
-962   clear |rails/curves90@32,0
-963   clear |rails/curves90@0,16
-964   clear |rails/curves90@16,16
-965   clear |rails/curves90@32,16
-966   clear |rails/curves90@0,32
-967   clear |rails/curves90@16,32
-968   clear |rails/curves90@32,32
+960   terrain@0,0 |rails/curves90@0,0
+961   clear       |rails/curves90@16,0
+962   clear       |rails/curves90@32,0
+963   clear       |rails/curves90@0,16
+964   clear       |rails/curves90@16,16
+965   terrain@0,0 |rails/curves90@32,16
+966   clear       |rails/curves90@0,32
+967   terrain@0,0 |rails/curves90@16,32
+968   terrain@0,0 |rails/curves90@32,32
