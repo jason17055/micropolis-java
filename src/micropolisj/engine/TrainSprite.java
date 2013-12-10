@@ -38,6 +38,9 @@ public class TrainSprite extends Sprite
 	static final int DIR_WEST = 3;
 	static final int DIR_NONE = 4; //not moving
 
+	int step;
+	CityLocation loc;
+
 	public TrainSprite(Micropolis engine, int xpos, int ypos)
 	{
 		super(engine, SpriteKind.TRA);
@@ -46,11 +49,33 @@ public class TrainSprite extends Sprite
 		this.offx = -16;
 		this.offy = -16;
 		this.dir = DIR_NONE;   //not moving
+
+		this.step = 0;
+		this.loc = new CityLocation(xpos, ypos);
 	}
 
 	@Override
 	public void moveImpl()
 	{
+		int baseTile = city.getTile(loc.x, loc.y);
+		TileSpec spec = Tiles.get(baseTile);
+		String trackInfo = spec.getAttribute("track");
+
+		if (trackInfo == null) {
+			moveImplOld();
+			return;
+		}
+
+		TrackStep [] track = parseTrackInfo(trackInfo);
+		this.x = loc.x*16 + TRA_GROOVE_X + track[step].offX;
+		this.y = loc.y*16 + TRA_GROOVE_Y + track[step].offY;
+		this.frame = getFrame(track[step].dir);
+
+		this.step = (this.step + 1) % track.length;
+	}
+
+	void moveImplOld()
+	{	
 		if (frame == 3 || frame == 4) {
 			frame = TrainPic2[this.dir];
 		}
@@ -64,6 +89,8 @@ public class TrainSprite extends Sprite
 		// should be at the center of a cell, if not, correct it
 		x = (x/16) * 16 + TRA_GROOVE_X;
 		y = (y/16) * 16 + TRA_GROOVE_Y;
+
+		// pick new direction
 		int d1 = city.PRNG.nextInt(4);
 		for (int z = d1; z < d1 + 4; z++) {
 			int d2 = z % 4;
@@ -94,6 +121,13 @@ public class TrainSprite extends Sprite
 				this.dir = d2;
 				return;
 			}
+			else if (isNewTrack(c)) {
+				enterNewTrack(
+					(this.x + Cx[d2]) / 16,
+					(this.y + Cy[d2]) / 16
+					);
+				return;
+			}
 		}
 		if (this.dir == DIR_NONE) {
 			// train has nowhere to go, so retire
@@ -101,5 +135,56 @@ public class TrainSprite extends Sprite
 			return;
 		}
 		this.dir = DIR_NONE;
+	}
+
+	boolean isNewTrack(int tile)
+	{
+	System.out.println("is tile "+tile+" new track?");
+		TileSpec spec = Tiles.get(tile);
+		if (spec.owner != null) {
+			spec = spec.owner;
+		}
+		return spec.getAttribute("track") != null;
+	}
+
+	void enterNewTrack(int xpos, int ypos)
+	{
+		TileSpec spec = Tiles.get(city.getTile(xpos, ypos));
+		if (spec.owner != null) {
+			xpos -= spec.ownerOffsetX;
+			ypos -= spec.ownerOffsetY;
+			spec = spec.owner;
+		}
+		this.loc = new CityLocation(xpos, ypos);
+	}
+
+	static class TrackStep
+	{
+		int offX;
+		int offY;
+		int dir;
+	}
+
+	TrackStep [] parseTrackInfo(String trackInfo)
+	{
+		String [] parts = trackInfo.split(";");
+		TrackStep [] rv = new TrackStep[parts.length];
+		for (int i = 0; i < parts.length; i++) {
+			rv[i] = new TrackStep();
+			String [] aa = parts[i].split(",");
+			rv[i].offX = Integer.parseInt(aa[0]);
+			rv[i].offY = Integer.parseInt(aa[1]);
+			rv[i].dir = Integer.parseInt(aa[2]);
+		}
+		return rv;
+	}
+
+	int getFrame(int dir)
+	{
+		return
+			dir == 0 ? 2 :
+			dir == 45 ? 4 :
+			dir == 90 ? 1 :
+			dir == 135 ? 3 : 1;
 	}
 }
