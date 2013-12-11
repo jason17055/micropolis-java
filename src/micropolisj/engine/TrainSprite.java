@@ -175,7 +175,7 @@ public class TrainSprite extends Sprite
 				this.dir = d2;
 				return;
 			}
-			else if (isNewTrack(c)) {
+			else if (canEnterNewTrack((this.x + Cx[d2])/16, (this.y + Cy[d2])/16, d2)) {
 				enterNewTrack(
 					(this.x + Cx[d2]) / 16,
 					(this.y + Cy[d2]) / 16
@@ -192,13 +192,32 @@ public class TrainSprite extends Sprite
 		this.dir = DIR_NONE;
 	}
 
-	boolean isNewTrack(int tile)
+	boolean canEnterNewTrack(int xpos, int ypos, int d2)
 	{
-		TileSpec spec = Tiles.get(tile);
+		TileSpec spec = Tiles.get(city.getTile(xpos, ypos));
 		if (spec.owner != null) {
+			xpos -= spec.ownerOffsetX;
+			ypos -= spec.ownerOffsetY;
 			spec = spec.owner;
 		}
-		return spec.getAttribute("track") != null;
+		if (spec.getAttribute("track") == null) {
+			return false;
+		}
+
+		int baseX = xpos * 16 + TRA_GROOVE_X;
+		int baseY = ypos * 16 + TRA_GROOVE_Y;
+
+		TrackStep [] atrack = parseTrackInfo(spec.getAttribute("track"));
+		int xx = this.x + (d2 == DIR_EAST ? 8 : d2 == DIR_WEST ? -8 : 0) - baseX;
+		int yy = this.y + (d2 == DIR_NORTH ? -8 : d2 == DIR_SOUTH ? 8 : 0) - baseY;
+
+		if (atrack[0].offX == xx && atrack[0].offY == yy) {
+			return true;
+		}
+		if (atrack[atrack.length-1].offX == xx && atrack[atrack.length-1].offY == yy) {
+			return true;
+		}
+		return false;
 	}
 
 	void enterNewTrack(int xpos, int ypos)
