@@ -223,9 +223,9 @@ public class TrainSprite extends Sprite
 	int getFrame(int dir)
 	{
 		return
-			dir == 0 ? 2 :
-			dir == 45 ? 4 :
-			dir == 90 ? 1 :
-			dir == 135 ? 3 : 1;
+			dir == 0 ? FRAME_EASTWEST :
+			dir == 45 ? FRAME_SW_NE :
+			dir == 90 ? FRAME_NORTHSOUTH :
+			dir == 135 ? FRAME_NW_SE : 1;
 	}
 }
