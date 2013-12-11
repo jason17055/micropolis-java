@@ -39,7 +39,9 @@ public class TrainSprite extends Sprite
 	static final int DIR_NONE = 4; //not moving
 
 	int step;
+	int stepdir;
 	CityLocation loc;
+	TrackStep [] track;
 
 	public TrainSprite(Micropolis engine, int xpos, int ypos)
 	{
@@ -51,27 +53,55 @@ public class TrainSprite extends Sprite
 		this.dir = DIR_NONE;   //not moving
 
 		this.step = 0;
+		this.stepdir = 1;
 		this.loc = new CityLocation(xpos, ypos);
+		this.frame = 1;
 	}
 
 	@Override
 	public void moveImpl()
 	{
-		int baseTile = city.getTile(loc.x, loc.y);
-		TileSpec spec = Tiles.get(baseTile);
-		String trackInfo = spec.getAttribute("track");
-
-		if (trackInfo == null) {
+		if (this.track == null) {
 			moveImplOld();
 			return;
 		}
 
-		TrackStep [] track = parseTrackInfo(trackInfo);
+		this.step += this.stepdir;
+		setNewTrackPos();
+	}
+
+	void setNewTrackPos()
+	{
+		if (step < 0 || step >= track.length) {
+			// leave tile
+			leaveNewTrack();
+			return;
+		}
+
 		this.x = loc.x*16 + TRA_GROOVE_X + track[step].offX;
 		this.y = loc.y*16 + TRA_GROOVE_Y + track[step].offY;
 		this.frame = getFrame(track[step].dir);
+	}
 
-		this.step = (this.step + 1) % track.length;
+	void leaveNewTrack()
+	{
+		int baseX = loc.x * 16 + TRA_GROOVE_X;
+		int baseY = loc.y * 16 + TRA_GROOVE_Y;
+
+		if (this.x > baseX) {
+			this.dir = 1;
+			this.track = null;
+			this.loc = null;
+			this.step = 2;
+		}
+		else if (this.y > baseY) {
+			this.dir = 2;
+			this.track = null;
+			this.loc = null;
+			this.step = 2;
+		}
+
+		moveImplOld();
 	}
 
 	void moveImplOld()
@@ -81,7 +111,7 @@ public class TrainSprite extends Sprite
 		}
 		x += Dx[this.dir];
 		y += Dy[this.dir];
-		if (city.acycle % 4 != 0) {
+		if (++this.step < 4) {
 			// continue present course
 			return;
 		}
@@ -89,6 +119,7 @@ public class TrainSprite extends Sprite
 		// should be at the center of a cell, if not, correct it
 		x = (x/16) * 16 + TRA_GROOVE_X;
 		y = (y/16) * 16 + TRA_GROOVE_Y;
+		this.step = 0;
 
 		// pick new direction
 		int d1 = city.PRNG.nextInt(4);
@@ -139,7 +170,6 @@ public class TrainSprite extends Sprite
 
 	boolean isNewTrack(int tile)
 	{
-	System.out.println("is tile "+tile+" new track?");
 		TileSpec spec = Tiles.get(tile);
 		if (spec.owner != null) {
 			spec = spec.owner;
@@ -156,6 +186,23 @@ public class TrainSprite extends Sprite
 			spec = spec.owner;
 		}
 		this.loc = new CityLocation(xpos, ypos);
+		this.track = parseTrackInfo(spec.getAttribute("track"));
+
+		int startX = loc.x * 16 + TRA_GROOVE_X + track[0].offX;
+		int startY = loc.y * 16 + TRA_GROOVE_Y + track[0].offY;
+		int endX = loc.x * 16 + TRA_GROOVE_X + track[track.length-1].offX;
+		int endY = loc.y * 16 + TRA_GROOVE_Y + track[track.length-1].offY;
+
+		if (Math.abs(this.x-startX) + Math.abs(this.y-startY) <= Math.abs(this.x-endX) + Math.abs(this.y-endY)) {
+			this.step = 0;
+			this.stepdir = 1;
+			setNewTrackPos();
+		}
+		else {
+			this.step = track.length - 1;
+			this.stepdir = -1;
+			setNewTrackPos();
+		}
 	}
 
 	static class TrackStep
