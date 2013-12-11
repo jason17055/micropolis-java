@@ -67,20 +67,49 @@ public class TrainSprite extends Sprite
 		}
 
 		this.step += this.stepdir;
-		setNewTrackPos();
+		if (stepdir > 0 && step >= track.length) {
+			leaveNewTrack();
+		}
+		else if (stepdir < 0 && step < 0) {
+			leaveNewTrack();
+		}
+		else {
+			setNewTrackPos();
+		}
 	}
 
 	void setNewTrackPos()
 	{
-		if (step < 0 || step >= track.length) {
-			// leave tile
-			leaveNewTrack();
-			return;
+		int offX;
+		int offY;
+		int aDir;
+
+		if (step >= 0 && step < track.length) {
+			aDir = track[step].dir;
+			offX = track[step].offX;
+			offY = track[step].offY;
+		}
+		else if (step < 0) {
+			aDir = track[0].dir;
+			offX = track[0].offX + (aDir == 0 ? 4 : aDir == 180 ? -4 : 0) * (step);
+			offY = track[0].offY + (aDir == 90 ? -4 : aDir == 270 ? 4 : 0) * (step);
+		}
+		else {
+			assert step >= track.length;
+			int z = step+1 - track.length;
+			aDir = track[track.length-1].dir;
+			offX = track[track.length-1].offX + (aDir == 0 ? 4 : aDir == 180 ? -4 : 0) * z;
+			offY = track[track.length-1].offY + (aDir == 90 ? -4 : aDir == 270 ? 4 : 0) * z;
 		}
 
-		this.x = loc.x*16 + TRA_GROOVE_X + track[step].offX;
-		this.y = loc.y*16 + TRA_GROOVE_Y + track[step].offY;
-		this.frame = getFrame(track[step].dir);
+		this.x = loc.x*16 + TRA_GROOVE_X + offX;
+		this.y = loc.y*16 + TRA_GROOVE_Y + offY;
+		this.frame = getFrame(stepdir > 0 ? aDir : oppositeAngle(aDir));
+	}
+
+	int oppositeAngle(int dir)
+	{
+		return (dir+180) % 360;
 	}
 
 	void leaveNewTrack()
@@ -195,12 +224,12 @@ public class TrainSprite extends Sprite
 		int endY = loc.y * 16 + TRA_GROOVE_Y + track[track.length-1].offY;
 
 		if (Math.abs(this.x-startX) + Math.abs(this.y-startY) <= Math.abs(this.x-endX) + Math.abs(this.y-endY)) {
-			this.step = 0;
+			this.step = -2;
 			this.stepdir = 1;
 			setNewTrackPos();
 		}
 		else {
-			this.step = track.length - 1;
+			this.step = track.length - 1 + 2;
 			this.stepdir = -1;
 			setNewTrackPos();
 		}
@@ -230,9 +259,9 @@ public class TrainSprite extends Sprite
 	int getFrame(int dir)
 	{
 		return
-			dir == 0 ? FRAME_EASTWEST :
-			dir == 45 ? FRAME_SW_NE :
-			dir == 90 ? FRAME_NORTHSOUTH :
-			dir == 135 ? FRAME_NW_SE : 1;
+			dir == 0   || dir == 180 ? FRAME_EASTWEST :
+			dir == 45  || dir == 225 ? FRAME_SW_NE :
+			dir == 90  || dir == 270 ? FRAME_NORTHSOUTH :
+			dir == 135 || dir == 315 ? FRAME_NW_SE : 1;
 	}
 }
