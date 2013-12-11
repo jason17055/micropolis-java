@@ -83,13 +83,13 @@ public class TrainSprite extends Sprite
 		int baseY = loc.y * 16 + TRA_GROOVE_Y;
 
 		if (this.x > baseX) {
-			this.dir = 1;
+			this.dir = DIR_EAST;
 			this.track = null;
 			this.loc = null;
 			this.step = 2;
 		}
 		else if (this.y > baseY) {
-			this.dir = 2;
+			this.dir = DIR_SOUTH;
 			this.track = null;
 			this.loc = null;
 			this.step = 2;
@@ -159,6 +159,7 @@ public class TrainSprite extends Sprite
 			this.frame = 0;
 			return;
 		}
+		// stop the train for a moment, before allowing traveling in reverse direction
 		this.dir = DIR_NONE;
 	}
 
