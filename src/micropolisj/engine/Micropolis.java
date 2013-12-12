@@ -2162,10 +2162,23 @@ public class Micropolis
 				String [] s_parts = tmp.get(i).split(":");
 
 				TileSpec t = Tiles.load(s_parts[0]);
+				if (t == null) {
+					throw new XMLStreamException(
+						"Unrecognized tile '"+s_parts[0]+"' at map coordinates ("+i+","+mapList.size()+")",
+						in.getLocation()
+						);
+				}
+
 				int z = t.tileNumber;
 				for (int j = 1; j < s_parts.length; j++) {
 					if (s_parts[j].equals("pwr")) {
 						z |= PWRBIT;
+					}
+					else {
+						throw new XMLStreamException(
+							"Unrecognized tile modifier '"+s_parts[j]+"' at map coordinates ("+i+","+mapList.size()+")",
+							in.getLocation()
+							);
 					}
 				}
 				row[i] = (char)z;
