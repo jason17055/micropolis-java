@@ -2181,7 +2181,9 @@ public class Micropolis
 				if (x != 0) {
 					out.writeCharacters(" ");
 				}
-				out.writeCharacters(Integer.toString(z));
+				out.writeCharacters(
+					Tiles.get(z & LOMASK).name
+					);
 			}
 			out.writeEndElement(); //mapRow
 		}
