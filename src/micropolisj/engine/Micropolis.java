@@ -2159,7 +2159,16 @@ public class Micropolis
 
 			char[] row = new char[tmp.size()];
 			for (int i = 0; i < row.length; i++) {
-				row[i] = (char)Integer.parseInt(tmp.get(i));
+				String [] s_parts = tmp.get(i).split(":");
+
+				TileSpec t = Tiles.load(s_parts[0]);
+				int z = t.tileNumber;
+				for (int j = 1; j < s_parts.length; j++) {
+					if (s_parts[j].equals("pwr")) {
+						z |= PWRBIT;
+					}
+				}
+				row[i] = (char)z;
 			}
 
 			mapList.add(row);
@@ -2184,6 +2193,9 @@ public class Micropolis
 				out.writeCharacters(
 					Tiles.get(z & LOMASK).name
 					);
+				if ((z & PWRBIT) == PWRBIT) {
+					out.writeCharacters(":pwr");
+				}
 			}
 			out.writeEndElement(); //mapRow
 		}
