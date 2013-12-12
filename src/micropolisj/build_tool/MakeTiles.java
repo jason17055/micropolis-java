@@ -21,6 +21,8 @@ public class MakeTiles
 	static int COUNT_TILES = -1;
 	static int TILE_SIZE = 16;
 
+	PrintWriter dependencies;
+
 	public static void main(String [] args)
 		throws Exception
 	{
@@ -38,13 +40,28 @@ public class MakeTiles
 			COUNT_TILES = Integer.parseInt(System.getProperty("tile_count"));
 		}
 
+		MakeTiles me = new MakeTiles();
 		File recipeFile = new File(args[0]);
 		File outputFile = new File(args[1]);
 
-		generateFromRecipe(recipeFile, outputFile);
+		File dependencyFile = new File(
+				outputFile.getParentFile(),
+				outputFile.getName()
+					.replaceFirst("\\.png$", "")
+					+ ".dep$"
+				);
+		me.dependencies = new PrintWriter(
+				new FileWriter(dependencyFile)
+				);
+		try {
+			me.generateFromRecipe(recipeFile, outputFile);
+		}
+		finally {
+			me.dependencies.close();
+		}
 	}
 
-	static void generateFromRecipe(File recipeFile, File outputFile)
+	void generateFromRecipe(File recipeFile, File outputFile)
 		throws IOException
 	{
 		Properties recipe = new Properties();
@@ -107,7 +124,7 @@ public class MakeTiles
 		out.close();
 	}
 
-	static void drawTo(FrameSpec ref, Graphics2D gr, int destX, int destY)
+	void drawTo(FrameSpec ref, Graphics2D gr, int destX, int destY)
 		throws IOException
 	{
 		if (ref.background != null) {
@@ -257,7 +274,7 @@ public class MakeTiles
 		return pngFile;
 	}
 
-	static SourceImage loadImage(String fileName)
+	SourceImage loadImage(String fileName)
 		throws IOException
 	{
 		File svgFile, pngFile = null;
@@ -265,12 +282,20 @@ public class MakeTiles
 		svgFile = new File(fileName+"_"+TILE_SIZE+"x"+TILE_SIZE+".svg");
 
 		if (svgFile.exists()) {
+			dependencies.println("+"+svgFile);
+
 			pngFile = renderSvg(fileName, svgFile);
 		}
 		else {
+			dependencies.println("-"+svgFile);
+
 			svgFile = new File(fileName+".svg");
 			if (svgFile.exists()) {
+				dependencies.println("+"+svgFile);
 				pngFile = renderSvg(fileName, svgFile);
+			}
+			else {
+				dependencies.println("-"+svgFile);
 			}
 		}
 
@@ -283,18 +308,28 @@ public class MakeTiles
 
 		pngFile = new File(fileName+"_"+TILE_SIZE+"x"+TILE_SIZE+".png");
 		if (pngFile.exists()) {
+			dependencies.println("+"+pngFile);
+
 			ImageIcon ii = new ImageIcon(pngFile.toString());
 			return new SourceImage(
 				ii.getImage(),
 				TILE_SIZE);
 		}
+		else {
+			dependencies.println("-"+pngFile);
+		}
 
 		pngFile = new File(fileName+".png");
 		if (pngFile.exists()) {
+			dependencies.println("+"+pngFile);
+
 			ImageIcon ii = new ImageIcon(pngFile.toString());
 			return new SourceImage(
 				ii.getImage(),
 				16);
+		}
+		else {
+			dependencies.println("-"+pngFile);
 		}
 
 		throw new IOException("File not found: "+fileName+".{svg,png}");
