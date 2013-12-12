@@ -21,6 +21,8 @@ public class MakeTiles
 	static int COUNT_TILES = -1;
 	static int TILE_SIZE = 16;
 
+	File recipeFile;
+	File outputFile;
 	PrintWriter dependencies;
 
 	public static void main(String [] args)
@@ -41,24 +43,69 @@ public class MakeTiles
 		}
 
 		MakeTiles me = new MakeTiles();
-		File recipeFile = new File(args[0]);
-		File outputFile = new File(args[1]);
+		me.recipeFile = new File(args[0]);
+		me.outputFile = new File(args[1]);
 
 		File dependencyFile = new File(
-				outputFile.getParentFile(),
-				outputFile.getName()
+				me.outputFile.getParentFile(),
+				me.outputFile.getName()
 					.replaceFirst("\\.png$", "")
 					+ ".dep$"
 				);
+		if (me.outputFile.exists() &&
+			dependencyFile.exists() &&
+			dependencyFile.lastModified() > me.recipeFile.lastModified()
+			) {
+			if (me.checkDependencies(dependencyFile)) {
+				// the output file is good.
+				System.exit(0);
+			}
+		}
+
 		me.dependencies = new PrintWriter(
 				new FileWriter(dependencyFile)
 				);
 		try {
-			me.generateFromRecipe(recipeFile, outputFile);
+			me.generateFromRecipe(me.recipeFile, me.outputFile);
 		}
 		finally {
 			me.dependencies.close();
 		}
+	}
+
+	/**
+	 * @return true iff all of the dependencies are older
+	 * than the output file.
+	 */
+	boolean checkDependencies(File dependencyFile)
+		throws IOException
+	{
+		long outTime = outputFile.lastModified();
+
+		BufferedReader in = new BufferedReader(
+			new FileReader(dependencyFile)
+			);
+		String s;
+		while ( (s = in.readLine()) != null)
+		{
+			char mode = s.charAt(0);
+			File file = new File(s.substring(1));
+			if (mode == '-' && file.exists()) {
+				return false;
+			}
+			else if (mode == '+') {
+				if (!file.exists()) {
+					return false;
+				}
+				else if (file.lastModified() >= outTime) {
+					return false;
+				}
+			}
+		}
+
+		in.close();
+
+		return true;
 	}
 
 	void generateFromRecipe(File recipeFile, File outputFile)
