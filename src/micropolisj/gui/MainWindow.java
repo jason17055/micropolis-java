@@ -1017,6 +1017,7 @@ public class MainWindow extends JFrame
 		gridBox.add(b11,c);
 
 		b11.add(makeToolBtn(MicropolisTool.RAIL_CURVE_1));
+		b11.add(makeToolBtn(MicropolisTool.RAIL_CURVE_90));
 
 		c.gridy++;
 		Box b2 = new Box(BoxLayout.X_AXIS);

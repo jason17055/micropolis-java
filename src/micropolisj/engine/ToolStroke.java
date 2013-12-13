@@ -99,7 +99,10 @@ public class ToolStroke
 			return applyZone(eff, AIRPORT);
 
 		case RAIL_CURVE_1:
-			return applyRailZone(eff, 960, 3, 3);
+			return applyRailZone(eff, Tiles.get(964), 3, 3);
+
+		case RAIL_CURVE_90:
+			return applyRailZone(eff, Tiles.load("rail-turn-R090"), 3, 3);
 
 		default:
 			// not expected
@@ -149,14 +152,16 @@ public class ToolStroke
 		return new CityLocation(xpos, ypos);
 	}
 
-	boolean applyRailZone(ToolEffectIfc eff, int baseTile, int width, int height)
+	boolean applyRailZone(ToolEffectIfc eff, TileSpec baseTile, int width, int height)
 	{
-		int i = baseTile;
-		for (int rowNum = 0; rowNum < height; rowNum++)
+		TileSpec.BuildingInfo bi = baseTile.getBuildingInfo();
+
+		int i = 0;
+		for (int rowNum = 0; rowNum < bi.height; rowNum++)
 		{
-			for (int columnNum = 0; columnNum < width; columnNum++)
+			for (int columnNum = 0; columnNum < bi.width; columnNum++)
 			{
-				eff.setTile(columnNum, rowNum, (char) i);
+				eff.setTile(columnNum, rowNum, (char) bi.members[i]);
 				i++;
 			}
 		}
