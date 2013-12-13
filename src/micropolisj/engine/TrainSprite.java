@@ -108,16 +108,33 @@ public class TrainSprite extends Sprite
 
 	void leaveNewTrack()
 	{
-		int baseX = loc.x * 16 + TRA_GROOVE_X;
-		int baseY = loc.y * 16 + TRA_GROOVE_Y;
+		int orientation = stepdir > 0 ?
+			track[track.length-1].dir :
+			oppositeAngle(track[0].dir);
 
-		if (this.x > baseX) {
+		if (orientation < 90) {
+			// east
 			this.dir = DIR_EAST;
 			this.track = null;
 			this.loc = null;
 			this.step = 2;
 		}
-		else if (this.y > baseY) {
+		else if (orientation < 180) {
+			// north
+			this.dir = DIR_NORTH;
+			this.track = null;
+			this.loc = null;
+			this.step = 2;
+		}
+		else if (orientation < 270) {
+			// west
+			this.dir = DIR_WEST;
+			this.track = null;
+			this.loc = null;
+			this.step = 2;
+		}
+		else {
+			// south
 			this.dir = DIR_SOUTH;
 			this.track = null;
 			this.loc = null;
