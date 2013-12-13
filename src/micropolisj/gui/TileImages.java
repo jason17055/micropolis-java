@@ -11,6 +11,7 @@ package micropolisj.gui;
 import java.awt.*;
 import java.awt.image.*;
 import java.net.URL;
+import java.io.*;
 import java.util.*;
 import javax.swing.*;
 
@@ -22,6 +23,7 @@ public class TileImages
 	final int TILE_WIDTH;
 	final int TILE_HEIGHT;
 	Image [] images;
+	int [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
 
 	private TileImages(int size)
@@ -30,13 +32,50 @@ public class TileImages
 		this.TILE_HEIGHT = size;
 
 		if (size != 16) {
-			this.images = loadTileImages("/tiles_"+size+"x"+size+".png", size);
+			initTileImages("/tiles_"+size+"x"+size, size);
 		}
 		else {
-			this.images = loadTileImages("/tiles.png", 16);
+			initTileImages("/tiles", 16);
+		}
+		loadSpriteImages();
+	}
+
+	void initTileImages(String prefix, int size)
+	{
+		this.images = loadTileImages(prefix + ".png", size);
+		initTileImageMap(prefix);
+	}
+
+	void initTileImageMap(String prefix)
+	{
+		try
+		{
+
+		// load tile->image mapping
+		this.tileImageMap = new int[Tiles.getTileCount()];
+		String resourceName = prefix + ".idx";
+
+		InputStream inStream = TileImages.class.getResourceAsStream(resourceName);
+		BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
+		String s;
+
+		while ((s = in.readLine()) != null) {
+			String [] s1 = s.split(" ");
+			String tileName = s1[0];
+			int imageNumber = Integer.parseInt(s1[1]);
+
+			assert imageNumber >= 0 && imageNumber < images.length;
+
+			TileSpec ts = Tiles.load(tileName);
+			tileImageMap[ts.tileNumber] = imageNumber;
 		}
 
-		loadSpriteImages();
+		in.close();
+
+		}
+		catch (IOException e) {
+			throw new Error("unexpected: "+e, e);
+		}
 	}
 
 	static Map<Integer,TileImages> savedInstances = new HashMap<Integer,TileImages>();
@@ -49,10 +88,13 @@ public class TileImages
 		return savedInstances.get(size);
 	}
 
-	public Image getTileImage(int cell)
+	public Image getTileImage(int tileNumber)
 	{
-		int tile = (cell & LOMASK) % images.length;
-		return images[tile];
+		assert (tileNumber & LOMASK) == tileNumber;
+		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
+
+		int imageNumber = tileImageMap[tileNumber];
+		return images[imageNumber];
 	}
 
 	private Image [] loadTileImages(String resourceName, int srcSize)

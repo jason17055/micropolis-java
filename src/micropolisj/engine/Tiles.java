@@ -93,6 +93,11 @@ public class Tiles
 		}
 	}
 
+	public static int getTileCount()
+	{
+		return tiles.length;
+	}
+
 	static void checkTiles()
 	{
 		for (int i = 0; i < tiles.length; i++) {
