@@ -1025,7 +1025,7 @@ rail-turn-R090@N1W1 clear       |rails/curves90@48,0
 rail-turn-R090@N1   clear       |rails/curves90@64,0
 rail-turn-R090@N1E1 terrain@0,0 |rails/curves90@80,0
 rail-turn-R090@W1   terrain@0,0 |rails/curves90@48,16
-rail-turn-R090      clear       |rails/curves90@64,16 (building=3x3)(track=-24,-16,180;-20,-16,180;-16,-15,180;-12,-14,180;-9,-13,225;-5,-11,225;-2,-9,225;1,-7,225;4,-4,225;7,-1,225;9,2,225;11,5,225;13,9,225;14,12,270;15,16,270;16,20,270;16,24,270)
+rail-turn-R090      clear       |rails/curves90@64,16 (building=3x3)(track=-24,-16,0;-20,-16,0;-16,-15,0;-12,-14,0;-9,-13,315;-5,-11,315;-2,-9,315;1,-7,315;4,-4,315;7,-1,315;9,2,315;11,5,315;13,9,315;14,12,270;15,16,270;16,20,270;16,24,270)
 rail-turn-R090@E1   clear       |rails/curves90@80,16
 rail-turn-R090@S1W1 terrain@0,0 |rails/curves90@48,32
 rail-turn-R090@S1   terrain@0,0 |rails/curves90@64,32
