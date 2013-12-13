@@ -67,14 +67,13 @@ public class TrainSprite extends Sprite
 		}
 
 		this.step += this.stepdir;
-		if (stepdir > 0 && step >= track.length) {
+		setNewTrackPos();
+
+		if (stepdir > 0 && step + 1 >= track.length) {
 			leaveNewTrack();
 		}
-		else if (stepdir < 0 && step < 0) {
+		else if (stepdir < 0 && step <= 0) {
 			leaveNewTrack();
-		}
-		else {
-			setNewTrackPos();
 		}
 	}
 
@@ -121,33 +120,29 @@ public class TrainSprite extends Sprite
 		if (orientation < 90) {
 			// east
 			this.dir = DIR_EAST;
-			this.track = null;
-			this.loc = null;
-			this.step = 2;
 		}
 		else if (orientation < 180) {
 			// north
 			this.dir = DIR_NORTH;
-			this.track = null;
-			this.loc = null;
-			this.step = 2;
 		}
 		else if (orientation < 270) {
 			// west
 			this.dir = DIR_WEST;
-			this.track = null;
-			this.loc = null;
-			this.step = 2;
 		}
 		else {
 			// south
 			this.dir = DIR_SOUTH;
-			this.track = null;
-			this.loc = null;
-			this.step = 2;
 		}
 
-		moveImplOld();
+		if (canEnterNewTrack(this.x, this.y, this.dir, 0)) {
+			enterNewTrack(this.x, this.y, this.dir, 0);
+		}
+		else {
+			this.loc = null;
+			this.track = null;
+			this.step = 2;
+			moveImplOld();
+		}
 	}
 
 	void moveImplOld()
@@ -198,11 +193,8 @@ public class TrainSprite extends Sprite
 				this.dir = d2;
 				return;
 			}
-			else if (canEnterNewTrack((this.x + Cx[d2])/16, (this.y + Cy[d2])/16, d2)) {
-				enterNewTrack(
-					(this.x + Cx[d2]) / 16,
-					(this.y + Cy[d2]) / 16
-					);
+			else if (canEnterNewTrack(this.x, this.y, d2, 8)) {
+				enterNewTrack(this.x, this.y, d2, 8);
 				return;
 			}
 		}
@@ -215,8 +207,16 @@ public class TrainSprite extends Sprite
 		this.dir = DIR_NONE;
 	}
 
-	boolean canEnterNewTrack(int xpos, int ypos, int d2)
+	boolean canEnterNewTrack(int x, int y, int d2, int dist)
 	{
+		assert dist >= 0 && dist % 4 == 0;
+
+		x += (d2 == DIR_EAST ? dist : d2 == DIR_WEST ? -dist : 0);
+		y += (d2 == DIR_SOUTH ? dist : d2 == DIR_NORTH ? -dist : 0);
+
+		int xpos = x / 16 + (d2 == DIR_WEST ? -1 : 0);
+		int ypos = y / 16 + (d2 == DIR_NORTH ? -1 : 0);
+
 		TileSpec spec = Tiles.get(city.getTile(xpos, ypos));
 		if (spec.owner != null) {
 			xpos -= spec.ownerOffsetX;
@@ -231,8 +231,8 @@ public class TrainSprite extends Sprite
 		int baseY = ypos * 16 + TRA_GROOVE_Y;
 
 		TrackStep [] atrack = parseTrackInfo(spec.getAttribute("track"));
-		int xx = this.x + (d2 == DIR_EAST ? 8 : d2 == DIR_WEST ? -8 : 0) - baseX;
-		int yy = this.y + (d2 == DIR_NORTH ? -8 : d2 == DIR_SOUTH ? 8 : 0) - baseY;
+		int xx = x - baseX;
+		int yy = y - baseY;
 
 		if (atrack[0].offX == xx && atrack[0].offY == yy) {
 			return true;
@@ -243,14 +243,24 @@ public class TrainSprite extends Sprite
 		return false;
 	}
 
-	void enterNewTrack(int xpos, int ypos)
+	void enterNewTrack(int x, int y, int d2, int dist)
 	{
+		assert dist >= 0 && dist % 4 == 0;
+
+		x += (d2 == DIR_EAST ? dist : d2 == DIR_WEST ? -dist : 0);
+		y += (d2 == DIR_SOUTH ? dist : d2 == DIR_NORTH ? -dist : 0);
+
+		int xpos = x / 16 + (d2 == DIR_WEST ? -1 : 0);
+		int ypos = y / 16 + (d2 == DIR_NORTH ? -1 : 0);
+
 		TileSpec spec = Tiles.get(city.getTile(xpos, ypos));
 		if (spec.owner != null) {
 			xpos -= spec.ownerOffsetX;
 			ypos -= spec.ownerOffsetY;
 			spec = spec.owner;
 		}
+		assert spec.getAttribute("track") != null;
+
 		this.loc = new CityLocation(xpos, ypos);
 		this.track = parseTrackInfo(spec.getAttribute("track"));
 
@@ -259,13 +269,13 @@ public class TrainSprite extends Sprite
 		int endX = loc.x * 16 + TRA_GROOVE_X + track[track.length-1].offX;
 		int endY = loc.y * 16 + TRA_GROOVE_Y + track[track.length-1].offY;
 
-		if (Math.abs(this.x-startX) + Math.abs(this.y-startY) <= Math.abs(this.x-endX) + Math.abs(this.y-endY)) {
-			this.step = -2;
+		if (Math.abs(x-startX) + Math.abs(y-startY) <= Math.abs(x-endX) + Math.abs(y-endY)) {
+			this.step = 0 - dist/4;
 			this.stepdir = 1;
 			setNewTrackPos();
 		}
 		else {
-			this.step = track.length - 1 + 2;
+			this.step = track.length - 1 + dist/4;
 			this.stepdir = -1;
 			setNewTrackPos();
 		}
