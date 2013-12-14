@@ -1010,7 +1010,27 @@
 958   misc_animation@0,2096
 959   misc_animation@0,2112
 # NEW CURVED RAILS #
-# left-turn, heading west
+# left-turn, heading east, turning north
+rail-turn-R000@N1W1 terrain@0,0 |rails/curves90@48,48
+rail-turn-R000@N1   terrain@0,0 |rails/curves90@64,48
+rail-turn-R000@N1E1 clear       |rails/curves90@80,48
+rail-turn-R000@W1   terrain@0,0 |rails/curves90@48,64
+rail-turn-R000      clear       |rails/curves90@64,64 (building=3x3)(track=24,-16,180;20,-16,180;16,-15,180;12,-14,180;9,-13,225;5,-11,225;2,-9,225;-1,-7,225;-4,-4,225;-7,-1,225;-9,2,225;-11,5,225;-13,9,225;-14,12,270;-15,16,270;-16,20,270;-16,24,270)
+rail-turn-R000@E1   clear       |rails/curves90@80,64
+rail-turn-R000@S1W1 clear       |rails/curves90@48,80
+rail-turn-R000@S1   clear       |rails/curves90@64,80
+rail-turn-R000@S1E1 terrain@0,0 |rails/curves90@80,80
+# left-turn, heading north, turning west
+rail-turn-R090@N1W1 clear       |rails/curves90@48,0
+rail-turn-R090@N1   clear       |rails/curves90@64,0
+rail-turn-R090@N1E1 terrain@0,0 |rails/curves90@80,0
+rail-turn-R090@W1   terrain@0,0 |rails/curves90@48,16
+rail-turn-R090      clear       |rails/curves90@64,16 (building=3x3)(track=-24,-16,180;-20,-16,180;-16,-15,180;-12,-14,180;-9,-13,225;-5,-11,225;-2,-9,225;1,-7,225;4,-4,225;7,-1,225;9,2,225;11,5,225;13,9,225;14,12,270;15,16,270;16,20,270;16,24,270)
+rail-turn-R090@E1   clear       |rails/curves90@80,16
+rail-turn-R090@S1W1 terrain@0,0 |rails/curves90@48,32
+rail-turn-R090@S1   terrain@0,0 |rails/curves90@64,32
+rail-turn-R090@S1E1 clear       |rails/curves90@80,32
+# left-turn, heading west, turning south
 rail-turn-R180@N1W1 terrain@0,0 |rails/curves90@0,0
 rail-turn-R180@N1   clear       |rails/curves90@16,0
 rail-turn-R180@N1E1 clear       |rails/curves90@32,0
@@ -1020,13 +1040,13 @@ rail-turn-R180@E1   terrain@0,0 |rails/curves90@32,16
 rail-turn-R180@S1W1 clear       |rails/curves90@0,32
 rail-turn-R180@S1   terrain@0,0 |rails/curves90@16,32
 rail-turn-R180@S1E1 terrain@0,0 |rails/curves90@32,32
-# left-turn, heading north
-rail-turn-R090@N1W1 terrain@0,0 |rails/curves90@48,0
-rail-turn-R090@N1   clear       |rails/curves90@64,0
-rail-turn-R090@N1E1 clear       |rails/curves90@80,0
-rail-turn-R090@W1   clear       |rails/curves90@48,16
-rail-turn-R090      clear       |rails/curves90@64,16 (building=3x3)(track=-24,-16,180;-20,-16,180;-16,-15,180;-12,-14,180;-9,-13,225;-5,-11,225;-2,-9,225;1,-7,225;4,-4,225;7,-1,225;9,2,225;11,5,225;13,9,225;14,12,270;15,16,270;16,20,270;16,24,270)
-rail-turn-R090@E1   terrain@0,0 |rails/curves90@80,16
-rail-turn-R090@S1W1 clear       |rails/curves90@48,32
-rail-turn-R090@S1   terrain@0,0 |rails/curves90@64,32
-rail-turn-R090@S1E1 terrain@0,0 |rails/curves90@80,32
+# left-turn, heading south, turning east
+rail-turn-R270@N1W1 clear       |rails/curves90@0,48
+rail-turn-R270@N1   clear       |rails/curves90@16,48
+rail-turn-R270@N1E1 terrain@0,0 |rails/curves90@32,48
+rail-turn-R270@W1   terrain@0,0 |rails/curves90@0,64
+rail-turn-R270      clear       |rails/curves90@16,64 (building=3x3)(track=-24,-16,180;-20,-16,180;-16,-15,180;-12,-14,180;-9,-13,225;-5,-11,225;-2,-9,225;1,-7,225;4,-4,225;7,-1,225;9,2,225;11,5,225;13,9,225;14,12,270;15,16,270;16,20,270;16,24,270)
+rail-turn-R270@E1   clear       |rails/curves90@32,64
+rail-turn-R270@S1W1 terrain@0,0 |rails/curves90@0,80
+rail-turn-R270@S1   terrain@0,0 |rails/curves90@16,80
+rail-turn-R270@S1E1 clear       |rails/curves90@32,80

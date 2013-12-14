@@ -98,11 +98,17 @@ public class ToolStroke
 		case AIRPORT:
 			return applyZone(eff, AIRPORT);
 
-		case RAIL_CURVE_1:
-			return applyRailZone(eff, Tiles.get(964), 3, 3);
+		case RAIL_CURVE_000:
+			return applyRailZone(eff, Tiles.load("rail-turn-R000"), 3, 3);
 
-		case RAIL_CURVE_90:
+		case RAIL_CURVE_090:
 			return applyRailZone(eff, Tiles.load("rail-turn-R090"), 3, 3);
+
+		case RAIL_CURVE_180:
+			return applyRailZone(eff, Tiles.load("rail-turn-R180"), 3, 3);
+
+		case RAIL_CURVE_270:
+			return applyRailZone(eff, Tiles.load("rail-turn-R270"), 3, 3);
 
 		default:
 			// not expected
