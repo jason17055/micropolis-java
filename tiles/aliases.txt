@@ -1,0 +1,45 @@
+# In this file are tiles whose official names have changed.
+# Each entry consists of <old-name> <new-name>.
+# Whenever <old-name> is found when loading a Micropolis save-file,
+# that tile will be mapped to <new-name> automatically.
+#
+
+# old fire animation
+57 56
+58 56
+59 56
+60 56
+61 56
+62 56
+63 56
+# radar dish animation
+833 832
+834 832
+835 832
+836 832
+837 832
+838 832
+839 832
+# fountain animation
+841 840
+842 840
+843 840
+# stadium animation
+933 932
+934 932
+935 932
+936 932
+937 932
+938 932
+939 932
+941 940
+942 940
+943 940
+944 940
+945 940
+946 940
+947 940
+# nuclear swirl
+953 952
+954 952
+955 952

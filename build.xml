@@ -69,6 +69,7 @@
 	<arg file="${builddir}/sm" />
 </java>
 <copy todir="${builddir}" file="graphics/tiles.rc" />
+<copy todir="${builddir}/tiles" file="tiles/aliases.txt" />
 </target>
 
 <target name="compile" depends="init-builddir">

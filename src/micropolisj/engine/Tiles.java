@@ -30,6 +30,32 @@ public class Tiles
 		}
 	}
 
+	static final String TILE_ALIASES = "/tiles/aliases.txt";
+	static Map<String,String> loadTileUpgradeMap()
+	{
+		try {
+		Properties p = new Properties();
+		p.load(
+			new InputStreamReader(
+				Tiles.class.getResourceAsStream(TILE_ALIASES),
+				UTF8
+				)
+			);
+
+		HashMap<String,String> rv = new HashMap<String,String>();
+		for (Map.Entry<Object,Object> e : p.entrySet()) {
+			rv.put((String)e.getKey(), (String)e.getValue());
+		}
+		return rv;
+
+		}
+		catch (IOException e) {
+			// probably means the resource file was not found
+			System.err.println(TILE_ALIASES + ": "+e);
+			return Collections.emptyMap();
+		}
+	}
+
 	static void readTiles()
 		throws IOException
 	{
