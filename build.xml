@@ -69,6 +69,7 @@
 	<arg file="${builddir}/tilessm.png" />
 </java>
 <copy todir="${builddir}" file="graphics/tiles.rc" />
+<copy todir="${builddir}/tiles" file="tiles/name_changes.txt" />
 </target>
 
 <target name="compile" depends="init-builddir">

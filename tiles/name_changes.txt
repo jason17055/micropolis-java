@@ -1,0 +1,14 @@
+# In this file are tiles whose official names have changed.
+# Each entry consists of <old-name> <new-name>.
+# Whenever <old-name> is found when loading a Micropolis save-file,
+# that tile will be mapped to <new-name> automatically.
+#
+960   rail-turn-R180@N1W1
+961   rail-turn-R180@N1
+962   rail-turn-R180@N1E1
+963   rail-turn-R180@W1
+964   rail-turn-R180
+965   rail-turn-R180@E1
+966   rail-turn-R180@S1W1
+967   rail-turn-R180@S1
+968   rail-turn-R180@S1E1
