@@ -32,8 +32,10 @@ public enum MicropolisTool
 	NUCLEAR(4, 5000),
 	AIRPORT(6, 10000),
 	QUERY(1, 0),
-	RAIL_CURVE_1(3, 100),
-	RAIL_CURVE_90(3, 100);
+	RAIL_CURVE_000(3, 100),
+	RAIL_CURVE_090(3, 100),
+	RAIL_CURVE_180(3, 100),
+	RAIL_CURVE_270(3, 100);
 
 	int size;
 	int cost;
