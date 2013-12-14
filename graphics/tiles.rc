@@ -1010,16 +1010,17 @@
 958   misc_animation@0,2096
 959   misc_animation@0,2112
 # NEW CURVED RAILS #
-960   terrain@0,0 |rails/curves90@0,0
-961   clear       |rails/curves90@16,0
-962   clear       |rails/curves90@32,0
-963   clear       |rails/curves90@0,16
-964   clear       |rails/curves90@16,16 (building=3x3)(track=24,-16,180;20,-16,180;16,-15,180;12,-14,180;9,-13,225;5,-11,225;2,-9,225;-1,-7,225;-4,-4,225;-7,-1,225;-9,2,225;-11,5,225;-13,9,225;-14,12,270;-15,16,270;-16,20,270;-16,24,270)
-965   terrain@0,0 |rails/curves90@32,16
-966   clear       |rails/curves90@0,32
-967   terrain@0,0 |rails/curves90@16,32
-968   terrain@0,0 |rails/curves90@32,32
-# NEW FORMAT EXPERIMENT
+# left-turn, heading west
+rail-turn-R180@N1W1 terrain@0,0 |rails/curves90@0,0
+rail-turn-R180@N1   clear       |rails/curves90@16,0
+rail-turn-R180@N1E1 clear       |rails/curves90@32,0
+rail-turn-R180@W1   clear       |rails/curves90@0,16
+rail-turn-R180      clear       |rails/curves90@16,16 (building=3x3)(track=24,-16,180;20,-16,180;16,-15,180;12,-14,180;9,-13,225;5,-11,225;2,-9,225;-1,-7,225;-4,-4,225;-7,-1,225;-9,2,225;-11,5,225;-13,9,225;-14,12,270;-15,16,270;-16,20,270;-16,24,270)
+rail-turn-R180@E1   terrain@0,0 |rails/curves90@32,16
+rail-turn-R180@S1W1 clear       |rails/curves90@0,32
+rail-turn-R180@S1   terrain@0,0 |rails/curves90@16,32
+rail-turn-R180@S1E1 terrain@0,0 |rails/curves90@32,32
+# left-turn, heading north
 rail-turn-R090@N1W1 terrain@0,0 |rails/curves90@48,0
 rail-turn-R090@N1   clear       |rails/curves90@64,0
 rail-turn-R090@N1E1 clear       |rails/curves90@80,0

@@ -30,6 +30,32 @@ public class Tiles
 		}
 	}
 
+	static final String NAME_CHANGES = "/tiles/name_changes.txt";
+	static Map<String,String> loadTileUpgradeMap()
+	{
+		try {
+		Properties p = new Properties();
+		p.load(
+			new InputStreamReader(
+				Tiles.class.getResourceAsStream(NAME_CHANGES),
+				UTF8
+				)
+			);
+
+		HashMap<String,String> rv = new HashMap<String,String>();
+		for (Map.Entry<Object,Object> e : p.entrySet()) {
+			rv.put((String)e.getKey(), (String)e.getValue());
+		}
+		return rv;
+
+		}
+		catch (IOException e) {
+			// probably means the resource file was not found
+			System.err.println(NAME_CHANGES + ": "+e);
+			return Collections.emptyMap();
+		}
+	}
+
 	static void readTiles()
 		throws IOException
 	{

@@ -2126,6 +2126,8 @@ public class Micropolis
 	void loadMap_v2(XMLStreamReader in)
 		throws XMLStreamException
 	{
+		Map<String,String> tileUpgradeMap = Tiles.loadTileUpgradeMap();
+
 		ArrayList< char [] > mapList = new ArrayList< char[] >();
 		while (in.next() != XMLStreamConstants.END_ELEMENT) {
 			if (!in.isStartElement()) {
@@ -2148,8 +2150,13 @@ public class Micropolis
 			char[] row = new char[tmp.size()];
 			for (int i = 0; i < row.length; i++) {
 				String [] s_parts = tmp.get(i).split(":");
+				String tileName = s_parts[0];
 
-				TileSpec t = Tiles.load(s_parts[0]);
+				while (tileUpgradeMap.containsKey(tileName)) {
+					tileName = tileUpgradeMap.get(tileName);
+				}
+
+				TileSpec t = Tiles.load(tileName);
 				if (t == null) {
 					throw new XMLStreamException(
 						"Unrecognized tile '"+s_parts[0]+"' at map coordinates ("+i+","+mapList.size()+")",
