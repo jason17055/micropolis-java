@@ -97,15 +97,31 @@ public class TileSpec
 			int mrow = bi.height >= 3 ? -1 : 0;
 			for (int row = 0; row < bi.height; row++) {
 				for (int col = 0; col < bi.width; col++) {
-					String n = this.name + (
-					(row + mrow == 0 && col + mcol == 0) ? "" :
-						("@"+(col+mcol)+","+(row+mrow)));
+					String n = this.name + makeOffsetSuffix(col+mcol, row+mrow);
 					bi.members[row*bi.width+col] = (short) tileMap.get(n).tileNumber;
 				}
 			}
 		}
 
 		this.buildingInfo = bi;
+	}
+
+	/**
+	 * Generate the suffix used to identify a member tile of a building.
+	 * E.g. for the tile directly north of the center tile, the suffix is
+	 * "{@literal @}N1". For the tile southeast of the center tile, the
+	 * suffix is "{@literal @}S1E1". For the center tile itself, the suffix
+	 * is an empty string.
+	 */
+	static String makeOffsetSuffix(int dx, int dy)
+	{
+		if (dx == 0 && dy == 0) {
+			return "";
+		}
+
+		return "@" +
+			(dy > 0 ? ("S"+dy) : dy < 0 ? ("N"+(-dy)) : "") +
+			(dx > 0 ? ("E"+dx) : dx < 0 ? ("W"+(-dx)) : "");
 	}
 
 	public CityDimension getBuildingSize()
