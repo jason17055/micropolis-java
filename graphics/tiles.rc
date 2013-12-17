@@ -1015,7 +1015,7 @@ rail-turn-R000@N1W1 terrain@0,0 |rails/curves90@48,48
 rail-turn-R000@N1   terrain@0,0 |rails/curves90@64,48
 rail-turn-R000@N1E1 clear       |rails/curves90@80,48
 rail-turn-R000@W1   terrain@0,0 |rails/curves90@48,64
-rail-turn-R000      clear       |rails/curves90@64,64 (building=3x3)(track=24,-16,180;20,-16,180;16,-15,180;12,-14,180;9,-13,225;5,-11,225;2,-9,225;-1,-7,225;-4,-4,225;-7,-1,225;-9,2,225;-11,5,225;-13,9,225;-14,12,270;-15,16,270;-16,20,270;-16,24,270)
+rail-turn-R000      clear       |rails/curves90@64,64 (building=3x3)(track=-24,16,0;-20,16,0;-16,15,0;-12,14,0;-9,13,45;-5,11,45;-2,9,45;1,7,45;4,4,45;7,1,45;9,-2,45;11,-5,45;13,-9,45;14,-12,90;15,-16,90;16,-20,90;16,-24,90)
 rail-turn-R000@E1   clear       |rails/curves90@80,64
 rail-turn-R000@S1W1 clear       |rails/curves90@48,80
 rail-turn-R000@S1   clear       |rails/curves90@64,80
@@ -1042,11 +1042,11 @@ rail-turn-R180@S1   terrain@0,0 |rails/curves90@16,32
 rail-turn-R180@S1E1 terrain@0,0 |rails/curves90@32,32
 # left-turn, heading south, turning east
 rail-turn-R270@N1W1 clear       |rails/curves90@0,48
-rail-turn-R270@N1   clear       |rails/curves90@16,48
+rail-turn-R270@N1   terrain@0,0 |rails/curves90@16,48
 rail-turn-R270@N1E1 terrain@0,0 |rails/curves90@32,48
-rail-turn-R270@W1   terrain@0,0 |rails/curves90@0,64
-rail-turn-R270      clear       |rails/curves90@16,64 (building=3x3)(track=-24,-16,180;-20,-16,180;-16,-15,180;-12,-14,180;-9,-13,225;-5,-11,225;-2,-9,225;1,-7,225;4,-4,225;7,-1,225;9,2,225;11,5,225;13,9,225;14,12,270;15,16,270;16,20,270;16,24,270)
-rail-turn-R270@E1   clear       |rails/curves90@32,64
+rail-turn-R270@W1   clear       |rails/curves90@0,64
+rail-turn-R270      clear       |rails/curves90@16,64 (building=3x3)(track=24,16,180;20,16,180;16,15,180;12,14,180;9,13,135;5,11,135;2,9,135;-1,7,135;-4,4,135;-7,1,135;-9,-2,135;-11,-5,135;-13,-9,135;-14,-12,90;-15,-16,90;-16,-20,90;-16,-24,90)
+rail-turn-R270@E1   terrain@0,0 |rails/curves90@32,64
 rail-turn-R270@S1W1 terrain@0,0 |rails/curves90@0,80
-rail-turn-R270@S1   terrain@0,0 |rails/curves90@16,80
+rail-turn-R270@S1   clear       |rails/curves90@16,80
 rail-turn-R270@S1E1 clear       |rails/curves90@32,80
