@@ -164,6 +164,37 @@ public class MicropolisDrawingArea extends JComponent
 		}
 	}
 
+	static final Color GROUND_COLOR = new Color(0x995500);
+
+	void drawGround(Graphics gr, int xpos, int ypos)
+	{
+		int myHeight = m.getTileElevation(xpos, ypos);
+
+		gr.setColor(GROUND_COLOR);
+		if (m.testBounds(xpos, ypos+1)) {
+			int nHeight = m.getTileElevation(xpos, ypos+1);
+			int diff = myHeight - nHeight;
+			for (int i = 0; i < diff; i++) {
+				gr.drawLine(
+					xpos*TILE_WIDTH + nHeight + i,
+					(ypos+1)*TILE_HEIGHT - 1 - nHeight - i,
+					(xpos+1)*TILE_WIDTH + nHeight + i,
+					(ypos+1)*TILE_HEIGHT - 1 - nHeight - i);
+			}
+		}
+		if (m.testBounds(xpos-1, ypos)) {
+			int nHeight = m.getTileElevation(xpos-1, ypos);
+			int diff = myHeight - nHeight;
+			for (int i = 0; i < diff; i++) {
+				gr.drawLine(
+					xpos*TILE_WIDTH + nHeight + i,
+					ypos*TILE_HEIGHT - nHeight - i,
+					xpos*TILE_WIDTH + nHeight + i,
+					(ypos+1)*TILE_HEIGHT - nHeight - i);
+			}
+		}
+	}
+
 	public void paintComponent(Graphics gr)
 	{
 		final int width = m.getWidth();
@@ -196,9 +227,11 @@ public class MicropolisDrawingArea extends JComponent
 					}
 				}
 
+				drawGround(gr, x, y);
+				int heightOffs = m.getTileElevation(x,y);
 				gr.drawImage(tileImages.getTileImage(cell),
-					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0),
-					y*TILE_HEIGHT,
+					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0) + heightOffs,
+					y*TILE_HEIGHT - heightOffs,
 					null);
 			}
 		}

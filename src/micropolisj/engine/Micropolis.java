@@ -32,6 +32,7 @@ public class Micropolis
 	// full size arrays
 	char [][] map;
 	boolean [][] powerMap;
+	short [][] elevations;
 
 	// half-size arrays
 
@@ -227,6 +228,7 @@ public class Micropolis
 	{
 		map = new char[height][width];
 		powerMap = new boolean[height][width];
+		elevations = new short[height][width];
 
 		int hX = (width+1)/2;
 		int hY = (height+1)/2;
@@ -433,6 +435,11 @@ public class Micropolis
 		return (char)(map[ypos][xpos] & LOMASK);
 	}
 
+	public short getTileElevation(int xpos, int ypos)
+	{
+		return elevations[ypos][xpos];
+	}
+
 	public char getTileRaw(int xpos, int ypos)
 	{
 		return map[ypos][xpos];
@@ -474,6 +481,14 @@ public class Micropolis
 		if (map[ypos][xpos] != newTile)
 		{
 			map[ypos][xpos] = newTile;
+			fireTileChanged(xpos, ypos);
+		}
+	}
+
+	public void setTileElevation(int xpos, int ypos, short newElevation)
+	{
+		if (elevations[ypos][xpos] != newElevation) {
+			elevations[ypos][xpos] = newElevation;
 			fireTileChanged(xpos, ypos);
 		}
 	}

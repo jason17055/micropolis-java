@@ -66,6 +66,10 @@ public enum MicropolisTool
 		case BULLDOZER:
 			return new Bulldozer(engine, xpos, ypos);
 
+		case GROUND_RAISE:
+		case GROUND_LOWER:
+			return new ElevationTool(engine, this, xpos, ypos);
+
 		case WIRE:
 		case ROADS:
 		case RAIL:
