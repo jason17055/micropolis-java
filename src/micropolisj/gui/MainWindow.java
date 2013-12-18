@@ -1058,6 +1058,13 @@ public class MainWindow extends JFrame
 		b6.add(makeToolBtn(MicropolisTool.AIRPORT));
 
 		c.gridy++;
+		Box b7 = new Box(BoxLayout.X_AXIS);
+		gridBox.add(b7,c);
+
+		b7.add(makeToolBtn(MicropolisTool.GROUND_RAISE));
+		b7.add(makeToolBtn(MicropolisTool.GROUND_LOWER));
+
+		c.gridy++;
 		Box b8 = new Box(BoxLayout.X_AXIS);
 		gridBox.add(b8,c);
 
