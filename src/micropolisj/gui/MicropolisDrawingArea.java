@@ -246,32 +246,45 @@ public class MicropolisDrawingArea extends JComponent
 
 		if (toolCursor != null)
 		{
-			int x0 = toolCursor.rect.x * TILE_WIDTH;
-			int x1 = (toolCursor.rect.x + toolCursor.rect.width) * TILE_WIDTH;
-			int y0 = toolCursor.rect.y * TILE_HEIGHT;
-			int y1 = (toolCursor.rect.y + toolCursor.rect.height) * TILE_HEIGHT;
+			Rectangle r = getToolCursorRectangle();
 
 			gr.setColor(Color.BLACK);
-			gr.drawLine(x0-1,y0-1,x0-1,y1-1);
-			gr.drawLine(x0-1,y0-1,x1-1,y0-1);
-			gr.drawLine(x1+3,y0-3,x1+3,y1+3);
-			gr.drawLine(x0-3,y1+3,x1+3,y1+3);
+			gr.drawLine(r.x-1, r.y-1, r.x-1,         r.y+r.height-1);
+			gr.drawLine(r.x-1, r.y-1, r.x+r.width-1, r.y-1);
+			gr.drawLine(r.x+r.width+3, r.y-3,  r.x+r.width+3, r.y+r.height+3);
+			gr.drawLine(r.x-3, r.y+r.height+3, r.x+r.width+3, r.y+r.height+3);
 
 			gr.setColor(Color.WHITE);
-			gr.drawLine(x0-4,y0-4,x1+3,y0-4);
-			gr.drawLine(x0-4,y0-4,x0-4,y1+3);
-			gr.drawLine(x1,  y0-1,x1,  y1  );
-			gr.drawLine(x0-1,y1,  x1,  y1  );
+			gr.drawLine(r.x-4,       r.y-4,  r.x+r.width+3, r.y-4);
+			gr.drawLine(r.x-4,       r.y-4,  r.x-4,       r.y+r.height+3);
+			gr.drawLine(r.x+r.width, r.y-1,  r.x+r.width, r.y+r.height  );
+			gr.drawLine(r.x-1, r.y+r.height, r.x+r.width, r.y+r.height  );
 
 			gr.setColor(toolCursor.borderColor);
-			gr.drawRect(x0-3,y0-3,x1-x0+5,y1-y0+5);
-			gr.drawRect(x0-2,y0-2,x1-x0+3,y1-y0+3);
+			gr.drawRect(r.x-3, r.y-3, r.width+5, r.height+5);
+			gr.drawRect(r.x-2, r.y-2, r.width+3, r.height+3);
 
 			if (toolCursor.fillColor != null) {
 				gr.setColor(toolCursor.fillColor);
-				gr.fillRect(x0,y0,x1-x0,y1-y0);
+				gr.fillRect(r.x,r.y,r.width,r.height);
 			}
 		}
+	}
+
+	Rectangle getToolCursorRectangle()
+	{
+		int cx = toolCursor.rect.x + toolCursor.rect.width/2;
+		int cy = toolCursor.rect.y + toolCursor.rect.height/2;
+
+		int heightOffs = m.getTileElevation(cx,cy);
+
+		int x0 = toolCursor.rect.x * TILE_WIDTH + heightOffs;
+		int y0 = toolCursor.rect.y * TILE_HEIGHT - heightOffs;
+
+		return new Rectangle(x0, y0,
+			toolCursor.rect.width * TILE_WIDTH,
+			toolCursor.rect.height * TILE_HEIGHT
+			);
 	}
 
 	static class ToolCursor
@@ -307,21 +320,23 @@ public class MicropolisDrawingArea extends JComponent
 
 		if (toolCursor != null)
 		{
+			Rectangle r = getToolCursorRectangle();
 			repaint(new Rectangle(
-				toolCursor.rect.x*TILE_WIDTH - 4,
-				toolCursor.rect.y*TILE_HEIGHT - 4,
-				toolCursor.rect.width*TILE_WIDTH + 8,
-				toolCursor.rect.height*TILE_HEIGHT + 8
+				r.x - 4,
+				r.y - 4,
+				r.width + 8,
+				r.height + 8
 				));
 		}
 		toolCursor = newCursor;
 		if (toolCursor != null)
 		{
+			Rectangle r = getToolCursorRectangle();
 			repaint(new Rectangle(
-				toolCursor.rect.x*TILE_WIDTH - 4,
-				toolCursor.rect.y*TILE_HEIGHT - 4,
-				toolCursor.rect.width*TILE_WIDTH + 8,
-				toolCursor.rect.height*TILE_HEIGHT + 8
+				r.x - 4,
+				r.y - 4,
+				r.width + 8,
+				r.height + 8
 				));
 		}
 	}
