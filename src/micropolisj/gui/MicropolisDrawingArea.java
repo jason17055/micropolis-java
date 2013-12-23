@@ -416,7 +416,9 @@ public class MicropolisDrawingArea extends JComponent
 
 	public Rectangle getTileBounds(int xpos, int ypos)
 	{
-		return new Rectangle(xpos*TILE_WIDTH, ypos * TILE_HEIGHT,
+		int heightOffs = m.getTileElevation(xpos, ypos);
+		return new Rectangle(xpos*TILE_WIDTH+heightOffs,
+			ypos * TILE_HEIGHT-heightOffs,
 			TILE_WIDTH, TILE_HEIGHT);
 	}
 
