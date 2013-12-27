@@ -58,15 +58,29 @@ public enum MicropolisTool
 
 	public ToolStroke beginStroke(Micropolis engine, int xpos, int ypos)
 	{
-		if (this == BULLDOZER) {
+		switch (this) {
+		case BULLDOZER:
 			return new Bulldozer(engine, xpos, ypos);
-		}
-		else if (this == WIRE ||
-			this == ROADS ||
-			this == RAIL) {
+
+		case WIRE:
+		case ROADS:
+		case RAIL:
 			return new RoadLikeTool(engine, this, xpos, ypos);
-		}
-		else {
+
+		case FIRE:
+		case POLICE:
+		case RAIL_CURVE_000:
+		case RAIL_CURVE_090:
+		case RAIL_CURVE_180:
+		case RAIL_CURVE_270:
+		case STADIUM:
+		case SEAPORT:
+		case POWERPLANT:
+		case NUCLEAR:
+		case AIRPORT:
+			return new BuildingTool(engine, this, xpos, ypos);
+
+		default:
 			return new ToolStroke(engine, this, xpos, ypos);
 		}
 	}
