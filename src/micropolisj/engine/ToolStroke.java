@@ -77,6 +77,9 @@ public class ToolStroke
 		case INDUSTRIAL:
 			return applyZone(eff, INDCLR);
 
+		case FIELD:
+			return applyZone(eff, Tiles.load("field"));
+
 		default:
 			// not expected
 			throw new Error("unexpected tool: "+tool);
@@ -142,13 +145,13 @@ public class ToolStroke
 		return true;
 	}
 
-	boolean applyZone(ToolEffectIfc eff, int base)
+	boolean applyZone(ToolEffectIfc eff, TileSpec baseTile)
 	{
-		assert isZoneCenter(base);
+		assert baseTile != null;
 
-		TileSpec.BuildingInfo bi = Tiles.get(base).getBuildingInfo();
+		TileSpec.BuildingInfo bi = baseTile.getBuildingInfo();
 		if (bi == null) {
-			throw new Error("Cannot applyZone to #"+base);
+			throw new Error("Cannot applyZone to "+baseTile);
 		}
 
 		int cost = tool.getToolCost();
@@ -188,6 +191,12 @@ public class ToolStroke
 
 		fixBorder(eff, bi.width, bi.height);
 		return true;
+	}
+
+	boolean applyZone(ToolEffectIfc eff, int base)
+	{
+		assert isZoneCenter(base);
+		return applyZone(eff, Tiles.get(base));
 	}
 
 	//compatible function

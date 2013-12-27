@@ -52,6 +52,9 @@ class BuildingTool extends ToolStroke
 		case AIRPORT:
 			return applyZone(eff, AIRPORT);
 
+		case FARMHOUSE:
+			return applyZone(eff, Tiles.load("farmhouse"));
+
 		case RAIL_CURVE_000:
 			return applyRailZone(eff, Tiles.load("rail-turn-R000"), 3, 3);
 

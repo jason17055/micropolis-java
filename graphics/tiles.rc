@@ -1050,3 +1050,29 @@ rail-turn-R270@E1   terrain@0,0 |rails/curves90@32,64
 rail-turn-R270@S1W1 terrain@0,0 |rails/curves90@0,80
 rail-turn-R270@S1   clear       |rails/curves90@16,80
 rail-turn-R270@S1E1 clear       |rails/curves90@32,80
+# FARMHOUSE #
+farmhouse@N1W1      farms/farmhouse@0,0
+farmhouse@N1        farms/farmhouse@16,0
+farmhouse@N1E1      farms/farmhouse@32,0
+farmhouse@W1        farms/farmhouse@0,16
+farmhouse           farms/farmhouse@16,16       (building=3x3)
+farmhouse@E1        farms/farmhouse@32,16
+farmhouse@S1W1      farms/farmhouse@0,32
+farmhouse@S1        farms/farmhouse@16,32
+farmhouse@S1E1      farms/farmhouse@32,32
+field@N1W1          farms/wheatfield_zone@0,0
+field@N1            farms/wheatfield_zone@16,0
+field@N1E1          farms/wheatfield_zone@32,0
+field@N1E2          farms/wheatfield_zone@48,0
+field@W1            farms/wheatfield_zone@0,16
+field               farms/wheatfield_zone@16,16 (building=4x4)
+field@E1            farms/wheatfield_zone@32,16
+field@E2            farms/wheatfield_zone@48,16
+field@S1W1          farms/wheatfield_zone@0,32
+field@S1            farms/wheatfield_zone@16,32
+field@S1E1          farms/wheatfield_zone@32,32
+field@S1E2          farms/wheatfield_zone@48,32
+field@S2W1          farms/wheatfield_zone@0,48
+field@S2            farms/wheatfield_zone@16,48
+field@S2E1          farms/wheatfield_zone@32,48
+field@S2E2          farms/wheatfield_zone@48,48
