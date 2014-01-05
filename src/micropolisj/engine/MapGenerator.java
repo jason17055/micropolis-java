@@ -76,9 +76,62 @@ public class MapGenerator
 
 	int lakeLevel = -1; //level for lake creation; -1==auto, 0==none, >0==level
 
+	void makeElevations()
+	{
+		int H = 128;
+		int W = 128;
+		short [][] hmap = new short[H+1][W+1];
+		int bumpiness = 200;
+		int sz = 128;
+
+		while (sz > 1) {
+
+			sz /= 2;
+
+		// squares step
+		for (int y = sz; y < H; y += 2*sz) {
+			for (int x = sz; x < W; x += 2*sz) {
+				int sumEls = 0;
+				sumEls += hmap[y-sz][x-sz];
+				sumEls += hmap[y-sz][x+sz];
+				sumEls += hmap[y+sz][x-sz];
+				sumEls += hmap[y+sz][x+sz];
+				hmap[y][x] = (short)((sumEls + PRNG.nextInt(bumpiness)-bumpiness/2)/4);
+			}
+		}
+
+		// diamonds step
+		for (int y = 0; y <= H; y += sz) {
+			int rowStart = (y/sz) % 2 == 0 ? sz : 0;
+			for (int x = rowStart; x <= W; x += 2*sz) {
+				int sumEls = 0;
+				sumEls += (y > 0 ? hmap[y-sz][x] : 0);
+				sumEls += (x < W ? hmap[y][x+sz] : 0);
+				sumEls += (y < H ? hmap[y+sz][x] : 0);
+				sumEls += (x > 0 ? hmap[y][x-sz] : 0);
+				hmap[y][x] = (short)((sumEls + PRNG.nextInt(bumpiness)-bumpiness/2)/4);
+			}
+		}
+
+			bumpiness = bumpiness * 4 / 7;
+		} //while
+
+		for (int y = 0; y < engine.getHeight(); y++) {
+			for (int x = 0; x < engine.getWidth(); x++) {
+				int el = (hmap[y][x] +
+					hmap[y][x+1] +
+					hmap[y+1][x] +
+					hmap[y+1][x+1]) / 4;
+				engine.setTileElevation(x, y, (short)el);
+			}
+		}
+	}
+
 	void generateMap(long r)
 	{
 		PRNG = new Random(r);
+
+		makeElevations();
 
 		if (createIsland == CreateIsland.SELDOM)
 		{
