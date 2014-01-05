@@ -1055,7 +1055,7 @@ farmhouse@N1W1      farms/farmhouse@0,0
 farmhouse@N1        farms/farmhouse@16,0
 farmhouse@N1E1      farms/farmhouse@32,0
 farmhouse@W1        farms/farmhouse@0,16
-farmhouse           farms/farmhouse@16,16       (building=3x3)
+farmhouse           farms/farmhouse@16,16       (zone)(conducts)(building=3x3)
 farmhouse@E1        farms/farmhouse@32,16
 farmhouse@S1W1      farms/farmhouse@0,32
 farmhouse@S1        farms/farmhouse@16,32
@@ -1065,7 +1065,7 @@ field@N1            farms/wheatfield_zone@16,0
 field@N1E1          farms/wheatfield_zone@32,0
 field@N1E2          farms/wheatfield_zone@48,0
 field@W1            farms/wheatfield_zone@0,16
-field               farms/wheatfield_zone@16,16 (building=4x4)
+field               farms/wheatfield_zone@16,16 (zone)(building=4x4)
 field@E1            farms/wheatfield_zone@32,16
 field@E2            farms/wheatfield_zone@48,16
 field@S1W1          farms/wheatfield_zone@0,32
