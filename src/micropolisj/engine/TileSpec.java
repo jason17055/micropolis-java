@@ -68,6 +68,43 @@ public class TileSpec
 		return buildingInfo;
 	}
 
+	//experimental
+	String [] getBuildingMemberNames()
+	{
+		String tmp = getAttribute("building");
+		if (tmp == null) { throw new Error("not a building"); }
+
+		String [] p2 = tmp.split("x");
+		int bWidth = Integer.parseInt(p2[0]);
+		int bHeight = Integer.parseInt(p2[1]);
+
+		String [] members = new String[bWidth * bHeight];
+		if (this.isNumberedTile()) {
+			int startTile = tileNumber;
+			if (bWidth >= 3) { startTile--; }
+			if (bHeight >= 3) { startTile -= bWidth; }
+
+			for (int row = 0; row < bHeight; row++) {
+				for (int col = 0; col < bWidth; col++) {
+					members[row*bWidth+col] = Integer.toString(startTile);
+					startTile++;
+				}
+			}
+		}
+		else {
+			int mcol = bWidth >= 3 ? -1 : 0;
+			int mrow = bHeight >= 3 ? -1 : 0;
+			for (int row = 0; row < bHeight; row++) {
+				for (int col = 0; col < bWidth; col++) {
+					String n = this.name + makeOffsetSuffix(col+mcol, row+mrow);
+					members[row*bWidth+col] = n;
+				}
+			}
+		}
+
+		return members;
+	}
+
 	private void resolveBuildingInfo(Map<String,TileSpec> tileMap)
 	{
 		String tmp = getAttribute("building");
@@ -323,6 +360,11 @@ public class TileSpec
 	public String toString()
 	{
 		return "{tile:"+name+"}";
+	}
+
+	boolean isBuilding()
+	{
+		return attributes.containsKey("building");
 	}
 
 	boolean isNumberedTile()
