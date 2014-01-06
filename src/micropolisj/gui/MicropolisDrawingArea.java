@@ -195,20 +195,27 @@ public class MicropolisDrawingArea extends JComponent
 		}
 	}
 
+	CityRect getCityAreaForClipRect(Rectangle clipRect)
+	{
+		int minX = Math.max(0, clipRect.x / TILE_WIDTH);
+		int minY = Math.max(0, clipRect.y / TILE_HEIGHT);
+		int maxX = Math.min(m.getWidth(), 1 + (clipRect.x + clipRect.width-1) / TILE_WIDTH);
+		int maxY = Math.min(m.getHeight(), 1 + (clipRect.y + clipRect.height-1) / TILE_HEIGHT);
+
+		return new CityRect(minX, minY, maxX-minX, maxY-minY);
+	}
+
 	public void paintComponent(Graphics gr)
 	{
 		final int width = m.getWidth();
 		final int height = m.getHeight();
 
 		Rectangle clipRect = gr.getClipBounds();
-		int minX = Math.max(0, clipRect.x / TILE_WIDTH);
-		int minY = Math.max(0, clipRect.y / TILE_HEIGHT);
-		int maxX = Math.min(width, 1 + (clipRect.x + clipRect.width-1) / TILE_WIDTH);
-		int maxY = Math.min(height, 1 + (clipRect.y + clipRect.height-1) / TILE_HEIGHT);
+		CityRect clipArea = getCityAreaForClipRect(clipRect);
 
-		for (int y = minY; y < maxY; y++)
+		for (int y = clipArea.y; y < clipArea.y+clipArea.height; y++)
 		{
-			for (int x = maxX-1; x >= minX; x--)
+			for (int x = clipArea.x+clipArea.width-1; x >= clipArea.x; x--)
 			{
 				int cell = m.getTile(x,y);
 				if (blinkUnpoweredZones &&
