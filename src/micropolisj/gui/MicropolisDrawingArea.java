@@ -195,14 +195,27 @@ public class MicropolisDrawingArea extends JComponent
 		}
 	}
 
-	CityRect getCityAreaForClipRect(Rectangle clipRect)
+	int heightOffset(int el)
 	{
-		int minX = Math.max(0, clipRect.x / TILE_WIDTH);
-		int minY = Math.max(0, clipRect.y / TILE_HEIGHT);
-		int maxX = Math.min(m.getWidth(), 1 + (clipRect.x + clipRect.width-1) / TILE_WIDTH);
-		int maxY = Math.min(m.getHeight(), 1 + (clipRect.y + clipRect.height-1) / TILE_HEIGHT);
+		return el;
+	}
 
-		return new CityRect(minX, minY, maxX-minX, maxY-minY);
+	int getMaximumHeightOfRow(int ypos)
+	{
+		int v = m.getTileElevation(0, ypos);
+		for (int i = 1; i < m.getWidth(); i++) {
+			v = Math.max(v, m.getTileElevation(i, ypos));
+		}
+		return v;
+	}
+
+	int getMinimumHeightOfRow(int ypos)
+	{
+		int v = m.getTileElevation(0, ypos);
+		for (int i = 1; i < m.getWidth(); i++) {
+			v = Math.min(v, m.getTileElevation(i, ypos));
+		}
+		return v;
 	}
 
 	public void paintComponent(Graphics gr)
@@ -211,11 +224,20 @@ public class MicropolisDrawingArea extends JComponent
 		final int height = m.getHeight();
 
 		Rectangle clipRect = gr.getClipBounds();
-		CityRect clipArea = getCityAreaForClipRect(clipRect);
 
-		for (int y = clipArea.y; y < clipArea.y+clipArea.height; y++)
+		for (int y = 0; y < height; y++)
 		{
-			for (int x = clipArea.x+clipArea.width-1; x >= clipArea.x; x--)
+			int affTop = y*TILE_HEIGHT
+				- heightOffset(getMaximumHeightOfRow(y));
+			int affBottom = y*TILE_HEIGHT + TILE_HEIGHT
+				- heightOffset(getMinimumHeightOfRow(y));
+
+			if (affBottom < clipRect.y ||
+				affTop >= clipRect.y + clipRect.height) {
+				continue;
+			}
+
+			for (int x = 0; x < width; x++)
 			{
 				int cell = m.getTile(x,y);
 				if (blinkUnpoweredZones &&
