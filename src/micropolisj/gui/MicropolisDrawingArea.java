@@ -168,11 +168,11 @@ public class MicropolisDrawingArea extends JComponent
 
 	void drawGround(Graphics gr, int xpos, int ypos)
 	{
-		int myHeight = m.getTileElevation(xpos, ypos);
+		int myHeight = heightOffset(m.getTileElevation(xpos, ypos));
 
 		gr.setColor(GROUND_COLOR);
 		if (m.testBounds(xpos, ypos+1)) {
-			int nHeight = m.getTileElevation(xpos, ypos+1);
+			int nHeight = heightOffset(m.getTileElevation(xpos, ypos+1));
 			int diff = myHeight - nHeight;
 			for (int i = 0; i < diff; i++) {
 				gr.drawLine(
@@ -183,7 +183,7 @@ public class MicropolisDrawingArea extends JComponent
 			}
 		}
 		if (m.testBounds(xpos-1, ypos)) {
-			int nHeight = m.getTileElevation(xpos-1, ypos);
+			int nHeight = heightOffset(m.getTileElevation(xpos-1, ypos));
 			int diff = myHeight - nHeight;
 			for (int i = 0; i < diff; i++) {
 				gr.drawLine(
@@ -195,25 +195,25 @@ public class MicropolisDrawingArea extends JComponent
 		}
 	}
 
-	int heightOffset(int el)
+	int heightOffset(short el)
 	{
-		return el;
+		return el*TILE_HEIGHT/16;
 	}
 
-	int getMaximumHeightOfRow(int ypos)
+	short getMaximumHeightOfRow(int ypos)
 	{
-		int v = m.getTileElevation(0, ypos);
+		short v = m.getTileElevation(0, ypos);
 		for (int i = 1; i < m.getWidth(); i++) {
-			v = Math.max(v, m.getTileElevation(i, ypos));
+			v = (short)Math.max(v, m.getTileElevation(i, ypos));
 		}
 		return v;
 	}
 
-	int getMinimumHeightOfRow(int ypos)
+	short getMinimumHeightOfRow(int ypos)
 	{
-		int v = m.getTileElevation(0, ypos);
+		short v = m.getTileElevation(0, ypos);
 		for (int i = 1; i < m.getWidth(); i++) {
-			v = Math.min(v, m.getTileElevation(i, ypos));
+			v = (short)Math.min(v, m.getTileElevation(i, ypos));
 		}
 		return v;
 	}
@@ -257,7 +257,7 @@ public class MicropolisDrawingArea extends JComponent
 				}
 
 				drawGround(gr, x, y);
-				int heightOffs = m.getTileElevation(x,y);
+				int heightOffs = heightOffset(m.getTileElevation(x,y));
 				gr.drawImage(tileImages.getTileImage(cell),
 					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0) + heightOffs,
 					y*TILE_HEIGHT - heightOffs,
@@ -305,7 +305,7 @@ public class MicropolisDrawingArea extends JComponent
 		int cx = toolCursor.rect.x + toolCursor.rect.width/2;
 		int cy = toolCursor.rect.y + toolCursor.rect.height/2;
 
-		int heightOffs = m.getTileElevation(cx,cy);
+		int heightOffs = heightOffset(m.getTileElevation(cx,cy));
 
 		int x0 = toolCursor.rect.x * TILE_WIDTH + heightOffs;
 		int y0 = toolCursor.rect.y * TILE_HEIGHT - heightOffs;
@@ -445,7 +445,7 @@ public class MicropolisDrawingArea extends JComponent
 
 	public Rectangle getTileBounds(int xpos, int ypos)
 	{
-		int heightOffs = m.getTileElevation(xpos, ypos);
+		int heightOffs = heightOffset(m.getTileElevation(xpos, ypos));
 		return new Rectangle(xpos*TILE_WIDTH+heightOffs,
 			ypos * TILE_HEIGHT-heightOffs,
 			TILE_WIDTH, TILE_HEIGHT);
