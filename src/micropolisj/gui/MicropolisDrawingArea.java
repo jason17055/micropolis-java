@@ -237,7 +237,7 @@ public class MicropolisDrawingArea extends JComponent
 				continue;
 			}
 
-			for (int x = 0; x < width; x++)
+			for (int x = width-1; x >= 0; x--)
 			{
 				int cell = m.getTile(x,y);
 				if (blinkUnpoweredZones &&
