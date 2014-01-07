@@ -229,8 +229,9 @@ public class MicropolisDrawingArea extends JComponent
 		{
 			int affTop = y*TILE_HEIGHT
 				- heightOffset(getMaximumHeightOfRow(y));
-			int affBottom = y*TILE_HEIGHT + TILE_HEIGHT
-				- heightOffset(getMinimumHeightOfRow(y));
+			int affBottom = y+1 < height ?
+				(y+1)*TILE_HEIGHT - heightOffset(getMinimumHeightOfRow(y+1)) :
+				y*TILE_HEIGHT + TILE_HEIGHT;
 
 			if (affBottom < clipRect.y ||
 				affTop >= clipRect.y + clipRect.height) {
