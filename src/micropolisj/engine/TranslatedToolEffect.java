@@ -28,6 +28,12 @@ class TranslatedToolEffect implements ToolEffectIfc
 	}
 
 	//implements ToolEffectIfc
+	public short getTileElevation(int x, int y)
+	{
+		return base.getTileElevation(x+dx, y+dy);
+	}
+
+	//implements ToolEffectIfc
 	public void makeSound(int x, int y, Sound sound)
 	{
 		base.makeSound(x+dx, y+dy, sound);

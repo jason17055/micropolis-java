@@ -16,6 +16,8 @@ public interface ToolEffectIfc
 	 */
 	int getTile(int dx, int dy);
 
+	short getTileElevation(int dx, int dy);
+
 	void makeSound(int dx, int dy, Sound sound);
 
 	/**

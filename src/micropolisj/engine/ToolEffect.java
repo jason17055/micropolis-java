@@ -49,6 +49,17 @@ class ToolEffect implements ToolEffectIfc
 	}
 
 	//implements ToolEffectIfc
+	public short getTileElevation(int dx, int dy)
+	{
+		if (city.testBounds(originX + dx, originY + dy)) {
+			return city.getTileElevation(originX + dx, originY + dy);
+		}
+		else {
+			return 0;
+		}
+	}
+
+	//implements ToolEffectIfc
 	public void makeSound(int dx, int dy, Sound sound)
 	{
 		preview.makeSound(dx, dy, sound);

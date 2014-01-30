@@ -52,6 +52,12 @@ public class ToolPreview implements ToolEffectIfc
 		}
 	}
 
+	//implements ToolEffectIfc
+	public short getTileElevation(int x, int y)
+	{
+		return 0;
+	}
+
 	public CityRect getBounds()
 	{
 		return new CityRect(
