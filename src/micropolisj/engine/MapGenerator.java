@@ -153,17 +153,17 @@ public class MapGenerator
 
 		getRandStart();
 
-		if (curveLevel != 0)
-		{
-			doRivers();
-		}
-
-		if (lakeLevel != 0)
-		{
-			makeLakes();
-		}
-
-		smoothRiver();
+//		if (curveLevel != 0)
+//		{
+//			doRivers();
+//		}
+//
+//		if (lakeLevel != 0)
+//		{
+//			makeLakes();
+//		}
+//
+//		smoothRiver();
 
 		if (treeLevel != 0)
 		{

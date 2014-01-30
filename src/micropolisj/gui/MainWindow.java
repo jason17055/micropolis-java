@@ -1071,6 +1071,12 @@ public class MainWindow extends JFrame
 		b8.add(makeToolBtn(MicropolisTool.FARMHOUSE));
 		b8.add(makeToolBtn(MicropolisTool.FIELD));
 
+		c.gridy++;
+		Box b9 = new Box(BoxLayout.X_AXIS);
+		gridBox.add(b9,c);
+
+		b9.add(makeToolBtn(MicropolisTool.RIVERSTART));
+
 		// add glue to make all elements align toward top
 		c.gridy++;
 		c.weighty = 1.0;

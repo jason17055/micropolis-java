@@ -150,7 +150,7 @@ public class NewCityDialog extends JDialog
 	{
 		if (nextMaps.isEmpty())
 		{
-			Micropolis m = new Micropolis();
+			Micropolis m = new Micropolis(256, 256);
 			new MapGenerator(m).generateNewCity();
 			nextMaps.add(m);
 		}

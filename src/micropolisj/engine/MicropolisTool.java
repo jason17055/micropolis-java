@@ -39,7 +39,8 @@ public enum MicropolisTool
 	RAIL_CURVE_180(3, 100),
 	RAIL_CURVE_270(3, 100),
 	FARMHOUSE(3, 100),
-	FIELD(4, 50);
+	FIELD(4, 50),
+	RIVERSTART(1,1);
 
 	int size;
 	int cost;
@@ -88,6 +89,9 @@ public enum MicropolisTool
 		case AIRPORT:
 		case FARMHOUSE:
 			return new BuildingTool(engine, this, xpos, ypos);
+
+		case RIVERSTART:
+			return new RiverStartTool(engine, xpos, ypos);
 
 		default:
 			return new ToolStroke(engine, this, xpos, ypos);
