@@ -28,9 +28,7 @@ class RiverStartTool extends ToolStroke
 	@Override
 	boolean apply1(ToolEffectIfc eff)
 	{
-		for (int i = 0; i <= magnitude; i++) {
-			eff.setTile(i, 0, RIVER);
-		}
+		eff.setTile(0, 0, Tiles.load("river_source").tileNumber);
 		return true;
 	}
 }

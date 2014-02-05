@@ -657,6 +657,7 @@ public class Micropolis
 		case 15:
 			fireAnalysis();
 			doDisasters();
+			new WaterScan(this).waterScan();
 			break;
 
 		default:

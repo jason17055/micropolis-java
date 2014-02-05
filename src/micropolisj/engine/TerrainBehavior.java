@@ -109,31 +109,17 @@ class TerrainBehavior extends TileBehavior
 		final int [] DX = { 0, 1, 0, -1 };
 		final int [] DY = { -1, 0, 1, 0 };
 
-		if (city.floodCnt != 0)
+		for (int z = 0; z < 4; z++)
 		{
-			for (int z = 0; z < 4; z++)
-			{
-				if (PRNG.nextInt(8) == 0) {
-					int xx = xpos + DX[z];
-					int yy = ypos + DY[z];
-					if (city.testBounds(xx, yy)) {
-						int t = city.getTile(xx, yy);
-						if (isCombustible(t)
-							|| t == DIRT
-							|| (t >= WOODS5 && t < FLOOD))
-						{
-							if (isZoneCenter(t)) {
-								city.killZone(xx, yy, t);
-							}
-							city.setTile(xx, yy, (char)(FLOOD + PRNG.nextInt(3)));
-						}
-					}
+			if (PRNG.nextInt(8) == 0) {
+				int xx = xpos + DX[z];
+				int yy = ypos + DY[z];
+				if (!city.testBounds(xx, yy))
+					continue;
+
+				if (city.getTileElevation(xx, yy) <= city.getTileElevation(xpos, ypos)) {
+					city.setTile(xx, yy, FLOOD);
 				}
-			}
-		}
-		else {
-			if (PRNG.nextInt(16) == 0) {
-				city.setTile(xpos, ypos, DIRT);
 			}
 		}
 	}

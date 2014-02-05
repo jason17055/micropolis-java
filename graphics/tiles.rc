@@ -1076,3 +1076,10 @@ field@S2W1          farms/wheatfield_zone@0,48
 field@S2            farms/wheatfield_zone@16,48
 field@S2E1          farms/wheatfield_zone@32,48
 field@S2E2          farms/wheatfield_zone@48,48
+# NEW #
+river               river
+river_source        river_source
+river_flow_north    river_flow_north
+river_flow_south    river_flow_south
+river_flow_east     river_flow_east
+river_flow_west     river_flow_west
