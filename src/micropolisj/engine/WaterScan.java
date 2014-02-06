@@ -95,8 +95,7 @@ class WaterScan
 			int i = city.PRNG.nextInt(lowerLand.size());
 			CityLocation aLoc = lowerLand.get(i);
 
-			System.out.println("adding lower-elevation river tile at "+aLoc.x+","+aLoc.y);
-			city.setTile(aLoc.x, aLoc.y, (char) Tiles.load("river").tileNumber);
+			overflowTo(p, aLoc);
 			return;
 		}
 
@@ -104,8 +103,7 @@ class WaterScan
 			int i = city.PRNG.nextInt(equalLand.size());
 			CityLocation aLoc = equalLand.get(i);
 
-			System.out.println("adding same-elevation river tile at "+aLoc.x+","+aLoc.y);
-			city.setTile(aLoc.x, aLoc.y, (char) Tiles.load("river").tileNumber);
+			expandTo(p, aLoc);
 			return;
 		}
 
@@ -113,12 +111,44 @@ class WaterScan
 			int i = city.PRNG.nextInt(raisable.size());
 			CityLocation aLoc = raisable.get(i);
 
-			System.out.println("raising river at "+aLoc.x+","+aLoc.y);
-			city.setTileElevation(aLoc.x, aLoc.y, (short)(p.elevation+1));
+			raiseWater(p, aLoc);
 			return;
 		}
 
 		System.out.println("Oops, cannot grow river");
+	}
+
+	void overflowTo(WaterPart p, CityLocation aLoc)
+	{
+		assert p != null && !p.body.contains(aLoc);
+		assert city.testBounds(aLoc.x, aLoc.y);
+		assert !isRiverPart(city.getTile(aLoc.x, aLoc.y));
+		assert city.getTileElevation(aLoc.x, aLoc.y) < p.elevation;
+
+		System.out.println("adding lower-elevation river tile at "+aLoc.x+","+aLoc.y);
+		city.setTile(aLoc.x, aLoc.y, (char) Tiles.load("river").tileNumber);
+	}
+
+	void expandTo(WaterPart p, CityLocation aLoc)
+	{
+		assert p != null && !p.body.contains(aLoc);
+		assert city.testBounds(aLoc.x, aLoc.y);
+		assert !isRiverPart(city.getTile(aLoc.x, aLoc.y));
+		assert city.getTileElevation(aLoc.x, aLoc.y) == p.elevation;
+
+		System.out.println("adding same-elevation river tile at "+aLoc.x+","+aLoc.y);
+		city.setTile(aLoc.x, aLoc.y, (char) Tiles.load("river").tileNumber);
+	}
+
+	void raiseWater(WaterPart p, CityLocation aLoc)
+	{
+		assert p != null && p.body.contains(aLoc);
+		assert city.testBounds(aLoc.x, aLoc.y);
+		assert isRiverPart(city.getTile(aLoc.x, aLoc.y));
+		assert city.getTileElevation(aLoc.x, aLoc.y) == p.elevation;
+
+		System.out.println("raising river at "+aLoc.x+","+aLoc.y);
+		city.setTileElevation(aLoc.x, aLoc.y, (short)(p.elevation+1));
 	}
 
 	void makeWaterPart(int xpos, int ypos)
