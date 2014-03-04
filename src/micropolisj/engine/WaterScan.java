@@ -127,6 +127,36 @@ class WaterScan
 
 		System.out.println("adding lower-elevation river tile at "+aLoc.x+","+aLoc.y);
 		city.setTile(aLoc.x, aLoc.y, (char) Tiles.load("river").tileNumber);
+		seen[aLoc.y][aLoc.x] = true;
+
+		// check neighbors for a same-elevation river tile
+		WaterPart destPart = null;
+		for (int i = 0; i < Dx.length; i++) {
+			int x = aLoc.x + Dx[i];
+			int y = aLoc.y + Dy[i];
+			if (city.testBounds(x, y) &&
+				isRiverPart(city.getTile(x, y)) &&
+				city.getTileElevation(x, y) == city.getTileElevation(aLoc.x, aLoc.y)
+			) {
+				// this neighbor has same elevation, so the
+				// new tile should join that water part
+				destPart = findPart(new CityLocation(x, y));
+				assert destPart != null;
+				destPart.body.add(aLoc);
+				break;
+			}
+		}
+
+		if (destPart == null) {
+			// have to make a new water part
+			destPart = new WaterPart();
+			destPart.elevation = city.getTileElevation(aLoc.x, aLoc.y);
+			destPart.body = new HashSet<CityLocation>();
+			destPart.body.add(aLoc);
+			parts.add(destPart);
+		}
+
+		addFlow(p, destPart, 1);
 	}
 
 	void expandTo(WaterPart p, CityLocation aLoc)
@@ -138,6 +168,12 @@ class WaterScan
 
 		System.out.println("adding same-elevation river tile at "+aLoc.x+","+aLoc.y);
 		city.setTile(aLoc.x, aLoc.y, (char) Tiles.load("river").tileNumber);
+		seen[aLoc.y][aLoc.x] = true;
+
+		p.body.add(aLoc);
+
+		//TODO- check whether this part is now adjacent to another
+		// part with same elevation
 	}
 
 	void raiseWater(WaterPart p, CityLocation aLoc)
