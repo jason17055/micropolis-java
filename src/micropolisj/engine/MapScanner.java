@@ -107,7 +107,7 @@ class MapScanner extends TileBehavior
 		return zonePwrFlag;
 	}
 
-	boolean setZonePower()
+	boolean setZonePower() //update zone power and return new value
 	{
 		boolean oldPower = (rawTile & PWRBIT) == PWRBIT;
 		boolean newPower = (
@@ -182,7 +182,7 @@ class MapScanner extends TileBehavior
 
 	void doCoalPower()
 	{
-		boolean powerOn = checkZonePower();
+		checkZonePower();
 		city.coalCount++;
 		if ((city.cityTime % 8) == 0) {
 			repairZone(POWERPLANT, 4);
@@ -193,7 +193,7 @@ class MapScanner extends TileBehavior
 
 	void doNuclearPower()
 	{
-		boolean powerOn = checkZonePower();
+		checkZonePower();
 		if (!city.noDisasters && PRNG.nextInt(city.MltdwnTab[city.gameLevel]+1) == 0) {
 			city.doMeltdown(xpos, ypos);
 			return;
@@ -275,7 +275,7 @@ class MapScanner extends TileBehavior
 
 	void doStadiumFull()
 	{
-		boolean powerOn = checkZonePower();
+		checkZonePower();
 		city.stadiumCount++;
 		if (((city.cityTime + xpos + ypos) % 8) == 0) {
 			drawStadium(STADIUM);
@@ -397,8 +397,7 @@ class MapScanner extends TileBehavior
 				int xx = xpos - 1 + x;
 				int yy = ypos - 1 + y;
 
-				if (city.testBounds(xx, yy))
-				{
+				if (city.testBounds(xx, yy)) {
 					int thCh = city.getTile(xx, yy);
 					if (isZoneCenter(thCh)) {
 						continue;
