@@ -3,9 +3,12 @@ package micropolisj.gui;
 
 import static micropolisj.gui.MainWindow.EXTENSION;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -13,13 +16,17 @@ import javax.swing.JOptionPane;
 
 import micropolisj.Main;
 import micropolisj.gui.*;
-
 import micropolisj.engine.Micropolis;
+
 import javax.swing.JDialog;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.awt.BorderLayout;
+import java.awt.Graphics;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 public class SplashScreen extends JFrame{
 	
@@ -29,11 +36,20 @@ public class SplashScreen extends JFrame{
 	JButton jbExit;
 	JButton jbScenario;
 	JPanel panel;
+	BufferedImage image;
+	JLabel jlSplashImage;
+	
 	static final ResourceBundle strings = MainWindow.strings;
 	
 	public SplashScreen(){
 		super("Willkommen");
-		
+		try{
+			image = ImageIO.read(new File("graphics/splash.png"));
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+
+		jlSplashImage = new JLabel(new ImageIcon(image));
 		jbLastGame = new JButton("Letztes Spiel laden");
 		jbLastGame.setEnabled(false);
 		
@@ -100,10 +116,18 @@ public class SplashScreen extends JFrame{
 		panel.add(jbScenario);
 		panel.add(jbExit);
 		getContentPane().add(panel, BorderLayout.SOUTH);
+		getContentPane().add(jlSplashImage, BorderLayout.NORTH);
 		pack();
 		
 		
 	}
+	
+    protected void paintComponent(Graphics g) {
+        super.paintComponents(g);
+        g.drawImage(image, 0, 0, null);           
+    }
+	
+	
 	void startPlaying(Micropolis newEngine, File file)
 	{
 		
