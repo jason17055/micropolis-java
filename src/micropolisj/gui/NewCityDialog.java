@@ -12,9 +12,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import micropolisj.Main;
 import micropolisj.engine.*;
 import static micropolisj.gui.MainWindow.EXTENSION;
 
@@ -118,7 +120,11 @@ public class NewCityDialog extends JDialog
 			btn = new JButton(strings.getString("welcome.quit"));
 			btn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
-					onQuitClicked();
+					
+					//instead of quiting, show splash screen again
+					onCancelClicked();
+					Main.splash.setVisible(true);
+					
 				}});
 			buttonPane.add(btn);
 		}

@@ -46,8 +46,10 @@ public class SplashScreen extends JFrame{
 		
 		jbNewGame.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+				setVisible(false);
 				MainWindow win = new MainWindow();
-				win.setVisible(true);
+				
+				win.setVisible(false);
 				win.doNewCity(true);
 			}
 		});
@@ -55,7 +57,7 @@ public class SplashScreen extends JFrame{
 		jbLoadGame.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				try
-				{
+				{	
 					JFileChooser fc = new JFileChooser();
 					FileNameExtensionFilter filter1 = new FileNameExtensionFilter(strings.getString("cty_file"), EXTENSION);
 					fc.setFileFilter(filter1);
@@ -95,6 +97,7 @@ public class SplashScreen extends JFrame{
 	}
 	void startPlaying(Micropolis newEngine, File file)
 	{
+		
 		MainWindow win = new MainWindow();
 		win.setVisible(true);
 		win.setEngine(newEngine);
