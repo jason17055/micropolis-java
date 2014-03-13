@@ -99,12 +99,12 @@ public class NewCityDialog extends JDialog
 			}});
 		buttonPane.add(btn);
 
-		btn = new JButton(strings.getString("welcome.load_city"));
-		btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				onLoadCityClicked();
-			}});
-		buttonPane.add(btn);
+		//btn = new JButton(strings.getString("welcome.load_city"));
+		//btn.addActionListener(new ActionListener() {
+		//	public void actionPerformed(ActionEvent evt) {
+		//		onLoadCityClicked();
+		//	}});
+		//buttonPane.add(btn);
 
 		if (showCancelOption) {
 			btn = new JButton(strings.getString("welcome.cancel"));
@@ -162,7 +162,7 @@ public class NewCityDialog extends JDialog
 		previousMapBtn.setEnabled(true);
 	}
 
-	private void onLoadCityClicked()
+	public void onLoadCityClicked()
 	{
 		try
 		{

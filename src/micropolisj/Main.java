@@ -11,14 +11,18 @@ package micropolisj;
 import javax.swing.*;
 
 import micropolisj.gui.MainWindow;
+import micropolisj.gui.SplashScreen;
 
 public class Main
 {
 	static void createAndShowGUI()
 	{
-		MainWindow win = new MainWindow();
-		win.setVisible(true);
-		win.doNewCity(true);
+		SplashScreen splash = new SplashScreen();
+		splash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		splash.setVisible(true);
+		//MainWindow win = new MainWindow();
+		//win.setVisible(true);
+		//win.doNewCity(true);
 	}
 
 	public static void main(String [] args)
