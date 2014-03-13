@@ -15,9 +15,10 @@ import micropolisj.gui.SplashScreen;
 
 public class Main
 {
+	public static SplashScreen splash = new SplashScreen();
+	
 	static void createAndShowGUI()
 	{
-		SplashScreen splash = new SplashScreen();
 		splash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		splash.setVisible(true);
 		//MainWindow win = new MainWindow();
