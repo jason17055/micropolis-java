@@ -46,6 +46,12 @@ public class SplashScreen extends JFrame{
 		jbScenario = new JButton("Szenario spielen");
 		jbScenario.setEnabled(false);
 		
+		jbExit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				System.exit(0);
+			}
+		});
+		
 		jbNewGame.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				setVisible(false);
