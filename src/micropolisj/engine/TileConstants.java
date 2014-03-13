@@ -134,6 +134,7 @@ public class TileConstants
 	static final char POWERPLANT = 750;
 	static final char FIRESTATION = 765;
 	static final char POLICESTATION = 774;
+	static final char SCHOOL = 780;
 	static final char STADIUM = 784;
 	static final char FULLSTADIUM = 800;
 	static final char NUCLEAR = 816;

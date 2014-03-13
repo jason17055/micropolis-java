@@ -1041,6 +1041,7 @@ public class MainWindow extends JFrame
 
 		b5.add(makeToolBtn(MicropolisTool.STADIUM));
 		b5.add(makeToolBtn(MicropolisTool.SEAPORT));
+		b5.add(makeToolBtn(MicropolisTool.SCHOOL));
 
 		c.gridy++;
 		Box b6 = new Box(BoxLayout.X_AXIS);
