@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JOptionPane;
+import micropolisj.gui.*;
 
 import micropolisj.engine.Micropolis;
 import javax.swing.JDialog;
@@ -59,18 +60,19 @@ public class SplashScreen extends JFrame{
 					FileNameExtensionFilter filter1 = new FileNameExtensionFilter(strings.getString("cty_file"), EXTENSION);
 					fc.setFileFilter(filter1);
 
-					int rv = fc.showOpenDialog(new JDialog());
+					int rv = fc.showOpenDialog(SplashScreen.this);
 					if (rv == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
 						Micropolis newEngine = new Micropolis();
 						newEngine.load(file);
 						startPlaying(newEngine, file);
+
 					}
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace(System.err);
-					JOptionPane.showMessageDialog(new JDialog(), e, strings.getString("main.error_caption"),
+					JOptionPane.showMessageDialog(SplashScreen.this, e, strings.getString("main.error_caption"),
 						JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -93,7 +95,8 @@ public class SplashScreen extends JFrame{
 	}
 	void startPlaying(Micropolis newEngine, File file)
 	{
-		MainWindow win = (MainWindow) getOwner();
+		MainWindow win = new MainWindow();
+		win.setVisible(true);
 		win.setEngine(newEngine);
 		win.currentFile = file;
 		win.makeClean();
