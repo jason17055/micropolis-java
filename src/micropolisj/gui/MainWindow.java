@@ -181,7 +181,7 @@ public class MainWindow extends JFrame
 		leftPane.add(notificationPane, c);
 
 		pack();
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
 		InputMap inputMap = ((JComponent)getContentPane()).getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -494,7 +494,7 @@ public class MainWindow extends JFrame
 			new ActionListener() {
 			public void actionPerformed(ActionEvent ev)
 			{
-				closeWindow();
+				System.exit(0);
 			}
 			}));
 		gameMenu.add(menuItem);

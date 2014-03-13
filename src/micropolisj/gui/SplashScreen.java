@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JOptionPane;
+
+import micropolisj.Main;
 import micropolisj.gui.*;
 
 import micropolisj.engine.Micropolis;
@@ -92,6 +94,7 @@ public class SplashScreen extends JFrame{
 		panel.add(jbScenario);
 		panel.add(jbExit);
 		getContentPane().add(panel, BorderLayout.SOUTH);
+		pack();
 		
 		
 	}

@@ -16,6 +16,7 @@ import micropolisj.gui.SplashScreen;
 public class Main
 {
 	public static SplashScreen splash = new SplashScreen();
+//	public static MainWindow win = new MainWindow();
 	
 	static void createAndShowGUI()
 	{

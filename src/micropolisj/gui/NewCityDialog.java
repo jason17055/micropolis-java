@@ -195,6 +195,7 @@ public class NewCityDialog extends JDialog
 	void startPlaying(Micropolis newEngine, File file)
 	{
 		MainWindow win = (MainWindow) getOwner();
+		win.setVisible(true);
 		win.setEngine(newEngine);
 		win.currentFile = file;
 		win.makeClean();
