@@ -186,7 +186,7 @@ public class TileConstants
 	// bit 10 ... unused
 
 	public static final char ALLBITS = 64512;   // mask for upper 6 bits
-	public static final char LOMASK = 1023; //mask for low 10 bits
+	public static final char LOMASK = 2047; //mask for low 10 bits
 
 	private TileConstants() {}
 

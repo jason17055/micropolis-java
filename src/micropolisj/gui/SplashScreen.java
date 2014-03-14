@@ -42,7 +42,7 @@ public class SplashScreen extends JFrame{
 	static final ResourceBundle strings = MainWindow.strings;
 	
 	public SplashScreen(){
-		super("Willkommen");
+		super("WELCOME");
 		try{
 			image = ImageIO.read(new File("graphics/splash.png"));
 		} catch(IOException e){
@@ -50,16 +50,16 @@ public class SplashScreen extends JFrame{
 		}
 
 		jlSplashImage = new JLabel(new ImageIcon(image));
-		jbLastGame = new JButton("Letztes Spiel laden");
+		jbLastGame = new JButton("Load previous city");
 		jbLastGame.setEnabled(false);
 		
-		jbNewGame = new JButton("Neues Spiel starten");
+		jbNewGame = new JButton("Start a new city");
 		
-		jbLoadGame = new JButton("Spiel laden");
+		jbLoadGame = new JButton("Load city");
 		
-		jbExit = new JButton("Spiel verlassen");
+		jbExit = new JButton("Leave game");
 		
-		jbScenario = new JButton("Szenario spielen");
+		jbScenario = new JButton("Play a scenario");
 		jbScenario.setEnabled(false);
 		
 		jbExit.addActionListener(new ActionListener(){
