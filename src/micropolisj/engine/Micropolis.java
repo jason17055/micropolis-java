@@ -86,6 +86,7 @@ public class Micropolis
 	public int [][] fireRate;       //firestations reach- used for overlay graphs
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
+	int [][] schoolMap;
 
 	/** For each 8x8 section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
@@ -119,6 +120,7 @@ public class Micropolis
 	int hospitalCount;
 	int churchCount;
 	int policeCount;
+	int schoolCount;
 	int fireStationCount;
 	int stadiumCount;
 	int coalCount;
@@ -243,6 +245,7 @@ public class Micropolis
 		rateOGMem = new int[smY][smX];
 		fireStMap = new int[smY][smX];
 		policeMap = new int[smY][smX];
+		schoolMap = new int[smY][smX];
 		policeMapEffect = new int[smY][smX];
 		fireRate = new int[smY][smX];
 		comRate = new int[smY][smX];
@@ -520,6 +523,7 @@ public class Micropolis
 		hospitalCount = 0;
 		churchCount = 0;
 		policeCount = 0;
+		schoolCount = 0;
 		fireStationCount = 0;
 		stadiumCount = 0;
 		coalCount = 0;
@@ -532,6 +536,7 @@ public class Micropolis
 			for (int x = 0; x < fireStMap[y].length; x++) {
 				fireStMap[y][x] = 0;
 				policeMap[y][x] = 0;
+				schoolMap[y][x] = 0;
 			}
 		}
 	}
@@ -1451,6 +1456,7 @@ public class Micropolis
 		bb.put("NUCLEAR", new MapScanner(this, MapScanner.B.NUCLEAR));
 		bb.put("FIRESTATION", new MapScanner(this, MapScanner.B.FIRESTATION));
 		bb.put("POLICESTATION", new MapScanner(this, MapScanner.B.POLICESTATION));
+		bb.put("SCHOOLBUILDING", new MapScanner(this, MapScanner.B.SCHOOLBUILDING));
 		bb.put("STADIUM_EMPTY", new MapScanner(this, MapScanner.B.STADIUM_EMPTY));
 		bb.put("STADIUM_FULL", new MapScanner(this, MapScanner.B.STADIUM_FULL));
 		bb.put("AIRPORT", new MapScanner(this, MapScanner.B.AIRPORT));

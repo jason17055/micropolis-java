@@ -40,6 +40,7 @@ class MapScanner extends TileBehavior
 		NUCLEAR,
 		FIRESTATION,
 		POLICESTATION,
+		SCHOOLBUILDING,
 		STADIUM_EMPTY,
 		STADIUM_FULL,
 		AIRPORT,
@@ -73,6 +74,10 @@ class MapScanner extends TileBehavior
 			return;
 		case POLICESTATION:
 			doPoliceStation();
+			return;
+		case SCHOOLBUILDING:
+			System.out.println("doschool");
+			doSchool();
 			return;
 		case STADIUM_EMPTY:
 			doStadiumEmpty();
@@ -253,6 +258,29 @@ class MapScanner extends TileBehavior
 		}
 
 		city.policeMap[ypos/8][xpos/8] += z;
+	}
+	void doSchool()
+	{
+		boolean powerOn = checkZonePower();
+		city.schoolCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(SCHOOLBUILDING, 3);
+		}
+
+		int z;
+		if (powerOn) {
+			z = city.policeEffect;
+		} else {
+			z = city.policeEffect / 2;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.schoolMap[ypos/8][xpos/8] += z;
 	}
 
 	void doStadiumEmpty()
