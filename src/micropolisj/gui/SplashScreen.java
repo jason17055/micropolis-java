@@ -42,7 +42,7 @@ public class SplashScreen extends JFrame{
 	static final ResourceBundle strings = MainWindow.strings;
 	
 	public SplashScreen(){
-		super("Willkommen");
+		super("WELCOME");
 		try{
 			image = ImageIO.read(new File("graphics/splash.png"));
 		} catch(IOException e){
