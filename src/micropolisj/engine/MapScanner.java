@@ -40,6 +40,7 @@ class MapScanner extends TileBehavior
 		NUCLEAR,
 		FIRESTATION,
 		POLICESTATION,
+		SCHOOL,
 		STADIUM_EMPTY,
 		STADIUM_FULL,
 		AIRPORT,
