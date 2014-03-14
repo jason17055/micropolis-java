@@ -1010,12 +1010,12 @@
 958   misc_animation@0,2096
 959   misc_animation@0,2112
 # BEGIN SCHOOL #
-959   police@0,0             (conducts)
-960   police@16,0            (conducts)
-961   police@32,0            (conducts)
-962   police@0,16            (conducts)
-963   police@16,16     (zone)(conducts)(building=3x3)(behavior=SCHOOL)(description=#17)
-964   police@32,16           (conducts)
-965   police@0,32            (conducts)
-966   police@16,32           (conducts)
-967   police@32,32           (conducts)
+960   school@0,0             (conducts)
+961   school@16,0            (conducts)
+962   school@32,0            (conducts)
+963   school@0,16            (conducts)
+964   school@16,16     (zone)(conducts)(building=3x3)(behavior=SCHOOLBUILDING)(description=#17)
+965   school@32,16           (conducts)
+966   school@0,32            (conducts)
+967   school@16,32           (conducts)
+968   school@32,32           (conducts)

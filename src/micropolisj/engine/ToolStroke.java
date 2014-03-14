@@ -88,6 +88,9 @@ public class ToolStroke
 
 		case STADIUM:
 			return applyZone(eff, STADIUM);
+			
+		case SCHOOL:
+			return applyZone(eff, SCHOOLBUILDING);
 
 		case SEAPORT:
 			return applyZone(eff, PORT);
@@ -151,6 +154,7 @@ public class ToolStroke
 		assert isZoneCenter(base);
 
 		TileSpec.BuildingInfo bi = Tiles.get(base).getBuildingInfo();
+		//System.out.println("base of tile: " + Tiles.get(base));
 		if (bi == null) {
 			throw new Error("Cannot applyZone to #"+base);
 		}
