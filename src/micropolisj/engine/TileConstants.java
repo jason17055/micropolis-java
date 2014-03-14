@@ -153,7 +153,7 @@ public class TileConstants
 	static final char VBRDG2 = 950;
 	static final char VBRDG3 = 951;
 	static final char SCHOOLBUILDING = 964;
-	public static final char LAST_TILE = 968;
+	public static final char LAST_TILE = 964;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,

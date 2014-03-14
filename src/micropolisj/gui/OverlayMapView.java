@@ -409,6 +409,7 @@ public class OverlayMapView extends JComponent
 
 	void paintTile(BufferedImage img, int x, int y, int tile)
 	{
+		System.out.println("gonna paint tile");
 		assert tile >= 0;
 
 		for (int yy = 0; yy < TILE_HEIGHT; yy++)
