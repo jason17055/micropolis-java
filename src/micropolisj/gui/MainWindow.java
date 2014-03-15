@@ -190,6 +190,7 @@ public class MainWindow extends JFrame
 		inputMap.put(KeyStroke.getKeyStroke("SUBTRACT"), "zoomOut");
 		inputMap.put(KeyStroke.getKeyStroke("MINUS"), "zoomOut");
 		inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "escape");
+        inputMap.put(KeyStroke.getKeyStroke("ENTER"), "openCheatBox");
 
 		ActionMap actionMap = ((JComponent)getContentPane()).getActionMap();
 		actionMap.put("zoomIn", new AbstractAction() {
@@ -207,6 +208,12 @@ public class MainWindow extends JFrame
 				onEscapePressed();
 			}
 			});
+        actionMap.put("openCheatBox", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                openCheatBox();
+            }
+        });
+
 
 		MouseAdapter mouse = new MouseAdapter() {
 			public void mousePressed(MouseEvent ev)
@@ -1129,6 +1136,14 @@ public class MainWindow extends JFrame
 			drawingAreaScroll.getViewport().setViewPosition(new Point(newX, newY));
 		}
 	}
+
+    private void openCheatBox()
+    {
+        String text=JOptionPane.showInputDialog("CHEAT:");
+        if (text.equals("fund"))
+            engine.spend(-10000);
+
+    }
 
 	private void doZoom(int dir)
 	{
