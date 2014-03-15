@@ -137,6 +137,7 @@ public class Micropolis
 	int lastTotalPop;
 	int lastFireStationCount;
 	int lastPoliceCount;
+	int lastSchoolCount;
 
 	int trafficMaxLocationX;
 	int trafficMaxLocationY;
@@ -174,11 +175,13 @@ public class Micropolis
 	public double roadPercent = 1.0;
 	public double policePercent = 1.0;
 	public double firePercent = 1.0;
+	public double schoolPercent = 1.0;
 
 	int taxEffect = 7;
 	int roadEffect = 32;
 	int policeEffect = 1000;
 	int fireEffect = 1000;
+	int schoolEffect = 1000;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -1724,6 +1727,7 @@ public class Micropolis
 		lastTotalPop = totalPop;
 		lastFireStationCount = fireStationCount;
 		lastPoliceCount = policeCount;
+		lastSchoolCount = schoolCount;
 
 		BudgetNumbers b = generateBudget();
 
@@ -1731,6 +1735,7 @@ public class Micropolis
 		budget.roadFundEscrow -= b.roadFunded;
 		budget.fireFundEscrow -= b.fireFunded;
 		budget.policeFundEscrow -= b.policeFunded;
+		budget.schoolFundEscrow -= b.schoolFunded;
 
 		taxEffect = b.taxRate;
 		roadEffect = b.roadRequest != 0 ?
@@ -1741,6 +1746,9 @@ public class Micropolis
 			1000;
 		fireEffect = b.fireRequest != 0 ?
 			(int)Math.floor(1000.0 * (double)b.fireFunded / (double)b.fireRequest) :
+			1000;
+		schoolEffect = b.schoolRequest != 0 ?
+			(int)Math.floor(1000.0 * (double)b.schoolFunded / (double)b.schoolRequest) :
 			1000;
 	}
 
@@ -1756,7 +1764,7 @@ public class Micropolis
 	void collectTax()
 	{
 		int revenue = budget.taxFund / TAXFREQ;
-		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow) / TAXFREQ;
+		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow + budget.schoolFundEscrow) / TAXFREQ;
 
 		FinancialHistory hist = new FinancialHistory();
 		hist.cityTime = cityTime;
@@ -1773,6 +1781,7 @@ public class Micropolis
 		budget.roadFundEscrow = 0;
 		budget.fireFundEscrow = 0;
 		budget.policeFundEscrow = 0;
+		budget.schoolFundEscrow = 0;
 	}
 
 	/** Annual maintenance cost of each police station. */
@@ -1780,6 +1789,9 @@ public class Micropolis
 
 	/** Annual maintenance cost of each fire station. */
 	static final int FIRE_STATION_MAINTENANCE = 100;
+	
+	/** Annual maintenance cost of each police station. */
+	static final int SCHOOL_MAINTENANCE = 100;
 
 	/**
 	 * Calculate the current budget numbers.
@@ -1791,6 +1803,7 @@ public class Micropolis
 		b.roadPercent = Math.max(0.0, roadPercent);
 		b.firePercent = Math.max(0.0, firePercent);
 		b.policePercent = Math.max(0.0, policePercent);
+		b.schoolPercent = Math.max(0.0, schoolPercent);
 
 		b.previousBalance = budget.totalFunds;
 		b.taxIncome = (int)Math.round(lastTotalPop * landValueAverage / 120 * b.taxRate * FLevels[gameLevel]);
@@ -1799,14 +1812,18 @@ public class Micropolis
 		b.roadRequest = (int)Math.round((lastRoadTotal + lastRailTotal * 2) * RLevels[gameLevel]);
 		b.fireRequest = FIRE_STATION_MAINTENANCE * lastFireStationCount;
 		b.policeRequest = POLICE_STATION_MAINTENANCE * lastPoliceCount;
+		b.schoolRequest = SCHOOL_MAINTENANCE * lastSchoolCount;
 
 		b.roadFunded = (int)Math.round(b.roadRequest * b.roadPercent);
 		b.fireFunded = (int)Math.round(b.fireRequest * b.firePercent);
 		b.policeFunded = (int)Math.round(b.policeRequest * b.policePercent);
+		b.schoolFunded = (int)Math.round(b.schoolRequest * b.schoolPercent);
 
 		int yumDuckets = budget.totalFunds + b.taxIncome;
 		assert yumDuckets >= 0;
 
+		// calculating budget. subtracting all the costs and checking if it still can be subtracted
+		// definetly need to refactor here
 		if (yumDuckets >= b.roadFunded)
 		{
 			yumDuckets -= b.roadFunded;
@@ -1816,13 +1833,28 @@ public class Micropolis
 				if (yumDuckets >= b.policeFunded)
 				{
 					yumDuckets -= b.policeFunded;
+					if (yumDuckets >= b.schoolFunded)
+					{
+						yumDuckets -= b.schoolFunded;
+					}
+					else
+					{
+						assert b.schoolRequest != 0;
+
+						b.schoolFunded = yumDuckets;
+						b.schoolPercent = (double)b.schoolFunded / (double)b.schoolRequest;
+						yumDuckets = 0;
+						
+					}
 				}
 				else
 				{
-					assert b.policeRequest != 0;
+					assert b.schoolRequest != 0;
 
 					b.policeFunded = yumDuckets;
 					b.policePercent = (double)b.policeFunded / (double)b.policeRequest;
+					b.schoolFunded = 0;
+					b.schoolPercent = 0.0;
 					yumDuckets = 0;
 				}
 			}
@@ -1834,6 +1866,8 @@ public class Micropolis
 				b.firePercent = (double)b.fireFunded / (double)b.fireRequest;
 				b.policeFunded = 0;
 				b.policePercent = 0.0;
+				b.schoolFunded = 0;
+				b.schoolPercent = 0.0;
 				yumDuckets = 0;
 			}
 		}
@@ -1847,6 +1881,8 @@ public class Micropolis
 			b.firePercent = 0.0;
 			b.policeFunded = 0;
 			b.policePercent = 0.0;
+			b.schoolFunded = 0;
+			b.schoolPercent = 0.0;
 		}
 
 		b.operatingExpenses = b.roadFunded + b.fireFunded + b.policeFunded;
@@ -2616,6 +2652,10 @@ public class Micropolis
 		case 63:
 			if (trafficAverage > 60) {
 				sendMessage(MicropolisMessage.HIGH_TRAFFIC);
+			}
+		case 67:
+			if (schoolEffect < 700 && totalPop > 20) {
+				sendMessage(MicropolisMessage.SCHOOL_NEED_FUNDING);
 			}
 			break;
 		default:
