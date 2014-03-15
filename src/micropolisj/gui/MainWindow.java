@@ -1142,7 +1142,6 @@ public class MainWindow extends JFrame
         String text=JOptionPane.showInputDialog("CHEAT:");
         if (text.equals("fund"))
             engine.spend(-10000);
-
     }
 
 	private void doZoom(int dir)
