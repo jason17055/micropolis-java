@@ -111,6 +111,7 @@ public class Micropolis
 	int poweredZoneCount;
 	int unpoweredZoneCount;
 	int roadTotal;
+	// int bigRoadTotal;
 	int railTotal;
 	int firePop;
 	int resZoneCount;
@@ -136,6 +137,7 @@ public class Micropolis
 	// used in generateBudget()
 	int lastRoadTotal;
 	int lastRailTotal;
+	// int lastBigRoadTotal;
 	int lastTotalPop;
 	int lastFireStationCount;
 	int lastPoliceCount;
@@ -527,6 +529,7 @@ public class Micropolis
 		firePop = 0;
 		roadTotal = 0;
 		railTotal = 0;
+		// bigRoadTotal = 0;
 		resPop = 0;
 		comPop = 0;
 		indPop = 0;
