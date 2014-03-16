@@ -657,7 +657,6 @@ public class Micropolis
 		case 15:
 			fireAnalysis();
 			doDisasters();
-			new WaterScan(this).waterScan();
 			break;
 
 		default:
@@ -2456,6 +2455,7 @@ public class Micropolis
 		}
 		moveObjects();
 		animateTiles();
+		new WaterScan(this).waterScan();
 	}
 
 	public Sprite [] allSprites()
