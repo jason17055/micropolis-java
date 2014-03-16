@@ -33,16 +33,37 @@ class WaterScan
 		connectParts();
 		calculateInFlows();
 
+		Set<CityLocation> waterAdd = new HashSet<CityLocation>();
+		Set<CityLocation> waterSub = new HashSet<CityLocation>();
+
 		for (WaterPart p : parts) {
 			int netFlow = p.getNetFlow();
 			if (netFlow > 0) {
-				System.out.println("water should rise "+netFlow);
-				addWater(p);
-				break;
+				
+				Collection<CityLocation> locs = pickLocationOfWaterIncrease(p, netFlow);
+				for (CityLocation l : locs) {
+					waterAdd.add(l);
+				}
 			}
 			else if (netFlow < 0) {
 				System.out.println("water should lower "+netFlow);
 			}
+		}
+
+		if (!waterAdd.isEmpty()) {
+			System.out.printf("adding water in %d locations\n", waterAdd.size());
+		}
+
+		for (CityLocation loc : waterAdd) {
+			if (waterSub.contains(loc)) {
+				waterSub.remove(loc);
+				continue;
+			}
+			addWater(loc);
+		}
+
+		for (CityLocation loc : waterSub) {
+			removeWater(loc);
 		}
 	}
 
@@ -80,7 +101,7 @@ class WaterScan
 		return null;
 	}
 
-	CityLocation pickLocationOfWaterIncrease(WaterPart p)
+	Collection<CityLocation> pickLocationOfWaterIncrease(WaterPart p, int count)
 	{
 		assert !p.body.isEmpty();
 
@@ -92,6 +113,8 @@ class WaterScan
 		ArrayList<CityLocation> raisable = new ArrayList<CityLocation>();
 		// remaining water in this body
 		ArrayList<CityLocation> otherWater = new ArrayList<CityLocation>();
+
+		HashSet<CityLocation> processedNeighbors = new HashSet<CityLocation>();
 
 		for (CityLocation loc : p.body)
 		{
@@ -107,13 +130,18 @@ class WaterScan
 				if (!city.testBounds(x, y)) {
 					continue;
 				}
+				CityLocation nLoc = new CityLocation(x, y);
+				if (processedNeighbors.contains(nLoc)) {
+					continue;
+				}
+				processedNeighbors.add(nLoc);
 
 				short el = city.getTileElevation(x, y);
 				if (el < p.elevation && !isRiverPart(city.getTile(x, y))) {
-					lowerLand.add(new CityLocation(x, y));
+					lowerLand.add(nLoc);
 				}
 				else if (el == p.elevation && !isRiverPart(city.getTile(x, y))) {
-					equalLand.add(new CityLocation(x, y));
+					equalLand.add(nLoc);
 				}
 				else if (el > p.elevation && isRiverPart(city.getTile(x, y))) {
 					isRaisable = true;
@@ -128,33 +156,35 @@ class WaterScan
 			}
 		}
 
-		if (!lowerLand.isEmpty()) {
+		ArrayList<CityLocation> list = new ArrayList<CityLocation>();
+		while (list.size() < count && !lowerLand.isEmpty()) {
 			int i = city.PRNG.nextInt(lowerLand.size());
-			return lowerLand.get(i);
+			list.add(lowerLand.remove(i));
 		}
-		else if (!equalLand.isEmpty()) {
+		while (list.size() < count && !equalLand.isEmpty()) {
 			int i = city.PRNG.nextInt(equalLand.size());
-			return equalLand.get(i);
+			list.add(equalLand.remove(i));
 		}
-		else if (!raisable.isEmpty()) {
+		while (list.size() < count && !raisable.isEmpty()) {
 			int i = city.PRNG.nextInt(raisable.size());
-			return raisable.get(i);
+			list.add(raisable.remove(i));
 		}
-		else {
-			assert !otherWater.isEmpty();
+		while (list.size() < count && !otherWater.isEmpty()) {
 			int i = city.PRNG.nextInt(otherWater.size());
-			return otherWater.get(i);
+			list.add(otherWater.remove(i));
 		}
+		return list;
 	}
 
-	void addWater(WaterPart p)
+	/**
+	 * Add one unit of water at a particular location.
+	 * @see #changeToWater, #raiseWater.
+	 */
+	void addWater(CityLocation loc)
 	{
-		CityLocation loc = pickLocationOfWaterIncrease(p);
-		assert city.testBounds(loc.x, loc.y);
-
 		if (!isRiverPart(city.getTile(loc.x, loc.y)))
 		{
-			addWater(loc);
+			changeToWater(loc);
 		}
 		else
 		{
@@ -162,10 +192,15 @@ class WaterScan
 		}
 	}
 
+	void removeWater(CityLocation loc)
+	{
+		//TODO
+	}
+
 	/**
 	 * Turn a land tile into shallow water.
 	 */
-	void addWater(CityLocation aLoc)
+	void changeToWater(CityLocation aLoc)
 	{
 		assert city.testBounds(aLoc.x, aLoc.y);
 		assert !isRiverPart(city.getTile(aLoc.x, aLoc.y));
@@ -256,8 +291,6 @@ class WaterScan
 	{
 		assert city.testBounds(aLoc.x, aLoc.y);
 		assert isRiverPart(city.getTile(aLoc.x, aLoc.y));
-
-		System.out.println("raising river at "+aLoc.x+","+aLoc.y);
 
 		WaterPart p = findPart(aLoc);
 		assert city.getTileElevation(aLoc.x, aLoc.y) == p.elevation;
