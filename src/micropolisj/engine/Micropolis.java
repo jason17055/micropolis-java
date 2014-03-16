@@ -154,6 +154,7 @@ public class Micropolis
 	int needChurch;   // -1 too many already, 0 just right, 1 not enough
 
 	int crimeAverage;
+    int analphabetismAverage;
 	int pollutionAverage;
 	int landValueAverage;
 	int trafficAverage;
@@ -2634,6 +2635,11 @@ public class Micropolis
 				sendMessage(MicropolisMessage.HIGH_TAXES);
 			}
 			break;
+        case 52:
+            if (totalPop > 60 && schoolCount == 0) {
+                sendMessage(MicropolisMessage.NEED_SCHOOL);
+            }
+            break;
 		case 54:
 			if (roadEffect < 20 && roadTotal > 30) {
 				sendMessage(MicropolisMessage.ROADS_NEED_FUNDING);

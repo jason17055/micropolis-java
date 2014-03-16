@@ -96,6 +96,7 @@ public class CityEval
 		z += engine.railTotal * 10;
 		z += engine.policeCount * 1000;
 		z += engine.fireStationCount * 1000;
+        z += engine.schoolCount * 1000;
 		z += engine.hospitalCount * 400;
 		z += engine.stadiumCount * 3000;
 		z += engine.seaportCount * 5000;
@@ -129,6 +130,7 @@ public class CityEval
 		problemTable.put(CityProblem.TAXES, engine.cityTax * 10);
 		problemTable.put(CityProblem.TRAFFIC, averageTrf());
 		problemTable.put(CityProblem.UNEMPLOYMENT, getUnemployment());
+        problemTable.put(CityProblem.ANALPHABETISM, engine.analphabetismAverage);
 		problemTable.put(CityProblem.FIRE, getFire());
 
 		problemVotes = voteProblems(problemTable);
@@ -211,6 +213,7 @@ public class CityEval
 		int z = engine.firePop * 5;
 		return Math.min(255, z);
 	}
+
 
 	static double clamp(double x, double min, double max)
 	{

@@ -21,6 +21,7 @@ public enum MicropolisMessage
 	NEED_RAILS,            //   5            doMessages           1/20
 	NEED_POWER,            //   6            doMessages           1/19
 	NEED_STADIUM,          //   7            doMessages           1/20
+    NEED_SCHOOL,
 	NEED_SEAPORT,          //   8            doMessages           1/20
 	NEED_AIRPORT,          //   9            doMessages
 	HIGH_POLLUTION,        //  10            doMessages           1/20
