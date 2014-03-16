@@ -103,9 +103,11 @@ public class Micropolis
 
 	public int gameLevel;
 
-	boolean autoGo;
+    public int nCheats = 0;
 
-	// census numbers, reset in phase 0 of each cycle, summed during map scan
+    boolean autoGo;
+
+    // census numbers, reset in phase 0 of each cycle, summed during map scan
 	int poweredZoneCount;
 	int unpoweredZoneCount;
 	int roadTotal;
@@ -211,8 +213,15 @@ public class Micropolis
 		fireFundsChanged();
 	}
 
-	public Micropolis()
-	{
+    public void incNCheats() {
+        nCheats++;
+    }
+
+    public void resetNCheats() {
+        nCheats = 0;
+    }
+
+    public Micropolis() {
 		this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
@@ -885,13 +894,21 @@ public class Micropolis
 		}
 
 		final int [] DisChance = { 480, 240, 60 };
-		if (noDisasters)
-			return;
 
-		if (PRNG.nextInt(DisChance[gameLevel]+1) != 0)
-			return;
 
-		switch (PRNG.nextInt(9))
+        if (noDisasters)
+            return;
+
+        if (nCheats > 5) {
+            makeEarthquake();
+            resetNCheats();
+            return;
+        }
+
+        if (PRNG.nextInt(DisChance[gameLevel] + 1) != 0)
+            return;
+
+        switch (PRNG.nextInt(9))
 		{
 		case 0:
 		case 1:
@@ -2165,9 +2182,10 @@ public class Micropolis
 		fireWholeMapChanged();
 		fireDemandChanged();
 		fireFundsChanged();
-	}
+        resetNCheats();
+    }
 
-	public void save(File filename)
+    public void save(File filename)
 		throws IOException
 	{
 		save(new FileOutputStream(filename));

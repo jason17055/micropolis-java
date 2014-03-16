@@ -1078,9 +1078,12 @@ public class MainWindow extends JFrame
     }
 
     private void openCheatBox() {
-        String text = JOptionPane.showInputDialog("CHEAT:");
-        if (text.equals("fund"))
+        String text = JOptionPane.showInputDialog(strings.getString("cheating.dialog"));
+        if (text.equals(strings.getString("cheating.cheat1"))) {
             engine.spend(-10000);
+            engine.incNCheats();
+        }
+
     }
 
     private void doZoom(int dir) {
