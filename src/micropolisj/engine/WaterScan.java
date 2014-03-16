@@ -34,7 +34,9 @@ class WaterScan
 
 		// start from the water source
 		WaterPart p = findWaterSink(source);
-		addWater(p);
+		if (p.body != null) {
+			addWater(p);
+		}
 	}
 
 	WaterPart findWaterSink(WaterPart src)
@@ -172,8 +174,37 @@ class WaterScan
 
 		p.body.add(aLoc);
 
-		//TODO- check whether this part is now adjacent to another
+		// check whether this part is now adjacent to another
 		// part with same elevation
+
+		checkNeighborsAt(p, aLoc);
+	}
+
+	void checkNeighborsAt(WaterPart p, CityLocation aLoc)
+	{
+		for (int i = 0; i < Dx.length; i++) {
+			CityLocation bLoc = new CityLocation(aLoc.x+Dx[i], aLoc.y+Dy[i]);
+			WaterPart q = findPart(bLoc);
+			if (q != null && q != p && q.elevation == p.elevation) {
+				mergeParts(p, q);
+			}
+		}
+	}
+
+	void mergeParts(WaterPart p, WaterPart q)
+	{
+		assert p != null;
+		assert q != null;
+		assert p != q;
+		assert p.elevation == q.elevation;
+
+		assert parts.contains(q);
+
+		parts.remove(q);
+		p.body.addAll(q.body);
+		for (WaterFlow f : q.outFlows) {
+			addFlow(p, f.to, f.volume);
+		}
 	}
 
 	void raiseWater(WaterPart p, CityLocation aLoc)
@@ -287,7 +318,7 @@ class WaterScan
 	static class WaterPart
 	{
 		Set<CityLocation> body;
-		int inVolume;
+		//int inVolume;
 		short elevation;
 		Collection<WaterFlow> outFlows = new ArrayList<WaterFlow>();
 	}
