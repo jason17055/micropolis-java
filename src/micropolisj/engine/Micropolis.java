@@ -260,6 +260,7 @@ public class Micropolis
 
 		landValueMem = new int[height][width];
 		pollutionMem = new int[height][width];
+		analphabetismMem = new int[height][width];
 		crimeMem = new int[height][width];
 		popDensity = new int[height][width];
 		trfDensity = new int[height][width];
@@ -268,6 +269,7 @@ public class Micropolis
 		fireStMap = new int[height][width];
 		policeMap = new int[height][width];
 		schoolMap = new int[height][width];
+		museumMap = new int[height][width];
 		policeMapEffect = new int[height][width];
 		schoolMapEffect = new int[height][width];
 		fireRate = new int[height][width];
@@ -1124,12 +1126,10 @@ public class Micropolis
 						sendMessage(MicropolisMessage.BROWNOUTS_REPORT);
 						return;
 					}
-					System.out.print(current);
 					powerMap[current.y][current.x] = true;
 					for (int dir=0;dir<4;dir++) {
 						if (testForCond(current, dir)) {
 							toDo.add(goToAdj(current, dir));
-							System.out.print("ha:"+goToAdj(current, dir));
 						}
 					}
 				}
@@ -1700,14 +1700,14 @@ public class Micropolis
 		history.com[0] = comPop;
 		history.ind[0] = indPop;
 
-		crimeRamp += (crimeAverage - crimeRamp) / 4;
+		crimeRamp += (crimeAverage - crimeRamp);
 		history.crime[0] = Math.min(255, crimeRamp);
 
 
-		polluteRamp += (pollutionAverage - polluteRamp) / 4;
+		polluteRamp += (pollutionAverage - polluteRamp);
 		history.pollution[0] = Math.min(255, polluteRamp);
 
-        analphabetismRamp += (analphabetismAverage - analphabetismRamp) / 4;
+        analphabetismRamp += (analphabetismAverage - analphabetismRamp);
         history.analphabetism[0] = Math.min(255, analphabetismRamp);
 
 		int moneyScaled = cashFlow / 20 + 128;
