@@ -1270,7 +1270,8 @@ public class Micropolis
 	{
 		return new CityLocation(pollutionMaxLocationX, pollutionMaxLocationY);
 	}
-
+	
+	//growth depending on tax
 	static final int [] TaxTable = {
 		200, 150, 120, 100, 80, 50, 30, 0, -10, -40, -100,
 		-150, -200, -250, -300, -350, -400, -450, -500, -550, -600 };
@@ -1294,7 +1295,7 @@ public class Micropolis
 	{
 		double normResPop = (double)resPop / 8.0;
 		totalPop = (int) (normResPop + comPop + indPop);
-
+		//refactor this on base of visits
 		double employment;
 		if (normResPop != 0.0)
 		{
@@ -1370,7 +1371,8 @@ public class Micropolis
 
 		if (indRatio > 2.0)
 			indRatio = 2.0;
-
+		
+		//growth depending on tax
 		int z2 = taxEffect + gameLevel;
 		if (z2 > 20)
 			z2 = 20;
