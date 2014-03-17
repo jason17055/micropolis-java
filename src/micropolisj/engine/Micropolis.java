@@ -1933,12 +1933,14 @@ public class Micropolis
 		b.fireRequest = FIRE_STATION_MAINTENANCE * lastFireStationCount;
 		b.policeRequest = POLICE_STATION_MAINTENANCE * lastPoliceCount;
 		b.schoolRequest = SCHOOL_MAINTENANCE * lastSchoolCount;
+		b.cultureRequest = CULTURE_MAINTENANCE * (lastMuseumCount); //plus stadion count...
 
 		b.roadFunded = (int)Math.round(b.roadRequest * b.roadPercent);
 		b.fireFunded = (int)Math.round(b.fireRequest * b.firePercent);
 		b.policeFunded = (int)Math.round(b.policeRequest * b.policePercent);
 		b.schoolFunded = (int)Math.round(b.schoolRequest * b.schoolPercent);
-
+		b.cultureFunded = (int)Math.round(b.cultureRequest * b.culturePercent);
+		
 		int yumDuckets = budget.totalFunds + b.taxIncome;
 		assert yumDuckets >= 0;
 
@@ -1956,6 +1958,18 @@ public class Micropolis
 					if (yumDuckets >= b.schoolFunded)
 					{
 						yumDuckets -= b.schoolFunded;
+						if (yumDuckets >= b.cultureFunded)
+						{
+							yumDuckets -= b.cultureFunded;
+						}
+						else
+						{
+							assert b.cultureRequest !=0;
+							
+							b.cultureFunded = yumDuckets;
+							b.culturePercent = (double)b.cultureFunded / (double)b.cultureRequest;
+							yumDuckets = 0;
+						}
 					}
 					else
 					{
@@ -1963,6 +1977,8 @@ public class Micropolis
 
 						b.schoolFunded = yumDuckets;
 						b.schoolPercent = (double)b.schoolFunded / (double)b.schoolRequest;
+						b.cultureFunded = 0;
+						b.culturePercent = 0.0;
 						yumDuckets = 0;
 						
 					}
@@ -1975,6 +1991,8 @@ public class Micropolis
 					b.policePercent = (double)b.policeFunded / (double)b.policeRequest;
 					b.schoolFunded = 0;
 					b.schoolPercent = 0.0;
+					b.cultureFunded = 0;
+					b.culturePercent = 0.0;
 					yumDuckets = 0;
 				}
 			}
@@ -1988,6 +2006,8 @@ public class Micropolis
 				b.policePercent = 0.0;
 				b.schoolFunded = 0;
 				b.schoolPercent = 0.0;
+				b.cultureFunded = 0;
+				b.culturePercent = 0.0;
 				yumDuckets = 0;
 			}
 		}
@@ -2003,9 +2023,11 @@ public class Micropolis
 			b.policePercent = 0.0;
 			b.schoolFunded = 0;
 			b.schoolPercent = 0.0;
+			b.cultureFunded = 0;
+			b.culturePercent = 0.0;
 		}
 
-		b.operatingExpenses = b.roadFunded + b.fireFunded + b.policeFunded;
+		b.operatingExpenses = b.roadFunded + b.fireFunded + b.policeFunded + b.schoolFunded + b.cultureFunded;
 		b.newBalance = b.previousBalance + b.taxIncome - b.operatingExpenses;
 
 		return b;
@@ -2782,6 +2804,11 @@ public class Micropolis
 		case 67:
 			if (schoolEffect < 700 && totalPop > 20) {
 				sendMessage(MicropolisMessage.SCHOOL_NEED_FUNDING);
+			}
+			break;
+		case 70:
+			if (cultureEffect < 700 && totalPop > 1000) {
+				sendMessage(MicropolisMessage.CULTURE_NEED_FUNDING);
 			}
 			break;
 		default:

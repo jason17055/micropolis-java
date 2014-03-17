@@ -63,7 +63,8 @@ public enum MicropolisMessage
 	// added by Jason
 	NO_NUCLEAR_PLANTS,
 	// added by team rocket
-	SCHOOL_NEED_FUNDING;
+	SCHOOL_NEED_FUNDING,
+	CULTURE_NEED_FUNDING;
 
 	/** Whether the message should be displayed in the notification pane. */
 	public boolean useNotificationPane = false;
