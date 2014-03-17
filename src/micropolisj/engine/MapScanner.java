@@ -41,6 +41,7 @@ class MapScanner extends TileBehavior
 		FIRESTATION,
 		POLICESTATION,
 		SCHOOLBUILDING,
+		MUSEUMBUILDING,
 		STADIUM_EMPTY,
 		STADIUM_FULL,
 		AIRPORT,
@@ -78,6 +79,8 @@ class MapScanner extends TileBehavior
 		case SCHOOLBUILDING:
 			System.out.println("doschool");
 			doSchool();
+		case MUSEUMBUILDING:
+			doMuseum();
 			return;
 		case STADIUM_EMPTY:
 			doStadiumEmpty();
@@ -282,7 +285,31 @@ class MapScanner extends TileBehavior
 
 		city.schoolMap[ypos/8][xpos/8] += z;
 	}
+	
+	void doMuseum()
+	{
+		boolean powerOn = checkZonePower();
+		city.museumCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(MUSEUMBUILDING, 3);
+		}
 
+		int z;
+		if (powerOn) {
+			z = city.cultureEffect;
+		} else {
+			z = city.cultureEffect / 2;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.museumMap[ypos/8][xpos/8] += z;
+	}
+	
 	void doStadiumEmpty()
 	{
 		boolean powerOn = checkZonePower();

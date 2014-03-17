@@ -1019,3 +1019,13 @@
 966   school@0,32            (conducts)
 967   school@16,32           (conducts)
 968   school@32,32           (conducts)
+# BEGIN MUSEUM #
+969   museum@0,0             (conducts)
+970   museum@16,0            (conducts)
+971   museum@32,0            (conducts)
+972   museum@0,16            (conducts)
+973   museum@16,16     (zone)(conducts)(building=3x3)(behavior=MUSEUMBUILDING)(description=#17)
+974   museum@32,16           (conducts)
+975   museum@0,32            (conducts)
+976   museum@16,32           (conducts)
+977   museum@32,32           (conducts)

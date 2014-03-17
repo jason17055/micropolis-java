@@ -991,13 +991,14 @@ public class MainWindow extends JFrame
         b5.add(makeToolBtn(MicropolisTool.STADIUM));
         b5.add(makeToolBtn(MicropolisTool.SEAPORT));
         b5.add(makeToolBtn(MicropolisTool.SCHOOL));
+        
 
         c.gridy++;
         Box b6 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b6, c);
 
         b6.add(makeToolBtn(MicropolisTool.AIRPORT));
-
+        b6.add(makeToolBtn(MicropolisTool.MUSEUM));
         // add glue to make all elements align toward top
         c.gridy++;
         c.weighty = 1.0;

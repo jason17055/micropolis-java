@@ -87,6 +87,7 @@ public class Micropolis
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
 	int [][] schoolMap;
+	int [][] museumMap;
 
 	/** For each 8x8 section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
@@ -124,6 +125,7 @@ public class Micropolis
 	int churchCount;
 	int policeCount;
 	int schoolCount;
+	int museumCount;
 	int fireStationCount;
 	int stadiumCount;
 	int coalCount;
@@ -142,6 +144,7 @@ public class Micropolis
 	int lastFireStationCount;
 	int lastPoliceCount;
 	int lastSchoolCount;
+	int lastMuseumCount;
 
 	int trafficMaxLocationX;
 	int trafficMaxLocationY;
@@ -181,12 +184,14 @@ public class Micropolis
 	public double policePercent = 1.0;
 	public double firePercent = 1.0;
 	public double schoolPercent = 1.0;
-
+	public double culturePercent = 1.0;
+	
 	int taxEffect = 7;
 	int roadEffect = 32;
 	int policeEffect = 1000;
 	int fireEffect = 1000;
 	int schoolEffect = 1000;
+	int cultureEffect = 1000;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -261,6 +266,7 @@ public class Micropolis
 		fireStMap = new int[smY][smX];
 		policeMap = new int[smY][smX];
 		schoolMap = new int[smY][smX];
+		museumMap = new int[smY][smX];
 		policeMapEffect = new int[smY][smX];
 		fireRate = new int[smY][smX];
 		comRate = new int[smY][smX];
@@ -540,6 +546,7 @@ public class Micropolis
 		churchCount = 0;
 		policeCount = 0;
 		schoolCount = 0;
+		museumCount = 0;
 		fireStationCount = 0;
 		stadiumCount = 0;
 		coalCount = 0;
@@ -553,6 +560,7 @@ public class Micropolis
 				fireStMap[y][x] = 0;
 				policeMap[y][x] = 0;
 				schoolMap[y][x] = 0;
+				museumMap[y][x] = 0;
 			}
 		}
 	}
@@ -1483,6 +1491,7 @@ public class Micropolis
 		bb.put("FIRESTATION", new MapScanner(this, MapScanner.B.FIRESTATION));
 		bb.put("POLICESTATION", new MapScanner(this, MapScanner.B.POLICESTATION));
 		bb.put("SCHOOLBUILDING", new MapScanner(this, MapScanner.B.SCHOOLBUILDING));
+		bb.put("MUSEUMBUILDING", new MapScanner(this, MapScanner.B.MUSEUMBUILDING));
 		bb.put("STADIUM_EMPTY", new MapScanner(this, MapScanner.B.STADIUM_EMPTY));
 		bb.put("STADIUM_FULL", new MapScanner(this, MapScanner.B.STADIUM_FULL));
 		bb.put("AIRPORT", new MapScanner(this, MapScanner.B.AIRPORT));
@@ -1752,6 +1761,7 @@ public class Micropolis
 		lastFireStationCount = fireStationCount;
 		lastPoliceCount = policeCount;
 		lastSchoolCount = schoolCount;
+		lastMuseumCount = museumCount;
 
 		BudgetNumbers b = generateBudget();
 
@@ -1760,7 +1770,8 @@ public class Micropolis
 		budget.fireFundEscrow -= b.fireFunded;
 		budget.policeFundEscrow -= b.policeFunded;
 		budget.schoolFundEscrow -= b.schoolFunded;
-
+		budget.cultureFundEscrow -= b.cultureFunded;
+		
 		taxEffect = b.taxRate;
 		roadEffect = b.roadRequest != 0 ?
 			(int)Math.floor(32.0 * (double)b.roadFunded / (double)b.roadRequest) :
@@ -1774,6 +1785,9 @@ public class Micropolis
 		schoolEffect = b.schoolRequest != 0 ?
 			(int)Math.floor(1000.0 * (double)b.schoolFunded / (double)b.schoolRequest) :
 			1000;
+		cultureEffect = b.cultureRequest != 0 ?
+					(int)Math.floor(1000.0 * (double)b.cultureFunded / (double)b.cultureRequest) :
+					1000;
 	}
 
 	public static class FinancialHistory
@@ -1788,7 +1802,8 @@ public class Micropolis
 	void collectTax()
 	{
 		int revenue = budget.taxFund / TAXFREQ;
-		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow + budget.schoolFundEscrow) / TAXFREQ;
+		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow + budget.schoolFundEscrow
+			+ budget.cultureFundEscrow)/ TAXFREQ;
 
 		FinancialHistory hist = new FinancialHistory();
 		hist.cityTime = cityTime;
@@ -1806,6 +1821,7 @@ public class Micropolis
 		budget.fireFundEscrow = 0;
 		budget.policeFundEscrow = 0;
 		budget.schoolFundEscrow = 0;
+		budget.cultureFundEscrow = 0;
 	}
 
 	/** Annual maintenance cost of each police station. */
@@ -1816,6 +1832,9 @@ public class Micropolis
 	
 	/** Annual maintenance cost of each police station. */
 	static final int SCHOOL_MAINTENANCE = 100;
+	
+	static final int CULTURE_MAINTENANCE = 100;
+
 
 	/**
 	 * Calculate the current budget numbers.
@@ -1828,6 +1847,8 @@ public class Micropolis
 		b.firePercent = Math.max(0.0, firePercent);
 		b.policePercent = Math.max(0.0, policePercent);
 		b.schoolPercent = Math.max(0.0, schoolPercent);
+		b.culturePercent = Math.max(0.0, culturePercent);
+
 
 		b.previousBalance = budget.totalFunds;
 		//tax income
