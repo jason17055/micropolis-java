@@ -31,28 +31,28 @@ public class Micropolis
 	// half-size arrays
 
 	/**
-	 * For each 2x2 section of the city, the land value of the city (0-250).
+	 * For each section of the city, the land value of the city (0-250).
 	 * 0 is lowest land value; 250 is maximum land value.
 	 * Updated each cycle by ptlScan().
 	 */
 	int [][] landValueMem;
 
 	/**
-	 * For each 2x2 section of the city, the pollution level of the city (0-255).
+	 * For each section of the city, the pollution level of the city (0-255).
 	 * 0 is no pollution; 255 is maximum pollution.
 	 * Updated each cycle by ptlScan(); affects land value.
 	 */
 	public int [][] pollutionMem;
 
 	/**
-	 * For each 2x2 section of the city, the crime level of the city (0-250).
+	 * For each section of the city, the crime level of the city (0-250).
 	 * 0 is no crime; 250 is maximum crime.
 	 * Updated each cycle by crimeScan(); affects land value.
 	 */
 	public int [][] crimeMem;
 
     /**
-     * For each 2x2 section of the city, the analphabetism level of the city (0-250).
+     * For each section of the city, the analphabetism level of the city (0-250).
      * 0 is no analphabetism; 250 is maximum analphabetism.
      * Updated each cycle by crimeScan(); affects land value.
      */
@@ -60,13 +60,13 @@ public class Micropolis
     public int [][] analphabetismMem;
 
 	/**
-	 * For each 2x2 section of the city, the population density (0-?).
+	 * For each section of the city, the population density (0-?).
 	 * Used for map overlays and as a factor for crime rates.
 	 */
 	public int [][] popDensity;
 
 	/**
-	 * For each 2x2 section of the city, the traffic density (0-255).
+	 * For each section of the city, the traffic density (0-255).
 	 * If less than 64, no cars are animated.
 	 * If between 64 and 192, then the "light traffic" animation is used.
 	 * If 192 or higher, then the "heavy traffic" animation is used.
@@ -76,7 +76,7 @@ public class Micropolis
 	// quarter-size arrays
 
 	/**
-	 * For each 4x4 section of the city, an integer representing the natural
+	 * For each section of the city, an integer representing the natural
 	 * land features in the vicinity of this part of the city.
 	 */
 	int [][] terrainMem;
@@ -84,7 +84,7 @@ public class Micropolis
 	// eighth-size arrays
 
 	/**
-	 * For each 8x8 section of the city, the rate of growth.
+	 * For each section of the city, the rate of growth.
 	 * Capped to a number between -200 and 200.
 	 * Used for reporting purposes only; the number has no affect.
 	 */
@@ -99,7 +99,7 @@ public class Micropolis
 	int [][] museumMap;
 	public int [][] museumMapEffect;
 
-	/** For each 8x8 section of city, this is an integer between 0 and 64,
+	/** For each section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
 	int [][] comRate;
 
@@ -791,7 +791,7 @@ public class Micropolis
 		{
 			for (int x = 0; x < comRate[y].length; x++)
 			{
-				int z = getDisCC(x*4, y*4);
+				int z = getDisCC(x, y);
 				z /= 4;
 				z = 64 - z;
 				comRate[y][x] = z;
@@ -1062,7 +1062,7 @@ public class Micropolis
 		return false;
 	}
 	
-	private CityLocation goToAdj(CityLocation loc, int dir)
+	private static CityLocation goToAdj(CityLocation loc, int dir)
 	{
 		CityLocation loci =new CityLocation(loc.x,loc.y);
 		switch(dir)
@@ -1103,7 +1103,7 @@ public class Micropolis
 				if (g==NUCLEAR) {
 					localPower=2000;
 				} else {
-					localPower=700;
+					localPower=500; //original was 700
 				}
 				int numPower=0;
 				toDo.add(loc);
@@ -1116,7 +1116,7 @@ public class Micropolis
 						done.add(current);
 					} else {
 						if (g==POWERPLANT)  {
-							localPower+=700;
+							localPower+=500; //original was 700
 							done.add(current);
 						}
 					}
@@ -1484,6 +1484,7 @@ public class Micropolis
 
 	// calculate manhatten distance from center of city
 	// capped at 32
+	//FIX Why do cap at 32? Consider to increase the cap.
 	int getDisCC(int x, int y)
 	{
 		assert x >= 0 && x <= getWidth();
@@ -2794,6 +2795,38 @@ public class Micropolis
 	void sendMessageAt(MicropolisMessage message, int x, int y)
 	{
 		fireCityMessage(message, new CityLocation(x,y));
+	}
+	/*
+	 * calculates popDensity for a 3x3 square
+	 */
+	
+	public int getMapdata(int x,int y, String g) {
+		int ret=0;
+		int d=0;
+		for (int xp=Math.max(0,x-1);xp<Math.min(x+2,getWidth());xp++) {
+			for (int yp=Math.max(0,y-1);yp<Math.min(y+2,getHeight());xp++) {
+				ret+=accessMap(x, y, g);
+				d++;
+			}
+		}
+		//fix rounding, we should consider to round up
+		 return ret/d;
+	}
+	
+	private int accessMap(int x,int y, String g) {
+		switch (g) {
+		case "popDensity":
+			return popDensity[y][x];
+		case "landValueMem":
+			return landValueMem[y][x];
+		case "crimeMem":
+			return crimeMem[y][x];
+		case "pollutionMem":
+			return pollutionMem[y][x];
+		case "rateOGMem":
+			return rateOGMem[y][x];	
+		}
+		return 0;
 	}
 
 	public ZoneStatus queryZoneStatus(int xpos, int ypos)

@@ -202,7 +202,7 @@ class MapScanner extends TileBehavior
 	void doNuclearPower()
 	{
 		checkZonePower();
-		if (!city.noDisasters && PRNG.nextInt(city.MltdwnTab[city.gameLevel]+1) == 0) {
+		if (!city.noDisasters && PRNG.nextInt(Micropolis.MltdwnTab[city.gameLevel]+1) == 0) {
 			city.doMeltdown(xpos, ypos);
 			return;
 		}
@@ -379,13 +379,12 @@ class MapScanner extends TileBehavior
 		{
 			zonePlop(HOSPITAL);
 			city.needHospital = 0;
-		}
-
-//FIXME- should be 'else if'
-		if (city.needChurch > 0)
-		{
-			zonePlop(CHURCH);
-			city.needChurch = 0;
+		} else {
+			if (city.needChurch > 0)
+			{
+				zonePlop(CHURCH);
+				city.needChurch = 0;
+			}
 		}
 	}
 
