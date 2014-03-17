@@ -1,0 +1,40 @@
+Gebäude			Verfügbarkeit
+
+Allgemein:
+
+Rathaus			Spielbeginn? oder erst wenn man Stadtstatus erreicht?
+Parks			Spielbeginn
+Residential		Spielbeginn
+Commercial		Spielbeginn
+Industrial		Spielbeginn
+Police Dep.		Spielbeginn
+Fire Dep.		Spielbeginn
+
+Kraftwerke:
+
+Kohle			Spielbeginn
+Kernkraft		Spielbeginn
+Windkraft		nach Erforschung
+Solaranlage		nach Erforschung
+
+Infrastruktur:
+
+schmale Straße		Spielbeginn
+breite Straße		nach Erforschung
+Schiene			Spielbeginn
+Bahnhof			Spielbeginn
+Stromleitung		Spielbeginn
+Hafen			ab 2000 Einwohnern?
+Flughafen		ab 5000 Einwohnern? & nach Erforschung
+
+Bildung/Forschung:
+
+Schule			Spielbeginn
+Universität 2 Arten	Spielbeginn oder erst nach Bauen einer Schule?
+
+Kultur:
+
+Museum			Spielbeginn?
+Stadion 		Kulturelle Gebäude werden nach Überschreitungen gewisser Einwohnerzahlen freigeschaltet.
+Open Air Gelände	In der Reihenfolge wie aufgeführt? Erneutes sperren bei enormen Einwohnerverlust?
+(Theater?)
