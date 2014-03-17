@@ -155,7 +155,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI(10 + A[y][x]),x*6,y*6,6,6);
+				maybeDrawRect(gr, getCI(10 + A[y][x]),x*3,y*3,3,3);
 			}
 		}
 	}
@@ -166,7 +166,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI(A[y][x]),x*6,y*6,6,6);
+				maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,3,3);
 			}
 		}
 	}
@@ -177,7 +177,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI(A[y][x]),x*6,y*6,6,6);
+				maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,3,3);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI_rog(A[y][x]),x*24,y*24,24,24);
+				maybeDrawRect(gr, getCI_rog(A[y][x]),x*3,y*3,3,3);
 			}
 		}
 	}
@@ -199,7 +199,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI(A[y][x]),x*24,y*24,24,24);
+				maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,3,3);
 			}
 		}
 	}
@@ -210,7 +210,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI(A[y][x]),x*24,y*24,24,24);
+				maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,3,3);
 			}
 		}
 	}

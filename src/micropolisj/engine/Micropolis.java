@@ -80,7 +80,7 @@ public class Micropolis
 	 * Capped to a number between -200 and 200.
 	 * Used for reporting purposes only; the number has no affect.
 	 */
-	public int [][] rateOGMem; //rate of growth?
+	public int [][] rateOGMem; //rate of growth
 
 	int [][] fireStMap;      //firestations- cleared and rebuilt each sim cycle
 	public int [][] fireRate;       //firestations reach- used for overlay graphs
@@ -240,33 +240,22 @@ public class Micropolis
 		map = new char[height][width];
 		powerMap = new boolean[height][width];
 
-		int hX = (width+1)/2;
-		int hY = (height+1)/2;
+		landValueMem = new int[height][width];
+		pollutionMem = new int[height][width];
+		crimeMem = new int[height][width];
+		popDensity = new int[height][width];
+		trfDensity = new int[height][width];
+		terrainMem = new int[height][width];
+		rateOGMem = new int[height][width];
+		fireStMap = new int[height][width];
+		policeMap = new int[height][width];
+		schoolMap = new int[height][width];
+		policeMapEffect = new int[height][width];
+		fireRate = new int[height][width];
+		comRate = new int[height][width];
 
-		landValueMem = new int[hY][hX];
-		pollutionMem = new int[hY][hX];
-		crimeMem = new int[hY][hX];
-		popDensity = new int[hY][hX];
-		trfDensity = new int[hY][hX];
-
-		int qX = (width+3)/4;
-		int qY = (height+3)/4;
-
-		terrainMem = new int[qY][qX];
-
-		int smX = (width+7)/8;
-		int smY = (height+7)/8;
-
-		rateOGMem = new int[smY][smX];
-		fireStMap = new int[smY][smX];
-		policeMap = new int[smY][smX];
-		schoolMap = new int[smY][smX];
-		policeMapEffect = new int[smY][smX];
-		fireRate = new int[smY][smX];
-		comRate = new int[smY][smX];
-
-		centerMassX = hX;
-		centerMassY = hY;
+		centerMassX = width/2;
+		centerMassY = height/2;
 	}
 
 	void fireCensusChanged()
@@ -723,7 +712,7 @@ public class Micropolis
 		int zoneCount = 0;
 		int width = getWidth();
 		int height = getHeight();
-		int [][] tem = new int[(height+1)/2][(width+1)/2];
+		int [][] tem = new int[(height)][(width)];
 
 		for (int x = 0; x < width; x++)
 		{
@@ -732,7 +721,7 @@ public class Micropolis
 				char tile = getTile(x, y);
 				if (isZoneCenter(tile))
 				{
-					int den = computePopDen(x, y, tile) * 8;
+					int den = computePopDen(x, y, tile);
 					if (den > 254)
 						den = 254;
 					tem[y/2][x/2] = den;
@@ -747,11 +736,11 @@ public class Micropolis
 		tem = doSmooth(tem);
 		tem = doSmooth(tem);
 
-		for (int x = 0; x < (width+1)/2; x++)
+		for (int x = 0; x < width; x++)
 		{
-			for (int y = 0; y < (height+1)/2; y++)
+			for (int y = 0; y < height; y++)
 			{
-				popDensity[y][x] = 2 * tem[y][x];
+				popDensity[y][x] = tem[y][x];
 			}
 		}
 
@@ -864,7 +853,7 @@ public class Micropolis
 					count++;
 					int z = 128 - val + popDensity[hy][hx];
 					z = Math.min(300, z);
-					z -= policeMap[hy/4][hx/4];
+					z -= policeMap[hy][hx];
 					z = Math.min(250, z);
 					z = Math.max(0, z);
 					crimeMem[hy][hx] = z;
@@ -872,8 +861,8 @@ public class Micropolis
 					sum += z;
 					if (z > cmax || (z == cmax && PRNG.nextInt(4) == 0)) {
 						cmax = z;
-						crimeMaxLocationX = hx*2;
-						crimeMaxLocationY = hy*2;
+						crimeMaxLocationX = hx;
+						crimeMaxLocationY = hy;
 					}
 				}
 				else {
@@ -973,124 +962,107 @@ public class Micropolis
 
 	private boolean testForCond(CityLocation loc, int dir)
 	{
-		int xsave = loc.x;
-		int ysave = loc.y;
 
 		boolean rv = false;
-		if (movePowerLocation(loc,dir))
-		{
-			char t = getTile(loc.x, loc.y);
-			rv = (
-				isConductive(t) &&
-				t != NUCLEAR &&
-				t != POWERPLANT &&
-				!hasPower(loc.x, loc.y)
-				);
+		if (onMap(loc,dir)) {
+			CityLocation c=new CityLocation(goToAdj(loc, dir).x,goToAdj(loc, dir).y);
+			rv = (isConductive(getTile(c.x, c.y)) && !hasPower(c.x, c.y));
 		}
-
-		loc.x = xsave;
-		loc.y = ysave;
 		return rv;
 	}
 
-	private boolean movePowerLocation(CityLocation loc, int dir)
+	private boolean onMap(CityLocation loc, int dir)
 	{
 		switch(dir)
 		{
 		case 0:
-			if (loc.y > 0)
-			{
-				loc.y--;
-				return true;
-			}
-			else
-				return false;
+			return (loc.y > 0);
 		case 1:
-			if (loc.x + 1 < getWidth())
-			{
-				loc.x++;
-				return true;
-			}
-			else
-				return false;
+			return (loc.x + 1 < getWidth());
 		case 2:
-			if (loc.y + 1 < getHeight())
-			{
-				loc.y++;
-				return true;
-			}
-			else
-				return false;
+			return (loc.y + 1 < getHeight());
 		case 3:
-			if (loc.x > 0)
-			{
-				loc.x--;
-				return true;
-			}
-			else
-				return false;
+			return (loc.x > 0);
 		case 4:
 			return true;
 		}
 		return false;
 	}
+	
+	private CityLocation goToAdj(CityLocation loc, int dir)
+	{
+		CityLocation loci =new CityLocation(loc.x,loc.y);
+		switch(dir)
+		{
+		case 0:
+			loci.y--;
+			return loci;
+		case 1:
+			loci.x++;
+			return loci;
+		case 2:
+			loci.y++;
+			return loci;
+		case 3:
+			loci.x--;
+			return loci;
+		}
+		return loci;
+	}
 
 	void powerScan()
 	{
 		// clear powerMap
-		for (boolean [] bb : powerMap)
+		int localPower=0;
+		Stack<CityLocation> toDo=new Stack<CityLocation>();
+		HashSet<CityLocation> done=new HashSet<CityLocation>();
+		CityLocation current=new CityLocation(1,1);
+		for (boolean [] f : powerMap)
 		{
-			Arrays.fill(bb, false);
+			Arrays.fill(f, false);
 		}
 
-		//
-		// Note: brownouts are based on total number of power plants, not the number
-		// of powerplants connected to your city.
-		//
-
-		int maxPower = coalCount * 700 + nuclearCount * 2000;
-		int numPower = 0;
-
-		// This is kind of odd algorithm, but I haven't the heart to rewrite it at
-		// this time.
-
-		while (!powerPlants.isEmpty())
-		{
+		while (!powerPlants.isEmpty()) {
 			CityLocation loc = powerPlants.pop();
-
-			int aDir = 4;
-			int conNum;
-			do
-			{
-				if (++numPower > maxPower)
-				{
-					// trigger notification
-					sendMessage(MicropolisMessage.BROWNOUTS_REPORT);
-					return;
+			if (!done.contains(loc)) {
+				char g=getTile(loc.x,loc.y);
+				
+				if (g==NUCLEAR) {
+					localPower=2000;
+				} else {
+					localPower=700;
 				}
-				movePowerLocation(loc, aDir);
-				powerMap[loc.y][loc.x] = true;
-
-				conNum = 0;
-				int dir = 0;
-				while (dir < 4 && conNum < 2)
-				{
-					if (testForCond(loc, dir))
-					{
-						conNum++;
-						aDir = dir;
+				int numPower=0;
+				toDo.add(loc);
+	
+				while (!toDo.isEmpty()) {
+					current=toDo.pop();
+					g=getTile(current.x,current.y);
+					if (g==NUCLEAR) {
+						localPower+=2000;
+						done.add(current);
+					} else {
+						if (g==POWERPLANT)  {
+							localPower+=700;
+							done.add(current);
+						}
 					}
-					else
-					{
+					
+					if (++numPower > localPower) {
+						// trigger notification
+						sendMessage(MicropolisMessage.BROWNOUTS_REPORT);
+						return;
 					}
-					dir++;
-				}
-				if (conNum > 1)
-				{
-					powerPlants.add(new CityLocation(loc.x,loc.y));
+					System.out.print(current);
+					powerMap[current.y][current.x] = true;
+					for (int dir=0;dir<4;dir++) {
+						if (testForCond(current, dir)) {
+							toDo.add(goToAdj(current, dir));
+							System.out.print("ha:"+goToAdj(current, dir));
+						}
+					}
 				}
 			}
-			while (conNum != 0);
 		}
 	}
 
@@ -1101,7 +1073,7 @@ public class Micropolis
 	 */
 	void addTraffic(int mapX, int mapY, int traffic)
 	{
-		int z = trfDensity[mapY/2][mapX/2];
+		int z = trfDensity[mapY][mapX];
 		z += traffic;
 
 		//FIXME- why is this only capped to 240
@@ -1121,7 +1093,7 @@ public class Micropolis
 			}
 		}
 
-		trfDensity[mapY/2][mapX/2] = z;
+		trfDensity[mapY][mapX] = z;
 	}
 
 	/** Accessor method for fireRate[]. */
@@ -1134,7 +1106,7 @@ public class Micropolis
 	public int getLandValue(int xpos, int ypos)
 	{
 		if (testBounds(xpos, ypos)) {
-			return landValueMem[ypos/2][xpos/2];
+			return landValueMem[ypos][xpos];
 		}
 		else {
 			return 0;
@@ -1144,7 +1116,7 @@ public class Micropolis
 	public int getTrafficDensity(int xpos, int ypos)
 	{
 		if (testBounds(xpos, ypos)) {
-			return trfDensity[ypos/2][xpos/2];
+			return trfDensity[ypos][xpos];
 		} else {
 			return 0;
 		}
@@ -1153,15 +1125,15 @@ public class Micropolis
 	//power, terrain, land value
 	void ptlScan()
 	{
-		final int qX = (getWidth()+3)/4;
-		final int qY = (getHeight()+3)/4;
+		final int qX = (getWidth());
+		final int qY = (getHeight());
 		int [][] qtem = new int[qY][qX];
 
 		int landValueTotal = 0;
 		int landValueCount = 0;
 
-		final int HWLDX = (getWidth()+1)/2;
-		final int HWLDY = (getHeight()+1)/2;
+		final int HWLDX = (getWidth());
+		final int HWLDY = (getHeight());
 		int [][] tem = new int[HWLDY][HWLDX];
 		for (int x = 0; x < HWLDX; x++)
 		{
@@ -1169,28 +1141,21 @@ public class Micropolis
 			{
 				int plevel = 0;
 				int lvflag = 0;
-				int zx = 2*x;
-				int zy = 2*y;
-
-				for (int mx = zx; mx <= zx+1; mx++)
-				{
-					for (int my = zy; my <= zy+1; my++)
+				
+					int tile = getTile(x, y);
+					if (tile != DIRT)
 					{
-						int tile = getTile(mx, my);
-						if (tile != DIRT)
+						if (tile < RUBBLE) //natural land features
 						{
-							if (tile < RUBBLE) //natural land features
-							{
-								//inc terrainMem
-								qtem[y/2][x/2] += 15;
-								continue;
-							}
-							plevel += getPollutionValue(tile);
-							if (isConstructed(tile))
-								lvflag++;
+							//inc terrainMem
+							qtem[y][x] += 15;
+							continue;
 						}
+						plevel += getPollutionValue(tile);
+						if (isConstructed(tile))
+							lvflag++;
 					}
-				}
+					
 
 				if (plevel < 0)
 					plevel = 250; //?
@@ -1207,7 +1172,7 @@ public class Micropolis
 
 					int dis = 34 - getDisCC(x, y);
 					dis *= 4;
-					dis += terrainMem[y/2][x/2];
+					dis += terrainMem[y][x];
 					dis -= pollutionMem[y][x];
 					if (crimeMem[y][x] > 190) {
 						dis -= 20;
@@ -1251,8 +1216,8 @@ public class Micropolis
 						(z == pmax && PRNG.nextInt(4) == 0))
 					{
 						pmax = z;
-						pollutionMaxLocationX = 2*x;
-						pollutionMaxLocationY = 2*y;
+						pollutionMaxLocationX = x;
+						pollutionMaxLocationY = y;
 					}
 				}
 			}
@@ -1918,7 +1883,7 @@ public class Micropolis
 
 	int getPopulationDensity(int xpos, int ypos)
 	{
-		return popDensity[ypos/2][xpos/2];
+		return popDensity[ypos][xpos];
 	}
 
 	void doMeltdown(int xpos, int ypos)
@@ -2463,7 +2428,7 @@ public class Micropolis
 	 */
 	void killZone(int xpos, int ypos, int zoneTile)
 	{
-		rateOGMem[ypos/8][xpos/8] -= 20;
+		rateOGMem[ypos][xpos] -= 20;
 
 		assert isZoneCenter(zoneTile);
 		CityDimension dim = getZoneSizeFor(zoneTile);
@@ -2718,20 +2683,20 @@ public class Micropolis
 		zs.building = getDescriptionNumber(getTile(xpos, ypos));
 
 		int z;
-		z = (popDensity[ypos/2][xpos/2] / 64) % 4;
+		z = (popDensity[ypos][xpos] / 64) % 4;
 		zs.popDensity = z + 1;
 
-		z = landValueMem[ypos/2][xpos/2];
+		z = landValueMem[ypos][xpos];
 		z = z < 30 ? 4 : z < 80 ? 5 : z < 150 ? 6 : 7;
 		zs.landValue = z + 1;
 
-		z = ((crimeMem[ypos/2][xpos/2] / 64) % 4) + 8;
+		z = ((crimeMem[ypos][xpos] / 64) % 4) + 8;
 		zs.crimeLevel = z + 1;
 
-		z = Math.max(13,((pollutionMem[ypos/2][xpos/2] / 64) % 4) + 12);
+		z = Math.max(13,((pollutionMem[ypos][xpos] / 64) % 4) + 12);
 		zs.pollution = z + 1;
 
-		z = rateOGMem[ypos/8][xpos/8];
+		z = rateOGMem[ypos][xpos];
 		z = z < 0 ? 16 : z == 0 ? 17 : z <= 100 ? 18 : 19;
 		zs.growthRate = z + 1;
 
