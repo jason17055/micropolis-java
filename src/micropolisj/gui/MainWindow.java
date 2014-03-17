@@ -143,7 +143,8 @@ public class MainWindow extends JFrame
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POPDEN_OVERLAY", MapState.POPDEN_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.GROWTHRATE_OVERLAY", MapState.GROWTHRATE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.LANDVALUE_OVERLAY", MapState.LANDVALUE_OVERLAY));
-        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.CRIME_OVERLAY", MapState.CRIME_OVERLAY));
+        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.CRIME_OVERLAY", MapState.ANALPHABETISM_OVERLAY));
+        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.ANALPHABETISM_OVERLAY", MapState.CRIME_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POLLUTE_OVERLAY", MapState.POLLUTE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.TRAFFIC_OVERLAY", MapState.TRAFFIC_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POWER_OVERLAY", MapState.POWER_OVERLAY));
@@ -991,13 +992,14 @@ public class MainWindow extends JFrame
         b5.add(makeToolBtn(MicropolisTool.STADIUM));
         b5.add(makeToolBtn(MicropolisTool.SEAPORT));
         b5.add(makeToolBtn(MicropolisTool.SCHOOL));
+        
 
         c.gridy++;
         Box b6 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b6, c);
 
         b6.add(makeToolBtn(MicropolisTool.AIRPORT));
-
+        b6.add(makeToolBtn(MicropolisTool.MUSEUM));
         // add glue to make all elements align toward top
         c.gridy++;
         c.weighty = 1.0;

@@ -32,6 +32,7 @@ public enum MicropolisTool
 	NUCLEAR(4, 5000),
 	AIRPORT(6, 10000),
 	SCHOOL(3,500),
+	MUSEUM(3,500),
 	QUERY(1, 0);
 
 	int size;

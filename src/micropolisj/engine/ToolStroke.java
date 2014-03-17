@@ -92,6 +92,9 @@ public class ToolStroke
 		case SCHOOL:
 			return applyZone(eff, SCHOOLBUILDING);
 
+		case MUSEUM:
+			return applyZone(eff, MUSEUMBUILDING);
+		
 		case SEAPORT:
 			return applyZone(eff, PORT);
 

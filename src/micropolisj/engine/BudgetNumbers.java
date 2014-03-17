@@ -35,4 +35,8 @@ public class BudgetNumbers
 	public int schoolRequest;
 	public int schoolFunded;
 	public double schoolPercent;
+	
+	public int cultureRequest;
+	public int cultureFunded;
+	public double culturePercent;
 }

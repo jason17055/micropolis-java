@@ -40,6 +40,7 @@ public class CityBudget
 	
 	int schoolFundEscrow;
 
+	int cultureFundEscrow;
 	CityBudget(Micropolis city)
 	{
 		this.city = city;

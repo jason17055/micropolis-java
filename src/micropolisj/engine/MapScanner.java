@@ -41,6 +41,7 @@ class MapScanner extends TileBehavior
 		FIRESTATION,
 		POLICESTATION,
 		SCHOOLBUILDING,
+		MUSEUMBUILDING,
 		STADIUM_EMPTY,
 		STADIUM_FULL,
 		AIRPORT,
@@ -76,8 +77,10 @@ class MapScanner extends TileBehavior
 			doPoliceStation();
 			return;
 		case SCHOOLBUILDING:
-			System.out.println("doschool");
 			doSchool();
+            return;
+		case MUSEUMBUILDING:
+			doMuseum();
 			return;
 		case STADIUM_EMPTY:
 			doStadiumEmpty();
@@ -224,7 +227,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.fireEffect;  //if powered, get effect
 		} else {
-			z = city.fireEffect/2; // from the funding ratio
+			z = city.fireEffect; // from the funding ratio
 		}
 
 		traffic.mapX = xpos;
@@ -233,7 +236,7 @@ class MapScanner extends TileBehavior
 			z /= 2;
 		}
 
-		city.fireStMap[ypos/8][xpos/8] += z;
+		city.fireStMap[ypos][xpos] += z;
 	}
 
 	void doPoliceStation()
@@ -248,7 +251,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.policeEffect;
 		} else {
-			z = city.policeEffect / 2;
+			z = city.policeEffect;
 		}
 
 		traffic.mapX = xpos;
@@ -257,7 +260,7 @@ class MapScanner extends TileBehavior
 			z /= 2;
 		}
 
-		city.policeMap[ypos/8][xpos/8] += z;
+		city.policeMap[ypos][xpos] += z;
 	}
 	void doSchool()
 	{
@@ -271,7 +274,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.schoolEffect;
 		} else {
-			z = city.schoolEffect / 2;
+			z = city.schoolEffect ;
 		}
 
 		traffic.mapX = xpos;
@@ -280,9 +283,33 @@ class MapScanner extends TileBehavior
 			z /= 2;
 		}
 
-		city.schoolMap[ypos/8][xpos/8] += z;
+		city.schoolMap[ypos][xpos] += z;
 	}
+	
+	void doMuseum()
+	{
+		boolean powerOn = checkZonePower();
+		city.museumCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(MUSEUMBUILDING, 3);
+		}
 
+		int z;
+		if (powerOn) {
+			z = city.cultureEffect;
+		} else {
+			z = city.cultureEffect;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.museumMap[ypos][xpos] += z;
+	}
+	
 	void doStadiumEmpty()
 	{
 		boolean powerOn = checkZonePower();
@@ -729,7 +756,7 @@ class MapScanner extends TileBehavior
 	{
 		assert value >= 0 && value <= 3;
 
-		int z = city.pollutionMem[ypos/2][xpos/2];
+		int z = city.pollutionMem[ypos][xpos];
 		if (z > 128)
 			return;
 
@@ -883,7 +910,7 @@ class MapScanner extends TileBehavior
 		if (traf < 0)
 			return -3000;
 
-		return city.comRate[ypos/8][xpos/8];
+		return city.comRate[ypos][xpos];
 	}
 
 	/**
@@ -911,7 +938,7 @@ class MapScanner extends TileBehavior
 			return -3000;
 
 		int value = city.getLandValue(xpos, ypos);
-		value -= city.pollutionMem[ypos/2][xpos/2];
+		value -= city.pollutionMem[ypos][xpos];
 
 		if (value < 0)
 			value = 0;    //cap at 0
@@ -933,7 +960,7 @@ class MapScanner extends TileBehavior
 	int getCRValue()
 	{
 		int lval = city.getLandValue(xpos, ypos);
-		lval -= city.pollutionMem[ypos/2][xpos/2];
+		lval -= city.pollutionMem[ypos][xpos];
 
 		if (lval < 30)
 			return 0;
@@ -957,7 +984,7 @@ class MapScanner extends TileBehavior
 	 */
 	void adjustROG(int amount)
 	{
-		city.rateOGMem[ypos/8][xpos/8] += 4*amount;
+		city.rateOGMem[ypos][xpos] += amount;
 	}
 
 	/**

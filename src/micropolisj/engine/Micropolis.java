@@ -51,6 +51,14 @@ public class Micropolis
 	 */
 	public int [][] crimeMem;
 
+    /**
+     * For each 2x2 section of the city, the analphabetism level of the city (0-250).
+     * 0 is no analphabetism; 250 is maximum analphabetism.
+     * Updated each cycle by crimeScan(); affects land value.
+     */
+
+    public int [][] analphabetismMem;
+
 	/**
 	 * For each 2x2 section of the city, the population density (0-?).
 	 * Used for map overlays and as a factor for crime rates.
@@ -87,6 +95,9 @@ public class Micropolis
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
 	int [][] schoolMap;
+	public int [][] schoolMapEffect;//school reach- used for overlay graphs
+	int [][] museumMap;
+	public int [][] museumMapEffect;
 
 	/** For each 8x8 section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
@@ -124,6 +135,7 @@ public class Micropolis
 	int churchCount;
 	int policeCount;
 	int schoolCount;
+	int museumCount;
 	int fireStationCount;
 	int stadiumCount;
 	int coalCount;
@@ -142,13 +154,16 @@ public class Micropolis
 	int lastFireStationCount;
 	int lastPoliceCount;
 	int lastSchoolCount;
+	int lastMuseumCount;
 
 	int trafficMaxLocationX;
 	int trafficMaxLocationY;
 	int pollutionMaxLocationX;
 	int pollutionMaxLocationY;
 	int crimeMaxLocationX;
-	int crimeMaxLocationY;
+    int crimeMaxLocationY;
+    int analphabetismMaxLocationX;
+    int analphabetismMaxLocationY;
 	public int centerMassX;
 	public int centerMassY;
 	CityLocation meltdownLocation;  //may be null
@@ -172,6 +187,7 @@ public class Micropolis
 	boolean indCap;  // industry demands sea port,  caps indValve at 0
 	int crimeRamp;
 	int polluteRamp;
+    int analphabetismRamp;
 
 	//
 	// budget stuff
@@ -181,12 +197,14 @@ public class Micropolis
 	public double policePercent = 1.0;
 	public double firePercent = 1.0;
 	public double schoolPercent = 1.0;
-
+	public double culturePercent = 1.0;
+	
 	int taxEffect = 7;
 	int roadEffect = 32;
 	int policeEffect = 1000;
 	int fireEffect = 1000;
 	int schoolEffect = 1000;
+	int cultureEffect = 1000;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -251,11 +269,11 @@ public class Micropolis
 		policeMap = new int[height][width];
 		schoolMap = new int[height][width];
 		policeMapEffect = new int[height][width];
+		schoolMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
 
-		centerMassX = width/2;
-		centerMassY = height/2;
+
 	}
 
 	void fireCensusChanged()
@@ -529,6 +547,7 @@ public class Micropolis
 		churchCount = 0;
 		policeCount = 0;
 		schoolCount = 0;
+		museumCount = 0;
 		fireStationCount = 0;
 		stadiumCount = 0;
 		coalCount = 0;
@@ -542,6 +561,7 @@ public class Micropolis
 				fireStMap[y][x] = 0;
 				policeMap[y][x] = 0;
 				schoolMap[y][x] = 0;
+				museumMap[y][x] = 0;
 			}
 		}
 	}
@@ -638,6 +658,7 @@ public class Micropolis
 
 		case 13:
 			crimeScan();
+            analphabetismScan();
 			break;
 
 		case 14:
@@ -724,7 +745,7 @@ public class Micropolis
 					int den = computePopDen(x, y, tile);
 					if (den > 254)
 						den = 254;
-					tem[y/2][x/2] = den;
+					tem[y][x] = den;
 					xtot += x;
 					ytot += y;
 					zoneCount++;
@@ -830,6 +851,56 @@ public class Micropolis
 			}
 		}
 	}
+
+    // basically copying functionality of crimeScan first and then applying relevant changes
+    // maybe reducing crime when education is up
+    void analphabetismScan()
+    {
+
+        for (int sy = 0; sy < schoolMap.length; sy++) {
+            for (int sx = 0; sx < schoolMap[sy].length; sx++) {
+                schoolMapEffect[sy][sx] = schoolMap[sy][sx];
+            }
+        }
+
+        int count = 0;
+        int sum = 0;
+        int cmax = 0;
+        for (int hy = 0; hy < landValueMem.length; hy++) {
+            for (int hx = 0; hx < landValueMem[hy].length; hx++) {
+                int val = landValueMem[hy][hx];
+                if (val != 0) {
+                    count++;
+                    int z = 128 - val + popDensity[hy][hx];
+                    z = Math.min(300, z);
+                    z -= schoolMap[hy][hx];
+                    z = Math.min(250, z);
+                    z = Math.max(0, z);
+                    analphabetismMem[hy][hx] = z;
+
+                    sum += z;
+                    if (z > cmax || (z == cmax && PRNG.nextInt(4) == 0)) {
+                        cmax = z;
+                        analphabetismMaxLocationX = hx;
+                        analphabetismMaxLocationY = hy;
+                    }
+                }
+                else {
+                    analphabetismMem[hy][hx] = 0;
+                }
+            }
+        }
+
+        if (count != 0)
+            analphabetismAverage = sum / count;
+        else
+            analphabetismAverage = 0;
+
+        fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
+    }
+
+
+
 
 	void crimeScan()
 	{
@@ -1099,7 +1170,7 @@ public class Micropolis
 	/** Accessor method for fireRate[]. */
 	public int getFireStationCoverage(int xpos, int ypos)
 	{
-		return fireRate[ypos/8][xpos/8];
+		return fireRate[ypos][xpos];
 	}
 
 	/** Accessor method for landValueMem overlay. */
@@ -1250,6 +1321,7 @@ public class Micropolis
 		public int [] money = new int[240];
 		public int [] pollution = new int[240];
 		public int [] crime = new int[240];
+        public int [] analphabetism = new int[240];
 		int resMax;
 		int comMax;
 		int indMax;
@@ -1414,11 +1486,11 @@ public class Micropolis
 	// capped at 32
 	int getDisCC(int x, int y)
 	{
-		assert x >= 0 && x <= getWidth()/2;
-		assert y >= 0 && y <= getHeight()/2;
+		assert x >= 0 && x <= getWidth();
+		assert y >= 0 && y <= getHeight();
 
-		int xdis = Math.abs(x - centerMassX/2);
-		int ydis = Math.abs(y - centerMassY/2);
+		int xdis = Math.abs(x - centerMassX);
+		int ydis = Math.abs(y - centerMassY);
 
 		int z = (xdis + ydis);
 		if (z > 32)
@@ -1448,6 +1520,7 @@ public class Micropolis
 		bb.put("FIRESTATION", new MapScanner(this, MapScanner.B.FIRESTATION));
 		bb.put("POLICESTATION", new MapScanner(this, MapScanner.B.POLICESTATION));
 		bb.put("SCHOOLBUILDING", new MapScanner(this, MapScanner.B.SCHOOLBUILDING));
+		bb.put("MUSEUMBUILDING", new MapScanner(this, MapScanner.B.MUSEUMBUILDING));
 		bb.put("STADIUM_EMPTY", new MapScanner(this, MapScanner.B.STADIUM_EMPTY));
 		bb.put("STADIUM_FULL", new MapScanner(this, MapScanner.B.STADIUM_FULL));
 		bb.put("AIRPORT", new MapScanner(this, MapScanner.B.AIRPORT));
@@ -1612,6 +1685,7 @@ public class Micropolis
 			history.com[i + 1] = history.com[i];
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
+            history.analphabetism[i + 1] = history.analphabetism[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -1629,8 +1703,12 @@ public class Micropolis
 		crimeRamp += (crimeAverage - crimeRamp) / 4;
 		history.crime[0] = Math.min(255, crimeRamp);
 
+
 		polluteRamp += (pollutionAverage - polluteRamp) / 4;
 		history.pollution[0] = Math.min(255, polluteRamp);
+
+        analphabetismRamp += (analphabetismAverage - analphabetismRamp) / 4;
+        history.analphabetism[0] = Math.min(255, analphabetismRamp);
 
 		int moneyScaled = cashFlow / 20 + 128;
 		if (moneyScaled < 0)
@@ -1688,6 +1766,7 @@ public class Micropolis
 			history.com[i + 1] = history.com[i];
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
+            history.analphabetism[i + 1] = history.analphabetism[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -1696,6 +1775,7 @@ public class Micropolis
 		history.com[120] = comPop;
 		history.ind[120] = indPop;
 		history.crime[120] = history.crime[0];
+        history.analphabetism[120] = history.analphabetism[0];
 		history.pollution[120] = history.pollution[0];
 		history.money[120] = history.money[0];
 	}
@@ -1717,6 +1797,7 @@ public class Micropolis
 		lastFireStationCount = fireStationCount;
 		lastPoliceCount = policeCount;
 		lastSchoolCount = schoolCount;
+		lastMuseumCount = museumCount;
 
 		BudgetNumbers b = generateBudget();
 
@@ -1725,7 +1806,8 @@ public class Micropolis
 		budget.fireFundEscrow -= b.fireFunded;
 		budget.policeFundEscrow -= b.policeFunded;
 		budget.schoolFundEscrow -= b.schoolFunded;
-
+		budget.cultureFundEscrow -= b.cultureFunded;
+		
 		taxEffect = b.taxRate;
 		roadEffect = b.roadRequest != 0 ?
 			(int)Math.floor(32.0 * (double)b.roadFunded / (double)b.roadRequest) :
@@ -1739,6 +1821,9 @@ public class Micropolis
 		schoolEffect = b.schoolRequest != 0 ?
 			(int)Math.floor(1000.0 * (double)b.schoolFunded / (double)b.schoolRequest) :
 			1000;
+		cultureEffect = b.cultureRequest != 0 ?
+					(int)Math.floor(1000.0 * (double)b.cultureFunded / (double)b.cultureRequest) :
+					1000;
 	}
 
 	public static class FinancialHistory
@@ -1753,7 +1838,8 @@ public class Micropolis
 	void collectTax()
 	{
 		int revenue = budget.taxFund / TAXFREQ;
-		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow + budget.schoolFundEscrow) / TAXFREQ;
+		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow + budget.schoolFundEscrow
+			+ budget.cultureFundEscrow)/ TAXFREQ;
 
 		FinancialHistory hist = new FinancialHistory();
 		hist.cityTime = cityTime;
@@ -1771,6 +1857,7 @@ public class Micropolis
 		budget.fireFundEscrow = 0;
 		budget.policeFundEscrow = 0;
 		budget.schoolFundEscrow = 0;
+		budget.cultureFundEscrow = 0;
 	}
 
 	/** Annual maintenance cost of each police station. */
@@ -1781,6 +1868,9 @@ public class Micropolis
 	
 	/** Annual maintenance cost of each police station. */
 	static final int SCHOOL_MAINTENANCE = 100;
+	
+	static final int CULTURE_MAINTENANCE = 100;
+
 
 	/**
 	 * Calculate the current budget numbers.
@@ -1793,6 +1883,8 @@ public class Micropolis
 		b.firePercent = Math.max(0.0, firePercent);
 		b.policePercent = Math.max(0.0, policePercent);
 		b.schoolPercent = Math.max(0.0, schoolPercent);
+		b.culturePercent = Math.max(0.0, culturePercent);
+
 
 		b.previousBalance = budget.totalFunds;
 		//tax income
@@ -1803,12 +1895,14 @@ public class Micropolis
 		b.fireRequest = FIRE_STATION_MAINTENANCE * lastFireStationCount;
 		b.policeRequest = POLICE_STATION_MAINTENANCE * lastPoliceCount;
 		b.schoolRequest = SCHOOL_MAINTENANCE * lastSchoolCount;
+		b.cultureRequest = CULTURE_MAINTENANCE * (lastMuseumCount); //plus stadion count...
 
 		b.roadFunded = (int)Math.round(b.roadRequest * b.roadPercent);
 		b.fireFunded = (int)Math.round(b.fireRequest * b.firePercent);
 		b.policeFunded = (int)Math.round(b.policeRequest * b.policePercent);
 		b.schoolFunded = (int)Math.round(b.schoolRequest * b.schoolPercent);
-
+		b.cultureFunded = (int)Math.round(b.cultureRequest * b.culturePercent);
+		
 		int yumDuckets = budget.totalFunds + b.taxIncome;
 		assert yumDuckets >= 0;
 
@@ -1826,6 +1920,18 @@ public class Micropolis
 					if (yumDuckets >= b.schoolFunded)
 					{
 						yumDuckets -= b.schoolFunded;
+						if (yumDuckets >= b.cultureFunded)
+						{
+							yumDuckets -= b.cultureFunded;
+						}
+						else
+						{
+							assert b.cultureRequest !=0;
+							
+							b.cultureFunded = yumDuckets;
+							b.culturePercent = (double)b.cultureFunded / (double)b.cultureRequest;
+							yumDuckets = 0;
+						}
 					}
 					else
 					{
@@ -1833,6 +1939,8 @@ public class Micropolis
 
 						b.schoolFunded = yumDuckets;
 						b.schoolPercent = (double)b.schoolFunded / (double)b.schoolRequest;
+						b.cultureFunded = 0;
+						b.culturePercent = 0.0;
 						yumDuckets = 0;
 						
 					}
@@ -1845,6 +1953,8 @@ public class Micropolis
 					b.policePercent = (double)b.policeFunded / (double)b.policeRequest;
 					b.schoolFunded = 0;
 					b.schoolPercent = 0.0;
+					b.cultureFunded = 0;
+					b.culturePercent = 0.0;
 					yumDuckets = 0;
 				}
 			}
@@ -1858,6 +1968,8 @@ public class Micropolis
 				b.policePercent = 0.0;
 				b.schoolFunded = 0;
 				b.schoolPercent = 0.0;
+				b.cultureFunded = 0;
+				b.culturePercent = 0.0;
 				yumDuckets = 0;
 			}
 		}
@@ -1873,9 +1985,11 @@ public class Micropolis
 			b.policePercent = 0.0;
 			b.schoolFunded = 0;
 			b.schoolPercent = 0.0;
+			b.cultureFunded = 0;
+			b.culturePercent = 0.0;
 		}
 
-		b.operatingExpenses = b.roadFunded + b.fireFunded + b.policeFunded;
+		b.operatingExpenses = b.roadFunded + b.fireFunded + b.policeFunded + b.schoolFunded + b.cultureFunded;
 		b.newBalance = b.previousBalance + b.taxIncome - b.operatingExpenses;
 
 		return b;
@@ -2363,7 +2477,7 @@ public class Micropolis
 		}
 
 		// no "nice" location found, just start in center of map then
-		makeMonsterAt(getWidth()/2, getHeight()/2);
+		makeMonsterAt(getWidth(), getHeight());
 	}
 
 	void makeMonsterAt(int xpos, int ypos)
@@ -2652,6 +2766,11 @@ public class Micropolis
 		case 67:
 			if (schoolEffect < 700 && totalPop > 20) {
 				sendMessage(MicropolisMessage.SCHOOL_NEED_FUNDING);
+			}
+			break;
+		case 70:
+			if (cultureEffect < 700 && totalPop > 1000) {
+				sendMessage(MicropolisMessage.CULTURE_NEED_FUNDING);
 			}
 			break;
 		default:
