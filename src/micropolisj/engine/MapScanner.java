@@ -76,7 +76,6 @@ class MapScanner extends TileBehavior
 			doPoliceStation();
 			return;
 		case SCHOOLBUILDING:
-			System.out.println("doschool");
 			doSchool();
 			return;
 		case STADIUM_EMPTY:
