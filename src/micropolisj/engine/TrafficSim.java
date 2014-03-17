@@ -37,13 +37,59 @@ public class TrafficSim {
 	}
 	
 	
-	public int[] changePeriphereRoad(CityLocation pos){
+	
+	public void findPeriphereRoad(CityLocation pos){
 		// finds out if there are streets next to our field
-		// and codes them to an integer list (4 entrys: north, east, south, west)
-		
-		int[] object= new int[4];
-		object[0]=object[1]=object[2]=object[3]=0;
-		return object;
+		// and writes them into the HashMap "ready"
+		char tiletype;
+		tiletype=engine.getTile(pos.x, pos.y);
+		int dimension; //height (and so width) of the tile
+		if(tiletype==716){       //if tiletype==AIRPORT -> see TileConstants
+			dimension=4;
+		}else{
+			dimension=3;
+		}
+		if (dimension==3){
+			if (engine.getTile(pos.x-2, pos.y-1)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x-2,pos.y-1),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x-2, pos.y)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x-2,pos.y),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x-2, pos.y+1)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x-2,pos.y+1),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x-1, pos.y-2)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x-1,pos.y-2),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x-1, pos.y+2)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x-1,pos.y+2),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x, pos.y-2)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x,pos.y-2),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x, pos.y+2)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x,pos.y+2),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x+1, pos.y-2)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x+1,pos.y-2),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x+1, pos.y+2)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x+1,pos.y+2),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x+2, pos.y-1)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x+2,pos.y-1),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x+2, pos.y)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x+2,pos.y),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+			if (engine.getTile(pos.x+2, pos.y+1)==1){  //1 muss ersetzt werden durch alle möglichen Straßen- und Schienenteile!!!
+				ready.put(new CityLocation(pos.x+2,pos.y+1),new SpecifiedTile(new CityLocation(pos.x-2,pos.y-2),true));
+			}
+		}
+		if(dimension==4){
+			// Abfrage von oben mit einbauen!
+		}
 	}
 	
 	public void makeTraffic(CityLocation pos, int value){
