@@ -1739,9 +1739,9 @@ public class Micropolis
 	 */
 	static final double [] RLevels = { 0.7, 0.9, 1.2 };
 
+	//tax income
 	/** Tax income multiplier, for various difficulty settings.
 	 */
-	//tax income
 	static final double [] FLevels = { 1.4, 1.2, 0.8 };
 
 	void collectTaxPartial()
@@ -1830,6 +1830,7 @@ public class Micropolis
 		b.schoolPercent = Math.max(0.0, schoolPercent);
 
 		b.previousBalance = budget.totalFunds;
+		//tax income
 		b.taxIncome = (int)Math.round(lastTotalPop * landValueAverage / 120 * b.taxRate * FLevels[gameLevel]);
 		assert b.taxIncome >= 0;
 
