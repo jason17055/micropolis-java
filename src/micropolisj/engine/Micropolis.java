@@ -1108,7 +1108,7 @@ public class Micropolis
 		// by random chance. why is there no cap
 		// the rest of the time?
 
-		if (z > 240)
+		if (z > 240 && PRNG.nextInt(6) == 0)
 		{
 			z = 240;
 			trafficMaxLocationX = mapX;
@@ -1741,6 +1741,7 @@ public class Micropolis
 
 	/** Tax income multiplier, for various difficulty settings.
 	 */
+	//tax income
 	static final double [] FLevels = { 1.4, 1.2, 0.8 };
 
 	void collectTaxPartial()
@@ -1829,7 +1830,6 @@ public class Micropolis
 		b.schoolPercent = Math.max(0.0, schoolPercent);
 
 		b.previousBalance = budget.totalFunds;
-		//tax income
 		b.taxIncome = (int)Math.round(lastTotalPop * landValueAverage / 120 * b.taxRate * FLevels[gameLevel]);
 		assert b.taxIncome >= 0;
 
