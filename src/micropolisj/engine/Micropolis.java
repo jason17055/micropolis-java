@@ -1482,7 +1482,7 @@ public class Micropolis
 		return mem;
 	}
 
-	// calculate manhatten distance (in 2-units) from center of city
+	// calculate manhatten distance from center of city
 	// capped at 32
 	int getDisCC(int x, int y)
 	{
