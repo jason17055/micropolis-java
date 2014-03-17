@@ -51,6 +51,14 @@ public class Micropolis
 	 */
 	public int [][] crimeMem;
 
+    /**
+     * For each 2x2 section of the city, the analphabetism level of the city (0-250).
+     * 0 is no analphabetism; 250 is maximum analphabetism.
+     * Updated each cycle by crimeScan(); affects land value.
+     */
+
+    public int [][] analphabetismMem;
+
 	/**
 	 * For each 2x2 section of the city, the population density (0-?).
 	 * Used for map overlays and as a factor for crime rates.
@@ -87,7 +95,9 @@ public class Micropolis
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
 	int [][] schoolMap;
+	public int [][] schoolMapEffect;//school reach- used for overlay graphs
 	int [][] museumMap;
+	public int [][] museumMapEffect;
 
 	/** For each 8x8 section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
@@ -151,7 +161,9 @@ public class Micropolis
 	int pollutionMaxLocationX;
 	int pollutionMaxLocationY;
 	int crimeMaxLocationX;
-	int crimeMaxLocationY;
+    int crimeMaxLocationY;
+    int analphabetismMaxLocationX;
+    int analphabetismMaxLocationY;
 	public int centerMassX;
 	public int centerMassY;
 	CityLocation meltdownLocation;  //may be null
@@ -175,6 +187,7 @@ public class Micropolis
 	boolean indCap;  // industry demands sea port,  caps indValve at 0
 	int crimeRamp;
 	int polluteRamp;
+    int analphabetismRamp;
 
 	//
 	// budget stuff
@@ -251,6 +264,7 @@ public class Micropolis
 		landValueMem = new int[hY][hX];
 		pollutionMem = new int[hY][hX];
 		crimeMem = new int[hY][hX];
+        analphabetismMem = new int[hY][hX];
 		popDensity = new int[hY][hX];
 		trfDensity = new int[hY][hX];
 
@@ -268,6 +282,7 @@ public class Micropolis
 		schoolMap = new int[smY][smX];
 		museumMap = new int[smY][smX];
 		policeMapEffect = new int[smY][smX];
+        schoolMapEffect = new int[smY][smX];
 		fireRate = new int[smY][smX];
 		comRate = new int[smY][smX];
 
@@ -657,6 +672,7 @@ public class Micropolis
 
 		case 13:
 			crimeScan();
+            analphabetismScan();
 			break;
 
 		case 14:
@@ -849,6 +865,56 @@ public class Micropolis
 			}
 		}
 	}
+
+    // basically copying functionality of crimeScan first and then applying relevant changes
+    // maybe reducing crime when education is up
+    void analphabetismScan()
+    {
+
+        for (int sy = 0; sy < schoolMap.length; sy++) {
+            for (int sx = 0; sx < schoolMap[sy].length; sx++) {
+                schoolMapEffect[sy][sx] = schoolMap[sy][sx];
+            }
+        }
+
+        int count = 0;
+        int sum = 0;
+        int cmax = 0;
+        for (int hy = 0; hy < landValueMem.length; hy++) {
+            for (int hx = 0; hx < landValueMem[hy].length; hx++) {
+                int val = landValueMem[hy][hx];
+                if (val != 0) {
+                    count++;
+                    int z = 128 - val + popDensity[hy][hx];
+                    z = Math.min(300, z);
+                    z -= schoolMap[hy/4][hx/4];
+                    z = Math.min(250, z);
+                    z = Math.max(0, z);
+                    analphabetismMem[hy][hx] = z;
+
+                    sum += z;
+                    if (z > cmax || (z == cmax && PRNG.nextInt(4) == 0)) {
+                        cmax = z;
+                        analphabetismMaxLocationX = hx*2;
+                        analphabetismMaxLocationY = hy*2;
+                    }
+                }
+                else {
+                    analphabetismMem[hy][hx] = 0;
+                }
+            }
+        }
+
+        if (count != 0)
+            analphabetismAverage = sum / count;
+        else
+            analphabetismAverage = 0;
+
+        fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
+    }
+
+
+
 
 	void crimeScan()
 	{
@@ -1293,6 +1359,7 @@ public class Micropolis
 		public int [] money = new int[240];
 		public int [] pollution = new int[240];
 		public int [] crime = new int[240];
+        public int [] analphabetism = new int[240];
 		int resMax;
 		int comMax;
 		int indMax;
@@ -1656,6 +1723,7 @@ public class Micropolis
 			history.com[i + 1] = history.com[i];
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
+            history.analphabetism[i + 1] = history.analphabetism[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -1673,8 +1741,12 @@ public class Micropolis
 		crimeRamp += (crimeAverage - crimeRamp) / 4;
 		history.crime[0] = Math.min(255, crimeRamp);
 
+
 		polluteRamp += (pollutionAverage - polluteRamp) / 4;
 		history.pollution[0] = Math.min(255, polluteRamp);
+
+        analphabetismRamp += (analphabetismAverage - analphabetismRamp) / 4;
+        history.analphabetism[0] = Math.min(255, analphabetismRamp);
 
 		int moneyScaled = cashFlow / 20 + 128;
 		if (moneyScaled < 0)
@@ -1732,6 +1804,7 @@ public class Micropolis
 			history.com[i + 1] = history.com[i];
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
+            history.analphabetism[i + 1] = history.analphabetism[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -1740,6 +1813,7 @@ public class Micropolis
 		history.com[120] = comPop;
 		history.ind[120] = indPop;
 		history.crime[120] = history.crime[0];
+        history.analphabetism[120] = history.analphabetism[0];
 		history.pollution[120] = history.pollution[0];
 		history.money[120] = history.money[0];
 	}
