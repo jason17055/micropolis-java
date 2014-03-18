@@ -282,8 +282,8 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.schoolCount++;
-        // this should be inside the doCityHall() function when its implemented:
-        city.cityHallList.add(new CityLocation(xpos, ypos));
+        
+        
 
 		if ((city.cityTime % 8) == 0) {
 			repairZone(SCHOOLBUILDING, 3);
@@ -381,6 +381,7 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.cityhallCount++;
+		city.cityHallList.add(new CityLocation(xpos, ypos));
 		if ((city.cityTime % 8) == 0) {
 			repairZone(CITYHALLBUILDING, 3);
 		}
