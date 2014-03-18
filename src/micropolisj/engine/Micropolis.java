@@ -965,8 +965,8 @@ public class Micropolis
             return;
 
         if (nCheats > 5) {
+        	resetNCheats();
             makeEarthquake();
-            resetNCheats();
             return;
         }
 
