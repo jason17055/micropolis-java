@@ -86,8 +86,11 @@ public class TrafficSim {
 			}
 		}
 		while (!unready.isEmpty() && best>(Collections.min(unready.keySet()))) {
-			currentLocation=unready.get(Collections.min(unready.keySet())).getLoc();
+			int current=Collections.min(unready.keySet());
+			currentLocation=unready.get(current).getLoc();
 			currentCost=engine.getCost(currentLocation);
+			ready.put(currentLocation, new SpecifiedTile(currentCost,unready.get(current).getPred(),true));
+			unready.remove(current);
 			for (CityLocation g : findAdjRoads(currentLocation)) {
 				if (!found.contains(g)) {
 					this.found.add(g);
@@ -102,7 +105,7 @@ public class TrafficSim {
 						}
 					} else {
 						int keyi=16384*evalfunc(currentLocation,goal)+g.y;
-						if (keyi<= (int) (mapBack.get(g)/16384)) {
+						if (keyi<= mapBack.get(g)) {
 							unready.put(keyi,new SpecifiedTile(g,currentLocation,false));
 							mapBack.put(g, keyi);
 						}
