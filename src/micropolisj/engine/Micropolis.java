@@ -982,8 +982,8 @@ public class Micropolis
             return;
 
         if (nCheats > 5) {
+        	resetNCheats();
             makeEarthquake();
-            resetNCheats();
             return;
         }
 
@@ -1061,8 +1061,7 @@ public class Micropolis
 		return rv;
 	}
 
-	private boolean onMap(CityLocation loc, int dir)
-	{
+	public boolean onMap(CityLocation loc, int dir) {
 		switch(dir)
 		{
 		case 0:
@@ -1079,7 +1078,11 @@ public class Micropolis
 		return false;
 	}
 	
-	private static CityLocation goToAdj(CityLocation loc, int dir)
+	public boolean onMap(CityLocation loc) 	{
+		return (loc.y > 0) && (loc.x + 1 < getWidth()) && (loc.y + 1 < getHeight()) && (loc.x > 0);
+	}
+	
+	public static CityLocation goToAdj(CityLocation loc, int dir)
 	{
 		CityLocation loci =new CityLocation(loc.x,loc.y);
 		switch(dir)
@@ -2917,5 +2920,14 @@ public class Micropolis
 	public void setFunds(int totalFunds)
 	{
 		budget.totalFunds = totalFunds;
+	}
+	/**
+	 * Traffic costs to pass this field.
+	 * @param
+	 * @return costs
+	 */
+	public int getCost(CityLocation loc) {
+		//TODO write this function
+		return 0;
 	}
 }

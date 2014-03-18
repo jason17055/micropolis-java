@@ -11,13 +11,15 @@ public class SpecifiedTile {
 	
 	public SpecifiedTile(int cost, CityLocation loc, boolean type){
 		this.type=type;
-		if (type) {
+		assert type;
 			this.pred=new CityLocation(loc.x,loc.y);
 			this.costs=cost;
-		} else {
-			this.pred=new CityLocation(loc.x,loc.y);
-			this.bestcosts=cost;
-		}
+	}
+	public SpecifiedTile(CityLocation loc, CityLocation pred, boolean type){
+		this.type=type;
+		assert !type;
+		this.pred=new CityLocation(pred.x,pred.y);
+		this.loc=new CityLocation(loc.x,loc.y);
 	}
 	/**
 	 * default constructor creates ready tile without pred
@@ -29,7 +31,7 @@ public class SpecifiedTile {
 	}
 	
 	public CityLocation getLoc(){
-		return loc;
+		return new CityLocation(loc.x,loc.y);
 	}
 	
 	public CityLocation getPred(){
