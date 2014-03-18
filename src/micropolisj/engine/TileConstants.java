@@ -415,7 +415,7 @@ public class TileConstants
 		return (tile >= ROADBASE && tile < POWERBASE);
 	}
 
-	public static boolean isRoadAny(int tile)
+	public static boolean isRoadAny(int tile) //TODO add all new parts of roads and rails
 	{
 		assert (tile & LOMASK) == tile;
 
