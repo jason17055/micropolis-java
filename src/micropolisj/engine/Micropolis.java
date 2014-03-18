@@ -761,7 +761,6 @@ public class Micropolis
 					tem[y][x] = den;
 					xtot += x;
 					ytot += y;
-                    System.out.println("ytot: " + ytot + ", xtot: " + xtot);
 					zoneCount++;
 				}
 			}
@@ -1511,6 +1510,13 @@ public class Micropolis
 		return mem;
 	}
 
+    int valueMapping(int x, int in_min, int in_max, int out_min, int out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+
+
 	// calculate manhatten distance from center of city
 	// capped at 32
 	//FIX Why do cap at 32? Consider to increase the cap.
@@ -1520,8 +1526,14 @@ public class Micropolis
 		assert y >= 0 && y <= getHeight();
         int xdis = Math.abs(x - centerMassX);
         int ydis = Math.abs(y - centerMassY);
+        int centerMassDistance = xdis+ydis;
+        int ccDis;
+
+        if(centerMassDistance > 32) centerMassDistance = 32;
 
         int closestDistance = 32;
+        //alternatively adding bonus if there are two cityHalls near
+        // also alternatively bonusing centerMass as original
 
         if(cityHallList.size() > 0){
         //getting the distance to the closest cityHall
@@ -1532,12 +1544,18 @@ public class Micropolis
              if(curDistance < closestDistance) closestDistance = curDistance;
            }
         } else {
-
-            int distanceToCenterMass = xdis+ydis;
-            if(distanceToCenterMass < closestDistance) closestDistance = distanceToCenterMass;
-
+            if(centerMassDistance < 32) closestDistance = centerMassDistance;
         }
-			return closestDistance;
+        ccDis = closestDistance;
+
+        // also some bonus if tile is close to the centerMass (the actual cityccenter by mass)
+        // it has only 1/4 effect than previously though
+        int centerMassDistanceB = centerMassDistance * 4; //making the centerMassDistance 4 times bigger so it has lesser effect
+        centerMassDistanceB = Math.min(32, centerMassDistanceB);
+        int bonusValue = valueMapping(centerMassDistance, 1,32, 32,1); // if centerMassDistance is 1 (close) then the bonous is big
+        ccDis = Math.min((closestDistance - bonusValue), 1);
+
+		return ccDis;
 	}
 
 	Map<String,TileBehavior> tileBehaviors;
@@ -2410,7 +2428,7 @@ public class Micropolis
 
 	void makeSound(int x, int y, Sound sound)
 	{
-		fireCitySound(sound, new CityLocation(x,y));
+		fireCitySound(sound, new CityLocation(x, y));
 	}
 
 	public void makeEarthquake()
@@ -2653,7 +2671,7 @@ public class Micropolis
 
 	void makeExplosion(int xpos, int ypos)
 	{
-		makeExplosionAt(xpos*16+8, ypos*16+8);
+		makeExplosionAt(xpos * 16 + 8, ypos * 16 + 8);
 	}
 
 	/**
