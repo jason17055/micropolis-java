@@ -89,6 +89,7 @@ public class Micropolis
 	 * Used for reporting purposes only; the number has no affect.
 	 */
 	public int [][] rateOGMem; //rate of growth
+    public ArrayList<CityLocation> cityHallList = new ArrayList<CityLocation>();
 
 	int [][] fireStMap;      //firestations- cleared and rebuilt each sim cycle
 	public int [][] fireRate;       //firestations reach- used for overlay graphs
@@ -557,6 +558,7 @@ public class Micropolis
 		seaportCount = 0;
 		airportCount = 0;
 		powerPlants.clear();
+        cityHallList.clear();
 
 		for (int y = 0; y < fireStMap.length; y++) {
 			for (int x = 0; x < fireStMap[y].length; x++) {
@@ -728,6 +730,7 @@ public class Micropolis
 		popDenScan();
 	}
 
+    // calculates centerMass and popDensity
 	private void popDenScan()
 	{
 		int xtot = 0;
@@ -737,24 +740,30 @@ public class Micropolis
 		int height = getHeight();
 		int [][] tem = new int[(height)][(width)];
 
+        // iterate all tiles on map
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
 				char tile = getTile(x, y);
+                // only continue if tile is a zone center
 				if (isZoneCenter(tile))
 				{
+                    // get density of tile from computePopDen
 					int den = computePopDen(x, y, tile);
 					if (den > 254)
 						den = 254;
+                    // write the density into a new array for each tile
 					tem[y][x] = den;
 					xtot += x;
 					ytot += y;
+                    System.out.println("ytot: " + ytot + ", xtot: " + xtot);
 					zoneCount++;
 				}
 			}
 		}
 
+        //smoothing the density array
 		tem = doSmooth(tem);
 		tem = doSmooth(tem);
 		tem = doSmooth(tem);
@@ -769,17 +778,25 @@ public class Micropolis
 
 		distIntMarket(); //set ComRate
 
+        // new centermass calculation
+        // check if there are city halls build already
+
 		// find center of mass for city
 		if (zoneCount != 0)
 		{
 			centerMassX = xtot / zoneCount;
 			centerMassY = ytot / zoneCount;
 		}
-		else
+		else if(schoolCount < 1)
 		{
 			centerMassX = (width+1)/2;
 			centerMassY = (height+1)/2;
-		}
+		} else
+        {
+            // using locations of city hall to set centerMass
+
+
+        }
 
 		fireMapOverlayDataChanged(MapState.POPDEN_OVERLAY);     //PDMAP
 		fireMapOverlayDataChanged(MapState.GROWTHRATE_OVERLAY); //RGMAP
@@ -1244,6 +1261,7 @@ public class Micropolis
 					//land value equation
 
 
+                    // getDisCC should check for every city hall if it is in distance
 					int dis = 34 - getDisCC(x, y);
 					dis *= 4;
 					dis += terrainMem[y][x];
@@ -1492,15 +1510,26 @@ public class Micropolis
 	{
 		assert x >= 0 && x <= getWidth();
 		assert y >= 0 && y <= getHeight();
+        int xdis = Math.abs(x - centerMassX);
+        int ydis = Math.abs(y - centerMassY);
 
-		int xdis = Math.abs(x - centerMassX);
-		int ydis = Math.abs(y - centerMassY);
+        int closestDistance = 32;
 
-		int z = (xdis + ydis);
-		if (z > 32)
-			return 32;
-		else
-			return z;
+        if(cityHallList.size() > 0){
+        //getting the distance to the closest cityHall
+            for(CityLocation cityHallLocation : cityHallList){
+              int cur_xdis = Math.abs(x - cityHallLocation.x);
+              int cur_ydis = Math.abs(y - cityHallLocation.y);
+             int curDistance = (cur_xdis + cur_ydis);
+             if(curDistance < closestDistance) closestDistance = curDistance;
+           }
+        } else {
+
+            int distanceToCenterMass = xdis+ydis;
+            if(distanceToCenterMass < closestDistance) closestDistance = distanceToCenterMass;
+
+        }
+			return closestDistance;
 	}
 
 	Map<String,TileBehavior> tileBehaviors;
