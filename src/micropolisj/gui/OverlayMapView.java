@@ -228,6 +228,7 @@ public class OverlayMapView extends JComponent
 
     private void drawSchoolRadius(Graphics gr)
     {
+        System.out.println("draw school radius");
         int [][] A = engine.schoolMapEffect;
 
         for (int y = 0; y < A.length; y++) {

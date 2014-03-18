@@ -691,17 +691,16 @@ public class Micropolis
 		case 12:
 			ptlScan();
 			break;
-
 		case 13:
-			crimeScan();
-            analphabetismScan();
+            popDenScan();
 			break;
-
 		case 14:
-			popDenScan();
+            crimeScan();
 			break;
-
-		case 15:
+        case 15:
+            analphabetismScan();
+            break;
+		case 16:
 			fireAnalysis();
 			doDisasters();
 			break;
@@ -747,7 +746,18 @@ public class Micropolis
 					z += tem[y-1][x];
 				if (y + 1 < h)
 					z += tem[y+1][x];
-				z /= 4;
+
+                // new adding values from diagonals
+                if (x > 0 && y > 0)
+                    z += tem[y-1][x-1];
+                if (x + 1 < w && y > 0)
+                    z += tem[y-1][x+1];
+                if (y + 1 < h && x + 1 < w)
+                    z += tem[y+1][x+1];
+                if (y + 1 < h && x > 0)
+                    z += tem[y+1][x-1];
+
+				z /= 8;
 				if (z > 255)
 					z = 255;
 				tem2[y][x] = z;
@@ -779,14 +789,13 @@ public class Micropolis
 			{
 				char tile = getTile(x, y);
                 // only continue if tile is a zone center
-				if (isZoneCenter(tile))
-				{
+				if (isZoneCenter(tile)){
                     // get density of tile from computePopDen
 					int den = computePopDen(x, y, tile);
 					if (den > 254)
 						den = 254;
                     // write the density into a new array for each tile
-					tem[y][x] = den;
+					tem[y][x] = den*40;
 					xtot += x;
 					ytot += y;
 					zoneCount++;
@@ -796,8 +805,9 @@ public class Micropolis
 
         //smoothing the density array
 		tem = doSmooth(tem);
-		tem = doSmooth(tem);
-		tem = doSmooth(tem);
+        tem = doSmooth(tem);
+        tem = doSmooth(tem);
+
 
 		for (int x = 0; x < width; x++)
 		{
@@ -818,7 +828,7 @@ public class Micropolis
 			centerMassX = xtot / zoneCount;
 			centerMassY = ytot / zoneCount;
 		}
-		else if(schoolCount < 1)
+		else if(cityhallCount < 1)
 		{
 			centerMassX = (width+1)/2;
 			centerMassY = (height+1)/2;
@@ -926,8 +936,7 @@ public class Micropolis
                     int z = 128 - val + popDensity[hy][hx];
                     z = Math.min(300, z);
                     z -= schoolMap[hy][hx];
-                    z = Math.min(250, z);
-                    z = Math.max(0, z);
+                    z = clamp(z,0,250);
                     analphabetismMem[hy][hx] = z;
 
                     sum += z;
@@ -958,13 +967,13 @@ public class Micropolis
 	{
 		policeMap = smoothFirePoliceMap(policeMap);
 		policeMap = smoothFirePoliceMap(policeMap);
-		policeMap = smoothFirePoliceMap(policeMap);
 
-		for (int sy = 0; sy < policeMap.length; sy++) {
+
+		/*for (int sy = 0; sy < policeMap.length; sy++) {
 			for (int sx = 0; sx < policeMap[sy].length; sx++) {
 				policeMapEffect[sy][sx] = policeMap[sy][sx];
 			}
-		}
+		}*/
 
 		int count = 0;
 		int sum = 0;
@@ -977,8 +986,7 @@ public class Micropolis
 					int z = 128 - val + popDensity[hy][hx];
 					z = Math.min(300, z);
 					z -= policeMap[hy][hx];
-					z = Math.min(250, z);
-					z = Math.max(0, z);
+					z = clamp(z,0,250);
 					crimeMem[hy][hx] = z;
 
 					sum += z;
@@ -993,6 +1001,8 @@ public class Micropolis
 				}
 			}
 		}
+
+
 
 		if (count != 0)
 			crimeAverage = sum / count;
@@ -1279,7 +1289,8 @@ public class Micropolis
 							qtem[y][x] += 15;
 							continue;
 						}
-						plevel += getPollutionValue(tile);
+                        // also get pollution value of adjacent tiles?
+						plevel += getPollutionValue(tile)*2;
 						if (isConstructed(tile))
 							lvflag++;
 					}
@@ -1301,8 +1312,8 @@ public class Micropolis
                     // getDisCC should check for every city hall if it is in distance
 					int dis = 34 - getDisCC(x, y);
 					dis *= 4;
-					dis += terrainMem[y][x];
-					dis -= pollutionMem[y][x];
+					dis += terrainMem[y][x]*100;
+					dis -= pollutionMem[y][x]*16;
 					if (crimeMem[y][x] > 190) {
 						dis -= 20;
 					}
@@ -1313,24 +1324,31 @@ public class Micropolis
 
 
 					landValueMem[y][x] = dis;
-					landValueTotal += dis;
+					landValueTotal += landValueMem[y][x];
 					landValueCount++;
 				}
 				else
 				{
 					landValueMem[y][x] = 0;
 				}
+
 			}
 		}
 
 		landValueAverage = landValueCount != 0 ? (landValueTotal/landValueCount) : 0;
 
-		tem = doSmooth(tem);
-		tem = doSmooth(tem);
 
 		int pcount = 0;
 		int ptotal = 0;
 		int pmax = 0;
+
+
+        // smooth polution
+        tem = doSmooth(tem);
+        tem = doSmooth(tem);
+        tem = doSmooth(tem);
+        tem = doSmooth(tem);
+        tem = doSmooth(tem);
 		for (int x = 0; x < HWLDX; x++)
 		{
 			for (int y = 0; y < HWLDY; y++)
@@ -1353,6 +1371,8 @@ public class Micropolis
 				}
 			}
 		}
+
+
 
 		pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
@@ -1917,7 +1937,7 @@ public class Micropolis
 			(int)Math.floor(32.0 * (double)b.roadFunded / (double)b.roadRequest) :
 			32;
 		policeEffect = b.policeRequest != 0 ?
-			(int)Math.floor(1000.0 * (double)b.policeFunded / (double)b.policeRequest) :
+			(int)Math.floor(10000.0 * (double)b.policeFunded / (double)b.policeRequest) :
 			1000;
 		fireEffect = b.fireRequest != 0 ?
 			(int)Math.floor(1000.0 * (double)b.fireFunded / (double)b.fireRequest) :
