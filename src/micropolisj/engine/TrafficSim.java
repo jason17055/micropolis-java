@@ -35,7 +35,7 @@ public class TrafficSim {
 		found=new HashSet<CityLocation>();
 	}
 	/**
-	 * The fuction is called to generate traffic from the starting position
+	 * The function is called to generate traffic from the starting position
 	 * uses A*-Algorithm to find ways
 	 * @param startP starting position
 	 * @return length of the way (-1 for no way)
@@ -106,9 +106,13 @@ public class TrafficSim {
 		return ret;
 	}
 	
+	/**
+	 * finds out if there are streets next to our zone and return a HashMap with default values
+	 * @param pos zone center
+	 * @return keys are the streets next to the zone, values are default
+	 */
+	
 	public HashMap<CityLocation,SpecifiedTile> findPeriphereRoad(CityLocation pos){
-		// finds out if there are streets next to our field
-		// and writes them into the HashMap "ready"
 		char tiletype;
 		HashMap<CityLocation,SpecifiedTile> ret=new HashMap<CityLocation,SpecifiedTile>();
 		tiletype=engine.getTile(pos.x, pos.y);
@@ -118,7 +122,7 @@ public class TrafficSim {
 		}else{
 			dimension=3;
 		}
-		/**if (dimension==3){ //need to change isRoad in TileConstants
+		/*if (dimension==3){ //need to change isRoad in TileConstants
 			if (engine.onMap(new CityLocation(pos.x-2,pos.y-1))&&TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y-1))){  
 				ret.put(new CityLocation(pos.x-2,pos.y-1),new SpecifiedTile());
 			}
