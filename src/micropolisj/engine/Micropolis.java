@@ -888,16 +888,18 @@ public class Micropolis
 		{
 			for (int x = 0; x < trfDensity[y].length; x++)
 			{
-				int z = trfDensity[y][x];
+				trfDensity[y][x]/=2;
+				/*original functionint z = trfDensity[y][x];
 				if (z != 0)
 				{
-					if (z > 200)
+					
+					  if (z > 200)
 						trfDensity[y][x] = z - 34;
 					else if (z > 24)
 						trfDensity[y][x] = z - 24;
 					else
 						trfDensity[y][x] = 0;
-				}
+				}*/
 			}
 		}
 	}
