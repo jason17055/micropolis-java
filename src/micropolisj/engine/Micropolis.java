@@ -2813,7 +2813,7 @@ public class Micropolis
 		 return ret/d;
 	}
 	
-	private int accessMap(int x,int y, String g) {
+	/**private int accessMap(int x,int y, String g) {  //CHANGE TO IF-ELSE
 		switch (g) {
 		case "popDensity":
 			return popDensity[y][x];
@@ -2827,7 +2827,7 @@ public class Micropolis
 			return rateOGMem[y][x];	
 		}
 		return 0;
-	}
+	}*/
 
 	public ZoneStatus queryZoneStatus(int xpos, int ypos)
 	{
