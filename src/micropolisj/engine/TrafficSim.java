@@ -70,7 +70,6 @@ public class TrafficSim {
 	public int findWay(CityLocation startpos, CityLocation endpos){
 		int currentCost=0;
 		CityLocation currentLocation=new CityLocation(-1,-1);
-		found.clear();
 		ready=findPeriphereRoad(startpos);
 		goal=(HashSet<CityLocation>) findPeriphereRoad(endpos).keySet();
 		found=(HashSet<CityLocation>) ready.keySet();
@@ -83,6 +82,7 @@ public class TrafficSim {
 				int keyi=16384*evalfunc(f,goal)+g.y;
 				unready.put(keyi,new SpecifiedTile(g,f,false));
 				mapBack.put(g, keyi);
+				found.add(g);
 			}
 		}
 		while (!unready.isEmpty() && best>(Collections.min(unready.keySet()))) {
