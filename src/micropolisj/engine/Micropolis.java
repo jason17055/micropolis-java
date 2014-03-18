@@ -2989,7 +2989,7 @@ public class Micropolis
 	 * @param
 	 * @return costs
 	 */
-	public int getCost(CityLocation loc) {
+	public int getTrafficCost(CityLocation loc) {
 		//TODO write this function
 		return 0;
 	}
