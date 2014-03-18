@@ -65,7 +65,8 @@ public class TrafficSim {
 		CityLocation currentLocation=new CityLocation(-1,-1);
 		found=new HashSet<CityLocation>();
 		ready=findPeriphereRoad(startpos);
-		builtGoal(endpos);
+		goal=(HashSet<CityLocation>) findPeriphereRoad(endpos).keySet();
+		found=(HashSet<CityLocation>) ready.keySet();
 		int best=200;
 		if (ready.isEmpty()) {
 			return -1;
@@ -80,7 +81,8 @@ public class TrafficSim {
 			currentCost=engine.getCost(currentLocation);
 			for (CityLocation g : findAdjRoads(currentLocation)) {
 				if (!found.contains(g)) {
-						unready.put(32768*evalfunc(currentLocation,goal)+g.y,new SpecifiedTile(g,currentLocation,false));
+					this.found.apply(g);
+						unready.put(16384*evalfunc(currentLocation,goal)+g.y,new SpecifiedTile(g,currentLocation,false));
 					}
 				}
 			}
@@ -98,10 +100,6 @@ public class TrafficSim {
 			}
 		}
 		return ret;
-	}
-	
-	private void builtGoal(CityLocation loc) {
-		goal=(HashSet<CityLocation>) findPeriphereRoad(loc).keySet();
 	}
 	
 	public HashMap<CityLocation,SpecifiedTile> findPeriphereRoad(CityLocation pos){
