@@ -94,6 +94,18 @@ public class ToolStroke
 
 		case MUSEUM:
 			return applyZone(eff, MUSEUMBUILDING);
+			
+		case UNIA:
+			return applyZone(eff, UNIABUILDING);
+			
+		case UNIB:
+			return applyZone(eff, UNIBBUILDING);
+			
+		case CITYHALL:
+			return applyZone(eff, CITYHALLBUILDING);
+			
+		case OPENAIR:
+			return applyZone(eff, OPENAIRBUILDING);
 		
 		case SEAPORT:
 			return applyZone(eff, PORT);
