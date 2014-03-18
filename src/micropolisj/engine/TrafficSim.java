@@ -155,8 +155,25 @@ public class TrafficSim {
 			}
 		}
 		if(dimension==4){
-			// Abfrage von oben mit einbauen!
+			
+			
 		}
+		
+		for(int i=-1; i<dimension+1;i++){
+			if (TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y+i))){  
+				ret.put(new CityLocation(pos.x-2,pos.y+i),new SpecifiedTile());
+			}
+			if (TileConstants.isRoadAny(engine.getTile(pos.x+2, pos.y+i))){  
+				ret.put(new CityLocation(pos.x+2,pos.y+i),new SpecifiedTile());
+			}
+			if (TileConstants.isRoadAny(engine.getTile(pos.x+i, pos.y-2))){  
+				ret.put(new CityLocation(pos.x+i,pos.y-2),new SpecifiedTile());
+			}
+			if (TileConstants.isRoadAny(engine.getTile(pos.x+i, pos.y+2))){  
+				ret.put(new CityLocation(pos.x+i,pos.y+2),new SpecifiedTile());
+			}
+		}
+		
 		return ret;
 	}
 	/**
