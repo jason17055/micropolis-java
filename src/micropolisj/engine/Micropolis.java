@@ -2805,7 +2805,7 @@ public class Micropolis
 		int d=0;
 		for (int xp=Math.max(0,x-1);xp<Math.min(x+2,getWidth());xp++) {
 			for (int yp=Math.max(0,y-1);yp<Math.min(y+2,getHeight());xp++) {
-				ret+=accessMap(x, y, g);
+				//ret+=accessMap(x, y, g);   TODO NEED TO CHANGE
 				d++;
 			}
 		}
