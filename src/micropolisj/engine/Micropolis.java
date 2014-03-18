@@ -89,6 +89,7 @@ public class Micropolis
 	 * Used for reporting purposes only; the number has no affect.
 	 */
 	public int [][] rateOGMem; //rate of growth
+    public ArrayList<CityLocation> cityHallList = new ArrayList<CityLocation>();
 
 	int [][] fireStMap;      //firestations- cleared and rebuilt each sim cycle
 	public int [][] fireRate;       //firestations reach- used for overlay graphs
@@ -234,6 +235,8 @@ public class Micropolis
 	int scycle; //same as cityTime, except mod 1024
 	int fcycle; //counts simulation steps (mod 1024)
 	int acycle; //animation cycle (mod 960)
+	
+	HashMap<CityLocation,Integer> visits=new HashMap<CityLocation,Integer>();
 
 	public CityEval evaluation;
 
@@ -553,6 +556,7 @@ public class Micropolis
 
 	void clearCensus()
 	{
+		
 		poweredZoneCount = 0;
 		unpoweredZoneCount = 0;
 		firePop = 0;
@@ -581,6 +585,8 @@ public class Micropolis
 		seaportCount = 0;
 		airportCount = 0;
 		powerPlants.clear();
+        cityHallList.clear();
+        visits.clear();
 
 		for (int y = 0; y < fireStMap.length; y++) {
 			for (int x = 0; x < fireStMap[y].length; x++) {
@@ -756,6 +762,7 @@ public class Micropolis
 		popDenScan();
 	}
 
+    // calculates centerMass and popDensity
 	private void popDenScan()
 	{
 		int xtot = 0;
@@ -765,16 +772,20 @@ public class Micropolis
 		int height = getHeight();
 		int [][] tem = new int[(height)][(width)];
 
+        // iterate all tiles on map
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
 				char tile = getTile(x, y);
+                // only continue if tile is a zone center
 				if (isZoneCenter(tile))
 				{
+                    // get density of tile from computePopDen
 					int den = computePopDen(x, y, tile);
 					if (den > 254)
 						den = 254;
+                    // write the density into a new array for each tile
 					tem[y][x] = den;
 					xtot += x;
 					ytot += y;
@@ -783,6 +794,7 @@ public class Micropolis
 			}
 		}
 
+        //smoothing the density array
 		tem = doSmooth(tem);
 		tem = doSmooth(tem);
 		tem = doSmooth(tem);
@@ -797,17 +809,25 @@ public class Micropolis
 
 		distIntMarket(); //set ComRate
 
+        // new centermass calculation
+        // check if there are city halls build already
+
 		// find center of mass for city
 		if (zoneCount != 0)
 		{
 			centerMassX = xtot / zoneCount;
 			centerMassY = ytot / zoneCount;
 		}
-		else
+		else if(schoolCount < 1)
 		{
 			centerMassX = (width+1)/2;
 			centerMassY = (height+1)/2;
-		}
+		} else
+        {
+            // using locations of city hall to set centerMass
+
+
+        }
 
 		fireMapOverlayDataChanged(MapState.POPDEN_OVERLAY);     //PDMAP
 		fireMapOverlayDataChanged(MapState.GROWTHRATE_OVERLAY); //RGMAP
@@ -993,8 +1013,8 @@ public class Micropolis
             return;
 
         if (nCheats > 5) {
+        	resetNCheats();
             makeEarthquake();
-            resetNCheats();
             return;
         }
 
@@ -1072,8 +1092,7 @@ public class Micropolis
 		return rv;
 	}
 
-	public boolean onMap(CityLocation loc, int dir)
-	{
+	public boolean onMap(CityLocation loc, int dir) {
 		switch(dir)
 		{
 		case 0:
@@ -1088,6 +1107,14 @@ public class Micropolis
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean onMap(CityLocation loc) 	{
+		return (loc.y > 0) && (loc.x + 1 < getWidth()) && (loc.y + 1 < getHeight()) && (loc.x > 0);
+	}
+	
+	public void putVisits(CityLocation loc) {
+		visits.put(loc,(visits.get(loc)+1));
 	}
 	
 	public static CityLocation goToAdj(CityLocation loc, int dir)
@@ -1269,6 +1296,7 @@ public class Micropolis
 					//land value equation
 
 
+                    // getDisCC should check for every city hall if it is in distance
 					int dis = 34 - getDisCC(x, y);
 					dis *= 4;
 					dis += terrainMem[y][x];
@@ -1510,6 +1538,13 @@ public class Micropolis
 		return mem;
 	}
 
+    int valueMapping(int x, int in_min, int in_max, int out_min, int out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+
+
 	// calculate manhatten distance from center of city
 	// capped at 32
 	//FIX Why do cap at 32? Consider to increase the cap.
@@ -1517,15 +1552,38 @@ public class Micropolis
 	{
 		assert x >= 0 && x <= getWidth();
 		assert y >= 0 && y <= getHeight();
+        int xdis = Math.abs(x - centerMassX);
+        int ydis = Math.abs(y - centerMassY);
+        int centerMassDistance = xdis+ydis;
+        int ccDis;
 
-		int xdis = Math.abs(x - centerMassX);
-		int ydis = Math.abs(y - centerMassY);
+        if(centerMassDistance > 32) centerMassDistance = 32;
 
-		int z = (xdis + ydis);
-		if (z > 32)
-			return 32;
-		else
-			return z;
+        int closestDistance = 32;
+        //alternatively adding bonus if there are two cityHalls near
+        // also alternatively bonusing centerMass as original
+
+        if(cityHallList.size() > 0){
+        //getting the distance to the closest cityHall
+            for(CityLocation cityHallLocation : cityHallList){
+              int cur_xdis = Math.abs(x - cityHallLocation.x);
+              int cur_ydis = Math.abs(y - cityHallLocation.y);
+             int curDistance = (cur_xdis + cur_ydis);
+             if(curDistance < closestDistance) closestDistance = curDistance;
+           }
+        } else {
+            if(centerMassDistance < 32) closestDistance = centerMassDistance;
+        }
+        ccDis = closestDistance;
+
+        // also some bonus if tile is close to the centerMass (the actual cityccenter by mass)
+        // it has only 1/4 effect than previously though
+        int centerMassDistanceB = centerMassDistance * 4; //making the centerMassDistance 4 times bigger so it has lesser effect
+        centerMassDistanceB = Math.min(32, centerMassDistanceB);
+        int bonusValue = valueMapping(centerMassDistance, 1,32, 32,1); // if centerMassDistance is 1 (close) then the bonous is big
+        ccDis = Math.min((closestDistance - bonusValue), 1);
+
+		return ccDis;
 	}
 
 	Map<String,TileBehavior> tileBehaviors;
@@ -1580,9 +1638,10 @@ public class Micropolis
 		if (behaviorStr == null) {
 			return; //nothing to do
 		}
-
+		
 		TileBehavior b = tileBehaviors.get(behaviorStr);
 		if (b != null) {
+			visits.put(new CityLocation(xpos,ypos),0);
 			b.processTile(xpos, ypos);
 		}
 		else {
@@ -1733,14 +1792,14 @@ public class Micropolis
 		history.com[0] = comPop;
 		history.ind[0] = indPop;
 
-		crimeRamp += (crimeAverage - crimeRamp);
+		crimeRamp = (crimeAverage);
 		history.crime[0] = Math.min(255, crimeRamp);
 
 
-		polluteRamp += (pollutionAverage - polluteRamp);
+		polluteRamp = pollutionAverage;
 		history.pollution[0] = Math.min(255, polluteRamp);
 
-        analphabetismRamp += (analphabetismAverage - analphabetismRamp);
+        analphabetismRamp = (analphabetismAverage);
         history.analphabetism[0] = Math.min(255, analphabetismRamp);
 
 		int moneyScaled = cashFlow / 20 + 128;
@@ -2405,7 +2464,7 @@ public class Micropolis
 
 	void makeSound(int x, int y, Sound sound)
 	{
-		fireCitySound(sound, new CityLocation(x,y));
+		fireCitySound(sound, new CityLocation(x, y));
 	}
 
 	public void makeEarthquake()
@@ -2648,7 +2707,7 @@ public class Micropolis
 
 	void makeExplosion(int xpos, int ypos)
 	{
-		makeExplosionAt(xpos*16+8, ypos*16+8);
+		makeExplosionAt(xpos * 16 + 8, ypos * 16 + 8);
 	}
 
 	/**
