@@ -1310,6 +1310,8 @@ public class Micropolis
 						dis = 250;
 					if (dis < 1)
 						dis = 1;
+
+
 					landValueMem[y][x] = dis;
 					landValueTotal += dis;
 					landValueCount++;
@@ -1545,6 +1547,10 @@ public class Micropolis
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
+    public static int clamp(int val, int min, int max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
 
 
 	// calculate manhatten distance from center of city
@@ -1556,7 +1562,7 @@ public class Micropolis
 		assert y >= 0 && y <= getHeight();
         int xdis = Math.abs(x - centerMassX);
         int ydis = Math.abs(y - centerMassY);
-        int centerMassDistance = xdis+ydis;
+        int centerMassDistance = (xdis+ydis)/2;
         int ccDis;
 
         if(centerMassDistance > 32) centerMassDistance = 32;
@@ -1581,9 +1587,9 @@ public class Micropolis
         // also some bonus if tile is close to the centerMass (the actual cityccenter by mass)
         // it has only 1/4 effect than previously though
         int centerMassDistanceB = centerMassDistance * 4; //making the centerMassDistance 4 times bigger so it has lesser effect
-        centerMassDistanceB = Math.min(32, centerMassDistanceB);
-        int bonusValue = valueMapping(centerMassDistance, 1,32, 32,1); // if centerMassDistance is 1 (close) then the bonous is big
-        ccDis = Math.min((closestDistance - bonusValue), 1);
+        centerMassDistanceB = clamp(centerMassDistanceB, 0,32);
+        int bonusValue = valueMapping(centerMassDistanceB, 1,32, 32,0); // if centerMassDistance is 1 (close) then the bonous is big
+        ccDis = clamp((closestDistance - bonusValue), 1,32);
 
 		return ccDis;
 	}
