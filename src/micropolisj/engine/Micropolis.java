@@ -96,6 +96,14 @@ public class Micropolis
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
 	int [][] schoolMap;
 	public int [][] schoolMapEffect;//school reach- used for overlay graphs
+	int [][] uniaMap;
+	public int [][] uniaMapEffect;//unia reach- used for overlay graphs
+	int [][] unibMap;
+	public int [][] unibMapEffect;//unib reach- used for overlay graphs
+	int [][] cityhallMap;
+	public int [][] cityhallEffect;//unib reach- used for overlay graphs
+	int [][] openairMap;
+	public int [][] openairMapEffect;
 	int [][] museumMap;
 	public int [][] museumMapEffect;
 
@@ -135,6 +143,10 @@ public class Micropolis
 	int churchCount;
 	int policeCount;
 	int schoolCount;
+	int uniaCount;
+	int unibCount;
+	int cityhallCount;
+	int openairCount;
 	int museumCount;
 	int fireStationCount;
 	int stadiumCount;
@@ -155,6 +167,10 @@ public class Micropolis
 	int lastPoliceCount;
 	int lastSchoolCount;
 	int lastMuseumCount;
+	int lastUniACount;
+	int lastUniBCount;
+	int lastOpenAirCount;
+	int lastCityHallCount;
 
 	int trafficMaxLocationX;
 	int trafficMaxLocationY;
@@ -270,6 +286,10 @@ public class Micropolis
 		policeMap = new int[height][width];
 		schoolMap = new int[height][width];
 		museumMap = new int[height][width];
+		uniaMap = new int[height][width];
+		unibMap = new int[height][width];
+		cityhallMap = new int[height][width];
+		openairMap = new int[height][width];
 		policeMapEffect = new int[height][width];
 		schoolMapEffect = new int[height][width];
 		fireRate = new int[height][width];
@@ -550,6 +570,10 @@ public class Micropolis
 		policeCount = 0;
 		schoolCount = 0;
 		museumCount = 0;
+		uniaCount = 0;
+		unibCount = 0;
+		openairCount = 0;
+		cityhallCount = 0;
 		fireStationCount = 0;
 		stadiumCount = 0;
 		coalCount = 0;
@@ -564,6 +588,10 @@ public class Micropolis
 				policeMap[y][x] = 0;
 				schoolMap[y][x] = 0;
 				museumMap[y][x] = 0;
+				uniaMap[y][x] = 0;
+				unibMap[y][x] = 0;
+				cityhallMap[y][x] = 0;
+				openairMap[y][x] = 0;
 			}
 		}
 	}
@@ -1522,6 +1550,10 @@ public class Micropolis
 		bb.put("POLICESTATION", new MapScanner(this, MapScanner.B.POLICESTATION));
 		bb.put("SCHOOLBUILDING", new MapScanner(this, MapScanner.B.SCHOOLBUILDING));
 		bb.put("MUSEUMBUILDING", new MapScanner(this, MapScanner.B.MUSEUMBUILDING));
+		bb.put("UNIABUILDING", new MapScanner(this, MapScanner.B.UNIABUILDING));
+		bb.put("UNIBBUILDING", new MapScanner(this, MapScanner.B.UNIBBUILDING));
+		bb.put("OPENAIRBUILDING", new MapScanner(this, MapScanner.B.OPENAIRBUILDING));
+		bb.put("CITYHALLBUILDING", new MapScanner(this, MapScanner.B.CITYHALLBUILDING));
 		bb.put("STADIUM_EMPTY", new MapScanner(this, MapScanner.B.STADIUM_EMPTY));
 		bb.put("STADIUM_FULL", new MapScanner(this, MapScanner.B.STADIUM_FULL));
 		bb.put("AIRPORT", new MapScanner(this, MapScanner.B.AIRPORT));
@@ -1799,6 +1831,10 @@ public class Micropolis
 		lastPoliceCount = policeCount;
 		lastSchoolCount = schoolCount;
 		lastMuseumCount = museumCount;
+		lastUniACount = uniaCount;
+		lastUniBCount = unibCount;
+		lastCityHallCount = cityhallCount;
+		lastOpenAirCount = cityhallCount;
 
 		BudgetNumbers b = generateBudget();
 

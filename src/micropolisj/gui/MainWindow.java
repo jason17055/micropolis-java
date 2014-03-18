@@ -989,17 +989,36 @@ public class MainWindow extends JFrame
         Box b5 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b5, c);
 
-        b5.add(makeToolBtn(MicropolisTool.STADIUM));
-        b5.add(makeToolBtn(MicropolisTool.SEAPORT));
+    //    b5.add(makeToolBtn(MicropolisTool.STADIUM));
+      //  b5.add(makeToolBtn(MicropolisTool.SEAPORT));
         b5.add(makeToolBtn(MicropolisTool.SCHOOL));
+        b5.add(makeToolBtn(MicropolisTool.UNIA));
+        b5.add(makeToolBtn(MicropolisTool.UNIB));
         
 
         c.gridy++;
         Box b6 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b6, c);
 
-        b6.add(makeToolBtn(MicropolisTool.AIRPORT));
+        b6.add(makeToolBtn(MicropolisTool.OPENAIR));
+        b6.add(makeToolBtn(MicropolisTool.STADIUM));
+    //   b6.add(makeToolBtn(MicropolisTool.AIRPORT));
         b6.add(makeToolBtn(MicropolisTool.MUSEUM));
+        
+        c.gridy++;
+        Box b7 = new Box(BoxLayout.X_AXIS);
+	    gridBox.add(b7, c);
+	    
+	//    b7.add(makeToolBtn(MicropolisTool.STATION));
+	    b7.add(makeToolBtn(MicropolisTool.SEAPORT));
+	    b7.add(makeToolBtn(MicropolisTool.AIRPORT));
+	    
+	    c.gridy++;
+        Box b8 = new Box(BoxLayout.X_AXIS);
+        gridBox.add(b8, c);
+        
+        b8.add(makeToolBtn(MicropolisTool.CITYHALL));
+	    
         // add glue to make all elements align toward top
         c.gridy++;
         c.weighty = 1.0;

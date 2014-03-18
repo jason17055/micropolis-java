@@ -42,6 +42,10 @@ class MapScanner extends TileBehavior
 		POLICESTATION,
 		SCHOOLBUILDING,
 		MUSEUMBUILDING,
+		UNIABUILDING,
+		UNIBBUILDING,
+		CITYHALLBUILDING,
+		OPENAIRBUILDING,
 		STADIUM_EMPTY,
 		STADIUM_FULL,
 		AIRPORT,
@@ -81,6 +85,18 @@ class MapScanner extends TileBehavior
             return;
 		case MUSEUMBUILDING:
 			doMuseum();
+			return;
+		case UNIABUILDING:
+			doUniA();
+			return;
+		case UNIBBUILDING:
+			doUniB();
+			return;
+		case CITYHALLBUILDING:
+			doCityHall();
+			return;
+		case OPENAIRBUILDING:
+			doOpenAir();
 			return;
 		case STADIUM_EMPTY:
 			doStadiumEmpty();
@@ -308,6 +324,95 @@ class MapScanner extends TileBehavior
 		}
 
 		city.museumMap[ypos][xpos] += z;
+	}
+	
+	void doUniA()
+	{
+		boolean powerOn = checkZonePower();
+		city.uniaCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(UNIABUILDING, 3);
+		}
+
+		int z;
+		if (powerOn) {
+			z = city.schoolEffect;
+		} else {
+			z = city.schoolEffect ;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.uniaMap[ypos][xpos] += z;
+	}
+	
+	void doUniB()
+	{
+		boolean powerOn = checkZonePower();
+		city.unibCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(UNIBBUILDING, 3);
+		}
+
+		int z;
+		if (powerOn) {
+			z = city.schoolEffect;
+		} else {
+			z = city.schoolEffect ;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.unibMap[ypos][xpos] += z;
+	}
+	
+	void doCityHall()
+	{
+		boolean powerOn = checkZonePower();
+		city.cityhallCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(CITYHALLBUILDING, 3);
+		}
+
+		
+		if (powerOn) {
+			
+		} else {
+			
+		}
+
+	}
+	
+	void doOpenAir()
+	{
+		boolean powerOn = checkZonePower();
+		city.openairCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(OPENAIRBUILDING, 3);
+		}
+
+		int z;
+		if (powerOn) {
+			z = city.cultureEffect;
+		} else {
+			z = city.cultureEffect ;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.openairMap[ypos][xpos] += z;
 	}
 	
 	void doStadiumEmpty()
