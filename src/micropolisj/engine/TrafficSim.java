@@ -13,6 +13,7 @@ public class TrafficSim {
 	Micropolis engine;
 	HashMap<Integer,SpecifiedTile> unready;
 	HashMap<CityLocation,SpecifiedTile> ready;
+	HashMap<CityLocation,Integer> mapBack;
 	HashSet<CityLocation> goal;
 	HashSet<CityLocation> found;
 	
@@ -21,18 +22,15 @@ public class TrafficSim {
 	
 	public TrafficSim(){
 		this(new Micropolis());
-		ready = new HashMap<CityLocation,SpecifiedTile>();
-		unready = new HashMap<Integer,SpecifiedTile>();
-		goal=new HashSet<CityLocation>();
-		found=new HashSet<CityLocation>();
 	}
 	
 	public TrafficSim(Micropolis city){
 		engine = city;
 		ready = new HashMap<CityLocation,SpecifiedTile>();
 		unready = new HashMap<Integer,SpecifiedTile>();
-		goal=new HashSet<CityLocation>();
-		found=new HashSet<CityLocation>();
+		goal = new HashSet<CityLocation>();
+		found = new HashSet<CityLocation>();
+		mapBack = new HashMap<CityLocation,Integer>();
 	}
 	/**
 	 * The function is called to generate traffic from the starting position
@@ -41,8 +39,13 @@ public class TrafficSim {
 	 * @return length of the way (-1 for no way)
 	 */
 	public int genTraffic(CityLocation startP) {
-		//TODO add visit counters
-		return findWay(startP,findEnd(startP));
+		CityLocation end=findEnd(startP);
+		int way=findWay(startP,end);
+		if (way!=-1) {
+			engine.putVisits(startP);
+			engine.putVisits(end);
+		}
+		return way;
 	}
 	
 	/**
@@ -67,7 +70,7 @@ public class TrafficSim {
 	public int findWay(CityLocation startpos, CityLocation endpos){
 		int currentCost=0;
 		CityLocation currentLocation=new CityLocation(-1,-1);
-		found=new HashSet<CityLocation>();
+		found.clear();
 		ready=findPeriphereRoad(startpos);
 		goal=(HashSet<CityLocation>) findPeriphereRoad(endpos).keySet();
 		found=(HashSet<CityLocation>) ready.keySet();
@@ -77,7 +80,9 @@ public class TrafficSim {
 		}
 		for (CityLocation f : ready.keySet()) {
 			for (CityLocation g : findAdjRoads(f)) {
-				unready.put(32768*evalfunc(f,goal)+g.y,new SpecifiedTile(g,f,false));
+				int keyi=16384*evalfunc(f,goal)+g.y;
+				unready.put(keyi,new SpecifiedTile(g,f,false));
+				mapBack.put(g, keyi);
 			}
 		}
 		while (!unready.isEmpty() && best>(Collections.min(unready.keySet()))) {
@@ -86,10 +91,25 @@ public class TrafficSim {
 			for (CityLocation g : findAdjRoads(currentLocation)) {
 				if (!found.contains(g)) {
 					this.found.add(g);
-						unready.put(16384*evalfunc(currentLocation,goal)+g.y,new SpecifiedTile(g,currentLocation,false));
+					int keyi=16384*evalfunc(currentLocation,goal)+g.y;
+					unready.put(keyi,new SpecifiedTile(g,currentLocation,false));
+					mapBack.put(g, keyi);
+				} else {
+					if (ready.containsKey(g)) {
+						int c=evalfunc(g, goal)+currentCost+ready.get(ready.get(g).getPred()).getCosts();
+						if (ready.get(g).getCosts()<=c) {
+							ready.put(g, new SpecifiedTile(c,currentLocation,true));
+						}
+					} else {
+						int keyi=16384*evalfunc(currentLocation,goal)+g.y;
+						if (keyi<= (int) (mapBack.get(g)/16384)) {
+							unready.put(keyi,new SpecifiedTile(g,currentLocation,false));
+							mapBack.put(g, keyi);
+						}
 					}
 				}
 			}
+		}
 		if (best==200) {
 			return -1;
 		}

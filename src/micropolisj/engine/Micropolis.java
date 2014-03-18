@@ -219,6 +219,8 @@ public class Micropolis
 	int scycle; //same as cityTime, except mod 1024
 	int fcycle; //counts simulation steps (mod 1024)
 	int acycle; //animation cycle (mod 960)
+	
+	HashMap<CityLocation,Integer> visits;
 
 	public CityEval evaluation;
 
@@ -534,6 +536,7 @@ public class Micropolis
 
 	void clearCensus()
 	{
+		
 		poweredZoneCount = 0;
 		unpoweredZoneCount = 0;
 		firePop = 0;
@@ -559,6 +562,7 @@ public class Micropolis
 		airportCount = 0;
 		powerPlants.clear();
         cityHallList.clear();
+        visits.clear();
 
 		for (int y = 0; y < fireStMap.length; y++) {
 			for (int x = 0; x < fireStMap[y].length; x++) {
@@ -1082,6 +1086,10 @@ public class Micropolis
 		return (loc.y > 0) && (loc.x + 1 < getWidth()) && (loc.y + 1 < getHeight()) && (loc.x > 0);
 	}
 	
+	public void putVisits(CityLocation loc) {
+		visits.put(loc,(visits.get(loc)+1));
+	}
+	
 	public static CityLocation goToAdj(CityLocation loc, int dir)
 	{
 		CityLocation loci =new CityLocation(loc.x,loc.y);
@@ -1580,9 +1588,10 @@ public class Micropolis
 		if (behaviorStr == null) {
 			return; //nothing to do
 		}
-
+		
 		TileBehavior b = tileBehaviors.get(behaviorStr);
 		if (b != null) {
+			visits.put(new CityLocation(xpos,ypos),0);
 			b.processTile(xpos, ypos);
 		}
 		else {
@@ -1733,14 +1742,14 @@ public class Micropolis
 		history.com[0] = comPop;
 		history.ind[0] = indPop;
 
-		crimeRamp += (crimeAverage - crimeRamp);
+		crimeRamp = (crimeAverage);
 		history.crime[0] = Math.min(255, crimeRamp);
 
 
-		polluteRamp += (pollutionAverage - polluteRamp);
+		polluteRamp = pollutionAverage;
 		history.pollution[0] = Math.min(255, polluteRamp);
 
-        analphabetismRamp += (analphabetismAverage - analphabetismRamp);
+        analphabetismRamp = (analphabetismAverage);
         history.analphabetism[0] = Math.min(255, analphabetismRamp);
 
 		int moneyScaled = cashFlow / 20 + 128;
