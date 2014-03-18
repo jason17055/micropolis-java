@@ -122,7 +122,7 @@ public class TrafficSim {
 	private HashSet<CityLocation> findAdjRoads(CityLocation loc) {
 		HashSet<CityLocation> ret=new HashSet<CityLocation>();
 		for (int dir=0;dir<4;dir++) {
-			if (engine.onMap(loc,dir)) {
+			if (engine.onMap(loc,dir) && TileConstants.isRoad(Micropolis.goToAdj(loc,dir))) {
 				ret.add(Micropolis.goToAdj(loc,dir));
 			}
 		}
