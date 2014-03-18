@@ -70,14 +70,15 @@ public class TrafficSim {
 	public int findWay(CityLocation startpos, CityLocation endpos){
 		int currentCost=0;
 		CityLocation currentLocation=new CityLocation(-1,-1);
-		ready=findPeriphereRoad(startpos);
-		goal=(HashSet<CityLocation>) findPeriphereRoad(endpos).keySet();
+		ready=findPeriphereRoad(startpos); //generate starts
+		goal=(HashSet<CityLocation>) findPeriphereRoad(endpos).keySet(); //generate ends
 		found=(HashSet<CityLocation>) ready.keySet();
 		int best=200;
+		CityLocation fastGoal=new CityLocation(-1,-1);
 		if (ready.isEmpty()) {
 			return -1;
 		}
-		for (CityLocation f : ready.keySet()) {
+		for (CityLocation f : ready.keySet()) { //take roads adj to starts
 			for (CityLocation g : findAdjRoads(f)) {
 				int keyi=16384*evalfunc(f,goal)+g.y;
 				unready.put(keyi,new SpecifiedTile(g,f,false));
@@ -85,36 +86,46 @@ public class TrafficSim {
 				found.add(g);
 			}
 		}
-		while (!unready.isEmpty() && best>(Collections.min(unready.keySet()))) {
-			int current=Collections.min(unready.keySet());
+		while (!unready.isEmpty() && best>(Collections.min(unready.keySet()))) { //main algorithm A*
+			int current=Collections.min(unready.keySet()); //add new field to ready
 			currentLocation=unready.get(current).getLoc();
 			currentCost=engine.getCost(currentLocation);
 			ready.put(currentLocation, new SpecifiedTile(currentCost,unready.get(current).getPred(),true));
 			unready.remove(current);
-			for (CityLocation g : findAdjRoads(currentLocation)) {
-				if (!found.contains(g)) {
+			for (CityLocation g : findAdjRoads(currentLocation)) { //go through adj roads
+				if (!found.contains(g)) { //new road part found
 					this.found.add(g);
 					int keyi=16384*evalfunc(currentLocation,goal)+g.y;
 					unready.put(keyi,new SpecifiedTile(g,currentLocation,false));
 					mapBack.put(g, keyi);
-				} else {
-					if (ready.containsKey(g)) {
-						int c=evalfunc(g, goal)+currentCost+ready.get(ready.get(g).getPred()).getCosts();
-						if (ready.get(g).getCosts()<=c) {
-							ready.put(g, new SpecifiedTile(c,currentLocation,true));
-						}
-					} else {
-						int keyi=16384*evalfunc(currentLocation,goal)+g.y;
-						if (keyi<= mapBack.get(g)) {
-							unready.put(keyi,new SpecifiedTile(g,currentLocation,false));
-							mapBack.put(g, keyi);
+				} else { //was already found before
+					if (g!=ready.get(current).getPred()) {//if not pred
+						if (ready.containsKey(g)) { //if it is alreay ready update ready
+							int c=evalfunc(g, goal)+currentCost+ready.get(ready.get(g).getPred()).getCosts();
+							if (ready.get(g).getCosts()<=c) {
+								ready.put(g, new SpecifiedTile(c,currentLocation,true));
+							}
+						} else { //if not, update it unready
+							int keyi=16384*evalfunc(currentLocation,goal)+g.y;
+							if (keyi<= mapBack.get(g)) {
+								unready.put(keyi,new SpecifiedTile(g,currentLocation,false));
+								mapBack.put(g, keyi);
+							}
 						}
 					}
 				}
 			}
+			if (goal.contains(currentLocation)) { //if it is a goal update goal
+				best=Math.min(best, ready.get(currentLocation).getCosts());
+				fastGoal=new CityLocation(currentLocation.x,currentLocation.y);
+			}
 		}
 		if (best==200) {
 			return -1;
+		}
+		while (ready.get(fastGoal).getPred()==new SpecifiedTile().getLoc()) {
+			//setTrafficMem(engine.getTile(fastGoal.x,fastGoal.y));
+			
 		}
 		return best;
 	}
@@ -122,7 +133,7 @@ public class TrafficSim {
 	private HashSet<CityLocation> findAdjRoads(CityLocation loc) {
 		HashSet<CityLocation> ret=new HashSet<CityLocation>();
 		for (int dir=0;dir<4;dir++) {
-			if (engine.onMap(loc,dir) && TileConstants.isRoad(Micropolis.goToAdj(loc,dir))) {
+			if (engine.onMap(loc,dir) && TileConstants.isRoad(engine.getTile(Micropolis.goToAdj(loc,dir).x, Micropolis.goToAdj(loc,dir).y))) {
 				ret.add(Micropolis.goToAdj(loc,dir));
 			}
 		}
