@@ -24,12 +24,15 @@ public class TrafficSim {
 		ready = new HashMap<CityLocation,SpecifiedTile>();
 		unready = new HashMap<Integer,SpecifiedTile>();
 		goal=new HashSet<CityLocation>();
+		found=new HashSet<CityLocation>();
 	}
 	
 	public TrafficSim(Micropolis city){
 		engine = city;
 		ready = new HashMap<CityLocation,SpecifiedTile>();
 		unready = new HashMap<Integer,SpecifiedTile>();
+		goal=new HashSet<CityLocation>();
+		found=new HashSet<CityLocation>();
 	}
 	/**
 	 * The fuction is called to generate traffic from the starting position
@@ -43,7 +46,7 @@ public class TrafficSim {
 	}
 	
 	/**
-	 * determines the end of a way starting at a given field
+	 * determinates the end of a way starting at a given field
 	 * @param startpos
 	 * @return the endpos
 	 */
@@ -55,6 +58,7 @@ public class TrafficSim {
 	/**
 	 * finds way from A to B, if exists
 	 * in general, does A*-algorithm
+	 * and increase traffic along the way
 	 * @param startpos
 	 * @param endpos
 	 * @return length of the way
@@ -81,7 +85,7 @@ public class TrafficSim {
 			currentCost=engine.getCost(currentLocation);
 			for (CityLocation g : findAdjRoads(currentLocation)) {
 				if (!found.contains(g)) {
-					this.found.apply(g);
+					this.found.add(g);
 						unready.put(16384*evalfunc(currentLocation,goal)+g.y,new SpecifiedTile(g,currentLocation,false));
 					}
 				}

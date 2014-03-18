@@ -1044,8 +1044,7 @@ public class Micropolis
 		return rv;
 	}
 
-	public boolean onMap(CityLocation loc, int dir)
-	{
+	public boolean onMap(CityLocation loc, int dir) {
 		switch(dir)
 		{
 		case 0:
@@ -1060,6 +1059,10 @@ public class Micropolis
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean onMap(CityLocation loc) 	{
+		return (loc.y > 0) && (loc.x + 1 < getWidth()) && (loc.y + 1 < getHeight()) && (loc.x > 0);
 	}
 	
 	public static CityLocation goToAdj(CityLocation loc, int dir)
