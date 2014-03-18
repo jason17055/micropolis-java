@@ -2797,7 +2797,7 @@ public class Micropolis
 		fireCityMessage(message, new CityLocation(x,y));
 	}
 	/*
-	 * calculates popDensity for a 3x3 square
+	 * calculates accurate density for a 3x3 square
 	 */
 	
 	public int getMapdata(int x,int y, String g) {
@@ -2805,7 +2805,7 @@ public class Micropolis
 		int d=0;
 		for (int xp=Math.max(0,x-1);xp<Math.min(x+2,getWidth());xp++) {
 			for (int yp=Math.max(0,y-1);yp<Math.min(y+2,getHeight());xp++) {
-				//ret+=accessMap(x, y, g);   TODO NEED TO CHANGE
+				ret+=accessMap(x, y, g); 
 				d++;
 			}
 		}
@@ -2813,21 +2813,28 @@ public class Micropolis
 		 return ret/d;
 	}
 	
-	/**private int accessMap(int x,int y, String g) {  //CHANGE TO IF-ELSE
-		switch (g) {
-		case "popDensity":
+	private int accessMap(int x,int y, String g) { 
+		if (g=="popDensity") {
 			return popDensity[y][x];
-		case "landValueMem":
-			return landValueMem[y][x];
-		case "crimeMem":
-			return crimeMem[y][x];
-		case "pollutionMem":
-			return pollutionMem[y][x];
-		case "rateOGMem":
-			return rateOGMem[y][x];	
+		} else {
+			if (g=="landValueMem") {
+				return landValueMem[y][x];
+			} else {
+				if (g=="crimeMem") {
+					return crimeMem[y][x];
+				} else {
+					if (g=="pollutionMem") {
+						return pollutionMem[y][x];
+					} else {
+						if (g=="rateOGMem") {
+							return rateOGMem[y][x];
+						}
+					}
+				}
+			}
 		}
 		return 0;
-	}*/
+	}
 
 	public ZoneStatus queryZoneStatus(int xpos, int ypos)
 	{
