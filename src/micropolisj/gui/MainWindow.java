@@ -1106,9 +1106,12 @@ public class MainWindow extends JFrame
 
     private void openCheatBox() {
         String text = JOptionPane.showInputDialog(strings.getString("cheating.dialog"));
-        if (text.equals(strings.getString("cheating.cheat1"))) {
+        if (text.equals(strings.getString("cheating.moneycheat"))) {
             engine.spend(-10000);
             engine.incNCheats();
+        }
+        if (text.equals(strings.getString("cheating.destructioncheat"))) {
+            engine.destroyEverything();
         }
 
     }
