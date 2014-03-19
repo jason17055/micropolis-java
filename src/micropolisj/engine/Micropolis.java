@@ -237,6 +237,7 @@ public class Micropolis
 	int acycle; //animation cycle (mod 960)
 	
 	HashMap<CityLocation,Integer> visits=new HashMap<CityLocation,Integer>();
+	private Vector<Vector<CityLocation>> paths=new Vector<Vector<CityLocation>>();
 
 	public CityEval evaluation;
 
@@ -250,6 +251,10 @@ public class Micropolis
 	{
 		budget.totalFunds -= amount;
 		fireFundsChanged();
+	}
+	
+	public void paths(Vector<CityLocation> way) {
+		paths.add(way);
 	}
 
     public void incNCheats() {
