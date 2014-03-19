@@ -82,9 +82,12 @@ class TerrainBehavior extends TileBehavior
 				if (isCombustible(c)) {
 					if (isZoneCenter(c)) {
 						city.killZone(xtem, ytem, c);
-						if (c > IZB) { //explode
-							city.makeExplosion(xtem, ytem);
-						}
+
+                        if(c == NUCLEAR){
+                            city.doMeltdown(xtem, ytem);
+                        } else if (c > IZB) { //explode
+                            city.makeExplosion(xtem, ytem);
+                        }
 					}
 					city.setTile(xtem, ytem, (char)(FIRE + PRNG.nextInt(4)));
 				}
