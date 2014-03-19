@@ -293,7 +293,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.schoolEffect;
 		} else {
-			z = city.schoolEffect ;
+			z = city.schoolEffect/2 ;
 		}
 
 		traffic.mapX = xpos;
@@ -317,7 +317,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.cultureEffect;
 		} else {
-			z = city.cultureEffect;
+			z = city.cultureEffect/2;
 		}
 
 		traffic.mapX = xpos;
@@ -341,7 +341,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.schoolEffect;
 		} else {
-			z = city.schoolEffect ;
+			z = city.schoolEffect/2 ;
 		}
 
 		traffic.mapX = xpos;
@@ -365,7 +365,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.schoolEffect;
 		} else {
-			z = city.schoolEffect ;
+			z = city.schoolEffect/2 ;
 		}
 
 		traffic.mapX = xpos;
@@ -386,28 +386,35 @@ class MapScanner extends TileBehavior
 			repairZone(CITYHALLBUILDING, 3);
 		}
 
-		
+		//int z;
 		if (powerOn) {
-			
+		
 		} else {
 			
 		}
+	//	traffic.mapX = xpos;
+		//traffic.mapY = ypos;
+		//if (!traffic.findPerimeterRoad()) {
+		//	z /= 2;
+	//	}
 
+		//city.cityhallMap[ypos][xpos] += z;
 	}
+	
 	
 	void doOpenAir()
 	{
 		boolean powerOn = checkZonePower();
 		city.openairCount++;
 		if ((city.cityTime % 8) == 0) {
-			repairZone(OPENAIRBUILDING, 3);
+			repairZone(OPENAIRBUILDING, 6);
 		}
 
 		int z;
 		if (powerOn) {
 			z = city.cultureEffect;
 		} else {
-			z = city.cultureEffect ;
+			z = city.cultureEffect/2 ;
 		}
 
 		traffic.mapX = xpos;
@@ -426,15 +433,15 @@ class MapScanner extends TileBehavior
 		if ((city.cityTime % 16) == 0) {
 			repairZone(STADIUM, 4);
 		}
-
-		if (powerOn)
-		{
+		int z;
+		if (powerOn)	{	
+			z = city.cultureEffect;
 			if (((city.cityTime + xpos + ypos) % 32) == 0) {
 				drawStadium(FULLSTADIUM);
 				city.setTile(xpos+1,ypos, (char)(FOOTBALLGAME1));
 				city.setTile(xpos+1,ypos+1,(char)(FOOTBALLGAME2));
 			}
-		}
+		}else z = city.cultureEffect/2;
 	}
 
 	void doStadiumFull()

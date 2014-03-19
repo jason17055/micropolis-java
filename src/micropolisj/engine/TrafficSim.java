@@ -66,11 +66,22 @@ public class TrafficSim {
 			help.put(temp,getValue(startpos,temp));
 		}
 		it.remove();
-		// TODO: randomly create the goal by the use of the "help"-HashMap!
-		int i = engine.PRNG.nextInt(100);
-		// Evtl dieses i anpassen und zwischen 0 und x bestimmen, wobei x die Summe aller Einträge in unserer HashMap ist
-		// Dann mit switch case abfragen, welches "getroffen" wurde. (switch case in einer for-loop)
 		
+		int sum=0;
+		int t;
+		Iterator it2 = help.values().iterator();
+		while(it.hasNext()){
+			t=(int)it2.next();
+			sum+=t;
+		}		
+		int i = engine.PRNG.nextInt(sum)+1;
+		// Dann mit switch case abfragen, welches "getroffen" wurde. (switch case in einer for-loop?!)
+		for(CityLocation b : help.keySet()){
+			i-=(int)help.get(b);
+			if(i<=0){
+				return b;
+			}
+		}
 		return startpos;
 	}
 	
@@ -85,7 +96,8 @@ public class TrafficSim {
 	private int getValue(CityLocation start, CityLocation end){
 		int factor;
 		factor = getFactor(engine.getTile(start.x, start.y), engine.getTile(end.x,end.y));
-		return (10/evalfunc(start,(HashSet<CityLocation>) findPeriphereRoad(end).keySet()))*factor; 
+		return (200000/(evalfunc(start,(HashSet<CityLocation>) findPeriphereRoad(end).keySet()))+20)*factor; 
+		//factor 200 000 for making randomization easyer later on.
 	}
 	
 	/**
@@ -261,49 +273,6 @@ public class TrafficSim {
 		}else{
 			dimension=3;
 		}
-		/*if (dimension==3){ //need to change isRoad in TileConstants
-			if (engine.onMap(new CityLocation(pos.x-2,pos.y-1))&&TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y-1))){  
-				ret.put(new CityLocation(pos.x-2,pos.y-1),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y))){  
-				ret.put(new CityLocation(pos.x-2,pos.y),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y+1))){  
-				ret.put(new CityLocation(pos.x-2,pos.y+1),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x-1, pos.y-2))){  
-				ret.put(new CityLocation(pos.x-1,pos.y-2),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x-1, pos.y+2))){  
-				ret.put(new CityLocation(pos.x-1,pos.y+2),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x, pos.y-2))){  
-				ret.put(new CityLocation(pos.x,pos.y-2),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x, pos.y+2))){  
-				ret.put(new CityLocation(pos.x,pos.y+2),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x+1, pos.y-2))){  
-				ret.put(new CityLocation(pos.x+1,pos.y-2),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x+1, pos.y+2))){  
-				ret.put(new CityLocation(pos.x+1,pos.y+2),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x+2, pos.y-1))){  
-				ret.put(new CityLocation(pos.x+2,pos.y-1),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x+2, pos.y))) {  
-				ret.put(new CityLocation(pos.x+2,pos.y),new SpecifiedTile());
-			}
-			if (TileConstants.isRoadAny(engine.getTile(pos.x+2, pos.y+1))){  
-				ret.put(new CityLocation(pos.x+2,pos.y+1),new SpecifiedTile());
-			}
-		}
-		if(dimension==4){
-			
-			
-		}*/
-		
 		for(int i=-1; i<dimension-1;i++){
 			if (engine.onMap(new CityLocation(pos.x-2,pos.y+i))&&TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y+i))){  
 				ret.put(new CityLocation(pos.x-2,pos.y+i),new SpecifiedTile());

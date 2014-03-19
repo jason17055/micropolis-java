@@ -168,6 +168,7 @@ public class Micropolis
 	int lastPoliceCount;
 	int lastSchoolCount;
 	int lastMuseumCount;
+	int lastStadiumCount;
 	int lastUniACount;
 	int lastUniBCount;
 	int lastOpenAirCount;
@@ -1927,7 +1928,8 @@ public class Micropolis
 		lastUniACount = uniaCount;
 		lastUniBCount = unibCount;
 		lastCityHallCount = cityhallCount;
-		lastOpenAirCount = cityhallCount;
+		lastOpenAirCount = openairCount;
+		lastStadiumCount = stadiumCount;
 
 		BudgetNumbers b = generateBudget();
 
@@ -2024,9 +2026,9 @@ public class Micropolis
 		b.roadRequest = (int)Math.round((lastRoadTotal + lastRailTotal * 2) * RLevels[gameLevel]);
 		b.fireRequest = FIRE_STATION_MAINTENANCE * lastFireStationCount;
 		b.policeRequest = POLICE_STATION_MAINTENANCE * lastPoliceCount;
-		b.schoolRequest = SCHOOL_MAINTENANCE * lastSchoolCount;
-		b.cultureRequest = CULTURE_MAINTENANCE * (lastMuseumCount); //plus stadion count...
-
+		b.schoolRequest = SCHOOL_MAINTENANCE * (lastSchoolCount + lastUniACount + lastUniBCount);
+		b.cultureRequest = CULTURE_MAINTENANCE * (lastMuseumCount + lastStadiumCount + lastOpenAirCount); 
+		
 		b.roadFunded = (int)Math.round(b.roadRequest * b.roadPercent);
 		b.fireFunded = (int)Math.round(b.fireRequest * b.firePercent);
 		b.policeFunded = (int)Math.round(b.policeRequest * b.policePercent);
