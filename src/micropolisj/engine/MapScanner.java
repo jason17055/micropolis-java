@@ -637,8 +637,7 @@ class MapScanner extends TileBehavior
 	 * Called when the current tile is the key tile of an
 	 * industrial zone.
 	 */
-	void doIndustrial()
-	{
+	void doIndustrial() {
 		boolean powerOn = checkZonePower();
 		city.indZoneCount++;
 
