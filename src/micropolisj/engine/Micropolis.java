@@ -236,8 +236,8 @@ public class Micropolis
 	int fcycle; //counts simulation steps (mod 1024)
 	int acycle; //animation cycle (mod 960)
 	
-	HashMap<CityLocation,Integer> visits=new HashMap<CityLocation,Integer>();
-	private Vector<Vector<CityLocation>> paths=new Vector<Vector<CityLocation>>();
+	public HashMap<CityLocation,Integer> visits=new HashMap<CityLocation,Integer>();
+	public Vector<Vector<CityLocation>> paths=new Vector<Vector<CityLocation>>();
 
 	public CityEval evaluation;
 

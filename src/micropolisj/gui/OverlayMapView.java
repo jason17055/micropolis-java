@@ -161,6 +161,11 @@ public class OverlayMapView extends JComponent
 	}
 
     private void drawVisitOverlay(Graphics gr){
+        Iterator pathIterator = engine.paths.iterator();
+        while(pathIterator.hasNext()){
+
+        }
+
         // read visit list and draw rectangle for each location
     }
 
