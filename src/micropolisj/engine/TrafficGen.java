@@ -50,8 +50,12 @@ class TrafficGen
 			return -1;
 		}
 	}
+	
+	void setTrafficMem() {
+		setTrafficMem(50);
+	}
 
-	void setTrafficMem()
+	void setTrafficMem(int cost)
 	{
 		while (!positions.isEmpty())
 		{
@@ -64,7 +68,7 @@ class TrafficGen
 			int tile = city.getTile(mapX, mapY);
 			if (tile >= ROADBASE && tile < POWERBASE)
 			{
-				city.addTraffic(mapX, mapY, 50);
+				city.addTraffic(mapX, mapY, cost);
 			}
 		}
 	}

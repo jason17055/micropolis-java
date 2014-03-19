@@ -33,6 +33,10 @@ public enum MicropolisTool
 	AIRPORT(6, 10000),
 	SCHOOL(3,500),
 	MUSEUM(3,500),
+	UNIA(3,1000),
+	UNIB(3,1000),
+	OPENAIR(6,500),
+	CITYHALL(3,1500),
 	QUERY(1, 0);
 
 	int size;

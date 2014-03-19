@@ -42,6 +42,10 @@ class MapScanner extends TileBehavior
 		POLICESTATION,
 		SCHOOLBUILDING,
 		MUSEUMBUILDING,
+		UNIABUILDING,
+		UNIBBUILDING,
+		CITYHALLBUILDING,
+		OPENAIRBUILDING,
 		STADIUM_EMPTY,
 		STADIUM_FULL,
 		AIRPORT,
@@ -81,6 +85,18 @@ class MapScanner extends TileBehavior
             return;
 		case MUSEUMBUILDING:
 			doMuseum();
+			return;
+		case UNIABUILDING:
+			doUniA();
+			return;
+		case UNIBBUILDING:
+			doUniB();
+			return;
+		case CITYHALLBUILDING:
+			doCityHall();
+			return;
+		case OPENAIRBUILDING:
+			doOpenAir();
 			return;
 		case STADIUM_EMPTY:
 			doStadiumEmpty();
@@ -251,7 +267,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.policeEffect;
 		} else {
-			z = city.policeEffect;
+			z = city.policeEffect/2;
 		}
 
 		traffic.mapX = xpos;
@@ -266,8 +282,8 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.schoolCount++;
-        // this should be inside the doCityHall() function when its implemented:
-        city.cityHallList.add(new CityLocation(xpos, ypos));
+        
+        
 
 		if ((city.cityTime % 8) == 0) {
 			repairZone(SCHOOLBUILDING, 3);
@@ -277,7 +293,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.schoolEffect;
 		} else {
-			z = city.schoolEffect ;
+			z = city.schoolEffect/2 ;
 		}
 
 		traffic.mapX = xpos;
@@ -301,7 +317,7 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.cultureEffect;
 		} else {
-			z = city.cultureEffect;
+			z = city.cultureEffect/2;
 		}
 
 		traffic.mapX = xpos;
@@ -313,6 +329,103 @@ class MapScanner extends TileBehavior
 		city.museumMap[ypos][xpos] += z;
 	}
 	
+	void doUniA()
+	{
+		boolean powerOn = checkZonePower();
+		city.uniaCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(UNIABUILDING, 3);
+		}
+
+		int z;
+		if (powerOn) {
+			z = city.schoolEffect;
+		} else {
+			z = city.schoolEffect/2 ;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.uniaMap[ypos][xpos] += z;
+	}
+	
+	void doUniB()
+	{
+		boolean powerOn = checkZonePower();
+		city.unibCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(UNIBBUILDING, 3);
+		}
+
+		int z;
+		if (powerOn) {
+			z = city.schoolEffect;
+		} else {
+			z = city.schoolEffect/2 ;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.unibMap[ypos][xpos] += z;
+	}
+	
+	void doCityHall()
+	{
+		boolean powerOn = checkZonePower();
+		city.cityhallCount++;
+		city.cityHallList.add(new CityLocation(xpos, ypos));
+		if ((city.cityTime % 8) == 0) {
+			repairZone(CITYHALLBUILDING, 3);
+		}
+
+		//int z;
+		if (powerOn) {
+		
+		} else {
+			
+		}
+	//	traffic.mapX = xpos;
+		//traffic.mapY = ypos;
+		//if (!traffic.findPerimeterRoad()) {
+		//	z /= 2;
+	//	}
+
+		//city.cityhallMap[ypos][xpos] += z;
+	}
+	
+	
+	void doOpenAir()
+	{
+		boolean powerOn = checkZonePower();
+		city.openairCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(OPENAIRBUILDING, 6);
+		}
+
+		int z;
+		if (powerOn) {
+			z = city.cultureEffect;
+		} else {
+			z = city.cultureEffect/2 ;
+		}
+
+		traffic.mapX = xpos;
+		traffic.mapY = ypos;
+		if (!traffic.findPerimeterRoad()) {
+			z /= 2;
+		}
+
+		city.openairMap[ypos][xpos] += z;
+	}
+	
 	void doStadiumEmpty()
 	{
 		boolean powerOn = checkZonePower();
@@ -320,15 +433,15 @@ class MapScanner extends TileBehavior
 		if ((city.cityTime % 16) == 0) {
 			repairZone(STADIUM, 4);
 		}
-
-		if (powerOn)
-		{
+		int z;
+		if (powerOn)	{	
+			z = city.cultureEffect;
 			if (((city.cityTime + xpos + ypos) % 32) == 0) {
 				drawStadium(FULLSTADIUM);
 				city.setTile(xpos+1,ypos, (char)(FOOTBALLGAME1));
 				city.setTile(xpos+1,ypos+1,(char)(FOOTBALLGAME2));
 			}
-		}
+		}else z = city.cultureEffect/2;
 	}
 
 	void doStadiumFull()
@@ -531,8 +644,7 @@ class MapScanner extends TileBehavior
 	 * Called when the current tile is the key tile of an
 	 * industrial zone.
 	 */
-	void doIndustrial()
-	{
+	void doIndustrial() {
 		boolean powerOn = checkZonePower();
 		city.indZoneCount++;
 
@@ -1001,8 +1113,10 @@ class MapScanner extends TileBehavior
 		{
 			for (int x = 0; x < 4; x++, zoneBase++)
 			{
-				city.setTile(xpos - 1 + x, ypos - 1 + y,
-					(char) (zoneBase | (x == 1 && y == 1 ? (PWRBIT) : 0)));
+				if (isIndestructible(city.getTile(xpos - 1 + x, ypos - 1 + y))) {
+					city.setTile(xpos - 1 + x, ypos - 1 + y,
+						(char) (zoneBase | (x == 1 && y == 1 ? (PWRBIT) : 0)));
+				}
 			}
 		}
 	}

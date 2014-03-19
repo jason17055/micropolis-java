@@ -143,13 +143,14 @@ public class MainWindow extends JFrame
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POPDEN_OVERLAY", MapState.POPDEN_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.GROWTHRATE_OVERLAY", MapState.GROWTHRATE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.LANDVALUE_OVERLAY", MapState.LANDVALUE_OVERLAY));
-        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.CRIME_OVERLAY", MapState.ANALPHABETISM_OVERLAY));
-        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.ANALPHABETISM_OVERLAY", MapState.CRIME_OVERLAY));
+        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.CRIME_OVERLAY", MapState.CRIME_OVERLAY));
+        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.ANALPHABETISM_OVERLAY", MapState.ANALPHABETISM_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POLLUTE_OVERLAY", MapState.POLLUTE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.TRAFFIC_OVERLAY", MapState.TRAFFIC_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POWER_OVERLAY", MapState.POWER_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.FIRE_OVERLAY", MapState.FIRE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POLICE_OVERLAY", MapState.POLICE_OVERLAY));
+        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.VISIT_OVERLAY", MapState.VISIT_OVERLAY));
 
         mapMenu.add(Box.createHorizontalGlue());
         mapLegendLbl = new JLabel();
@@ -192,6 +193,9 @@ public class MainWindow extends JFrame
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "escape");
         inputMap.put(KeyStroke.getKeyStroke("ENTER"), "openCheatBox");
 
+
+
+
         ActionMap actionMap = ((JComponent) getContentPane()).getActionMap();
         actionMap.put("zoomIn", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
@@ -213,6 +217,8 @@ public class MainWindow extends JFrame
                 openCheatBox();
             }
         });
+
+
 
 
         MouseAdapter mouse = new MouseAdapter() {
@@ -989,17 +995,36 @@ public class MainWindow extends JFrame
         Box b5 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b5, c);
 
-        b5.add(makeToolBtn(MicropolisTool.STADIUM));
-        b5.add(makeToolBtn(MicropolisTool.SEAPORT));
+    //    b5.add(makeToolBtn(MicropolisTool.STADIUM));
+      //  b5.add(makeToolBtn(MicropolisTool.SEAPORT));
         b5.add(makeToolBtn(MicropolisTool.SCHOOL));
+        b5.add(makeToolBtn(MicropolisTool.UNIA));
+        b5.add(makeToolBtn(MicropolisTool.UNIB));
         
 
         c.gridy++;
         Box b6 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b6, c);
 
-        b6.add(makeToolBtn(MicropolisTool.AIRPORT));
+        b6.add(makeToolBtn(MicropolisTool.OPENAIR));
+        b6.add(makeToolBtn(MicropolisTool.STADIUM));
+    //   b6.add(makeToolBtn(MicropolisTool.AIRPORT));
         b6.add(makeToolBtn(MicropolisTool.MUSEUM));
+        
+        c.gridy++;
+        Box b7 = new Box(BoxLayout.X_AXIS);
+	    gridBox.add(b7, c);
+	    
+	//    b7.add(makeToolBtn(MicropolisTool.STATION));
+	    b7.add(makeToolBtn(MicropolisTool.SEAPORT));
+	    b7.add(makeToolBtn(MicropolisTool.AIRPORT));
+	    
+	    c.gridy++;
+        Box b8 = new Box(BoxLayout.X_AXIS);
+        gridBox.add(b8, c);
+        
+        b8.add(makeToolBtn(MicropolisTool.CITYHALL));
+	    
         // add glue to make all elements align toward top
         c.gridy++;
         c.weighty = 1.0;
@@ -1087,6 +1112,8 @@ public class MainWindow extends JFrame
         }
 
     }
+
+
 
     private void doZoom(int dir) {
         Rectangle rect = drawingAreaScroll.getViewport().getViewRect();

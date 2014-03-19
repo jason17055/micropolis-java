@@ -152,9 +152,15 @@ public class TileConstants
 	static final char VBRDG1 = 949;
 	static final char VBRDG2 = 950;
 	static final char VBRDG3 = 951;
+	static final char NEWZONE = 963;
 	static final char SCHOOLBUILDING = 964;
 	static final char MUSEUMBUILDING = 973;
-	public static final char LAST_TILE = 973;
+	static final char UNIABUILDING = 982;
+	static final char UNIBBUILDING = 991;
+	static final char CITYHALLBUILDING = 1000;
+	static final char OPENAIRBUILDING = 1012;
+	public static final char LAST_TILE = 1012;
+	static final char NEWLASTZONE = 1013;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,
@@ -273,7 +279,7 @@ public class TileConstants
 		return (
 			!isZoneCenter(tile) &&
 			tile >= LHTHR &&
-			tile <= LASTZONE
+			(tile <= LASTZONE || (tile > NEWZONE && tile <= NEWLASTZONE))
 			);
 	}
 
@@ -345,7 +351,7 @@ public class TileConstants
 		assert (tile & LOMASK) == tile;
 
 		if (tile < RESBASE ||
-			tile > LASTZONE ||
+			(tile > LASTZONE && tile < NEWZONE) || tile > NEWLASTZONE ||
 			isZoneCenter(tile)
 			) {
 			return false;
@@ -408,20 +414,21 @@ public class TileConstants
 	 * Note: does not include rail/road tiles.
 	 * @see #isRoadAny
 	 */
-	public static boolean isRoad(int tile)
-	{
+	public static boolean isRoad(int tile) { //TODO add new tiles (new images)
 		assert (tile & LOMASK) == tile;
 
 		return (tile >= ROADBASE && tile < POWERBASE);
 	}
+	
+	public static boolean isBigRoad(int tile) {//TODO add bigRoads
+		return false;
+	}
 
-	public static boolean isRoadAny(int tile) //TODO add all new parts of roads and rails
+	public static boolean isRoadAny(int tile) 
 	{
 		assert (tile & LOMASK) == tile;
 
-		return (tile >= ROADBASE && tile < POWERBASE)
-			|| (tile == HRAILROAD)
-			|| (tile == VRAILROAD);
+		return isRoad(tile) || isBigRoad(tile) || isRail(tile);
 	}
 
 	/**
@@ -478,7 +485,7 @@ public class TileConstants
 			(tile != VBRIDGE));
 	}
 
-	public static boolean isRail(int tile)
+	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad)
 	{
 		assert (tile & LOMASK) == tile;
 
