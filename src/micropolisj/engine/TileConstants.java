@@ -414,20 +414,21 @@ public class TileConstants
 	 * Note: does not include rail/road tiles.
 	 * @see #isRoadAny
 	 */
-	public static boolean isRoad(int tile)
-	{
+	public static boolean isRoad(int tile) { //TODO add new tiles (new images)
 		assert (tile & LOMASK) == tile;
 
 		return (tile >= ROADBASE && tile < POWERBASE);
 	}
+	
+	public static boolean isBigRoad(int tile) {//TODO add bigRoads
+		return false;
+	}
 
-	public static boolean isRoadAny(int tile) //TODO add all new parts of roads and rails
+	public static boolean isRoadAny(int tile) 
 	{
 		assert (tile & LOMASK) == tile;
 
-		return (tile >= ROADBASE && tile < POWERBASE)
-			|| (tile == HRAILROAD)
-			|| (tile == VRAILROAD);
+		return isRoad(tile) || isBigRoad(tile) || isRail(tile);
 	}
 
 	/**
@@ -484,7 +485,7 @@ public class TileConstants
 			(tile != VBRIDGE));
 	}
 
-	public static boolean isRail(int tile)
+	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad)
 	{
 		assert (tile & LOMASK) == tile;
 

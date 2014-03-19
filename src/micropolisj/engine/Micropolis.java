@@ -3023,8 +3023,18 @@ public class Micropolis
 	 * @param
 	 * @return costs
 	 */
-	public int getTrafficCost(CityLocation loc) {
-		//TODO write this function
-		return 0;
+	public int getTrafficCost(CityLocation loc, int cur) { //TODO test values
+		char tile=getTile(loc.x,loc.y);
+		
+		if (isRoad(tile) && cur!=3) {
+			return 70+trfDensity[loc.y][loc.x]*7;
+		}
+		if (isBigRoad(tile) && cur!=3) {
+			return 40+trfDensity[loc.y][loc.x]*3;
+		}
+		if (isRail(tile) && cur>2) {
+			return 70+trfDensity[loc.y][loc.x]*7;
+		}
+		return 999;
 	}
 }
