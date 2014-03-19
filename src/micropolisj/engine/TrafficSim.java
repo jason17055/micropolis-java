@@ -169,10 +169,13 @@ public class TrafficSim {
 		if (best==200) {
 			return -1;
 		}
+		Vector<CityLocation> way=new Vector<CityLocation>();
 		while (ready.get(fastGoal).getPred()!=new SpecifiedTile().getLoc()) { //add traffic to way 
 			engine.addTraffic(fastGoal.x, fastGoal.y, engine.getTrafficCost(fastGoal));
+			way.add(fastGoal);
 			fastGoal=ready.get(fastGoal).getPred();
 		}
+		engine.paths(way);
 		return best;
 	}
 	
