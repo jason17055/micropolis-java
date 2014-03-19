@@ -75,7 +75,6 @@ public class TrafficSim {
 			sum+=t;
 		}		
 		int i = engine.PRNG.nextInt(sum)+1;
-		// Dann mit switch case abfragen, welches "getroffen" wurde. (switch case in einer for-loop?!)
 		for(CityLocation b : help.keySet()){
 			i-=(int)help.get(b);
 			if(i<=0){
