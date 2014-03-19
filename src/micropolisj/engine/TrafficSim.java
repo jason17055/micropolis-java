@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.Iterator;
 
 /**
  * Simluates traffic stuff
@@ -55,8 +56,53 @@ public class TrafficSim {
 	 */
 	
 	private CityLocation findEnd(CityLocation startpos){
+		/* iterates through engine.visits and puts them (together with a specifically calculated weight)
+		 * into a new HashMap. From there we will randomly create the "end" of the route.
+		 */
+		HashMap<CityLocation,Integer> help = new HashMap<CityLocation,Integer>();
+		Iterator it = engine.visits.keySet().iterator();
+		while(it.hasNext()){
+			CityLocation temp = (CityLocation) it.next();		
+			help.put(temp,getValue(startpos,temp));
+		}
+		it.remove();
+		// TODO: randomly create the goal by the use of the "help"-HashMap!
+		int i = engine.PRNG.nextInt(100);
+		// Evtl dieses i anpassen und zwischen 0 und x bestimmen, wobei x die Summe aller Einträge in unserer HashMap ist
+		// Dann mit switch case abfragen, welches "getroffen" wurde. (switch case in einer for-loop)
+		
 		return startpos;
 	}
+	
+	
+	/**
+	 * This function returns the weight for later more or less randomly determine the end 
+	 * of the route you want to travel.
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	private int getValue(CityLocation start, CityLocation end){
+		int factor;
+		factor = getFactor(engine.getTile(start.x, start.y), engine.getTile(end.x,end.y));
+		return (10/evalfunc(start,(HashSet<CityLocation>) findPeriphereRoad(end).keySet()))*factor; 
+	}
+	
+	/**
+	 * Just calculating the factor for later calculating the weight in "getValue"
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	private static int getFactor(char start, char end){
+		/*
+		 * What's need to be done here is a switch case; depending on what zone we are at 
+		 * and what type the zone of our goal is, we get a different value
+		 * 
+		 */
+		return 2; //just for not getting any errors right now.
+	}
+	
 	
 	/**
 	 * finds way from A to B, if exists
@@ -225,7 +271,7 @@ public class TrafficSim {
 		
 	}
 	/**
-	 * caped at 32 767
+	 * capped at 32 767
 	 * @param start
 	 * @param finish
 	 * @return
