@@ -152,6 +152,7 @@ public class TileConstants
 	static final char VBRDG1 = 949;
 	static final char VBRDG2 = 950;
 	static final char VBRDG3 = 951;
+	static final char NEWZONE = 963;
 	static final char SCHOOLBUILDING = 964;
 	static final char MUSEUMBUILDING = 973;
 	static final char UNIABUILDING = 982;
@@ -159,6 +160,7 @@ public class TileConstants
 	static final char CITYHALLBUILDING = 1000;
 	static final char OPENAIRBUILDING = 1012;
 	public static final char LAST_TILE = 1012;
+	static final char NEWLASTZONE = 1013;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,
@@ -277,7 +279,7 @@ public class TileConstants
 		return (
 			!isZoneCenter(tile) &&
 			tile >= LHTHR &&
-			tile <= LASTZONE
+			(tile <= LASTZONE || (tile > NEWZONE && tile <= NEWLASTZONE))
 			);
 	}
 
@@ -349,7 +351,7 @@ public class TileConstants
 		assert (tile & LOMASK) == tile;
 
 		if (tile < RESBASE ||
-			tile > LASTZONE ||
+			(tile > LASTZONE && tile < NEWZONE) || tile > NEWLASTZONE ||
 			isZoneCenter(tile)
 			) {
 			return false;

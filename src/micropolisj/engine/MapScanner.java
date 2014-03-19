@@ -644,8 +644,7 @@ class MapScanner extends TileBehavior
 	 * Called when the current tile is the key tile of an
 	 * industrial zone.
 	 */
-	void doIndustrial()
-	{
+	void doIndustrial() {
 		boolean powerOn = checkZonePower();
 		city.indZoneCount++;
 
@@ -1114,8 +1113,10 @@ class MapScanner extends TileBehavior
 		{
 			for (int x = 0; x < 4; x++, zoneBase++)
 			{
-				city.setTile(xpos - 1 + x, ypos - 1 + y,
-					(char) (zoneBase | (x == 1 && y == 1 ? (PWRBIT) : 0)));
+				if (isIndestructible(city.getTile(xpos - 1 + x, ypos - 1 + y))) {
+					city.setTile(xpos - 1 + x, ypos - 1 + y,
+						(char) (zoneBase | (x == 1 && y == 1 ? (PWRBIT) : 0)));
+				}
 			}
 		}
 	}

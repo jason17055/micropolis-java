@@ -237,7 +237,8 @@ public class Micropolis
 	int fcycle; //counts simulation steps (mod 1024)
 	int acycle; //animation cycle (mod 960)
 	
-	HashMap<CityLocation,Integer> visits=new HashMap<CityLocation,Integer>();
+	public HashMap<CityLocation,Integer> visits=new HashMap<CityLocation,Integer>();
+	public Vector<Vector<CityLocation>> paths=new Vector<Vector<CityLocation>>();
 
 	public CityEval evaluation;
 
@@ -251,6 +252,10 @@ public class Micropolis
 	{
 		budget.totalFunds -= amount;
 		fireFundsChanged();
+	}
+	
+	public void paths(Vector<CityLocation> way) {
+		paths.add(way);
 	}
 
     public void incNCheats() {
@@ -1381,6 +1386,7 @@ public class Micropolis
 
 		fireMapOverlayDataChanged(MapState.POLLUTE_OVERLAY);   //PLMAP
 		fireMapOverlayDataChanged(MapState.LANDVALUE_OVERLAY); //LVMAP
+        fireMapOverlayDataChanged(MapState.VISIT_OVERLAY); //RGMAP
 	}
 
 	public CityLocation getLocationOfMaxPollution()
@@ -2542,7 +2548,7 @@ public class Micropolis
 			int tile = getTile(x, y);
 			if (!isZoneCenter(tile) && isCombustible(tile))
 			{
-				if (tile > 21 && tile < LASTZONE) {
+				if (tile > 21 && (tile <= LASTZONE || (tile > NEWZONE && tile <= NEWLASTZONE))) {
 					setTile(x, y, (char)(FIRE + PRNG.nextInt(8)));
 					sendMessageAt(MicropolisMessage.FIRE_REPORT, x, y);
 					return;
