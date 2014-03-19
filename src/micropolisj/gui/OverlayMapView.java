@@ -160,6 +160,10 @@ public class OverlayMapView extends JComponent
 		}
 	}
 
+    private void drawVisitOverlay(Graphics gr){
+        // read visit list and draw rectangle for each location
+    }
+
 	private void drawCrimeMap(Graphics gr)
 	{
 		int [][] A = engine.crimeMem;
@@ -405,6 +409,8 @@ public class OverlayMapView extends JComponent
 			drawPoliceRadius(gr); break;
         case SCHOOL_OVERLAY:
             drawSchoolRadius(gr); break;
+        case VISIT_OVERLAY:
+            drawVisitOverlay(gr); break;
 		case FIRE_OVERLAY:
 			drawFireRadius(gr); break;
 		case CRIME_OVERLAY:

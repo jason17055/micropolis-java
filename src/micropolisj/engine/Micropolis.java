@@ -1380,6 +1380,7 @@ public class Micropolis
 
 		fireMapOverlayDataChanged(MapState.POLLUTE_OVERLAY);   //PLMAP
 		fireMapOverlayDataChanged(MapState.LANDVALUE_OVERLAY); //LVMAP
+        fireMapOverlayDataChanged(MapState.VISIT_OVERLAY); //RGMAP
 	}
 
 	public CityLocation getLocationOfMaxPollution()
