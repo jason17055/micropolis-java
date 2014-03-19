@@ -120,6 +120,8 @@ public class OverlayMapView extends JComponent
 	static final Color VAL_VERYPLUS  = new Color(0x00e600);
 	static final Color VAL_MINUS     = new Color(0xff7f00);
 	static final Color VAL_VERYMINUS = new Color(0xffff00);
+    static final Color PATHCOLOR     = new Color(0x000000);
+    static final Color VISITCOLOR     = new Color(0xffffff);
 
 	private Color getCI(int x)
 	{
@@ -161,10 +163,34 @@ public class OverlayMapView extends JComponent
 	}
 
     private void drawVisitOverlay(Graphics gr){
-        Iterator pathIterator = engine.paths.iterator();
-        while(pathIterator.hasNext()){
+        Iterator allPaths = engine.paths.iterator();
+        CityLocation l;
+
+        while(allPaths.hasNext()){
+            System.out.println("drawing a path");
+            Vector<CityLocation> curPath = (Vector<CityLocation>) allPaths.next();
+            Iterator pathPoints = curPath.iterator();
+            while(pathPoints.hasNext()){
+                l = (CityLocation) pathPoints.next();
+                maybeDrawRect(gr, PATHCOLOR, l.x,l.y, 10,10);
+            }
+        }
+
+        //System.out.println("there are " + engine.visits.size() + " visit locations on the map");
+        for (Map.Entry<CityLocation,Integer> entry : engine.visits.entrySet()) {
+            CityLocation visitloc = entry.getKey();
+            Integer visits = entry.getValue();
+            System.out.println(visits + " visits at: " + visitloc.x + "," + visitloc.y);
+            if(visitloc != null){
+                if(visits > 0){
+                    System.out.println("draw visit at: " + visitloc.x + ", " + visitloc.y);
+                    // getCI determines color, see above. so i multiply with 100 to get some colors
+                    maybeDrawRect(gr, getCI(visits * 100), visitloc.x, visitloc.y, 20, 20);
+                }
+            }
 
         }
+
 
         // read visit list and draw rectangle for each location
     }

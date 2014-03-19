@@ -70,7 +70,7 @@ public class TrafficSim {
 		
 		int sum=0;
 		int t;
-		Iterator it2 = help.values().iterator();
+		Iterator<Integer> it2 = help.values().iterator();
 		while(it.hasNext()){
 			t=(int)it2.next();
 			sum+=t;
