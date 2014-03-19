@@ -95,12 +95,68 @@ public class TrafficSim {
 	 * @return
 	 */
 	private static int getFactor(char start, char end){
-		/*
-		 * What's need to be done here is a switch case; depending on what zone we are at 
-		 * and what type the zone of our goal is, we get a different value
-		 * 
-		 */
-		return 2; //just for not getting any errors right now.
+		if(TileConstants.isResidentialZone((int)start)){
+			if(TileConstants.isResidentialZone((int)end)){
+				return 2;
+			}
+			if(TileConstants.isCommercialZone((int)end)){
+				return 20;
+			}
+			if(TileConstants.isIndustrialZone((int)end)){
+				return 12;
+			}
+			if((int)end==964){
+				return 8;	//School
+			}
+			if((int)end==982 || (int)end==991){
+				return 9;	//UniversityA or UniversityB
+			}
+			if((int)end==973){
+				return 7;	//Museum
+			}
+			if((int)end==1012){
+				return 5;	//OpenAir
+			}
+			if((int)end==750 || (int)end==816){
+				return 5;	//PowerPlant or Nuclear	
+			}
+			if((int)end==716){
+				return 6;	//Airport
+			}
+			if((int)end==784 || (int)end==800){
+				return 7;	//Stadium or FullStadium
+			}			
+		}
+		if(TileConstants.isCommercialZone((int)start)){
+			if((int)end==716){
+				return 2;	//Airport
+			}
+			if((int)end==698){
+				return 1;	//Port
+			}
+		}
+		if(TileConstants.isIndustrialZone((int)start)){
+			if((int)end==698){
+				return 1;
+			}
+		}
+		if((int)start==964){	//School
+			if((int)end==973){
+				return 5;	//Museum
+			}
+			if((int)end==982 || (int)end==991){
+				return 1;	//UniversityA or UniversityB
+			}
+		}
+		if((int)start==716){	//Airport
+			if((int)end==784 || (int)end==800){
+				return 2;	//Stadium or FullStadium
+			}
+			if((int)end==1012){
+				return 1;	//OpenAir
+			}
+		}		
+		return 0;
 	}
 	
 	
