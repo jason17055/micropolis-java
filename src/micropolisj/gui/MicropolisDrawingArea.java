@@ -58,12 +58,13 @@ public class MicropolisDrawingArea extends JComponent
 		}
 		public void ancestorMoved(AncestorEvent evt) {}
 		});
-		
-		addMouseListener(new MouseListener() {
-			
-			@Override
+
+        addMouseListener(new MouseListener() {
+
+            @Override
 			public void mousePressed(MouseEvent e) {
-				if(e.getButton()==MouseEvent.BUTTON2)
+                requestFocus();
+                if(e.getButton()==MouseEvent.BUTTON2)
 					startDrag(e.getX(), e.getY());
 			}
 			
