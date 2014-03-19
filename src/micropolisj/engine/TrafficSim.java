@@ -203,7 +203,7 @@ public class TrafficSim {
 		while (!unready.isEmpty() && best>(Collections.min(unready.keySet()))) { //main algorithm A*
 			int current=Collections.min(unready.keySet()); //add new field to ready
 			currentLocation=unready.get(current).getLoc();
-			currentCost=engine.getTrafficCost(currentLocation);
+			currentCost=engine.getTrafficCost(currentLocation,0);
 			ready.put(currentLocation, new SpecifiedTile(currentCost,unready.get(current).getPred(),true));
 			unready.remove(current);
 			for (CityLocation g : findAdjRoads(currentLocation)) { //go through adj roads
@@ -239,7 +239,7 @@ public class TrafficSim {
 		}
 		Vector<CityLocation> way=new Vector<CityLocation>();
 		while (ready.get(fastGoal).getPred()!=new SpecifiedTile().getLoc()) { //add traffic to way 
-			engine.addTraffic(fastGoal.x, fastGoal.y, engine.getTrafficCost(fastGoal));
+			engine.addTraffic(fastGoal.x, fastGoal.y, engine.getTrafficCost(fastGoal,0));
 			way.add(fastGoal);
 			fastGoal=ready.get(fastGoal).getPred();
 		}
