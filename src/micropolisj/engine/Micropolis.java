@@ -483,6 +483,10 @@ public class Micropolis
 	{
 		return (char)(map[ypos][xpos] & LOMASK);
 	}
+	public char getTile(CityLocation loc)
+	{
+		return (char)(map[loc.y][loc.x] & LOMASK);
+	}
 
 	public char getTileRaw(int xpos, int ypos)
 	{
@@ -904,7 +908,8 @@ public class Micropolis
 		{
 			for (int x = 0; x < trfDensity[y].length; x++)
 			{
-				trfDensity[y][x]/=2;
+				trfDensity[y][x]*=3;
+				trfDensity[y][x]/=4;
 				/*original functionint z = trfDensity[y][x];
 				if (z != 0)
 				{
@@ -3027,15 +3032,16 @@ public class Micropolis
 	 */
 	public int getTrafficCost(CityLocation loc, int cur) { //TODO test values
 		char tile=getTile(loc.x,loc.y);
-		
-		if (isRoad(tile) && cur!=3) {
-			return 70+trfDensity[loc.y][loc.x]*7;
-		}
-		if (isBigRoad(tile) && cur!=3) {
-			return 40+trfDensity[loc.y][loc.x]*3;
-		}
-		if (isRail(tile) && cur>2) {
-			return 70+trfDensity[loc.y][loc.x]*7;
+		if (TileConstants.isRoadAny(tile)) {
+			if (TileConstants.isRoad(tile) && cur!=3) {
+				return 70+trfDensity[loc.y][loc.x];
+			}
+			if (TileConstants.isBigRoad(tile) && cur!=3) {
+				return 40+trfDensity[loc.y][loc.x];
+			}
+			if (TileConstants.isRail(tile) && cur>2) {
+				return 30+trfDensity[loc.y][loc.x];
+			}
 		}
 		return 999;
 	}

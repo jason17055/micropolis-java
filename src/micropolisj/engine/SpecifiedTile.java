@@ -8,30 +8,39 @@ public class SpecifiedTile {
 	private boolean type;
 	// type=0: not ready --- type=1: ready
 	private int bestcosts=-1;
+	private int roadType;
 	
-	public SpecifiedTile(int cost, CityLocation loc, boolean type){
+	public SpecifiedTile(int cost, CityLocation loc, boolean type, int RoadType){
 		this.type=type;
 		assert type;
-			this.pred=new CityLocation(loc.x,loc.y);
-			this.costs=cost;
+		this.pred=new CityLocation(loc.x,loc.y);
+		this.costs=cost;
+		this.roadType=RoadType;
+			
 	}
-	public SpecifiedTile(CityLocation loc, CityLocation pred, boolean type){
+	public SpecifiedTile(CityLocation loc, CityLocation pred, boolean type, int RoadType){
 		this.type=type;
 		assert !type;
 		this.pred=new CityLocation(pred.x,pred.y);
 		this.loc=new CityLocation(loc.x,loc.y);
+		this.roadType=RoadType;
 	}
 	/**
 	 * default constructor creates ready tile without pred
 	 */
-	public SpecifiedTile(){
+	public SpecifiedTile(int RoadType){
 		this.type=true;
 		this.pred=new CityLocation(-1,-1);
 		this.costs=0;
+		this.roadType=RoadType;
 	}
 	
 	public CityLocation getLoc(){
 		return new CityLocation(loc.x,loc.y);
+	}
+	
+	public int getRoadType(){
+		return roadType;
 	}
 	
 	public CityLocation getPred(){
