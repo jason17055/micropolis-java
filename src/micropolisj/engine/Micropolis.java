@@ -33,6 +33,7 @@ public class Micropolis
 	char [][] map;
 	boolean [][] powerMap;
 	short [][] elevations;
+	short [][] waterDepth;
 
 	// half-size arrays
 
@@ -229,6 +230,7 @@ public class Micropolis
 		map = new char[height][width];
 		powerMap = new boolean[height][width];
 		elevations = new short[height][width];
+		waterDepth = new short[height][width];
 
 		int hX = (width+1)/2;
 		int hY = (height+1)/2;
