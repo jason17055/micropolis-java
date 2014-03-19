@@ -423,12 +423,47 @@ public class TileConstants
 	public static boolean isBigRoad(int tile) {//TODO add bigRoads
 		return false;
 	}
+	public static boolean isStation(int tile) {//TODO add station
+		return false;
+	}
 
-	public static boolean isRoadAny(int tile) 
-	{
+	public static boolean isRoadAny(int tile) {
 		assert (tile & LOMASK) == tile;
 
-		return isRoad(tile) || isBigRoad(tile) || isRail(tile);
+		return isRoad(tile) || isBigRoad(tile) || isRail(tile) || isStation(tile);
+	}
+	
+	/**
+	 * checks
+	 * @param tile
+	 * @return
+	 */
+	
+	public static int roadType(int tile) {
+		if (isStation(tile)) {
+			return 4;
+		} else {
+			if (isRoad(tile) && isRail(tile)) {
+				return 5;
+			} else {
+				if (isBigRoad(tile) && isRail(tile)) {
+					return 6;
+				} else {
+					if (isRoad(tile)) {
+						return 1;
+					} else {
+						if (isBigRoad(tile)) {
+							return 2;
+						} else {
+							if (isRail(tile)) {
+								return 3;
+							}
+						}
+					}
+				}
+			}
+		}
+	return 0;
 	}
 
 	/**
