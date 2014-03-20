@@ -19,4 +19,12 @@ public class RoadSpecifiedTile {
 	public static boolean isRoad(int roadType) {
 		return roadType==1 || roadType==2 || roadType==4 || roadType==5 || roadType==6;
 	}
+	
+	public static boolean equals(RoadSpecifiedTile a, RoadSpecifiedTile b){
+		if(CityLocation.equals(a.loc, b.loc)&&a.roadType==b.roadType){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
