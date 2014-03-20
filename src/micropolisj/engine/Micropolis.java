@@ -95,18 +95,13 @@ public class Micropolis
 	public int [][] fireRate;       //firestations reach- used for overlay graphs
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
-	int [][] schoolMap;
-	public int [][] schoolMapEffect;//school reach- used for overlay graphs
-	int [][] uniaMap;
-	public int [][] uniaMapEffect;//unia reach- used for overlay graphs
-	int [][] unibMap;
-	public int [][] unibMapEffect;//unib reach- used for overlay graphs
+	int [][] educationMap;
+	public int [][] educationMapEffect;//school reach- used for overlay graphs
+
 	int [][] cityhallMap;
 	public int [][] cityhallEffect;//unib reach- used for overlay graphs
-	int [][] openairMap;
-	public int [][] openairMapEffect;
-	int [][] museumMap;
-	public int [][] museumMapEffect;
+	int [][] cultureMap;
+	public int [][] cultureMapEffect;
 
 	/** For each section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
@@ -293,14 +288,11 @@ public class Micropolis
 		rateOGMem = new int[height][width];
 		fireStMap = new int[height][width];
 		policeMap = new int[height][width];
-		schoolMap = new int[height][width];
-		museumMap = new int[height][width];
-		uniaMap = new int[height][width];
-		unibMap = new int[height][width];
+		educationMap = new int[height][width];
 		cityhallMap = new int[height][width];
-		openairMap = new int[height][width];
+		cultureMap = new int[height][width];
 		policeMapEffect = new int[height][width];
-		schoolMapEffect = new int[height][width];
+		educationMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
 
@@ -616,12 +608,9 @@ public class Micropolis
 			for (int x = 0; x < fireStMap[y].length; x++) {
 				fireStMap[y][x] = 0;
 				policeMap[y][x] = 0;
-				schoolMap[y][x] = 0;
-				museumMap[y][x] = 0;
-				uniaMap[y][x] = 0;
-				unibMap[y][x] = 0;
+				educationMap[y][x] = 0;
+				cultureMap[y][x] = 0;
 				cityhallMap[y][x] = 0;
-				openairMap[y][x] = 0;
 			}
 		}
 	}
@@ -944,9 +933,9 @@ public class Micropolis
     void analphabetismScan()
     {
 
-        for (int sy = 0; sy < schoolMap.length; sy++) {
-            for (int sx = 0; sx < schoolMap[sy].length; sx++) {
-                schoolMapEffect[sy][sx] = schoolMap[sy][sx];
+        for (int sy = 0; sy < educationMap.length; sy++) {
+            for (int sx = 0; sx < educationMap[sy].length; sx++) {
+                educationMapEffect[sy][sx] = educationMap[sy][sx];
             }
         }
 
@@ -960,7 +949,7 @@ public class Micropolis
                     count++;
                     int z = 128 - val + popDensity[hy][hx];
                     z = Math.min(300, z);
-                    z -= schoolMap[hy][hx];
+                    z -= educationMap[hy][hx];
                     z = clamp(z,0,250);
                     analphabetismMem[hy][hx] = z;
 
