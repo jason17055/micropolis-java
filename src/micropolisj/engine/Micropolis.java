@@ -3009,6 +3009,8 @@ public class Micropolis
 		ZoneStatus zs = new ZoneStatus();
 		zs.building = getDescriptionNumber(getTile(xpos, ypos));
 
+        zs.location = new CityLocation(xpos, ypos);
+
 		int z;
 		z = (popDensity[ypos][xpos] / 64) % 4;
 		zs.popDensity = z + 1;

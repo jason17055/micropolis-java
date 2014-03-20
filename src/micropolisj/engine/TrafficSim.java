@@ -41,6 +41,7 @@ public class TrafficSim {
 	 * @return length of the way (-1 for no way)
 	 */
 	public int genTraffic(CityLocation startP) {
+		System.out.println("genTraffic entered");
 		CityLocation end=findEnd(startP);
 		if(CityLocation.equals(end, new CityLocation(-1,-1))){
 			return -1;
@@ -52,6 +53,7 @@ public class TrafficSim {
 		} else {
 			engine.noWay();
 		}
+		System.out.println("genTraffic returns a way "+way);
 		return way;
 	}
 	
@@ -65,6 +67,7 @@ public class TrafficSim {
 		/* iterates through engine.visits and puts them (together with a specifically calculated weight)
 		 * into a new HashMap. From there we will randomly create the "end" of the route.
 		 */
+		System.out.println("findEnd entered");
 		HashMap<CityLocation,Integer> help = new HashMap<CityLocation,Integer>();
 		for(CityLocation cl : engine.visits.keySet()){
 			CityLocation temp = cl;
@@ -78,12 +81,14 @@ public class TrafficSim {
 			sum+=t;
 		}
 		if(sum==0){
+			System.out.println("findEnd returns -1,-1");
 			return new CityLocation(-1,-1);
 		}
 		int i = engine.PRNG.nextInt(sum)+1;
 		for(CityLocation b : help.keySet()){
 			i-=(int)help.get(b);
 			if(i<=0){
+				System.out.println("Found End: " + b);
 				return b;
 			}
 		}
@@ -99,6 +104,7 @@ public class TrafficSim {
 	 * @return
 	 */
 	private int getValue(CityLocation start, CityLocation end){
+		System.out.println("getValue entered");
 		int factor;
 		factor = getFactor(engine.getTile(start.x, start.y), engine.getTile(end.x,end.y));
 		if (evalfunc(start,toHashSet(findPeriphereRoad(end)))>=150) {
@@ -115,6 +121,7 @@ public class TrafficSim {
 	 * @return
 	 */
 	private static int getFactor(char start, char end){
+		System.out.println("getFactor entered");
 		if(TileConstants.isResidentialZone((int)start)){
 			if(TileConstants.isResidentialZone((int)end)){
 				return 2;
@@ -190,6 +197,7 @@ public class TrafficSim {
 	 */
 	
 	protected int findWay(CityLocation startpos, CityLocation endpos){
+		System.out.println("findWay entered");
 		int currentCost=0;
 		CityLocation currentLocation=new CityLocation(-1,-1);
 		ready = new HashMap<RoadSpecifiedTile,SpecifiedTile>();
@@ -201,11 +209,12 @@ public class TrafficSim {
 			found.add(f);
 		}
 		goal=toHashSet(findPeriphereRoad(endpos)); //generate ends
+		System.out.println(goal);
 		int best=3000;
 		RoadSpecifiedTile fastGoal=new RoadSpecifiedTile(new CityLocation(-1,-1),1);
 		if (ready.isEmpty()) {
 			return -1;
-		}
+			}
 		for (RoadSpecifiedTile f : ready.keySet()) { //take roads adj to starts
 			for (RoadSpecifiedTile g : findAdjRoads(f.getLocation(),f.getRoadType())) {
 				for (int roadType : calcRoadType(engine.getTile(g.getLocation()),ready.get(f).getRoadType())) {
@@ -252,7 +261,7 @@ public class TrafficSim {
 				}
 			}
 			if (goal.contains(currentLocation)) { //if it is a goal update goal
-				best=Math.min(best, ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts());
+				best=Math.min(best, ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts()); //TODO genauer ansehen!
 				fastGoal=new RoadSpecifiedTile(new CityLocation(currentLocation.x,currentLocation.y),currentRoadType);
 			}
 		}
@@ -266,6 +275,7 @@ public class TrafficSim {
 			fastGoal=ready.get(fastGoal).getPred();
 		}
 		engine.paths(way);
+		System.out.println("have found way "+best);
 		return best;
 	}
 	
@@ -325,6 +335,7 @@ public class TrafficSim {
 	}*/
 	
 	private HashSet<RoadSpecifiedTile> findAdjRoads(CityLocation loc, int roadTyp) {
+		System.out.println("findAdjRoads entered");
 		HashSet<RoadSpecifiedTile> ret=new HashSet<RoadSpecifiedTile>();
 		
 		for (int dir=0;dir<4;dir++) {
@@ -335,6 +346,7 @@ public class TrafficSim {
 				}
 			}
 		}
+		System.out.println("find adjacent roads exited");
 		return ret;
 	}
 	
@@ -345,6 +357,7 @@ public class TrafficSim {
 	 */
 	
 	public HashMap<CityLocation,SpecifiedTile> findPeriphereRoad(CityLocation pos){
+		System.out.println("findPeriphereRoad entered");
 		char tiletype;
 		HashMap<CityLocation,SpecifiedTile> ret=new HashMap<CityLocation,SpecifiedTile>();
 		tiletype=engine.getTile(pos.x, pos.y);
@@ -384,7 +397,7 @@ public class TrafficSim {
 				}
 			}
 		}
-		
+		System.out.println("find periphere roads exited");
 		return ret;
 	}
 	/**
