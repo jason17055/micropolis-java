@@ -428,7 +428,7 @@ public class Micropolis
                     doMeltdown(x, y);
                 }
                 if (isArsonable(t) && isConstructed(t)) {
-                    makeExplosion(x, y);
+                    makeQuietExplosion(x, y);
                 }
             }
         }
@@ -2768,7 +2768,11 @@ public class Micropolis
 		makeExplosionAt(xpos * 16 + 8, ypos * 16 + 8);
 	}
 
-	/**
+    void makeQuietExplosion(int xpos, int ypos) {
+        makeQuietExplosionAt(xpos * 16 + 8, ypos * 16 + 8);
+    }
+
+    /**
 	 * Uses x,y coordinates as 1/16th-length tiles.
 	 */
 	void makeExplosionAt(int x, int y)
@@ -2776,7 +2780,11 @@ public class Micropolis
 		sprites.add(new ExplosionSprite(this, x, y));
 	}
 
-	void checkGrowth()
+    void makeQuietExplosionAt(int x, int y) {
+        sprites.add(new QuietExplosionSprite(this, x, y));
+    }
+
+    void checkGrowth()
 	{
 		if (cityTime % 4 == 0) {
 			int newPop = (resPop + comPop * 8 + indPop * 8) * 20;
