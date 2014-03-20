@@ -11,7 +11,6 @@ package micropolisj.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
-import java.text.*;
 import java.util.*;
 import javax.swing.*;
 
@@ -40,7 +39,7 @@ public class GraphsPane extends JPanel
 		INDPOP,
 		MONEY,
 		CRIME,
-        ANALPHABETISM,
+        EDUCATION,
 		POLLUTION;
 	}
 	EnumMap<GraphData,JToggleButton> dataBtns = new EnumMap<GraphData,JToggleButton>(GraphData.class);
@@ -118,7 +117,7 @@ public class GraphsPane extends JPanel
 		c.gridy = 4;
 		toolsPane.add(makeDataBtn(GraphData.POLLUTION), c);
         c.gridy = 5;
-        toolsPane.add(makeDataBtn(GraphData.ANALPHABETISM), c);
+        toolsPane.add(makeDataBtn(GraphData.EDUCATION), c);
 
 		graphArea = new GraphArea();
 		b1.add(graphArea, BorderLayout.CENTER);
@@ -205,7 +204,7 @@ public class GraphsPane extends JPanel
 		case INDPOP: return engine.history.ind[pos];
 		case MONEY: return engine.history.money[pos];
 		case CRIME: return engine.history.crime[pos];
-        case ANALPHABETISM: return engine.history.analphabetism[pos];
+        case EDUCATION: return engine.history.education[pos];
 		case POLLUTION: return engine.history.pollution[pos];
 		default: throw new Error("unexpected");
 		}

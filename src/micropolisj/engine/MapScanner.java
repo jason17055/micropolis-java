@@ -8,8 +8,6 @@
 
 package micropolisj.engine;
 
-import java.util.*;
-
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.engine.TrafficGen.ZoneType;
 
@@ -21,13 +19,15 @@ import static micropolisj.engine.TrafficGen.ZoneType;
 class MapScanner extends TileBehavior
 {
 	final B behavior;
-	TrafficGen traffic;
+	TrafficGen oldTraffic;
+	TrafficSim traffic;
 
 	MapScanner(Micropolis city, B behavior)
 	{
 		super(city);
 		this.behavior = behavior;
-		this.traffic = new TrafficGen(city);
+		this.oldTraffic = new TrafficGen(city);
+		this.traffic= new TrafficSim(city);
 	}
 
 	public static enum B
@@ -246,9 +246,9 @@ class MapScanner extends TileBehavior
 			z = city.fireEffect; // from the funding ratio
 		}
 
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
+		oldTraffic.mapX = xpos;
+		oldTraffic.mapY = ypos;
+		if (!oldTraffic.findPerimeterRoad()) {
 			z /= 2;
 		}
 
@@ -270,9 +270,9 @@ class MapScanner extends TileBehavior
 			z = city.policeEffect/2;
 		}
 
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
+		oldTraffic.mapX = xpos;
+		oldTraffic.mapY = ypos;
+		if (!oldTraffic.findPerimeterRoad()) {
 			z /= 2;
 		}
 
@@ -282,7 +282,10 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.schoolCount++;
-        
+		
+		if (0==city.PRNG.nextInt(5)) {
+			traffic.genTraffic(new CityLocation(xpos,ypos));
+		}
         
 
 		if ((city.cityTime % 8) == 0) {
@@ -291,18 +294,19 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.schoolEffect;
+			z = city.educationEffect;
 		} else {
-			z = city.schoolEffect/2 ;
+			z = city.educationEffect /2 ;
 		}
 
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
-			z /= 2;
-		}
 
-		city.schoolMap[ypos][xpos] += z;
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
+
+        oldTraffic.mapX = xpos;
+		oldTraffic.mapY = ypos;
+
+		city.educationMap[ypos][xpos] += z;
 	}
 	
 	void doMuseum()
@@ -320,13 +324,13 @@ class MapScanner extends TileBehavior
 			z = city.cultureEffect/2;
 		}
 
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
+		oldTraffic.mapX = xpos;
+		oldTraffic.mapY = ypos;
+		if (!oldTraffic.findPerimeterRoad()) {
 			z /= 2;
 		}
 
-		city.museumMap[ypos][xpos] += z;
+		city.cultureMap[ypos][xpos] += z;
 	}
 	
 	void doUniA()
@@ -339,18 +343,20 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.schoolEffect;
+			z = city.educationEffect;
 		} else {
-			z = city.schoolEffect/2 ;
+			z = city.educationEffect /2 ;
 		}
 
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
-			z /= 2;
-		}
+        // multiply the effect by visits
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
 
-		city.uniaMap[ypos][xpos] += z;
+
+		oldTraffic.mapX = xpos;
+		oldTraffic.mapY = ypos;
+
+		city.educationMap[ypos][xpos] += z;
 	}
 	
 	void doUniB()
@@ -363,18 +369,20 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.schoolEffect;
+			z = city.educationEffect;
 		} else {
-			z = city.schoolEffect/2 ;
+			z = city.educationEffect /2 ;
 		}
 
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
-			z /= 2;
-		}
+        // multiply the effect by visits
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
 
-		city.unibMap[ypos][xpos] += z;
+        oldTraffic.mapX = xpos;
+		oldTraffic.mapY = ypos;
+
+
+		city.educationMap[ypos][xpos] += z;
 	}
 	
 	void doCityHall()
@@ -420,15 +428,18 @@ class MapScanner extends TileBehavior
 				z = city.cultureEffect/2 ;
 			}
 
-			traffic.mapX = xpos;
-			traffic.mapY = ypos;
-			if (!traffic.findPerimeterRoad()) {
-				z /= 2;
-			}
+		oldTraffic.mapX = xpos;
+		oldTraffic.mapY = ypos;
+		if (!oldTraffic.findPerimeterRoad()) {
+			z /= 2;
+		}
 
-			city.openairMap[ypos][xpos] += z;
-		
-		
+        // multiply the effect by visits
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
+
+		city.cultureMap[ypos][xpos] += z;
+
 	}
 	
 	void doStadiumEmpty()
@@ -447,6 +458,10 @@ class MapScanner extends TileBehavior
 				city.setTile(xpos+1,ypos+1,(char)(FOOTBALLGAME2));
 			}
 		}else z = city.cultureEffect/2;
+
+        city.cultureMap[ypos][xpos] += z;
+
+
 	}
 
 	void doStadiumFull()
@@ -603,15 +618,11 @@ class MapScanner extends TileBehavior
 		int tpop = commercialZonePop(tile);
 		city.comPop += tpop;
 
-		int trafficGood;
-		if (tpop > PRNG.nextInt(6))
-		{
-			trafficGood = makeTraffic(ZoneType.COMMERCIAL);
+		int trafficGood = 0;
+		for (int i=0;i<tpop;i++) {
+			trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
-		else
-		{
-			trafficGood = 1;
-		}
+		//TODO design new algorithms for growth of main zones
 
 		if (trafficGood == -1)
 		{
@@ -656,16 +667,11 @@ class MapScanner extends TileBehavior
 		int tpop = industrialZonePop(tile);
 		city.indPop += tpop;
 
-		int trafficGood;
-		if (tpop > PRNG.nextInt(6))
-		{
-			trafficGood = makeTraffic(ZoneType.INDUSTRIAL);
+		int trafficGood = 0;
+		for (int i=0;i<tpop;i++) {
+			trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
-		else
-		{
-			trafficGood = 1;
-		}
-
+		//TODO design new algorithms for growth of main zones
 		if (trafficGood == -1)
 		{
 			doIndustrialOut(tpop, PRNG.nextInt(2));
@@ -717,16 +723,11 @@ class MapScanner extends TileBehavior
 
 		city.resPop += tpop;
 
-		int trafficGood;
-		if (tpop > PRNG.nextInt(36))
-		{
-			trafficGood = makeTraffic(ZoneType.RESIDENTIAL);
+		int trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
+		for (int i=2;i<tpop/8;i++) {
+			trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
-		else
-		{
-			trafficGood = 1;
-		}
-
+		//TODO design new algorithms for growth of main zones
 		if (trafficGood == -1)
 		{
 			int value = getCRValue();
@@ -1125,15 +1126,15 @@ class MapScanner extends TileBehavior
 			}
 		}
 	}
-
+	/*
 	/**
 	 * @return 1 if traffic "passed", 0 if traffic "failed", -1 if no roads found
-	 */
+	 
 	int makeTraffic(ZoneType zoneType)
 	{
 		traffic.mapX = xpos;
 		traffic.mapY = ypos;
 		traffic.sourceZone = zoneType;
 		return traffic.makeTraffic();
-	}
+	}*/
 }
