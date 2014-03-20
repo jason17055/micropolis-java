@@ -745,14 +745,14 @@ public class Micropolis
         int pollutionAdd = pol[loc.x][loc.y]*3; //spreading pollution is 1/3 the original pollution on that point
 
         int w = 6;
-        int arrayLength = pol[0].length;
         pollutionAdd /= (w*w); // same pollution for all fields
         int startx = loc.x - w/2;
         int starty = loc.y - w/2;
         for(int y = starty; y < starty + w; y++){
             for(int x = starty; x < startx + w; y++){
-                if(x < arrayLength && y < arrayLength)
-                pol[x][y] += pollutionAdd + PRNG.nextInt(3);
+                if(onMap(loc)){
+                 pol[x][y] += pollutionAdd + PRNG.nextInt(3);
+                }
             }
         }
     }
