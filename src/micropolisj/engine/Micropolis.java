@@ -150,6 +150,7 @@ public class Micropolis
 	int nuclearCount;
 	int seaportCount;
 	int airportCount;
+	int noWay;
 
 	int totalPop;
 	int lastCityPop;
@@ -598,6 +599,7 @@ public class Micropolis
 		nuclearCount = 0;
 		seaportCount = 0;
 		airportCount = 0;
+		noWay = 0;
 		powerPlants.clear();
         cityHallList.clear();
         visits.clear();
@@ -2915,6 +2917,9 @@ public class Micropolis
 		}
 		//fix rounding, we should consider to round up
 		 return ret/d;
+	}
+	public void noWay() {
+		noWay++;
 	}
 	
 	private int accessMap(int x,int y, String g) { 

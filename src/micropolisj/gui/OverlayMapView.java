@@ -438,7 +438,7 @@ public class OverlayMapView extends JComponent
 		switch (mapState) {
 		case POLICE_OVERLAY:
 			drawPoliceRadius(gr); break;
-        case EDUCATION_MAP:
+        case SCHOOL_OVERLAY:
             drawSchoolRadius(gr); break;
         case VISIT_OVERLAY:
             drawVisitOverlay(gr); break;
