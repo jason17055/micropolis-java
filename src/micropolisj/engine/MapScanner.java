@@ -1008,8 +1008,7 @@ class MapScanner extends TileBehavior
 	 */
 	int evalCommercial(int traf)
 	{
-		if (traf < 0)
-			return -3000;
+		
 
 		return city.comRate[ypos][xpos];
 	}
@@ -1021,9 +1020,7 @@ class MapScanner extends TileBehavior
 	 */
 	int evalIndustrial(int traf)
 	{
-		if (traf < 0)
-			return -1000;
-		else
+		
 			return 0;
 	}
 
@@ -1035,8 +1032,7 @@ class MapScanner extends TileBehavior
 	 */
 	int evalResidential(int traf)
 	{
-		if (traf < 0)
-			return -3000;
+		
 
 		int value = city.getLandValue(xpos, ypos);
 		value -= city.pollutionMem[ypos][xpos];
