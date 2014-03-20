@@ -31,8 +31,8 @@ public abstract class TileBehavior
 		this.xpos = xpos;
 		this.ypos = ypos;
 		this.rawTile = city.getTileRaw(xpos, ypos);
-		this.tile = rawTile & LOMASK;
-		apply();
+		this.tile = rawTile & LOMASK;   //What does this & Operator do? Found something about bitwise operation
+		apply();						//but this is really not clear to me...
 	}
 
 	/**
