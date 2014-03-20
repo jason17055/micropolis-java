@@ -55,4 +55,24 @@ public class CityLocation
 	{
 		return "("+x+","+y+")";
 	}
+	
+	
+	/**
+	 * Checks if two CityLocations are equal.
+	 * 
+	 * @param CityLocation a
+	 * @param CityLocation b
+	 * @return true if they equal, false otherwise
+	 */
+	public static boolean equals(CityLocation a, CityLocation b){
+		if(a.x==b.x && a.y==b.y){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
+	
+	
 }
