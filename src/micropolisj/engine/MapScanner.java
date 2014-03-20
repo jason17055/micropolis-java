@@ -289,9 +289,9 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.schoolEffect;
+			z = city.educationEffect;
 		} else {
-			z = city.schoolEffect/2 ;
+			z = city.educationEffect /2 ;
 		}
 
 
@@ -338,9 +338,9 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.schoolEffect;
+			z = city.educationEffect;
 		} else {
-			z = city.schoolEffect/2 ;
+			z = city.educationEffect /2 ;
 		}
 
         // multiply the effect by visits
@@ -364,9 +364,9 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.schoolEffect;
+			z = city.educationEffect;
 		} else {
-			z = city.schoolEffect/2 ;
+			z = city.educationEffect /2 ;
 		}
 
         // multiply the effect by visits

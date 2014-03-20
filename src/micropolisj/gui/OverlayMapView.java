@@ -206,9 +206,9 @@ public class OverlayMapView extends JComponent
 		}
 	}
 
-    private void drawAnalphabetismMap(Graphics gr)
+    private void drawEducationMap(Graphics gr)
     {
-        int [][] A = engine.analphabetismMem;
+        int [][] A = engine.educationMem;
 
         for (int y = 0; y < A.length; y++) {
             for (int x = 0; x < A[y].length; x++) {
@@ -438,7 +438,7 @@ public class OverlayMapView extends JComponent
 		switch (mapState) {
 		case POLICE_OVERLAY:
 			drawPoliceRadius(gr); break;
-        case SCHOOL_OVERLAY:
+        case EDUCATION_MAP:
             drawSchoolRadius(gr); break;
         case VISIT_OVERLAY:
             drawVisitOverlay(gr); break;
