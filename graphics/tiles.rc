@@ -1054,7 +1054,7 @@
 997   cityhall@16,0            (conducts)
 998   cityhall@32,0            (conducts)
 999   cityhall@0,16            (conducts)
-1000   cityhall@16,16     (zone)(conducts)(building=3x3)(behavior=CITYHALLBUILDING)(description=#17)
+1000   cityhall@16,16     (zone)(conducts)(building=3x3)(city-hall)(behavior=CITYHALLBUILDING)(description=#17)
 1001   cityhall@32,16           (conducts)
 1002   cityhall@0,32            (conducts)
 1003   cityhall@16,32           (conducts)
