@@ -59,7 +59,9 @@ public enum MicropolisMessage
 	FLOOD_REPORT,
 	MELTDOWN_REPORT,        // 43            doMeltdown
 	RIOTING_REPORT,
-
+	NEED_MORE_CITIZENS,
+	NEED_A_SCHOOL,
+	
 	// added by Jason
 	NO_NUCLEAR_PLANTS,
 	// added by team rocket

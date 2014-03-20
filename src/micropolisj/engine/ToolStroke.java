@@ -87,16 +87,32 @@ public class ToolStroke
 			return applyZone(eff, POWERPLANT);
 
 		case STADIUM:
-			return applyZone(eff, STADIUM);
-			
+			if (city.evaluation.cityClass >= 1 ){
+				return applyZone(eff, STADIUM);
+				}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
+				return false;}
 		case SCHOOL:
 			return applyZone(eff, SCHOOLBUILDING);
 
 		case MUSEUM:
-			return applyZone(eff, MUSEUMBUILDING);
+			if (city.evaluation.cityClass >= 1 ){
+				return applyZone(eff, MUSEUMBUILDING);
+				}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
+				return false;}
 			
 		case UNIA:
-			return applyZone(eff, UNIABUILDING);
+			if (city.schoolCount > 0){
+				return applyZone(eff, UNIABUILDING);
+			}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_A_SCHOOL, xpos, ypos);
+				return false;
+			}
+			
 			
 		case UNIB:
 			return applyZone(eff, UNIBBUILDING);
@@ -105,8 +121,14 @@ public class ToolStroke
 			return applyZone(eff, CITYHALLBUILDING);
 			
 		case OPENAIR:
-			return applyZone(eff, OPENAIRBUILDING);
-		
+			
+			if (city.evaluation.cityClass >= 1 ){
+				return applyZone(eff, OPENAIRBUILDING);
+				}
+		else {
+			city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
+			return false;}
+			
 		case SEAPORT:
 			return applyZone(eff, PORT);
 

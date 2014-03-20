@@ -403,27 +403,32 @@ class MapScanner extends TileBehavior
 	
 	
 	void doOpenAir()
-	{
-		boolean powerOn = checkZonePower();
-		city.openairCount++;
-		if ((city.cityTime % 8) == 0) {
-			repairZone(OPENAIRBUILDING, 6);
-		}
+	{	
+		
+	
+		
+			boolean powerOn = checkZonePower();
+			city.openairCount++;
+			if ((city.cityTime % 8) == 0) {
+				repairZone(OPENAIRBUILDING, 6);
+			}
 
-		int z;
-		if (powerOn) {
-			z = city.cultureEffect;
-		} else {
-			z = city.cultureEffect/2 ;
-		}
+			int z;
+			if (powerOn) {
+				z = city.cultureEffect;
+			} else {
+				z = city.cultureEffect/2 ;
+			}
 
-		traffic.mapX = xpos;
-		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
-			z /= 2;
-		}
+			traffic.mapX = xpos;
+			traffic.mapY = ypos;
+			if (!traffic.findPerimeterRoad()) {
+				z /= 2;
+			}
 
-		city.openairMap[ypos][xpos] += z;
+			city.openairMap[ypos][xpos] += z;
+		
+		
 	}
 	
 	void doStadiumEmpty()
