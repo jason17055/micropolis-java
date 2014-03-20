@@ -348,23 +348,31 @@ public class TrafficSim {
 		}
 		for(int i=-1; i<dimension-1;i++){
 			for (int roadType : calcRoadType(new CityLocation(pos.x-2,pos.y+i),1)) {
-				if (engine.onMap(new CityLocation(pos.x-2,pos.y+i))&&TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y+i))){  
-					ret.put(new CityLocation(pos.x-2,pos.y+i),new SpecifiedTile(roadType));
+				if (engine.onMap(new CityLocation(pos.x-2,pos.y+i))){
+					if(TileConstants.isRoadAny(engine.getTile(pos.x-2, pos.y+i))){
+						ret.put(new CityLocation(pos.x-2,pos.y+i),new SpecifiedTile(roadType));
+					}					
 				}
 			}
 			for (int roadType : calcRoadType(new CityLocation(pos.x+dimension-1,pos.y+i),1)) {
-				if (engine.onMap(new CityLocation(pos.x+dimension-1,pos.y+i))&&TileConstants.isRoadAny(engine.getTile(pos.x+2, pos.y+i))){ 
-					ret.put(new CityLocation(pos.x+dimension-1,pos.y+i),new SpecifiedTile(roadType));
+				if (engine.onMap(new CityLocation(pos.x+dimension-1,pos.y+i))){
+					if(TileConstants.isRoadAny(engine.getTile(pos.x+dimension-1, pos.y+i))){
+						ret.put(new CityLocation(pos.x+dimension-1,pos.y+i),new SpecifiedTile(roadType));
+					}					
 				}
 			}
 			for (int roadType : calcRoadType(new CityLocation(pos.x+i,pos.y-2),1)) {
-				if (engine.onMap(new CityLocation(pos.x+i,pos.y-2))&&TileConstants.isRoadAny(engine.getTile(pos.x+i, pos.y-2))){  
-					ret.put(new CityLocation(pos.x+i,pos.y-2),new SpecifiedTile(roadType));
+				if (engine.onMap(new CityLocation(pos.x+i,pos.y-2))){
+					if(TileConstants.isRoadAny(engine.getTile(pos.x+i, pos.y-2))){
+						ret.put(new CityLocation(pos.x+i,pos.y-2),new SpecifiedTile(roadType));
+					}					
 				}
 			}
 			for (int roadType : calcRoadType(new CityLocation(pos.x+i,pos.y+dimension-1),1)) {
-				if (engine.onMap(new CityLocation(pos.x+i,pos.y+dimension-1))&&TileConstants.isRoadAny(engine.getTile(pos.x+i, pos.y+2))){  
-					ret.put(new CityLocation(pos.x+i,pos.y+dimension-1),new SpecifiedTile(roadType));
+				if (engine.onMap(new CityLocation(pos.x+i,pos.y+dimension-1))){
+					if(TileConstants.isRoadAny(engine.getTile(pos.x+i, pos.y+dimension-1))){
+						ret.put(new CityLocation(pos.x+i,pos.y+dimension-1),new SpecifiedTile(roadType));
+					}					
 				}
 			}
 		}
