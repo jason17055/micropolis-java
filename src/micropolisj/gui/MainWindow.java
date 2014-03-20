@@ -726,7 +726,7 @@ public class MainWindow extends JFrame
                         onViewEvaluationClicked();
                     }
                 }));
-        windowsMenu.add(menuItem);
+        //windowsMenu.add(menuItem);
 
         menuItem = new JMenuItem(strings.getString("menu.windows.graph"));
         setupKeys(menuItem, "menu.windows.graph");
@@ -1075,11 +1075,14 @@ public class MainWindow extends JFrame
     }
 
     void doQueryTool(int xpos, int ypos) {
+
         if (!engine.testBounds(xpos, ypos))
             return;
-
         ZoneStatus z = engine.queryZoneStatus(xpos, ypos);
         notificationPane.showZoneStatus(engine, xpos, ypos, z);
+        if (TileConstants.isCityHallBuilding((int) engine.getTile(xpos, ypos))) {
+            evaluationPane.setVisible(true);
+        }
     }
 
     private void doZoom(int dir, Point mousePt) {

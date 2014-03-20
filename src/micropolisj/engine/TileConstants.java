@@ -663,7 +663,22 @@ public class TileConstants
 		return false;
 	}
 
-	public static boolean isResidentialClear(int tile)
+
+    public static boolean isCityHallBuilding(int tile) {
+        assert (tile & LOMASK) == tile;
+
+        TileSpec ts = Tiles.get(tile);
+        if (ts != null) {
+            if (ts.owner != null) {
+                ts = ts.owner;
+            }
+            return ts.getBooleanAttribute("city-hall");
+        }
+        return false;
+    }
+
+
+    public static boolean isResidentialClear(int tile)
 	{
 		assert (tile & LOMASK) == tile;
 
