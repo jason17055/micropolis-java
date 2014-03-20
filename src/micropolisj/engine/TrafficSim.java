@@ -8,7 +8,7 @@ import java.util.Vector;
 import java.util.Iterator;
 
 /**
- * Simluates traffic stuff
+ * Simulates traffic stuff
  */
 public class TrafficSim {
 	Micropolis engine;

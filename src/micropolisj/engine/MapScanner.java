@@ -8,8 +8,6 @@
 
 package micropolisj.engine;
 
-import java.util.*;
-
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.engine.TrafficGen.ZoneType;
 
@@ -296,13 +294,14 @@ class MapScanner extends TileBehavior
 			z = city.schoolEffect/2 ;
 		}
 
+
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
+
 		traffic.mapX = xpos;
 		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
-			z /= 2;
-		}
 
-		city.schoolMap[ypos][xpos] += z;
+		city.educationMap[ypos][xpos] += z;
 	}
 	
 	void doMuseum()
@@ -326,7 +325,7 @@ class MapScanner extends TileBehavior
 			z /= 2;
 		}
 
-		city.museumMap[ypos][xpos] += z;
+		city.cultureMap[ypos][xpos] += z;
 	}
 	
 	void doUniA()
@@ -344,13 +343,15 @@ class MapScanner extends TileBehavior
 			z = city.schoolEffect/2 ;
 		}
 
+        // multiply the effect by visits
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
+
+
 		traffic.mapX = xpos;
 		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
-			z /= 2;
-		}
 
-		city.uniaMap[ypos][xpos] += z;
+		city.educationMap[ypos][xpos] += z;
 	}
 	
 	void doUniB()
@@ -368,13 +369,15 @@ class MapScanner extends TileBehavior
 			z = city.schoolEffect/2 ;
 		}
 
+        // multiply the effect by visits
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
+
 		traffic.mapX = xpos;
 		traffic.mapY = ypos;
-		if (!traffic.findPerimeterRoad()) {
-			z /= 2;
-		}
 
-		city.unibMap[ypos][xpos] += z;
+
+		city.educationMap[ypos][xpos] += z;
 	}
 	
 	void doCityHall()
@@ -423,7 +426,11 @@ class MapScanner extends TileBehavior
 			z /= 2;
 		}
 
-		city.openairMap[ypos][xpos] += z;
+        // multiply the effect by visits
+        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        z = z * (visits+1);
+
+		city.cultureMap[ypos][xpos] += z;
 	}
 	
 	void doStadiumEmpty()
@@ -442,6 +449,10 @@ class MapScanner extends TileBehavior
 				city.setTile(xpos+1,ypos+1,(char)(FOOTBALLGAME2));
 			}
 		}else z = city.cultureEffect/2;
+
+        city.cultureMap[ypos][xpos] += z;
+
+
 	}
 
 	void doStadiumFull()

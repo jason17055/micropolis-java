@@ -72,5 +72,22 @@ public class SpecifiedTile {
 	public boolean getType() {
 		return type;
 	}
-	
+	public static boolean equals(SpecifiedTile a, SpecifiedTile b){
+		if(a.type&&b.type){
+			if(a.costs==b.costs&&a.pred==b.pred&&a.roadType==b.roadType){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			if(!a.type&&!b.type){
+				if(a.loc==b.loc&&a.pred==b.pred&&a.roadType==b.roadType){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+		return false;
+	}
 }
