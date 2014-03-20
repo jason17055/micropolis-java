@@ -305,7 +305,12 @@ public class TrafficSim {
 	}
 	
 	private Vector<Integer> calcRoadType(CityLocation me,int prevType) {
+		if (engine.onMap(me)) {
 		return calcRoadType(engine.getTile(me), prevType);
+		}
+		Vector<Integer> ret=new Vector<Integer>();
+		ret.add(0);
+		return ret;
 	}
 	
 	/*private HashSet<RoadSpecifiedTile> findAdjRoads(CityLocation loc) {
