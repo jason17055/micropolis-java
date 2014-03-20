@@ -862,7 +862,7 @@ class MapScanner extends TileBehavior
 
 		this.tile = rawTile & LOMASK;
 		if (tile == RESCLR)
-		{			System.out.println(pop+" "+value+" "+city.getPopulationDensity(xpos, ypos));
+		{			
 			if (pop < 8)
 			{
 				buildHouse(value);
