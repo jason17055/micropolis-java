@@ -15,6 +15,7 @@ package micropolisj.engine;
  */
 public class ZoneStatus
 {
+    public CityLocation location;
 	/** Number from 0 to 27, identifying the type of building. */
 	public int building;
 	/** Number from 1 to 4, 1=Low, 2=Medium, 3=High, 4=Very High. */

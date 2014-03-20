@@ -248,6 +248,7 @@ public class MainWindow extends JFrame
             }
 
             public void mouseMoved(MouseEvent ev) {
+
                 try {
                     onToolHover(ev);
                 } catch (Throwable e) {
