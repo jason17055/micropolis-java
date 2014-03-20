@@ -2,7 +2,7 @@ package micropolisj.engine;
 
 public class SpecifiedTile {
 	private CityLocation loc;
-	private CityLocation pred = new CityLocation(-1,-1);
+	private RoadSpecifiedTile pred;
 	// -1 standard value for coordinates if there doesn't exist a predecessor
 	private int costs=-1;
 	private boolean type;
@@ -10,19 +10,19 @@ public class SpecifiedTile {
 	private int bestcosts=-1;
 	private int roadType;
 	
-	public SpecifiedTile(int cost, CityLocation loc, boolean type, int RoadType){
+	public SpecifiedTile(int cost, RoadSpecifiedTile pred, boolean type, int RoadType){
 		this.type=type;
 		assert type;
-		this.pred=new CityLocation(loc.x,loc.y);
+		this.pred=new RoadSpecifiedTile(new CityLocation(pred.getLocation().x,pred.getLocation().y),pred.getRoadType());
 		this.costs=cost;
 		this.roadType=RoadType;
 			
 	}
-	public SpecifiedTile(CityLocation loc, CityLocation pred, boolean type, int RoadType){
+	public SpecifiedTile(CityLocation Loc, RoadSpecifiedTile pred1, boolean type, int RoadType){
 		this.type=type;
 		assert !type;
-		this.pred=new CityLocation(pred.x,pred.y);
-		this.loc=new CityLocation(loc.x,loc.y);
+		this.pred=new RoadSpecifiedTile(new CityLocation(pred1.getLocation().x,pred1.getLocation().y),pred1.getRoadType());
+		this.loc=new CityLocation(Loc.x,Loc.y);
 		this.roadType=RoadType;
 	}
 	/**
@@ -30,7 +30,7 @@ public class SpecifiedTile {
 	 */
 	public SpecifiedTile(int RoadType){
 		this.type=true;
-		this.pred=new CityLocation(-1,-1);
+		this.pred= new RoadSpecifiedTile(new CityLocation(-1,-1),0);
 		this.costs=0;
 		this.roadType=RoadType;
 	}
@@ -43,11 +43,11 @@ public class SpecifiedTile {
 		return roadType;
 	}
 	
-	public CityLocation getPred(){
+	public RoadSpecifiedTile getPred(){
 		return pred;
 	}
 	
-	public void setPred(CityLocation newpred){
+	public void setPred(RoadSpecifiedTile newpred){
 		pred=newpred;
 	}
 	
