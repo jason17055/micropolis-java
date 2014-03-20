@@ -1,11 +1,15 @@
 ========================================================================
 
-MicropolisJ (Micropolis in Java)
+Divercity
 
 ========================================================================
 
-MicropolisJ is Micropolis for the Java platform.
-Copyright (C) 2013 Jason Long (jason@long.name).
+Divercity is an Extension of MicropolisJ which is Micropolis for the Java platform.
+It was developed during a three-week programming course at Freie Universitaet Berlin.
+
+Copyright (C) for Divercity: 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck.
+
+Copyright (C) for MicropolisJ: 2013 Jason Long (jason@long.name).
 Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 
 MicropolisJ is based on Micropolis, Unix version, which was developed by
@@ -39,9 +43,6 @@ source code release.
 
 See the COPYING file for the full text copy of the GNU General Public
 License.
-
-If you need assistance with this program, you may contact:
-  Jason Long (jason@long.name)
 
 ========================================================================
 

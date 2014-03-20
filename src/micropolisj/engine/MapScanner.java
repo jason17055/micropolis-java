@@ -632,8 +632,7 @@ class MapScanner extends TileBehavior
 			if (!powerOn)
 				zscore = -500;
 
-			if (trafficGood != 0 &&
-				zscore > -350 &&
+			if (zscore > -350 &&
 				zscore - 26380 > (PRNG.nextInt(0x10000)-0x8000))
 			{
 				int value = getCRValue();
