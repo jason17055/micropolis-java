@@ -624,13 +624,6 @@ class MapScanner extends TileBehavior
 		}
 		//TODO design new algorithms for growth of main zones
 
-		if (trafficGood == -1)
-		{
-			int value = getCRValue();
-			doCommercialOut(tpop, value);
-			return;
-		}
-
 		if (PRNG.nextInt(8) == 0)
 		{
 			int locValve = evalCommercial(trafficGood);
@@ -672,13 +665,7 @@ class MapScanner extends TileBehavior
 			trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
 		//TODO design new algorithms for growth of main zones
-		if (trafficGood == -1)
-		{
-			doIndustrialOut(tpop, PRNG.nextInt(2));
-			return;
-		}
-
-		if (PRNG.nextInt(8) == 0)
+				if (PRNG.nextInt(8) == 0)
 		{
 			int locValve = evalIndustrial(trafficGood);
 			int zscore = city.indValve + locValve;
@@ -728,13 +715,7 @@ class MapScanner extends TileBehavior
 			trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
 		//TODO design new algorithms for growth of main zones
-		if (trafficGood == -1)
-		{
-			int value = getCRValue();
-			doResidentialOut(tpop, value);
-			return;
-		}
-
+		
 		if (tile == RESCLR || PRNG.nextInt(8) == 0)
 		{
 			int locValve = evalResidential(trafficGood);
