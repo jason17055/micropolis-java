@@ -721,7 +721,7 @@ class MapScanner extends TileBehavior
 			int zscore = city.resValve + locValve;
 
 			if (!powerOn)
-				zscore = -500;
+				zscore = Math.min(-500, zscore);
 
 			if (zscore > -350 && zscore - 26380 > (PRNG.nextInt(0x10000)-0x8000))
 			{
@@ -854,7 +854,7 @@ class MapScanner extends TileBehavior
 
 	private void doResidentialIn(int pop, int value)
 	{
-		assert value >= 0 && value <= 3;
+		assert value >= 0 && value <= 3; //FIXME assert doesnt make sense
 
 		int z = city.pollutionMem[ypos][xpos];
 		if (z > 128)
@@ -862,7 +862,7 @@ class MapScanner extends TileBehavior
 
 		this.tile = rawTile & LOMASK;
 		if (tile == RESCLR)
-		{
+		{			System.out.println(pop+" "+value+" "+city.getPopulationDensity(xpos, ypos));
 			if (pop < 8)
 			{
 				buildHouse(value);
@@ -870,7 +870,7 @@ class MapScanner extends TileBehavior
 				return;
 			}
 
-			if (city.getPopulationDensity(xpos, ypos) > 64)
+			if (city.getPopulationDensity(xpos, ypos) >= 8)
 			{
 				residentialPlop(0, value);
 				adjustROG(8);
