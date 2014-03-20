@@ -167,6 +167,7 @@ public class NotificationPane extends JPanel
 		p.add(new JLabel(strings.getString("notification.growth_lbl")), c1);
 		p.add(new JLabel(growthRateStr), c2);
 
+
 		c1.gridy++;
 		c1.gridwidth = 2;
 		c1.weighty = 1.0;

@@ -228,7 +228,7 @@ public class TrafficSim {
 						mapBack.put(new RoadSpecifiedTile(g.getLocation(),roadType), keyi+roadType);
 					}
 				} else { //was already found before
-					if (new RoadSpecifiedTile(g.getLocation(),g.getRoadType())!=ready.get(current).getPred()) {//if not pred
+					if (!RoadSpecifiedTile.equals(new RoadSpecifiedTile(g.getLocation(),g.getRoadType()),ready.get(current).getPred())) {//if not pred
 						if (ready.containsKey(g)) { //if it is already ready update ready
 							int c=evalfunc(g.getLocation(), goal)+currentCost+ready.get(ready.get(g).getPred()).getCosts();
 							if (ready.get(g).getCosts()<=c) {
@@ -255,7 +255,7 @@ public class TrafficSim {
 			return -1;
 		}
 		Vector<CityLocation> way=new Vector<CityLocation>();
-		while (ready.get(fastGoal).getPred()!=new RoadSpecifiedTile(new CityLocation(-1,-1),0)) { //add traffic to way 
+		while (!RoadSpecifiedTile.equals(ready.get(fastGoal).getPred(),new RoadSpecifiedTile(new CityLocation(-1,-1),0))) { //add traffic to way 
 			engine.addTraffic(fastGoal.getLocation().x, fastGoal.getLocation().y, engine.getTrafficCost(fastGoal.getLocation(),fastGoal.getRoadType()));
 			way.add(fastGoal.getLocation());
 			fastGoal=ready.get(fastGoal).getPred();
