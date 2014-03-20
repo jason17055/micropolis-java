@@ -2781,12 +2781,12 @@ public class Micropolis
 			}
 			break;
 		case 14:
-			if (totalZoneCount > 10 && totalZoneCount * 2 > roadTotal) { //TODO need to change
+			if (100*noWay>getCityPopulation()) { //TODO balance
 				sendMessage(MicropolisMessage.NEED_ROADS);
 			}
 			break;
 		case 18:
-			if (totalZoneCount > 50 && totalZoneCount > railTotal) { //TODO need to change
+			if (false) { //TODO need to change
 				sendMessage(MicropolisMessage.NEED_RAILS);
 			}
 			break;
