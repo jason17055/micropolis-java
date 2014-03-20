@@ -96,6 +96,9 @@ public class TrafficSim {
 	private int getValue(CityLocation start, CityLocation end){
 		int factor;
 		factor = getFactor(engine.getTile(start.x, start.y), engine.getTile(end.x,end.y));
+		if (evalfunc(start,(HashSet<CityLocation>) findPeriphereRoad(end).keySet())>=150) {
+			return 0;
+		}
 		return (200000/(evalfunc(start,(HashSet<CityLocation>) findPeriphereRoad(end).keySet()))+20)*factor; 
 		//factor 200 000 for making randomization easyer later on.
 	}
@@ -181,7 +184,7 @@ public class TrafficSim {
 	 * @return length of the way
 	 */
 	
-	public int findWay(CityLocation startpos, CityLocation endpos){
+	protected int findWay(CityLocation startpos, CityLocation endpos){
 		int currentCost=0;
 		CityLocation currentLocation=new CityLocation(-1,-1);
 		ready = new HashMap<RoadSpecifiedTile,SpecifiedTile>();
@@ -193,7 +196,7 @@ public class TrafficSim {
 			found.add(f);
 		}
 		goal=(HashSet<CityLocation>) findPeriphereRoad(endpos).keySet(); //generate ends
-		int best=200;
+		int best=3000;
 		CityLocation fastGoal=new CityLocation(-1,-1);
 		if (ready.isEmpty()) {
 			return -1;
@@ -247,7 +250,7 @@ public class TrafficSim {
 				fastGoal=new CityLocation(currentLocation.x,currentLocation.y);
 			}
 		}
-		if (best==200) {
+		if (best==3000) {
 			return -1;
 		}
 		Vector<CityLocation> way=new Vector<CityLocation>();
@@ -366,21 +369,13 @@ public class TrafficSim {
 		return ret;
 	}
 	/**
-	 *  increases the traffic on a given tile by value
-	 * @param pos
-	 * @param value is the zone type of the tile
-	 */
-	public void makeTraffic(CityLocation pos, int value){
-		
-	}
-	/**
 	 * capped at 32 767
 	 * @param start
 	 * @param finish
 	 * @return
 	 */
 	
-	public static int evalfunc(CityLocation start, HashSet<CityLocation> finish){
+	private static int evalfunc(CityLocation start, HashSet<CityLocation> finish){
 		int ret=32767;
 		for (CityLocation g : finish) {
 			ret=Math.min(ret,Math.abs(start.x-g.x)+Math.abs(start.y-g.y)+1);
