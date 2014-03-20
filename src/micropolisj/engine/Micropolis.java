@@ -750,7 +750,7 @@ public class Micropolis
         int starty = loc.y - w/2;
         for(int y = starty; y < starty + w; y++){
             for(int x = starty; x < startx + w; y++){
-                if(onMap(loc)){
+                if(onMap(new CityLocation(x,y))){
                  pol[x][y] += pollutionAdd + PRNG.nextInt(3);
                 }
             }
