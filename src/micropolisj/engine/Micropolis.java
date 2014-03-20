@@ -1291,7 +1291,7 @@ public class Micropolis
                     // getDisCC should check for every city hall if it is in distance
 					int dis = 34 - getDisCC(x, y);
 					dis *= 4;
-					dis += terrainMem[y][x]*100;
+					dis += terrainMem[y][x];
 					dis -= pollutionMem[y][x]*16;
 					if (crimeMem[y][x] > 190) {
 						dis -= 20;
