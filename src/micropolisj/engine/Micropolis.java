@@ -740,6 +740,41 @@ public class Micropolis
 		return 0;
 	}
 
+    private void addPolutionToArea(int [][] pol, CityLocation loc){
+        pol[loc.x][loc.y] = pol[loc.x][loc.y]/4;
+        int pollutionAdd = pol[loc.x][loc.y]*3; //spreading pollution is 1/3 the original pollution on that point
+
+        int w = 6;
+        pollutionAdd /= (w*w); // same pollution for all fields
+        int startx = loc.x - w/2;
+        int starty = loc.y - w/2;
+        for(int y = starty; y < starty + w; y++){
+            for(int x = starty; x < startx + w; y++){
+                pol[x][y] += pollutionAdd + PRNG.nextInt(3);
+            }
+        }
+    }
+
+
+    private void spreadPollution(int [][] pol){
+        final int h = pol.length;
+        final int w = pol[0].length;
+
+        // check every field, if there is higher pollution divide it by 4. 3/4 will spread to neigboring tiles
+        // 10x10 surroundings
+        ArrayList<CityLocation> highPollutionLocs = new ArrayList<CityLocation>();
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                if(pol[x][y] > 70) highPollutionLocs.add(new CityLocation(x,y));
+            }
+        }
+        for(CityLocation l : highPollutionLocs){
+            addPolutionToArea(pol, l);
+        }
+    }
+
 	private static int [][] doSmooth(int [][] tem)
 	{
 		final int h = tem.length;
@@ -1325,11 +1360,7 @@ public class Micropolis
 
 
         // smooth polution
-        tem = doSmooth(tem);
-        tem = doSmooth(tem);
-        tem = doSmooth(tem);
-        tem = doSmooth(tem);
-        tem = doSmooth(tem);
+        spreadPollution(tem);
 		for (int x = 0; x < HWLDX; x++)
 		{
 			for (int y = 0; y < HWLDY; y++)
