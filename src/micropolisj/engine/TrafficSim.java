@@ -66,17 +66,14 @@ public class TrafficSim {
 		 * into a new HashMap. From there we will randomly create the "end" of the route.
 		 */
 		HashMap<CityLocation,Integer> help = new HashMap<CityLocation,Integer>();
-		Iterator<CityLocation> it = engine.visits.keySet().iterator();
-		while(it.hasNext()){
-			CityLocation temp = it.next();		
-			help.put(temp,getValue(startpos,temp));
-		}
-		it.remove();
-		
+		for(CityLocation cl : engine.visits.keySet()){
+			CityLocation temp = cl;
+			help.put(temp, getValue(startpos,temp));
+		}		
 		int sum=0;
 		int t;
 		Iterator<Integer> it2 = help.values().iterator();
-		while(it.hasNext()){
+		while(it2.hasNext()){
 			t=(int)it2.next();
 			sum+=t;
 		}
