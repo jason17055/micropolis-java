@@ -632,8 +632,7 @@ class MapScanner extends TileBehavior
 			if (!powerOn)
 				zscore = -500;
 
-			if (trafficGood != 0 &&
-				zscore > -350 &&
+			if (zscore > -350 &&
 				zscore - 26380 > (PRNG.nextInt(0x10000)-0x8000))
 			{
 				int value = getCRValue();
@@ -1008,9 +1007,7 @@ class MapScanner extends TileBehavior
 	 */
 	int evalCommercial(int traf)
 	{
-		
-
-		return city.comRate[ypos][xpos];
+		return 0;
 	}
 
 	/**
@@ -1032,7 +1029,6 @@ class MapScanner extends TileBehavior
 	 */
 	int evalResidential(int traf)
 	{
-		
 
 		int value = city.getLandValue(xpos, ypos);
 		value -= city.pollutionMem[ypos][xpos];
