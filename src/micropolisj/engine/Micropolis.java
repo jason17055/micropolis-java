@@ -741,17 +741,17 @@ public class Micropolis
 	}
 
     private void addPolutionToArea(int [][] pol, CityLocation loc){
-        pol[loc.x][loc.y] = pol[loc.x][loc.y]/4;
-        int pollutionAdd = pol[loc.x][loc.y]*3; //spreading pollution is 1/3 the original pollution on that point
+        pol[loc.x][loc.y] = pol[loc.y][loc.x]/2;
+        int pollutionAdd = pol[loc.y][loc.x]*3; //spreading pollution is 1/3 the original pollution on that point
 
         int w = 6;
         pollutionAdd /= (w*w); // same pollution for all fields
         int startx = loc.x - w/2;
         int starty = loc.y - w/2;
         for(int y = starty; y < starty + w; y++){
-            for(int x = starty; x < startx + w; y++){
+            for(int x = startx; x < startx + w; x++){
                 if(onMap(new CityLocation(x,y))){
-                 pol[x][y] += pollutionAdd + PRNG.nextInt(3);
+                 pol[y][x] += pollutionAdd;
                 }
             }
         }
@@ -770,7 +770,7 @@ public class Micropolis
             for (int x = 1; x < w; x++)
             {
 
-                if(pol[x][y] > 70) highPollutionLocs.add(new CityLocation(x,y));
+                if(pol[y][x] > 70) highPollutionLocs.add(new CityLocation(x,y));
             }
         }
         for(CityLocation l : highPollutionLocs){
