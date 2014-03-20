@@ -42,6 +42,9 @@ public class TrafficSim {
 	 */
 	public int genTraffic(CityLocation startP) {
 		CityLocation end=findEnd(startP);
+		if(CityLocation.equals(end, new CityLocation(-1,-1))){
+			return -1;
+		}
 		int way=findWay(startP,end);
 		if (way!=-1) {
 			engine.putVisits(startP);
@@ -76,7 +79,10 @@ public class TrafficSim {
 		while(it.hasNext()){
 			t=(int)it2.next();
 			sum+=t;
-		}		
+		}
+		if(sum==0){
+			return new CityLocation(-1,-1);
+		}
 		int i = engine.PRNG.nextInt(sum)+1;
 		for(CityLocation b : help.keySet()){
 			i-=(int)help.get(b);
@@ -98,10 +104,10 @@ public class TrafficSim {
 	private int getValue(CityLocation start, CityLocation end){
 		int factor;
 		factor = getFactor(engine.getTile(start.x, start.y), engine.getTile(end.x,end.y));
-		if (evalfunc(start,(HashSet<CityLocation>) findPeriphereRoad(end).keySet())>=150) {
+		if (evalfunc(start,toHashSet(findPeriphereRoad(end)))>=150) {
 			return 0;
 		}
-		return (200000/(evalfunc(start,(HashSet<CityLocation>) findPeriphereRoad(end).keySet()))+20)*factor; 
+		return (200000/(evalfunc(start,toHashSet(findPeriphereRoad(end))))+20)*factor; 
 		//factor 200 000 for making randomization easyer later on.
 	}
 	
@@ -197,7 +203,7 @@ public class TrafficSim {
 			}
 			found.add(f);
 		}
-		goal=(HashSet<CityLocation>) findPeriphereRoad(endpos).keySet(); //generate ends
+		goal=toHashSet(findPeriphereRoad(endpos)); //generate ends
 		int best=3000;
 		RoadSpecifiedTile fastGoal=new RoadSpecifiedTile(new CityLocation(-1,-1),1);
 		if (ready.isEmpty()) {
@@ -395,7 +401,13 @@ public class TrafficSim {
 	}
 	
 	
-	
+	public static HashSet<CityLocation> toHashSet(HashMap<CityLocation,SpecifiedTile> input){
+		HashSet<CityLocation> ret = new HashSet<CityLocation>();
+		for(CityLocation c : input.keySet()){
+			ret.add(c);
+		}
+		return ret;
+	}
 	
 	
 }
