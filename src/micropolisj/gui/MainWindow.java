@@ -52,6 +52,7 @@ public class MainWindow extends JFrame
     long lastSavedTime = 0;  //real-time clock of when file was last saved
     boolean autoBudgetPending;
 
+
     static ImageIcon appIcon;
 
     static {
@@ -799,6 +800,7 @@ public class MainWindow extends JFrame
         reloadOptions();
     }
 
+
     void makeClean() {
         dirty1 = false;
         dirty2 = false;
@@ -1114,9 +1116,9 @@ public class MainWindow extends JFrame
             engine.incNCheats();
         }
         if (text.equals(strings.getString("cheating.destructioncheat"))) {
+            citySound(Sound.EXPLOSION_BOTH, new CityLocation(1, 1));
             engine.destroyEverything();
         }
-
     }
 
 
@@ -1561,9 +1563,18 @@ public class MainWindow extends JFrame
             return;
 
         try {
-            Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(afile));
+
+            AudioInputStream stream = AudioSystem.getAudioInputStream(afile);
+            AudioFormat format = stream.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            Clip clip = (Clip) AudioSystem.getLine(info);
+            clip.open(stream);
             clip.start();
+            while (clip.isRunning()) {
+                Thread.yield();
+            }
+            clip.close();
+
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
