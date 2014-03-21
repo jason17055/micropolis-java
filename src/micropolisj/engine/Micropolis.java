@@ -143,7 +143,7 @@ public class Micropolis
 	int uniaCount;
 	int unibCount;
 	int cityhallCount;
-    static int cityhallCountMem;
+    int cityhallCountMem;
 	int openairCount;
 	int museumCount;
 	int fireStationCount;
