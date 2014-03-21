@@ -159,8 +159,9 @@ public class TileConstants
 	static final char UNIBBUILDING = 991;
 	static final char CITYHALLBUILDING = 1000;
 	static final char OPENAIRBUILDING = 1012;
-	public static final char LAST_TILE = 1012;
-	static final char NEWLASTZONE = 1013;
+	static final char BIGPARKBUILDING = 1045;
+	public static final char LAST_TILE = 1045;
+	static final char NEWLASTZONE = 1050;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,
@@ -520,7 +521,7 @@ public class TileConstants
 			(tile != VBRIDGE));
 	}
 
-	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad)
+	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad crossover)
 	{
 		assert (tile & LOMASK) == tile;
 

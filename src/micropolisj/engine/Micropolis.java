@@ -119,6 +119,7 @@ public class Micropolis
 	public int gameLevel;
 
     public int nCheats = 0;
+    public int cheatedPopulation = 0;
 
     boolean autoGo;
 
@@ -142,7 +143,6 @@ public class Micropolis
 	int uniaCount;
 	int unibCount;
 	int cityhallCount;
-	static int cityhallCountMem;
 	int openairCount;
 	int museumCount;
 	int fireStationCount;
@@ -185,9 +185,6 @@ public class Micropolis
 	int needHospital; // -1 too many already, 0 just right, 1 not enough
 	int needChurch;   // -1 too many already, 0 just right, 1 not enough
 
-    float scienceEEPoints;
-    float scienceInfraPoints;
-
 	int crimeAverage;
     int educationAverage;
 	int pollutionAverage;
@@ -219,8 +216,8 @@ public class Micropolis
 	int roadEffect = 32;
 	int policeEffect = 1000;
 	int fireEffect = 1000;
-	int educationEffect = 100;
-	int cultureEffect = 1000;
+    int educationEffect = 1000;
+    int cultureEffect = 1000;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -261,7 +258,9 @@ public class Micropolis
     }
 
     public void incCityPopulation() {
-        lastCityPop += 20000;
+        cheatedPopulation += 20000;
+        int newPop = (resPop + comPop * 8 + indPop * 8) * 20;
+        lastCityPop = newPop + cheatedPopulation;
     }
 
 
@@ -303,8 +302,6 @@ public class Micropolis
 		educationMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
-        scienceEEPoints = 0;
-        scienceInfraPoints = 0;
 
 
 	}
@@ -685,17 +682,11 @@ public class Micropolis
 			}
 
 			collectTaxPartial();
-            System.out.println("scienceEEPoints " + scienceEEPoints);
-            System.out.println("scienceInfraPoints " + scienceInfraPoints);
 
 			if (cityTime % TAXFREQ == 0) {
 				collectTax();
 				evaluation.cityEvaluation();
 			}
-			
-			
-			
-			
 			break;
 
 		case 10:
@@ -755,28 +746,27 @@ public class Micropolis
 		return 0;
 	}
 
-    private void addPolutionToArea(int [][] pol, CityLocation loc, int size, int randomRange){
+    private void addPolutionToArea(int[][] pol, CityLocation loc) {
         pol[loc.x][loc.y] = pol[loc.y][loc.x]/10;
         int polutionAdd = pol[loc.y][loc.x]*8; //spreading pollution is 1/3 the original pollution on that point
 
+        int w = 20;
 
-
-        polutionAdd /= Math.ceil(size * size); // same pollution for all fields
-        int startx = loc.x - size/2;
-        int starty = loc.y - size/2;
-        for(int y = starty; y < starty + size; y++){
-            for(int x = startx; x < startx + size; x++){
+        polutionAdd /= Math.ceil(w * w); // same pollution for all fields
+        int startx = loc.x - w / 2;
+        int starty = loc.y - w / 2;
+        for (int y = starty; y < starty + w; y++) {
+            for (int x = startx; x < startx + w; x++) {
 
                 if(onMap(x,y)){
-                 pol[y][x] += clamp((polutionAdd + PRNG.nextInt(randomRange) - randomRange/2), 1, 250);
+                    pol[y][x] += clamp((polutionAdd + PRNG.nextInt(10) - 5), 1, 250);
                 }
             }
         }
     }
 
 
-    private void spreadPollution(int [][] pol, int size, int randomRange){
-
+    private void spreadPollution(int[][] pol) {
         //TODO: GAUSSIAN SPREAD
         final int h = pol.length;
         final int w = pol.length;
@@ -793,7 +783,7 @@ public class Micropolis
             }
         }
         for(CityLocation l : highPollutionLocs){
-            addPolutionToArea(pol, l, size , randomRange);
+            addPolutionToArea(pol, l);
         }
     }
 
@@ -1003,16 +993,17 @@ public class Micropolis
 
 	void crimeScan()
 	{
-        spreadPollution(policeMap,15,4);
+        policeMap = smoothFirePoliceMap(policeMap);
+        policeMap = smoothFirePoliceMap(policeMap);
 
 
-		for (int sy = 0; sy < policeMap.length; sy++) {
-			for (int sx = 0; sx < policeMap[sy].length; sx++) {
+		/*for (int sy = 0; sy < policeMap.length; sy++) {
+            for (int sx = 0; sx < policeMap[sy].length; sx++) {
 				policeMapEffect[sy][sx] = policeMap[sy][sx];
 			}
-		}
+		}*/
 
-		int count = 0;
+        int count = 0;
 		int sum = 0;
 		int cmax = 0;
 		for (int hy = 0; hy < landValueMem.length; hy++) {
@@ -1341,7 +1332,7 @@ public class Micropolis
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
             pollutionMem = doSmooth(pollutionMem);
-            spreadPollution(pollutionMem,30,10);
+            spreadPollution(pollutionMem);
         }
     }
 
@@ -1390,10 +1381,10 @@ public class Micropolis
 
                     // getDisCC should check for every city hall if it is in distance
 					int dis = 34 - getDisCC(x, y);
-					dis *= 6;
-					dis += terrainMem[y][x]*8;
-					dis -= pollutionMem[y][x]*4;
-					if (crimeMem[y][x] > 190) {
+                    dis *= 4;
+                    dis += terrainMem[y][x];
+                    dis -= pollutionMem[y][x];
+                    if (crimeMem[y][x] > 190) {
 						dis -= 20;
 					}
 					if (dis > 250)
@@ -1611,11 +1602,6 @@ public class Micropolis
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
-    double valueMapping(double x, double in_min, double in_max, double out_min, double out_max)
-    {
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-    }
-
     public static int clamp(int val, int min, int max) {
         return Math.max(min, Math.min(max, val));
     }
@@ -1658,7 +1644,6 @@ public class Micropolis
         int centerMassDistanceB = centerMassDistance * 4; //making the centerMassDistance 4 times bigger so it has lesser effect
         centerMassDistanceB = clamp(centerMassDistanceB, 0,32);
         int bonusValue = valueMapping(centerMassDistanceB, 1,32, 32,0); // if centerMassDistance is 1 (close) then the bonous is big
-
         ccDis = clamp((closestDistance - bonusValue), 1,32);
 
 		return ccDis;
@@ -1694,7 +1679,7 @@ public class Micropolis
 		bb.put("STADIUM_FULL", new MapScanner(this, MapScanner.B.STADIUM_FULL));
 		bb.put("AIRPORT", new MapScanner(this, MapScanner.B.AIRPORT));
 		bb.put("SEAPORT", new MapScanner(this, MapScanner.B.SEAPORT));
-
+		bb.put("BIGPARKBUILDING", new MapScanner(this, MapScanner.B.BIGPARKBUILDING));
 		this.tileBehaviors = bb;
 	}
 
@@ -1719,10 +1704,8 @@ public class Micropolis
 		
 		TileBehavior b = tileBehaviors.get(behaviorStr);
 		if (b != null) {
-			if (TileConstants.isZoneCenter(tile)) {
-				visits.put(new CityLocation(xpos,ypos),0);
-			}
-			b.processTile(xpos, ypos);
+            visits.put(new CityLocation(xpos, ypos), 0);
+            b.processTile(xpos, ypos);
 		}
 		else {
 			throw new Error("Unknown behavior: "+behaviorStr);
@@ -2828,8 +2811,8 @@ public class Micropolis
 					sendMessage(z);
 				}
 			}
-			lastCityPop = newPop;
-		}
+            lastCityPop = newPop + cheatedPopulation;
+        }
 	}
 
 	void doMessages()

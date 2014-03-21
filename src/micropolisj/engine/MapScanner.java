@@ -49,7 +49,8 @@ class MapScanner extends TileBehavior
 		STADIUM_EMPTY,
 		STADIUM_FULL,
 		AIRPORT,
-		SEAPORT;
+		SEAPORT,
+		BIGPARKBUILDING;
 	}
 
 	@Override
@@ -109,6 +110,9 @@ class MapScanner extends TileBehavior
 			return;
 		case SEAPORT:
 			doSeaport();
+			return;
+		case BIGPARKBUILDING:
+			doBigPark();
 			return;
 		default:
 			assert false;
@@ -517,7 +521,10 @@ class MapScanner extends TileBehavior
 			city.generateShip();
 		}
 	}
-
+	void doBigPark()
+	{
+	return;	
+	}
 	/**
 	 * Place hospital or church if needed.
 	 */
