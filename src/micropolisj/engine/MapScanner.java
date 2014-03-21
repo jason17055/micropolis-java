@@ -333,7 +333,7 @@ class MapScanner extends TileBehavior
 		city.cultureMap[ypos][xpos] += z;
 	}
 	
-	void doUniA()
+	void doUniA() // researches scienceEEPoints
 	{
 		boolean powerOn = checkZonePower();
 		city.uniaCount++;
@@ -348,9 +348,16 @@ class MapScanner extends TileBehavior
 			z = city.educationEffect /2 ;
 		}
 
+
+
+
         // multiply the effect by visits
         int visits = city.visits.get(new CityLocation(xpos, ypos));
         z = z * (visits+1);
+        z = city.clamp(z,0,1000);
+
+        double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
+        city.scienceEEPoints += sciencePoint;
 
 
 		oldTraffic.mapX = xpos;
@@ -359,7 +366,7 @@ class MapScanner extends TileBehavior
 		city.educationMap[ypos][xpos] += z;
 	}
 	
-	void doUniB()
+	void doUniB() // researches scienceInfraPoints
 	{
 		boolean powerOn = checkZonePower();
 		city.unibCount++;
@@ -377,6 +384,10 @@ class MapScanner extends TileBehavior
         // multiply the effect by visits
         int visits = city.visits.get(new CityLocation(xpos, ypos));
         z = z * (visits+1);
+        z = city.clamp(z,0,1000);
+
+        double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
+        city.scienceInfraPoints += sciencePoint;
 
         oldTraffic.mapX = xpos;
 		oldTraffic.mapY = ypos;
