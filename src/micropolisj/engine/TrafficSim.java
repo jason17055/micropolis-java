@@ -78,14 +78,12 @@ public class TrafficSim {
 			sum+=t;
 		}
 		if(sum==0){
-			//System.out.println("findEnd returns -1,-1");
 			return new CityLocation(-1,-1);
 		}
 		int i = engine.PRNG.nextInt(sum)+1;
 		for(CityLocation b : help.keySet()){
 			i-=(int)help.get(b);
 			if(i<=0){
-				//System.out.println("Found End: " + b);
 				return b;
 			}
 		}
@@ -219,7 +217,7 @@ public class TrafficSim {
 			for (RoadSpecifiedTile g : findAdjRoads(f.getLocation(),f.getRoadType())) {
 				if (!ready.containsKey(g)) {
 					for (int roadType : calcRoadType(engine.getTile(g.getLocation()),ready.get(f).getRoadType())) {
-						int keyi=16384*10*evalfuncHelp(f.getLocation(),goal)+g.getLocation().y*5+roadType;
+						int keyi=16384*10*evalfuncHelp(f.getLocation(),goal)+g.getLocation().y*600+g.getLocation().x*5+roadType; //map size limited at 120
 						unready.put(keyi,new SpecifiedTile(g.getLocation(),f,false,roadType));
 						mapBack.put(g,keyi);
 						found.add(g);
@@ -236,13 +234,15 @@ public class TrafficSim {
 			currentCost=engine.getTrafficCost(currentLocation,currentRoadType);
 			
 			RoadSpecifiedTile Pred=unready.get(current).getPred();
-			System.out.println(Pred.getLocation()+" cost "+search(ready,Pred).getCosts()); //FIXME pred can be null?!?!
+			for (int k : unready.keySet()) {
+				System.out.println(k+" "+unready.get(k).getLoc()+" "+unready.get(k).getRoadType());
+			}
 			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(search(ready,Pred).getCosts()+currentCost,Pred,true,currentRoadType));
 			unready.remove(current);
 			for (RoadSpecifiedTile g : findAdjRoads(currentLocation, currentRoadType)) { //go through adj roads
 				if (!found.contains(g)) { //new road part found
 					this.found.add(g);
-					int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
+					int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*600+g.getLocation().x*5+g.getRoadType();
 					for (int roadType : calcRoadType(TileConstants.roadType(engine.getTile(g.getLocation())),currentRoadType)) {
 						unready.put(keyi+roadType,new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,roadType));
 						mapBack.put(new RoadSpecifiedTile(g.getLocation(),roadType), keyi+roadType);
@@ -255,7 +255,7 @@ public class TrafficSim {
 								ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(currentLocation,currentRoadType),true,search(ready,g).getRoadType()));
 							}
 						} else { //if not, update it unready
-							int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
+							int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*600+g.getLocation().x*5+g.getRoadType();
 							if (keyi<= mapBack.get(g)) {
 								for (int tm : calcRoadType(g.getLocation(),currentRoadType)) {
 									unready.put(keyi+tm,new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,tm));
@@ -286,9 +286,9 @@ public class TrafficSim {
 		return best/16384;
 	}
 	
-	private boolean sameRoadType(int roadType1, int roadType2) {
+	/*private boolean sameRoadType(int roadType1, int roadType2) {
 		return roadType1==4 || roadType2==4 || (RoadSpecifiedTile.isRoad(roadType1)==RoadSpecifiedTile.isRoad(roadType2) && RoadSpecifiedTile.isRail(roadType1)==RoadSpecifiedTile.isRail(roadType2));
-	}
+	}*/
 	
 	/**
 	 *  caluclate possible roadTypes
