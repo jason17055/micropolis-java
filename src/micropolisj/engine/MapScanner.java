@@ -265,9 +265,9 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.policeEffect;
-		} else {
 			z = city.policeEffect/2;
+		} else {
+			z = city.policeEffect/4;
 		}
 
 		oldTraffic.mapX = xpos;
@@ -1008,9 +1008,7 @@ class MapScanner extends TileBehavior
 	 */
 	int evalCommercial(int traf)
 	{
-		
-
-		return city.comRate[ypos][xpos];
+		return 0;
 	}
 
 	/**
@@ -1032,7 +1030,6 @@ class MapScanner extends TileBehavior
 	 */
 	int evalResidential(int traf)
 	{
-		
 
 		int value = city.getLandValue(xpos, ypos);
 		value -= city.pollutionMem[ypos][xpos];
