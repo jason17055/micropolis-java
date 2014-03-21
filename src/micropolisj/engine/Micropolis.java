@@ -185,6 +185,9 @@ public class Micropolis
 	int needHospital; // -1 too many already, 0 just right, 1 not enough
 	int needChurch;   // -1 too many already, 0 just right, 1 not enough
 
+    float scienceEEPoints;
+    float scienceInfraPoints;
+
 	int crimeAverage;
     int educationAverage;
 	int pollutionAverage;
@@ -216,7 +219,7 @@ public class Micropolis
 	int roadEffect = 32;
 	int policeEffect = 1000;
 	int fireEffect = 1000;
-	int educationEffect = 1000;
+	int educationEffect = 100;
 	int cultureEffect = 1000;
 
 	int cashFlow; //net change in totalFunds in previous year
@@ -300,6 +303,8 @@ public class Micropolis
 		educationMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
+        scienceEEPoints = 0;
+        scienceInfraPoints = 0;
 
 
 	}
@@ -680,6 +685,8 @@ public class Micropolis
 			}
 
 			collectTaxPartial();
+            System.out.println("scienceEEPoints " + scienceEEPoints);
+            System.out.println("scienceInfraPoints " + scienceInfraPoints);
 
 			if (cityTime % TAXFREQ == 0) {
 				collectTax();
@@ -1600,6 +1607,11 @@ public class Micropolis
 	}
 
     int valueMapping(int x, int in_min, int in_max, int out_min, int out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+    double valueMapping(double x, double in_min, double in_max, double out_min, double out_max)
     {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
