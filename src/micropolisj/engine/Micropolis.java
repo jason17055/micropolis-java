@@ -740,27 +740,28 @@ public class Micropolis
 		return 0;
 	}
 
-    private void addPolutionToArea(int [][] pol, CityLocation loc){
+    private void addPolutionToArea(int [][] pol, CityLocation loc, int size, int randomRange){
         pol[loc.x][loc.y] = pol[loc.y][loc.x]/10;
         int polutionAdd = pol[loc.y][loc.x]*8; //spreading pollution is 1/3 the original pollution on that point
 
-        int w = 20;
 
-        polutionAdd /= Math.ceil(w*w); // same pollution for all fields
-        int startx = loc.x - w/2;
-        int starty = loc.y - w/2;
-        for(int y = starty; y < starty + w; y++){
-            for(int x = startx; x < startx + w; x++){
+
+        polutionAdd /= Math.ceil(size * size); // same pollution for all fields
+        int startx = loc.x - size/2;
+        int starty = loc.y - size/2;
+        for(int y = starty; y < starty + size; y++){
+            for(int x = startx; x < startx + size; x++){
 
                 if(onMap(x,y)){
-                 pol[y][x] += clamp((polutionAdd + PRNG.nextInt(10) - 5), 1, 250);
+                 pol[y][x] += clamp((polutionAdd + PRNG.nextInt(randomRange) - randomRange/2), 1, 250);
                 }
             }
         }
     }
 
 
-    private void spreadPollution(int [][] pol){
+    private void spreadPollution(int [][] pol, int size, int randomRange){
+
         //TODO: GAUSSIAN SPREAD
         final int h = pol.length;
         final int w = pol.length;
@@ -777,7 +778,7 @@ public class Micropolis
             }
         }
         for(CityLocation l : highPollutionLocs){
-            addPolutionToArea(pol, l);
+            addPolutionToArea(pol, l, size , randomRange);
         }
     }
 
@@ -987,15 +988,14 @@ public class Micropolis
 
 	void crimeScan()
 	{
-		policeMap = smoothFirePoliceMap(policeMap);
-		policeMap = smoothFirePoliceMap(policeMap);
+        spreadPollution(policeMap,15,4);
 
 
-		/*for (int sy = 0; sy < policeMap.length; sy++) {
+		for (int sy = 0; sy < policeMap.length; sy++) {
 			for (int sx = 0; sx < policeMap[sy].length; sx++) {
 				policeMapEffect[sy][sx] = policeMap[sy][sx];
 			}
-		}*/
+		}
 
 		int count = 0;
 		int sum = 0;
@@ -1326,7 +1326,7 @@ public class Micropolis
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
             pollutionMem = doSmooth(pollutionMem);
-            spreadPollution(pollutionMem);
+            spreadPollution(pollutionMem,30,10);
         }
     }
 
@@ -1375,9 +1375,9 @@ public class Micropolis
 
                     // getDisCC should check for every city hall if it is in distance
 					int dis = 34 - getDisCC(x, y);
-					dis *= 4;
-					dis += terrainMem[y][x];
-					dis -= pollutionMem[y][x];
+					dis *= 6;
+					dis += terrainMem[y][x]*8;
+					dis -= pollutionMem[y][x]*4;
 					if (crimeMem[y][x] > 190) {
 						dis -= 20;
 					}
@@ -1638,6 +1638,7 @@ public class Micropolis
         int centerMassDistanceB = centerMassDistance * 4; //making the centerMassDistance 4 times bigger so it has lesser effect
         centerMassDistanceB = clamp(centerMassDistanceB, 0,32);
         int bonusValue = valueMapping(centerMassDistanceB, 1,32, 32,0); // if centerMassDistance is 1 (close) then the bonous is big
+
         ccDis = clamp((closestDistance - bonusValue), 1,32);
 
 		return ccDis;
