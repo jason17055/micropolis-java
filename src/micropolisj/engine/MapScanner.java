@@ -50,7 +50,9 @@ class MapScanner extends TileBehavior
 		STADIUM_FULL,
 		AIRPORT,
 		SEAPORT,
-		BIGPARKBUILDING;
+		BIGPARKBUILDING,
+		SOLAR,
+		WIND;
 	}
 
 	@Override
@@ -113,6 +115,12 @@ class MapScanner extends TileBehavior
 			return;
 		case BIGPARKBUILDING:
 			doBigPark();
+			return;
+		case SOLAR:
+			doSolar();
+			return;
+		case WIND:
+			doWind();
 			return;
 		default:
 			assert false;
@@ -527,6 +535,26 @@ class MapScanner extends TileBehavior
 	{
 	return;	
 	}
+	
+	void doSolar()
+	{
+		checkZonePower();
+		city.solarCount++;
+		if ((city.cityTime % 8) == 0) {
+			repairZone(SOLAR, 4);
+		}
+
+		city.powerPlants.add(new CityLocation(xpos, ypos));
+	}
+	
+	void doWind()
+	{
+		checkZonePower();
+		city.windCount++;
+		city.powerPlants.add(new CityLocation(xpos, ypos));
+	}
+	
+	
 	/**
 	 * Place hospital or church if needed.
 	 */

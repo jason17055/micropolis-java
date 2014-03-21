@@ -154,6 +154,12 @@ public class ToolStroke
 		case NUCLEAR:
 			return applyZone(eff, NUCLEAR);
 
+		case SOLAR:
+			return applyZone(eff, SOLAR);
+			
+		case WIND:
+			return applyZone(eff, WIND);			
+			
 		case AIRPORT:
 			if (city.evaluation.cityClass >= 2 ){
 				return applyZone(eff, AIRPORT);

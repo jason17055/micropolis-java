@@ -143,7 +143,7 @@ public class Micropolis
 	int uniaCount;
 	int unibCount;
 	int cityhallCount;
-    static int cityhallCountMem;
+    int cityhallCountMem;
 	int openairCount;
 	int museumCount;
 	int fireStationCount;
@@ -152,6 +152,8 @@ public class Micropolis
 	int nuclearCount;
 	int seaportCount;
 	int airportCount;
+	int solarCount;
+	int windCount;
 	int noWay;
 
 	int totalPop;
@@ -171,6 +173,8 @@ public class Micropolis
 	int lastUniBCount;
 	int lastOpenAirCount;
 	int lastCityHallCount;
+	int lastSolarCount;
+	int lastWindCount;
 
 	int trafficMaxLocationX;
 	int trafficMaxLocationY;
@@ -618,6 +622,8 @@ public class Micropolis
 		powerPlants.clear();
         cityHallList.clear();
         visits.clear();
+        solarCount = 0;
+		windCount = 0;
 
 		for (int y = 0; y < fireStMap.length; y++) {
 			for (int x = 0; x < fireStMap[y].length; x++) {
@@ -1206,8 +1212,15 @@ public class Micropolis
 				
 				if (g==NUCLEAR) {
 					localPower=2000;
-				} else {
+				}
+				else if (g==POWERPLANT) {
 					localPower=500; //original was 700
+				}
+				else if (g==SOLAR) {
+					localPower=325;
+				}
+				else {
+					localPower=30;
 				}
 				int numPower=0;
 				toDo.add(loc);
@@ -1223,6 +1236,15 @@ public class Micropolis
 							localPower+=500; //original was 700
 							done.add(current);
 						}
+						if (g==SOLAR) {
+							localPower+=325;
+							done.add(current);
+						}
+						if (g==WIND) {
+							localPower+=30;
+							done.add(current);
+						}
+						
 					}
 					
 					if (++numPower > localPower) {
@@ -1690,6 +1712,8 @@ public class Micropolis
 		bb.put("AIRPORT", new MapScanner(this, MapScanner.B.AIRPORT));
 		bb.put("SEAPORT", new MapScanner(this, MapScanner.B.SEAPORT));
 		bb.put("BIGPARKBUILDING", new MapScanner(this, MapScanner.B.BIGPARKBUILDING));
+		bb.put("SOLAR", new MapScanner(this, MapScanner.B.SOLAR));
+		bb.put("WIND", new MapScanner(this, MapScanner.B.WIND));
 		this.tileBehaviors = bb;
 	}
 

@@ -160,8 +160,10 @@ public class TileConstants
 	static final char CITYHALLBUILDING = 1000;
 	static final char OPENAIRBUILDING = 1012;
 	static final char BIGPARKBUILDING = 1045;
-	public static final char LAST_TILE = 1045;
-	static final char NEWLASTZONE = 1050;
+	static final char SOLAR = 1055;
+	static final char WIND = 1066;
+	public static final char LAST_TILE = 1066;
+	static final char NEWLASTZONE = 1067;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,

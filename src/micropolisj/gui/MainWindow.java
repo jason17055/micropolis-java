@@ -993,7 +993,9 @@ public class MainWindow extends JFrame
 
         b4.add(makeToolBtn(MicropolisTool.POWERPLANT));
         b4.add(makeToolBtn(MicropolisTool.NUCLEAR));
-
+        b4.add(makeToolBtn(MicropolisTool.SOLAR));
+        b4.add(makeToolBtn(MicropolisTool.WIND));
+        
         c.gridy++;
         Box b5 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b5, c);
