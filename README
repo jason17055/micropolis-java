@@ -34,6 +34,13 @@ computer. You can get Java at http://java.com/download.
 Next, simply double-click the enclosed micropolisj.jar file to run the
 program.
 
+QUICK DOWNLOAD, COMPILE and RUN
+---------------------------------
+run this command in commandline in your favorite directory:
+git clone git@github.com:Team--Rocket/micropolis-java.git divercity ; cd divercity; ant
+
+then simply run (in divercity directory):
+java -jar micropolisj.jar
 
 How to Build This Program from Source
 -------------------------------------
