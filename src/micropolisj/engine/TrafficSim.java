@@ -215,7 +215,7 @@ public class TrafficSim {
 			}
 		for (RoadSpecifiedTile f : ready.keySet()) { //take roads adj to starts
 			for (RoadSpecifiedTile g : findAdjRoads(f.getLocation(),f.getRoadType())) {
-				if (!ready.containsKey(g)) {
+				if (!searchRoSpec(toHashSetTwo(ready),g)) {
 					for (int roadType : calcRoadType(engine.getTile(g.getLocation()),ready.get(f).getRoadType())) {
 						int keyi=16384*10*evalfuncHelp(f.getLocation(),goal)+g.getLocation().y*600+g.getLocation().x*5+roadType; //map size limited at 120
 						unready.put(keyi,new SpecifiedTile(g.getLocation(),f,false,roadType));
@@ -240,7 +240,7 @@ public class TrafficSim {
 			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(search(ready,Pred).getCosts()+currentCost,Pred,true,currentRoadType));
 			unready.remove(current);
 			for (RoadSpecifiedTile g : findAdjRoads(currentLocation, currentRoadType)) { //go through adj roads
-				if (!found.contains(g)) { //new road part found
+				if (!searchRoSpec(found,g)) { //new road part found
 					this.found.add(g);
 					int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*600+g.getLocation().x*5+g.getRoadType();
 					for (int roadType : calcRoadType(TileConstants.roadType(engine.getTile(g.getLocation())),currentRoadType)) {
@@ -249,7 +249,7 @@ public class TrafficSim {
 					}
 				} else { //was already found before
 					if (!RoadSpecifiedTile.equals(new RoadSpecifiedTile(g.getLocation(),g.getRoadType()),ready.get(current).getPred())) {//if not pred
-						if (ready.containsKey(g)) { //if it is already ready update ready
+						if (searchRoSpec(toHashSetTwo(ready),g)) { //if it is already ready update ready
 							int c=currentCost+ready.get(ready.get(g).getPred()).getCosts()+engine.getTrafficCost(g.getLocation(), g.getRoadType());
 							if (search(ready,g).getCosts()<=c) {
 								ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(currentLocation,currentRoadType),true,search(ready,g).getRoadType()));
@@ -266,7 +266,7 @@ public class TrafficSim {
 					}
 				}
 			}
-			if (goal.contains(new RoadSpecifiedTile(currentLocation,currentRoadType))) { //if it is a goal update goal
+			if (searchRoSpec(goal,new RoadSpecifiedTile(currentLocation,currentRoadType))) { //if it is a goal update goal
 				best=Math.min(best, search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts());
 				fastGoal=new RoadSpecifiedTile(new CityLocation(currentLocation.x,currentLocation.y),currentRoadType);
 			}
@@ -440,6 +440,13 @@ public class TrafficSim {
 	public static HashSet<CityLocation> toHashSet(HashMap<CityLocation,SpecifiedTile> input){
 		HashSet<CityLocation> ret = new HashSet<CityLocation>();
 		for(CityLocation c : input.keySet()){
+			ret.add(c);
+		}
+		return ret;
+	}
+	public static HashSet<RoadSpecifiedTile> toHashSetTwo(HashMap<RoadSpecifiedTile,SpecifiedTile> input){
+		HashSet<RoadSpecifiedTile> ret = new HashSet<RoadSpecifiedTile>();
+		for(RoadSpecifiedTile c : input.keySet()){
 			ret.add(c);
 		}
 		return ret;
