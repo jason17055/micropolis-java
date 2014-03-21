@@ -82,7 +82,6 @@ public class TrafficSim {
 		}
 		int i = engine.PRNG.nextInt(sum)+1;
 		for(CityLocation b : help.keySet()){
-			System.out.println(b.x + " " + b.y);
 			i-=(int)help.get(b);
 			if(i<=0){
 				return b;
