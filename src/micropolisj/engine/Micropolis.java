@@ -256,6 +256,11 @@ public class Micropolis
         nCheats++;
     }
 
+    public void incCityPopulation() {
+        lastCityPop += 20000;
+    }
+
+
     public void resetNCheats() {
         nCheats = 0;
     }
