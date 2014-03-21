@@ -620,7 +620,7 @@ public class Micropolis
 		seaportCount = 0;
 		airportCount = 0;
 		noWay = 0;
-		paths=new Vector<Vector<CityLocation>>();
+		paths.clear();
 		powerPlants.clear();
         cityHallList.clear();
         
@@ -3125,12 +3125,12 @@ public class Micropolis
 		}
 		return 999;
 	}
-	public Integer dummySearch(HashMap<CityLocation,Integer> map, CityLocation loc) {
+	public int dummySearch(HashMap<CityLocation,Integer> map, CityLocation loc) {
 		for (CityLocation tmp : map.keySet()) {
 			if (CityLocation.equals(tmp,loc)) {
 				return map.get(tmp);
 			}
 		}
-		return null;
+		return 0;
 	}
 }
