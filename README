@@ -38,14 +38,14 @@ QUICK DOWNLOAD, COMPILE and RUN
 ---------------------------------
 
 Wenn ihr die **letzte stabile Version** testen wollt cloned euch unser repo,
-und im Terminal führ *git reset --hard 8b3f4f924a12d49d9d1a6b6b963324f550fedf00* aus.
+und im Terminal führ git reset --hard 8b3f4f924a12d49d9d1a6b6b963324f550fedf00 aus.
 
 ansonsten:
-**download the precompiled jar (for mac):**
+download the precompiled jar (for mac):
 https://github.com/Team--Rocket/micropolis-java/raw/master/micropolisj.jar
 
 
-**to get the dev branch:**
+to get the dev branch:
 run this command in commandline in your favorite directory:
 git clone git@github.com:Team--Rocket/micropolis-java.git divercity ; cd divercity; ant
 
