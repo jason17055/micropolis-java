@@ -15,8 +15,8 @@ public class TrafficSim {
 	HashMap<Integer,SpecifiedTile> unready;
 	HashMap<RoadSpecifiedTile,SpecifiedTile> ready;
 	HashMap<RoadSpecifiedTile,Integer> mapBack;
-	HashSet<CityLocation> goal;
-	HashSet<CityLocation> found;
+	HashSet<RoadSpecifiedTile> goal;
+	HashSet<RoadSpecifiedTile> found;
 	int currentRoadType;
 	
 	
@@ -30,8 +30,8 @@ public class TrafficSim {
 		engine = city;
 		ready = new HashMap<RoadSpecifiedTile,SpecifiedTile>();
 		unready = new HashMap<Integer,SpecifiedTile>();
-		goal = new HashSet<CityLocation>();
-		found = new HashSet<CityLocation>();
+		goal = new HashSet<RoadSpecifiedTile>();
+		found = new HashSet<RoadSpecifiedTile>();
 		mapBack = new HashMap<RoadSpecifiedTile,Integer>();
 	}
 	/**
@@ -45,6 +45,9 @@ public class TrafficSim {
 		if(CityLocation.equals(end, new CityLocation(-1,-1))){
 			return -1;
 		}
+		if (CityLocation.equals(new CityLocation(1,1),new CityLocation(1,1))) { //just added for Milestone 2
+			return 0;
+		 } //after this line some reasonable code starts
 		int way=findWay(startP,end);
 		if (way!=-1) {
 			engine.putVisits(startP);
@@ -78,12 +81,14 @@ public class TrafficSim {
 			sum+=t;
 		}
 		if(sum==0){
+			//System.out.println("findEnd returns -1,-1");
 			return new CityLocation(-1,-1);
 		}
 		int i = engine.PRNG.nextInt(sum)+1;
 		for(CityLocation b : help.keySet()){
 			i-=(int)help.get(b);
 			if(i<=0){
+				//System.out.println("Found End: " + b);
 				return b;
 			}
 		}
@@ -190,6 +195,7 @@ public class TrafficSim {
 	 */
 	
 	protected int findWay(CityLocation startpos, CityLocation endpos){
+		System.out.println("findWay from"+startpos+"entered");
 		int currentCost=0;
 		CityLocation currentLocation=new CityLocation(-1,-1);
 		ready = new HashMap<RoadSpecifiedTile,SpecifiedTile>();
@@ -197,37 +203,49 @@ public class TrafficSim {
 		for (CityLocation f : temp.keySet()) {
 			for (Integer tm : calcRoadType(f,1)) {
 				ready.put(new RoadSpecifiedTile(f,tm), temp.get(f)); //generate starts
+				found.add(new RoadSpecifiedTile(f,tm));
 			}
-			found.add(f);
 		}
-		goal=toHashSet(findPeriphereRoad(endpos)); //generate ends
-		int best=3000;
+		goal.clear();
+		for (CityLocation f : toHashSet(findPeriphereRoad(endpos))) {
+			for (int g : calcRoadType(f,1)) {
+				goal.add(new RoadSpecifiedTile(f,g)); //generate ends
+				System.out.println(f);
+			}
+		}
+		int best=16384*3000;
 		RoadSpecifiedTile fastGoal=new RoadSpecifiedTile(new CityLocation(-1,-1),1);
 		if (ready.isEmpty()) {
 			return -1;
-		}
+			}
 		for (RoadSpecifiedTile f : ready.keySet()) { //take roads adj to starts
 			for (RoadSpecifiedTile g : findAdjRoads(f.getLocation(),f.getRoadType())) {
-				for (int roadType : calcRoadType(engine.getTile(g.getLocation()),ready.get(f).getRoadType())) {
-					int keyi=16384*10*evalfunc(f.getLocation(),goal)+g.getLocation().y*5+roadType;
-					unready.put(keyi,new SpecifiedTile(g.getLocation(),f,false,roadType));
-					mapBack.put(g,keyi);
+				if (!ready.containsKey(g)) {
+					for (int roadType : calcRoadType(engine.getTile(g.getLocation()),ready.get(f).getRoadType())) {
+						int keyi=16384*10*evalfuncHelp(f.getLocation(),goal)+g.getLocation().y*5+roadType;
+						unready.put(keyi,new SpecifiedTile(g.getLocation(),f,false,roadType));
+						mapBack.put(g,keyi);
+						found.add(g);
+					}
 				}
-				found.add(g.getLocation());
+				
 			}
 		}
+		ready.put(new RoadSpecifiedTile(new CityLocation(-1,-1),0), new SpecifiedTile(0,new RoadSpecifiedTile(new CityLocation(-1,-1),0),true,1)); //default vortex
 		while (!unready.isEmpty() && best>(Collections.min(unready.keySet()))) { //main algorithm A*
 			int current=Collections.min(unready.keySet()); //add new field to ready
 			currentLocation=unready.get(current).getLoc();
 			currentRoadType=unready.get(current).getRoadType();
 			currentCost=engine.getTrafficCost(currentLocation,currentRoadType);
 			
-			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(currentCost,unready.get(current).getPred(),true,currentRoadType));
+			RoadSpecifiedTile Pred=unready.get(current).getPred();
+			System.out.println(Pred.getLocation()+" cost "+ready.get(Pred)); //FIXME pred can be null?!?!
+			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(ready.get(Pred).getCosts()+currentCost,Pred,true,currentRoadType));
 			unready.remove(current);
 			for (RoadSpecifiedTile g : findAdjRoads(currentLocation, currentRoadType)) { //go through adj roads
 				if (!found.contains(g)) { //new road part found
-					this.found.add(g.getLocation());
-					int keyi=16384*(10*evalfunc(currentLocation,goal)+ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
+					this.found.add(g);
+					int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
 					for (int roadType : calcRoadType(TileConstants.roadType(engine.getTile(g.getLocation())),currentRoadType)) {
 						unready.put(keyi+roadType,new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,roadType));
 						mapBack.put(new RoadSpecifiedTile(g.getLocation(),roadType), keyi+roadType);
@@ -235,12 +253,12 @@ public class TrafficSim {
 				} else { //was already found before
 					if (!RoadSpecifiedTile.equals(new RoadSpecifiedTile(g.getLocation(),g.getRoadType()),ready.get(current).getPred())) {//if not pred
 						if (ready.containsKey(g)) { //if it is already ready update ready
-							int c=evalfunc(g.getLocation(), goal)+currentCost+ready.get(ready.get(g).getPred()).getCosts();
+							int c=currentCost+ready.get(ready.get(g).getPred()).getCosts()+engine.getTrafficCost(g.getLocation(), g.getRoadType());
 							if (ready.get(g).getCosts()<=c) {
 								ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(currentLocation,currentRoadType),true,ready.get(g).getRoadType()));
 							}
 						} else { //if not, update it unready
-							int keyi=16384*(10*evalfunc(currentLocation,goal)+ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
+							int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
 							if (keyi<= mapBack.get(g)) {
 								for (int tm : calcRoadType(g.getLocation(),currentRoadType)) {
 									unready.put(keyi+tm,new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,tm));
@@ -251,12 +269,13 @@ public class TrafficSim {
 					}
 				}
 			}
-			if (goal.contains(currentLocation)) { //if it is a goal update goal
+			if (goal.contains(new RoadSpecifiedTile(currentLocation,currentRoadType))) { //if it is a goal update goal
 				best=Math.min(best, ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts());
 				fastGoal=new RoadSpecifiedTile(new CityLocation(currentLocation.x,currentLocation.y),currentRoadType);
 			}
 		}
-		if (best==3000) {
+		System.out.println(unready.isEmpty());
+		if (best==16384*3000) {
 			return -1;
 		}
 		Vector<CityLocation> way=new Vector<CityLocation>();
@@ -266,7 +285,8 @@ public class TrafficSim {
 			fastGoal=ready.get(fastGoal).getPred();
 		}
 		engine.paths(way);
-		return best;
+		System.out.println("have found way "+best);
+		return best/16384;
 	}
 	
 	private boolean sameRoadType(int roadType1, int roadType2) {
@@ -275,7 +295,7 @@ public class TrafficSim {
 	
 	/**
 	 *  caluclate possible roadTypes
-	 * @param me int between 1 and 6
+	 * @param me tileID
 	 * @param prevType int between 1 and 4
 	 * @return int between 1 and 4
 	 */
@@ -288,7 +308,14 @@ public class TrafficSim {
 			return ret;
 		}
 		if (myType!=5 && myType!=6) {
-			ret.add(myType);
+			if (myType==3 && prevType==3) {
+				ret.add(myType);
+				return ret;
+			}
+			if ((myType==1 || myType==2) && (prevType%4==1 || prevType%4==2)) {
+				ret.add(myType);
+				return ret;
+			}
 			return ret;
 		}
 		if (prevType==4) {
@@ -306,7 +333,11 @@ public class TrafficSim {
 		return calcRoadType(engine.getTile(me), prevType);
 		}
 		Vector<Integer> ret=new Vector<Integer>();
-		ret.add(0);
+		if (CityLocation.equals(new CityLocation(-1,-1), me)) {
+			ret.add(1);
+		} else {
+			ret.add(0);
+		}
 		return ret;
 	}
 	
@@ -384,7 +415,6 @@ public class TrafficSim {
 				}
 			}
 		}
-		
 		return ret;
 	}
 	/**
@@ -400,6 +430,13 @@ public class TrafficSim {
 			ret=Math.min(ret,Math.abs(start.x-g.x)+Math.abs(start.y-g.y)+1);
 		}
 		return ret;
+	}
+	private static int evalfuncHelp(CityLocation start, HashSet<RoadSpecifiedTile> finish){
+		HashSet<CityLocation> newFinish=new HashSet<CityLocation>();
+		for (RoadSpecifiedTile g : finish) {
+			newFinish.add(g.getLocation());
+		}
+		return evalfunc(start,newFinish);
 	}
 	
 	

@@ -428,7 +428,7 @@ public class Micropolis
                     doMeltdown(x, y);
                 }
                 if (isArsonable(t) && isConstructed(t)) {
-                    makeExplosion(x, y);
+                    makeQuietExplosion(x, y);
                 }
             }
         }
@@ -741,18 +741,19 @@ public class Micropolis
 	}
 
     private void addPolutionToArea(int [][] pol, CityLocation loc){
-        pol[loc.x][loc.y] = pol[loc.y][loc.x]/3;
-        int polutionAdd = pol[loc.y][loc.x]*2; //spreading pollution is 1/3 the original pollution on that point
+        pol[loc.x][loc.y] = pol[loc.y][loc.x]/10;
+        int polutionAdd = pol[loc.y][loc.x]*8; //spreading pollution is 1/3 the original pollution on that point
 
-        int w = 17;
-        polutionAdd /= (w*w); // same pollution for all fields
+        int w = 20;
+
+        polutionAdd /= Math.ceil(w*w); // same pollution for all fields
         int startx = loc.x - w/2;
         int starty = loc.y - w/2;
         for(int y = starty; y < starty + w; y++){
             for(int x = startx; x < startx + w; x++){
 
                 if(onMap(x,y)){
-                 pol[y][x] += polutionAdd + PRNG.nextInt(5);
+                 pol[y][x] += clamp((polutionAdd + PRNG.nextInt(10) - 5), 1, 250);
                 }
             }
         }
@@ -760,6 +761,7 @@ public class Micropolis
 
 
     private void spreadPollution(int [][] pol){
+        //TODO: GAUSSIAN SPREAD
         final int h = pol.length;
         final int w = pol.length;
 
@@ -771,7 +773,7 @@ public class Micropolis
             for (int x = 1; x < w; x++)
             {
 
-                if(pol[y][x] > 25) highPollutionLocs.add(new CityLocation(x,y));
+                if(pol[y][x] > 15) highPollutionLocs.add(new CityLocation(x,y));
             }
         }
         for(CityLocation l : highPollutionLocs){
@@ -800,14 +802,14 @@ public class Micropolis
 					z += tem[y+1][x];
 
                 // new adding values from diagonals
-                if (x > 0 && y > 0)
+               /* if (x > 0 && y > 0)
                     z += tem[y-1][x-1];
                 if (x + 1 < w && y > 0)
                     z += tem[y-1][x+1];
                 if (y + 1 < h && x + 1 < w)
                     z += tem[y+1][x+1];
                 if (y + 1 < h && x > 0)
-                    z += tem[y+1][x-1];
+                    z += tem[y+1][x-1];*/
 
 				z /= 8;
 				if (z > 255)
@@ -1303,7 +1305,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = getPollutionValue(tile);
+                    int curPollution = (int)  ((float) getPollutionValue(tile) * 0.6);
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -1323,9 +1325,8 @@ public class Micropolis
             }
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
-
+            pollutionMem = doSmooth(pollutionMem);
             spreadPollution(pollutionMem);
-            //spreadPollution(pollutionMem);
         }
     }
 
@@ -2767,7 +2768,11 @@ public class Micropolis
 		makeExplosionAt(xpos * 16 + 8, ypos * 16 + 8);
 	}
 
-	/**
+    void makeQuietExplosion(int xpos, int ypos) {
+        makeQuietExplosionAt(xpos * 16 + 8, ypos * 16 + 8);
+    }
+
+    /**
 	 * Uses x,y coordinates as 1/16th-length tiles.
 	 */
 	void makeExplosionAt(int x, int y)
@@ -2775,7 +2780,11 @@ public class Micropolis
 		sprites.add(new ExplosionSprite(this, x, y));
 	}
 
-	void checkGrowth()
+    void makeQuietExplosionAt(int x, int y) {
+        sprites.add(new QuietExplosionSprite(this, x, y));
+    }
+
+    void checkGrowth()
 	{
 		if (cityTime % 4 == 0) {
 			int newPop = (resPop + comPop * 8 + indPop * 8) * 20;
@@ -2999,6 +3008,8 @@ public class Micropolis
 	{
 		ZoneStatus zs = new ZoneStatus();
 		zs.building = getDescriptionNumber(getTile(xpos, ypos));
+
+        zs.location = new CityLocation(xpos, ypos);
 
 		int z;
 		z = (popDensity[ypos][xpos] / 64) % 4;
