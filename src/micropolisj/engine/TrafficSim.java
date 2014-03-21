@@ -45,9 +45,6 @@ public class TrafficSim {
 		if(CityLocation.equals(end, new CityLocation(-1,-1))){
 			return -1;
 		}
-		if (CityLocation.equals(new CityLocation(1,1),new CityLocation(1,1))) { //just added for Milestone 2
-			return 0;
-		 } //after this line some reasonable code starts
 		int way=findWay(startP,end);
 		if (way!=-1) {
 			engine.putVisits(startP);
@@ -92,7 +89,7 @@ public class TrafficSim {
 				return b;
 			}
 		}
-		return startpos;
+		return new CityLocation(19,10);
 	}
 	
 	
@@ -106,7 +103,7 @@ public class TrafficSim {
 	private int getValue(CityLocation start, CityLocation end){
 		int factor;
 		factor = getFactor(engine.getTile(start.x, start.y), engine.getTile(end.x,end.y));
-		if (evalfunc(start,toHashSet(findPeriphereRoad(end)))>=150) {
+		if (evalfunc(start,toHashSet(findPeriphereRoad(end)))>=150 || CityLocation.equals(start,end)) {
 			return 0;
 		}
 		return (200000/(evalfunc(start,toHashSet(findPeriphereRoad(end))))+20)*factor; 
@@ -239,13 +236,13 @@ public class TrafficSim {
 			currentCost=engine.getTrafficCost(currentLocation,currentRoadType);
 			
 			RoadSpecifiedTile Pred=unready.get(current).getPred();
-			System.out.println(Pred.getLocation()+" cost "+ready.get(Pred)); //FIXME pred can be null?!?!
-			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(ready.get(Pred).getCosts()+currentCost,Pred,true,currentRoadType));
+			System.out.println(Pred.getLocation()+" cost "+search(ready,Pred).getCosts()); //FIXME pred can be null?!?!
+			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(search(ready,Pred).getCosts()+currentCost,Pred,true,currentRoadType));
 			unready.remove(current);
 			for (RoadSpecifiedTile g : findAdjRoads(currentLocation, currentRoadType)) { //go through adj roads
 				if (!found.contains(g)) { //new road part found
 					this.found.add(g);
-					int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
+					int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
 					for (int roadType : calcRoadType(TileConstants.roadType(engine.getTile(g.getLocation())),currentRoadType)) {
 						unready.put(keyi+roadType,new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,roadType));
 						mapBack.put(new RoadSpecifiedTile(g.getLocation(),roadType), keyi+roadType);
@@ -254,11 +251,11 @@ public class TrafficSim {
 					if (!RoadSpecifiedTile.equals(new RoadSpecifiedTile(g.getLocation(),g.getRoadType()),ready.get(current).getPred())) {//if not pred
 						if (ready.containsKey(g)) { //if it is already ready update ready
 							int c=currentCost+ready.get(ready.get(g).getPred()).getCosts()+engine.getTrafficCost(g.getLocation(), g.getRoadType());
-							if (ready.get(g).getCosts()<=c) {
-								ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(currentLocation,currentRoadType),true,ready.get(g).getRoadType()));
+							if (search(ready,g).getCosts()<=c) {
+								ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(currentLocation,currentRoadType),true,search(ready,g).getRoadType()));
 							}
 						} else { //if not, update it unready
-							int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
+							int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*5;
 							if (keyi<= mapBack.get(g)) {
 								for (int tm : calcRoadType(g.getLocation(),currentRoadType)) {
 									unready.put(keyi+tm,new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,tm));
@@ -270,7 +267,7 @@ public class TrafficSim {
 				}
 			}
 			if (goal.contains(new RoadSpecifiedTile(currentLocation,currentRoadType))) { //if it is a goal update goal
-				best=Math.min(best, ready.get(new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts());
+				best=Math.min(best, search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts());
 				fastGoal=new RoadSpecifiedTile(new CityLocation(currentLocation.x,currentLocation.y),currentRoadType);
 			}
 		}
@@ -279,10 +276,10 @@ public class TrafficSim {
 			return -1;
 		}
 		Vector<CityLocation> way=new Vector<CityLocation>();
-		while (!RoadSpecifiedTile.equals(ready.get(fastGoal).getPred(),new RoadSpecifiedTile(new CityLocation(-1,-1),0))) { //add traffic to way 
+		while (!RoadSpecifiedTile.equals(search(ready,fastGoal).getPred(),new RoadSpecifiedTile(new CityLocation(-1,-1),0))) { //add traffic to way 
 			engine.addTraffic(fastGoal.getLocation().x, fastGoal.getLocation().y, engine.getTrafficCost(fastGoal.getLocation(),fastGoal.getRoadType()));
 			way.add(fastGoal.getLocation());
-			fastGoal=ready.get(fastGoal).getPred();
+			fastGoal=search(ready,fastGoal).getPred();
 		}
 		engine.paths(way);
 		System.out.println("have found way "+best);
@@ -446,6 +443,15 @@ public class TrafficSim {
 			ret.add(c);
 		}
 		return ret;
+	}
+	
+	public static SpecifiedTile search(HashMap<RoadSpecifiedTile,SpecifiedTile> hm, RoadSpecifiedTile x){
+		for(RoadSpecifiedTile r : hm.keySet()){
+			if(RoadSpecifiedTile.equals(r, x)){
+				return hm.get(r);
+			}
+		}
+		return null;
 	}
 	
 	

@@ -265,9 +265,9 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.policeEffect;
-		} else {
 			z = city.policeEffect/2;
+		} else {
+			z = city.policeEffect/4;
 		}
 
 		oldTraffic.mapX = xpos;
