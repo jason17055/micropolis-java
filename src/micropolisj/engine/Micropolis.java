@@ -143,6 +143,7 @@ public class Micropolis
 	int uniaCount;
 	int unibCount;
 	int cityhallCount;
+    static int cityhallCountMem;
 	int openairCount;
 	int museumCount;
 	int fireStationCount;
@@ -201,6 +202,10 @@ public class Micropolis
 	int crimeRamp;
 	int polluteRamp;
     int educationRamp;
+
+
+    double scienceEEPoints;
+    double scienceInfraPoints;
 
 	//
 	// budget stuff
@@ -302,6 +307,8 @@ public class Micropolis
 		educationMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
+        scienceEEPoints = 0;
+        scienceInfraPoints = 0;
 
 
 	}
@@ -746,27 +753,26 @@ public class Micropolis
 		return 0;
 	}
 
-    private void addPolutionToArea(int[][] pol, CityLocation loc) {
+    private void addPolutionToArea(int [][] pol, CityLocation loc, int size, int randomRange){
         pol[loc.x][loc.y] = pol[loc.y][loc.x]/10;
         int polutionAdd = pol[loc.y][loc.x]*8; //spreading pollution is 1/3 the original pollution on that point
 
         int w = 20;
 
-        polutionAdd /= Math.ceil(w * w); // same pollution for all fields
-        int startx = loc.x - w / 2;
-        int starty = loc.y - w / 2;
-        for (int y = starty; y < starty + w; y++) {
-            for (int x = startx; x < startx + w; x++) {
-
+        polutionAdd /= Math.ceil(size * size); // same pollution for all fields
+        int startx = loc.x - size/2;
+        int starty = loc.y - size/2;
+        for(int y = starty; y < starty + size; y++){
+            for(int x = startx; x < startx + size; x++){
                 if(onMap(x,y)){
-                    pol[y][x] += clamp((polutionAdd + PRNG.nextInt(10) - 5), 1, 250);
+                    pol[y][x] += clamp((polutionAdd + PRNG.nextInt(randomRange) - randomRange/2), 1, 250);
                 }
             }
         }
     }
 
 
-    private void spreadPollution(int[][] pol) {
+    private void spreadPollution(int [][] pol, int size, int randomRange){
         //TODO: GAUSSIAN SPREAD
         final int h = pol.length;
         final int w = pol.length;
@@ -783,7 +789,7 @@ public class Micropolis
             }
         }
         for(CityLocation l : highPollutionLocs){
-            addPolutionToArea(pol, l);
+            addPolutionToArea(pol, l, size , randomRange);
         }
     }
 
@@ -823,7 +829,7 @@ public class Micropolis
 				tem2[y][x] = z;
 			}
 		}
-	
+
 		return tem2;
 	}
 
@@ -993,15 +999,14 @@ public class Micropolis
 
 	void crimeScan()
 	{
-        policeMap = smoothFirePoliceMap(policeMap);
-        policeMap = smoothFirePoliceMap(policeMap);
+        spreadPollution(policeMap,15,4);
 
 
-		/*for (int sy = 0; sy < policeMap.length; sy++) {
+		for (int sy = 0; sy < policeMap.length; sy++) {
             for (int sx = 0; sx < policeMap[sy].length; sx++) {
 				policeMapEffect[sy][sx] = policeMap[sy][sx];
 			}
-		}*/
+		}
 
         int count = 0;
 		int sum = 0;
@@ -1348,7 +1353,7 @@ public class Micropolis
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
             pollutionMem = doSmooth(pollutionMem);
-            spreadPollution(pollutionMem);
+            spreadPollution(pollutionMem,30,10);
         }
     }
 
@@ -1397,12 +1402,10 @@ public class Micropolis
 
                     // getDisCC should check for every city hall if it is in distance
 					int dis = 34 - getDisCC(x, y);
-                    dis *= 4;
-                    dis += terrainMem[y][x];
-                    dis -= pollutionMem[y][x];
+                    dis *= 6;
+                    dis += terrainMem[y][x]*8;
+                    dis -= pollutionMem[y][x]*4;
                     if (crimeMem[y][x] > 190) {
-						dis -= 20;
-					}
 					if (dis > 250)
 						dis = 250;
 					if (dis < 1)
@@ -1420,6 +1423,7 @@ public class Micropolis
 
 			}
 		}
+        }
 
 		landValueAverage = landValueCount != 0 ? (landValueTotal/landValueCount) : 0;
 
@@ -1431,7 +1435,8 @@ public class Micropolis
 		fireMapOverlayDataChanged(MapState.POLLUTE_OVERLAY);   //PLMAP
 		fireMapOverlayDataChanged(MapState.LANDVALUE_OVERLAY); //LVMAP
         fireMapOverlayDataChanged(MapState.VISIT_OVERLAY); //RGMAP
-	}
+
+    }
 
 	public CityLocation getLocationOfMaxPollution()
 	{
@@ -1618,6 +1623,11 @@ public class Micropolis
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
+    double valueMapping(double x, double in_min, double in_max, double out_min, double out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
     public static int clamp(int val, int min, int max) {
         return Math.max(min, Math.min(max, val));
     }
@@ -1722,7 +1732,9 @@ public class Micropolis
 		
 		TileBehavior b = tileBehaviors.get(behaviorStr);
 		if (b != null) {
-            visits.put(new CityLocation(xpos, ypos), 0);
+            if (TileConstants.isZoneCenter(tile)) {
+                visits.put(new CityLocation(xpos,ypos),0);
+            }
             b.processTile(xpos, ypos);
 		}
 		else {

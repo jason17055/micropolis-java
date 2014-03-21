@@ -120,8 +120,8 @@ public class OverlayMapView extends JComponent
 	static final Color VAL_VERYPLUS  = new Color(0x00e600);
 	static final Color VAL_MINUS     = new Color(0xff7f00);
 	static final Color VAL_VERYMINUS = new Color(0xffff00);
-    static final Color PATHCOLOR     = new Color(0x000000);
-    static final Color VISITCOLOR     = new Color(0xffffff);
+    static final Color PATHCOLOR     = new Color(0xB1F3FF);
+    static final Color VISITCOLOR     = new Color(0xFF0053);
 
 	private Color getCI(int x)
 	{
@@ -172,7 +172,7 @@ public class OverlayMapView extends JComponent
             Iterator pathPoints = curPath.iterator();
             while(pathPoints.hasNext()){
                 l = (CityLocation) pathPoints.next();
-                maybeDrawRect(gr, PATHCOLOR, l.x,l.y, 10,10);
+                maybeDrawRect(gr, PATHCOLOR, l.x*3,l.y*3, 4,4);
             }
         }
 
@@ -185,7 +185,9 @@ public class OverlayMapView extends JComponent
                 if(visits > 0){
                     System.out.println("draw visit at: " + visitloc.x + ", " + visitloc.y);
                     // getCI determines color, see above. so i multiply with 100 to get some colors
-                    maybeDrawRect(gr, getCI(visits * 100), visitloc.x, visitloc.y, 20, 20);
+
+                        maybeDrawRect(gr, getCI(10 + visits*50), visitloc.x*3, visitloc.y*3, 4, 4);
+
                 }
             }
 
