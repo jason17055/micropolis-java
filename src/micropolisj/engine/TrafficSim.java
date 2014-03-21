@@ -193,6 +193,7 @@ public class TrafficSim {
 		int currentCost=0;
 		CityLocation currentLocation=new CityLocation(-1,-1);
 		ready = new HashMap<RoadSpecifiedTile,SpecifiedTile>();
+		unready = new HashMap<Integer,SpecifiedTile>();
 		HashMap<CityLocation,SpecifiedTile> temp=findPeriphereRoad(startpos);
 		for (CityLocation f : temp.keySet()) {
 			for (Integer tm : calcRoadType(f,1)) {
