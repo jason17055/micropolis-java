@@ -1343,83 +1343,83 @@ public class Micropolis
 
 
 
-	void ptlScan()
-	{
-		final int qX = (getWidth());
-		final int qY = (getHeight());
-		int [][] qtem = new int[qY][qX];
+    void ptlScan()
+    {
+        final int qX = (getWidth());
+        final int qY = (getHeight());
+        int [][] qtem = new int[qY][qX];
 
-		int landValueTotal = 0;
-		int landValueCount = 0;
+        int landValueTotal = 0;
+        int landValueCount = 0;
 
-		final int HWLDX = (getWidth());
-		final int HWLDY = (getHeight());
-		int [][] tem = new int[HWLDY][HWLDX];
+        final int HWLDX = (getWidth());
+        final int HWLDY = (getHeight());
+        int [][] tem = new int[HWLDY][HWLDX];
 
         pollutionScan();
 
-		for (int x = 0; x < HWLDX; x++)
-		{
-			for (int y = 0; y < HWLDY; y++)
-			{
-				int plevel = 0;
-				int lvflag = 0;
-				
-					int tile = getTile(x, y);
-					if (tile != DIRT)
-					{
-						if (tile < RUBBLE) //natural land features
-						{
-							//inc terrainMem
-							qtem[y][x] += 15;
-							continue;
-						}
+        for (int x = 0; x < HWLDX; x++)
+        {
+            for (int y = 0; y < HWLDY; y++)
+            {
+                int plevel = 0;
+                int lvflag = 0;
 
-						if (isConstructed(tile))
-							lvflag++;
-					}
+                int tile = getTile(x, y);
+                if (tile != DIRT)
+                {
+                    if (tile < RUBBLE) //natural land features
+                    {
+                        //inc terrainMem
+                        qtem[y][x] += 15;
+                        continue;
+                    }
 
-				if (lvflag != 0)
-				{
-					//land value equation
+                    if (isConstructed(tile))
+                        lvflag++;
+                }
+
+                if (lvflag != 0)
+                {
+                    //land value equation
 
 
                     // getDisCC should check for every city hall if it is in distance
-					int dis = 34 - getDisCC(x, y);
+                    int dis = 34 - getDisCC(x, y);
                     dis *= 6;
                     dis += terrainMem[y][x]*8;
                     dis -= pollutionMem[y][x]*4;
                     if (crimeMem[y][x] > 190) {
-					if (dis > 250)
-						dis = 250;
-					if (dis < 1)
-						dis = 1;
+                        dis -= 20;
+                    }
+                    if (dis > 250)
+                        dis = 250;
+                    if (dis < 1)
+                        dis = 1;
 
 
-					landValueMem[y][x] = dis;
-					landValueTotal += landValueMem[y][x];
-					landValueCount++;
-				}
-				else
-				{
-					landValueMem[y][x] = 0;
-				}
+                    landValueMem[y][x] = dis;
+                    landValueTotal += landValueMem[y][x];
+                    landValueCount++;
+                }
+                else
+                {
+                    landValueMem[y][x] = 0;
+                }
 
-			}
-		}
+            }
         }
 
-		landValueAverage = landValueCount != 0 ? (landValueTotal/landValueCount) : 0;
+        landValueAverage = landValueCount != 0 ? (landValueTotal/landValueCount) : 0;
 
 
 
 
-		terrainMem = smoothTerrain(qtem);
+        terrainMem = smoothTerrain(qtem);
 
-		fireMapOverlayDataChanged(MapState.POLLUTE_OVERLAY);   //PLMAP
-		fireMapOverlayDataChanged(MapState.LANDVALUE_OVERLAY); //LVMAP
+        fireMapOverlayDataChanged(MapState.POLLUTE_OVERLAY);   //PLMAP
+        fireMapOverlayDataChanged(MapState.LANDVALUE_OVERLAY); //LVMAP
         fireMapOverlayDataChanged(MapState.VISIT_OVERLAY); //RGMAP
-
     }
 
 	public CityLocation getLocationOfMaxPollution()
