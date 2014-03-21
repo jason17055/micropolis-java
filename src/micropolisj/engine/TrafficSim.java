@@ -82,6 +82,7 @@ public class TrafficSim {
 		}
 		int i = engine.PRNG.nextInt(sum)+1;
 		for(CityLocation b : help.keySet()){
+			System.out.println(b.x + " " + b.y);
 			i-=(int)help.get(b);
 			if(i<=0){
 				return b;
@@ -104,8 +105,13 @@ public class TrafficSim {
 		if (evalfunc(start,toHashSet(findPeriphereRoad(end)))>=150 || CityLocation.equals(start,end)) {
 			return 0;
 		}
-		return (200000/(evalfunc(start,toHashSet(findPeriphereRoad(end))))+20)*factor; 
-		//factor 200 000 for making randomization easyer later on.
+		if(evalfunc(start,toHashSet(findPeriphereRoad(end)))<10){
+			return 100;
+		}
+		else{
+			return (200000/(evalfunc(start,toHashSet(findPeriphereRoad(end))))+20)*factor; 
+			//factor 200 000 for making randomization easyer later on.
+		}
 	}
 	
 	/**
