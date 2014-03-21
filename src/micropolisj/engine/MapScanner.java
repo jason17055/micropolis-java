@@ -362,6 +362,7 @@ class MapScanner extends TileBehavior
 
         double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
         city.scienceEEPoints += sciencePoint;
+        System.out.println("scienceEEPoints " + city.scienceEEPoints);
 
 
 		oldTraffic.mapX = xpos;
@@ -392,6 +393,7 @@ class MapScanner extends TileBehavior
 
         double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
         city.scienceInfraPoints += sciencePoint;
+        System.out.println("scienceInfraPoints " + city.scienceInfraPoints);
 
         oldTraffic.mapX = xpos;
 		oldTraffic.mapY = ypos;
@@ -404,7 +406,7 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.cityhallCount++;
-		city.cityhallCountMem=city.lastCityHallCount;
+		city.cityhallCountMem = city.lastCityHallCount;
 		city.cityHallList.add(new CityLocation(xpos, ypos));
 		if ((city.cityTime % 8) == 0) {
 			repairZone(CITYHALLBUILDING, 3);
