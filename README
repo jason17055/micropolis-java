@@ -50,7 +50,10 @@ git clone git@github.com:Team--Rocket/micropolis-java.git divercity ; cd diverci
 then simply run (in divercity directory):
 java -jar micropolisj.jar
 
-ACHTUNG: Verkehr und Wachstum ist noch nicht voll funktionsfähig.
+ACHTUNG: 
+!Ton bitte aus lassen. Da es wegen eines Bugfixes für Sound auf Linux das Spiel verlangsamt.
+
+!Verkehr und Wachstum ist noch nicht voll funktionsfähig.
 Evtl. entwickeln sich Zonen noch nicht wie erwartet.
 
 
