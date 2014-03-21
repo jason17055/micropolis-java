@@ -712,10 +712,8 @@ public class Micropolis
 			break;
         case 15:
             educationSan();
-            break;
-		case 16:
-			fireAnalysis();
-			doDisasters();
+            fireAnalysis();
+            doDisasters();
 			break;
 
 		default:
@@ -1036,8 +1034,8 @@ public class Micropolis
 
 	void doDisasters()
 	{
-		if (floodCnt > 0) {
-			floodCnt--;
+        if (floodCnt > 0) {
+            floodCnt--;
 		}
 
 		final int [] DisChance = { 480, 240, 60 };
