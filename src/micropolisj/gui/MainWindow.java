@@ -1024,7 +1024,8 @@ public class MainWindow extends JFrame
         gridBox.add(b8, c);
         
         b8.add(makeToolBtn(MicropolisTool.CITYHALL));
-	    
+        b8.add(makeToolBtn(MicropolisTool.BIGPARK));
+
         // add glue to make all elements align toward top
         c.gridy++;
         c.weighty = 1.0;

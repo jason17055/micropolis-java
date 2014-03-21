@@ -115,10 +115,20 @@ public class ToolStroke
 			
 			
 		case UNIB:
-			return applyZone(eff, UNIBBUILDING);
-			
+			if (city.schoolCount > 0){
+				return applyZone(eff, UNIBBUILDING);
+			}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_A_SCHOOL, xpos, ypos);
+				return false;
+			}
 		case CITYHALL:
-			return applyZone(eff, CITYHALLBUILDING);
+			if (city.evaluation.cityClass >= 1 ){
+				return applyZone(eff, CITYHALLBUILDING);
+				}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
+				return false;}
 			
 		case OPENAIR:
 			
@@ -131,12 +141,23 @@ public class ToolStroke
 			
 		case SEAPORT:
 			return applyZone(eff, PORT);
+			
+		case BIGPARK:
+			
+			if (city.evaluation.cityClass >= 0 ){
+				return applyZone(eff, BIGPARKBUILDING);
+				}
 
 		case NUCLEAR:
 			return applyZone(eff, NUCLEAR);
 
 		case AIRPORT:
-			return applyZone(eff, AIRPORT);
+			if (city.evaluation.cityClass >= 2 ){
+				return applyZone(eff, AIRPORT);
+				}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
+				return false;}
 
 		default:
 			// not expected
