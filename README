@@ -38,7 +38,7 @@ QUICK DOWNLOAD, COMPILE and RUN
 ---------------------------------
 
 Wenn ihr die **letzte stabile Version** testen wollt cloned euch unser repo,
-und im Terminal führ git reset --hard 2243773fa2df195479fdc8b867c5ed78e2530645 aus.
+und im Terminal führ git reset --hard 024a577d34b54576118173e39f96c0cee953ff8f aus.
 dann wie gewohnt ant ausführen und java -jar micropolisj.jar
 
 
