@@ -105,7 +105,7 @@ public class ToolStroke
 				return false;}
 			
 		case UNIA:
-			if (city.schoolCount > 0){
+			if (city.lastSchoolCount > 0){
 				return applyZone(eff, UNIABUILDING);
 			}
 			else {
@@ -115,10 +115,28 @@ public class ToolStroke
 			
 			
 		case UNIB:
-			return applyZone(eff, UNIBBUILDING);
+			if (city.lastSchoolCount > 0){
+				return applyZone(eff, UNIBBUILDING);
+			}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_A_SCHOOL, xpos, ypos);
+				return false;
+			}
 			
 		case CITYHALL:
-			return applyZone(eff, CITYHALLBUILDING);
+			city.evaluation.doPopNum();
+			if (city.cityhallCountMem < city.evaluation.cityClass  ){
+				return applyZone(eff, CITYHALLBUILDING);
+				}
+			else if (city.cityhallCountMem == 5){
+				city.sendMessageAt(MicropolisMessage.NO_MORE_CITYHALLS, xpos, ypos);
+				return false;
+			}
+			
+						
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
+				return false;}
 			
 		case OPENAIR:
 			

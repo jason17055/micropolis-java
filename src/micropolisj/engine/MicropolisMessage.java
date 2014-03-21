@@ -61,6 +61,7 @@ public enum MicropolisMessage
 	RIOTING_REPORT,
 	NEED_MORE_CITIZENS,
 	NEED_A_SCHOOL,
+	NO_MORE_CITYHALLS,
 	
 	// added by Jason
 	NO_NUCLEAR_PLANTS,

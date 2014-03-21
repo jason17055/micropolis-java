@@ -142,6 +142,7 @@ public class Micropolis
 	int uniaCount;
 	int unibCount;
 	int cityhallCount;
+	static int cityhallCountMem;
 	int openairCount;
 	int museumCount;
 	int fireStationCount;
@@ -684,6 +685,10 @@ public class Micropolis
 				collectTax();
 				evaluation.cityEvaluation();
 			}
+			
+			
+			
+			
 			break;
 
 		case 10:
