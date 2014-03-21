@@ -312,7 +312,8 @@ class MapScanner extends TileBehavior
 		}
 
 
-        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
+        
         z = z * (visits+1);
 
         oldTraffic.mapX = xpos;
@@ -364,7 +365,7 @@ class MapScanner extends TileBehavior
 
 
         // multiply the effect by visits
-        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
         z = z * (visits+1);
         z = city.clamp(z,0,1000);
 
@@ -395,7 +396,7 @@ class MapScanner extends TileBehavior
 		}
 
         // multiply the effect by visits
-        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
         z = z * (visits+1);
         z = city.clamp(z,0,1000);
 
@@ -461,7 +462,7 @@ class MapScanner extends TileBehavior
 		}
 
         // multiply the effect by visits
-        int visits = city.visits.get(new CityLocation(xpos, ypos));
+        int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
         z = z * (visits+1);
 
 		city.cultureMap[ypos][xpos] += z;
