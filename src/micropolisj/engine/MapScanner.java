@@ -400,6 +400,7 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.cityhallCount++;
+		city.cityhallCountMem=city.lastCityHallCount;
 		city.cityHallList.add(new CityLocation(xpos, ypos));
 		if ((city.cityTime % 8) == 0) {
 			repairZone(CITYHALLBUILDING, 3);
