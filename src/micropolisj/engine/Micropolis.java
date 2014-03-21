@@ -243,6 +243,7 @@ public class Micropolis
 	
 	public HashMap<CityLocation,Integer> visits=new HashMap<CityLocation,Integer>();
 	public Vector<Vector<CityLocation>> paths=new Vector<Vector<CityLocation>>();
+	public HashMap<CityLocation,Integer> visitNew=new HashMap<CityLocation,Integer>();
 
 	public CityEval evaluation;
 
@@ -619,9 +620,12 @@ public class Micropolis
 		seaportCount = 0;
 		airportCount = 0;
 		noWay = 0;
+		paths=new Vector<Vector<CityLocation>>();
 		powerPlants.clear();
         cityHallList.clear();
-        visits.clear();
+        
+        visits=new HashMap<CityLocation,Integer>(visitNew);
+        visitNew.clear();
         solarCount = 0;
 		windCount = 0;
 
@@ -1169,7 +1173,7 @@ public class Micropolis
     }
 	
 	public void putVisits(CityLocation loc) {
-		visits.put(loc,(visits.get(loc)+1));
+		visitNew.put(loc,(dummySearch(visitNew,loc)+1));
 	}
 	
 	public static CityLocation goToAdj(CityLocation loc, int dir)
@@ -3120,5 +3124,13 @@ public class Micropolis
 			}
 		}
 		return 999;
+	}
+	public Integer dummySearch(HashMap<CityLocation,Integer> map, CityLocation loc) {
+		for (CityLocation tmp : map.keySet()) {
+			if (CityLocation.equals(tmp,loc)) {
+				return map.get(tmp);
+			}
+		}
+		return null;
 	}
 }

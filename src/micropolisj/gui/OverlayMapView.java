@@ -167,7 +167,6 @@ public class OverlayMapView extends JComponent
         CityLocation l;
 
         while(allPaths.hasNext()){
-            System.out.println("drawing a path");
             Vector<CityLocation> curPath = (Vector<CityLocation>) allPaths.next();
             Iterator pathPoints = curPath.iterator();
             while(pathPoints.hasNext()){
