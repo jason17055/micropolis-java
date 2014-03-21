@@ -152,6 +152,8 @@ public class Micropolis
 	int nuclearCount;
 	int seaportCount;
 	int airportCount;
+	int solarCount;
+	int windCount;
 	int noWay;
 
 	int totalPop;
@@ -171,6 +173,8 @@ public class Micropolis
 	int lastUniBCount;
 	int lastOpenAirCount;
 	int lastCityHallCount;
+	int lastSolarCount;
+	int lastWindCount;
 
 	int trafficMaxLocationX;
 	int trafficMaxLocationY;
@@ -618,6 +622,8 @@ public class Micropolis
 		powerPlants.clear();
         cityHallList.clear();
         visits.clear();
+        solarCount = 0;
+		windCount = 0;
 
 		for (int y = 0; y < fireStMap.length; y++) {
 			for (int x = 0; x < fireStMap[y].length; x++) {
