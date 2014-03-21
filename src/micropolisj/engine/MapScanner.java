@@ -269,9 +269,9 @@ class MapScanner extends TileBehavior
 
 		int z;
 		if (powerOn) {
-			z = city.policeEffect;
-		} else {
 			z = city.policeEffect/2;
+		} else {
+			z = city.policeEffect/4;
 		}
 
 		oldTraffic.mapX = xpos;
@@ -337,7 +337,7 @@ class MapScanner extends TileBehavior
 		city.cultureMap[ypos][xpos] += z;
 	}
 	
-	void doUniA()
+	void doUniA() // researches scienceEEPoints
 	{
 		boolean powerOn = checkZonePower();
 		city.uniaCount++;
@@ -352,9 +352,16 @@ class MapScanner extends TileBehavior
 			z = city.educationEffect /2 ;
 		}
 
+
+
+
         // multiply the effect by visits
         int visits = city.visits.get(new CityLocation(xpos, ypos));
         z = z * (visits+1);
+        z = city.clamp(z,0,1000);
+
+        double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
+        city.scienceEEPoints += sciencePoint;
 
 
 		oldTraffic.mapX = xpos;
@@ -363,7 +370,7 @@ class MapScanner extends TileBehavior
 		city.educationMap[ypos][xpos] += z;
 	}
 	
-	void doUniB()
+	void doUniB() // researches scienceInfraPoints
 	{
 		boolean powerOn = checkZonePower();
 		city.unibCount++;
@@ -381,6 +388,10 @@ class MapScanner extends TileBehavior
         // multiply the effect by visits
         int visits = city.visits.get(new CityLocation(xpos, ypos));
         z = z * (visits+1);
+        z = city.clamp(z,0,1000);
+
+        double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
+        city.scienceInfraPoints += sciencePoint;
 
         oldTraffic.mapX = xpos;
 		oldTraffic.mapY = ypos;
@@ -393,6 +404,7 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.cityhallCount++;
+		city.cityhallCountMem=city.lastCityHallCount;
 		city.cityHallList.add(new CityLocation(xpos, ypos));
 		if ((city.cityTime % 8) == 0) {
 			repairZone(CITYHALLBUILDING, 3);
@@ -639,8 +651,7 @@ class MapScanner extends TileBehavior
 			if (!powerOn)
 				zscore = -500;
 
-			if (trafficGood != 0 &&
-				zscore > -350 &&
+			if (zscore > -350 &&
 				zscore - 26380 > (PRNG.nextInt(0x10000)-0x8000))
 			{
 				int value = getCRValue();
@@ -729,7 +740,7 @@ class MapScanner extends TileBehavior
 			int zscore = city.resValve + locValve;
 
 			if (!powerOn)
-				zscore = -500;
+				zscore = Math.min(-500, zscore);
 
 			if (zscore > -350 && zscore - 26380 > (PRNG.nextInt(0x10000)-0x8000))
 			{
@@ -862,7 +873,7 @@ class MapScanner extends TileBehavior
 
 	private void doResidentialIn(int pop, int value)
 	{
-		assert value >= 0 && value <= 3;
+		assert value >= 0 && value <= 3; //FIXME assert doesnt make sense
 
 		int z = city.pollutionMem[ypos][xpos];
 		if (z > 128)
@@ -870,7 +881,7 @@ class MapScanner extends TileBehavior
 
 		this.tile = rawTile & LOMASK;
 		if (tile == RESCLR)
-		{
+		{			
 			if (pop < 8)
 			{
 				buildHouse(value);
@@ -878,7 +889,7 @@ class MapScanner extends TileBehavior
 				return;
 			}
 
-			if (city.getPopulationDensity(xpos, ypos) > 64)
+			if (city.getPopulationDensity(xpos, ypos) >= 8)
 			{
 				residentialPlop(0, value);
 				adjustROG(8);
@@ -1015,9 +1026,7 @@ class MapScanner extends TileBehavior
 	 */
 	int evalCommercial(int traf)
 	{
-		
-
-		return city.comRate[ypos][xpos];
+		return 0;
 	}
 
 	/**
@@ -1039,7 +1048,6 @@ class MapScanner extends TileBehavior
 	 */
 	int evalResidential(int traf)
 	{
-		
 
 		int value = city.getLandValue(xpos, ypos);
 		value -= city.pollutionMem[ypos][xpos];

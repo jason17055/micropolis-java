@@ -521,7 +521,7 @@ public class TileConstants
 			(tile != VBRIDGE));
 	}
 
-	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad)
+	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad crossover)
 	{
 		assert (tile & LOMASK) == tile;
 
