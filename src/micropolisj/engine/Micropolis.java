@@ -1698,7 +1698,9 @@ public class Micropolis
 		
 		TileBehavior b = tileBehaviors.get(behaviorStr);
 		if (b != null) {
-			visits.put(new CityLocation(xpos,ypos),0);
+			if (TileConstants.isZoneCenter(tile)) {
+				visits.put(new CityLocation(xpos,ypos),0);
+			}
 			b.processTile(xpos, ypos);
 		}
 		else {
