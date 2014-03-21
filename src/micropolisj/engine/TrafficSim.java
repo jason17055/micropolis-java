@@ -233,16 +233,6 @@ public class TrafficSim {
 			currentCost=engine.getTrafficCost(currentLocation,currentRoadType);
 			
 			RoadSpecifiedTile Pred=unready.get(current).getPred();
-			System.out.println(Pred.getLocation() +" "+ Pred.getRoadType()+" Pred");
-			System.out.print("READY");
-			for(RoadSpecifiedTile r : ready.keySet()){
-				System.out.println(r.getLocation() + " " + r.getRoadType());
-			}
-			System.out.print("UNREADY");
-			for(int i : unready.keySet()){
-				System.out.println(unready.get(i).getLoc() + " " + unready.get(i).getRoadType());
-			}
-			System.out.println(search(ready,Pred).getCosts());
 			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(search(ready,Pred).getCosts()+currentCost,Pred,true,currentRoadType));
 			unready.remove(current);
 			for (RoadSpecifiedTile g : findAdjRoads(currentLocation, currentRoadType)) { //go through adj roads
