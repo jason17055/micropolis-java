@@ -112,8 +112,6 @@ public class ToolStroke
 				city.sendMessageAt(MicropolisMessage.NEED_A_SCHOOL, xpos, ypos);
 				return false;
 			}
-			
-			
 		case UNIB:
 			if (city.lastSchoolCount > 0){
 				return applyZone(eff, UNIBBUILDING);
@@ -121,8 +119,7 @@ public class ToolStroke
 			else {
 				city.sendMessageAt(MicropolisMessage.NEED_A_SCHOOL, xpos, ypos);
 				return false;
-			}
-			
+			}		
 		case CITYHALL:
 			city.evaluation.doPopNum();
 			if (city.cityhallCountMem < city.evaluation.cityClass  ){
@@ -132,8 +129,6 @@ public class ToolStroke
 				city.sendMessageAt(MicropolisMessage.NO_MORE_CITYHALLS, xpos, ypos);
 				return false;
 			}
-			
-						
 			else {
 				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
 				return false;}
@@ -149,12 +144,23 @@ public class ToolStroke
 			
 		case SEAPORT:
 			return applyZone(eff, PORT);
+			
+		case BIGPARK:
+			
+			if (city.evaluation.cityClass >= 0 ){
+				return applyZone(eff, BIGPARKBUILDING);
+				}
 
 		case NUCLEAR:
 			return applyZone(eff, NUCLEAR);
 
 		case AIRPORT:
-			return applyZone(eff, AIRPORT);
+			if (city.evaluation.cityClass >= 2 ){
+				return applyZone(eff, AIRPORT);
+				}
+			else {
+				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
+				return false;}
 
 		default:
 			// not expected

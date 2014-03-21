@@ -37,7 +37,8 @@ public enum MicropolisTool
 	UNIB(3,1000),
 	OPENAIR(6,500),
 	CITYHALL(3,1500),
-	QUERY(1, 0);
+	QUERY(1, 0),
+	BIGPARK(3, 100);
 
 	int size;
 	int cost;
