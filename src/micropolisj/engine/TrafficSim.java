@@ -454,5 +454,15 @@ public class TrafficSim {
 		return null;
 	}
 	
+	public static boolean searchRoSpec(HashSet<RoadSpecifiedTile> input, RoadSpecifiedTile x){
+		for(RoadSpecifiedTile r : input){
+			if(RoadSpecifiedTile.equals(r, x)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	
 }
