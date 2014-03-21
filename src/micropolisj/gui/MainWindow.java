@@ -1120,6 +1120,10 @@ public class MainWindow extends JFrame
             citySound(Sound.EXPLOSION_BOTH, new CityLocation(1, 1));
             engine.destroyEverything();
         }
+        if (text.equals(strings.getString("cheating.populationcheat"))) {
+            engine.incCityPopulation();
+            engine.incNCheats();
+        }
     }
 
 
