@@ -1201,8 +1201,15 @@ public class Micropolis
 				
 				if (g==NUCLEAR) {
 					localPower=2000;
-				} else {
+				}
+				else if (g==POWERPLANT) {
 					localPower=500; //original was 700
+				}
+				else if (g==SOLAR) {
+					localPower=325;
+				}
+				else {
+					localPower=30;
 				}
 				int numPower=0;
 				toDo.add(loc);
@@ -1218,6 +1225,15 @@ public class Micropolis
 							localPower+=500; //original was 700
 							done.add(current);
 						}
+						if (g==SOLAR) {
+							localPower+=325;
+							done.add(current);
+						}
+						if (g==WIND) {
+							localPower+=30;
+							done.add(current);
+						}
+						
 					}
 					
 					if (++numPower > localPower) {
@@ -1680,6 +1696,8 @@ public class Micropolis
 		bb.put("AIRPORT", new MapScanner(this, MapScanner.B.AIRPORT));
 		bb.put("SEAPORT", new MapScanner(this, MapScanner.B.SEAPORT));
 		bb.put("BIGPARKBUILDING", new MapScanner(this, MapScanner.B.BIGPARKBUILDING));
+		bb.put("SOLAR", new MapScanner(this, MapScanner.B.SOLAR));
+		bb.put("WIND", new MapScanner(this, MapScanner.B.WIND));
 		this.tileBehaviors = bb;
 	}
 

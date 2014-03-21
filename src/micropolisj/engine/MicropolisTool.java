@@ -38,7 +38,9 @@ public enum MicropolisTool
 	OPENAIR(6,500),
 	CITYHALL(3,1500),
 	QUERY(1, 0),
-	BIGPARK(3, 100);
+	BIGPARK(3, 100),
+	SOLAR(4, 4000),
+	WIND(1, 325);
 
 	int size;
 	int cost;
