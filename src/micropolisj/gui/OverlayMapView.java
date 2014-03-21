@@ -186,7 +186,7 @@ public class OverlayMapView extends JComponent
                     System.out.println("draw visit at: " + visitloc.x + ", " + visitloc.y);
                     // getCI determines color, see above. so i multiply with 100 to get some colors
 
-                        maybeDrawRect(gr, VISITCOLOR, visitloc.x*3, visitloc.y*3, 4, 4);
+                        maybeDrawRect(gr, getCI(10 + visits*50), visitloc.x*3, visitloc.y*3, 4, 4);
 
                 }
             }
