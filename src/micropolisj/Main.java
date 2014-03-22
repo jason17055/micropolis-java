@@ -21,6 +21,8 @@ public class Main
 	static void createAndShowGUI()
 	{
 		splash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		splash.setSize(800,600);
+		splash.setResizable(false);
 		splash.setVisible(true);
 		//MainWindow win = new MainWindow();
 		//win.setVisible(true);
