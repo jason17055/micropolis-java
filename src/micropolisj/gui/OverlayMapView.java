@@ -112,10 +112,12 @@ public class OverlayMapView extends JComponent
 		return bi;
 	}
 
-	static final Color VAL_LOW       = new Color(0xbfbfbf);
-	static final Color VAL_MEDIUM    = new Color(0xffff00);
-	static final Color VAL_HIGH      = new Color(0xff7f00);
-	static final Color VAL_VERYHIGH  = new Color(0xff0000);
+	static final Color VAL_VERYLOW       = new Color(0xE4E4E4);
+    static final Color VAL_LOW       = new Color(0xE0DD95);
+	static final Color VAL_MEDIUM    = new Color(0xEBCE27);
+	static final Color VAL_HIGH      = new Color(0xFF7F00);
+	static final Color VAL_VERYHIGH  = new Color(0xFF3E00);
+    static final Color VAL_VERYVERYHIGH  = new Color(0xD60B00);
 	static final Color VAL_PLUS      = new Color(0x007f00);
 	static final Color VAL_VERYPLUS  = new Color(0x00e600);
 	static final Color VAL_MINUS     = new Color(0xff7f00);
@@ -125,16 +127,19 @@ public class OverlayMapView extends JComponent
 
 	private Color getCI(int x)
 	{
-		if (x < 50)
+		if (x < 30)
 			return null;
+        else if (x < 60)
+            return VAL_VERYLOW;
 		else if (x < 100)
 			return VAL_LOW;
 		else if (x < 150)
 			return VAL_MEDIUM;
 		else if (x < 200)
 			return VAL_HIGH;
-		else
+		else if (x < 245)
 			return VAL_VERYHIGH;
+        else return VAL_VERYVERYHIGH;
 	}
 
 	private Color getCI_rog(int x)

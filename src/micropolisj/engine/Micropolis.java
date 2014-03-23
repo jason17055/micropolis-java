@@ -767,8 +767,6 @@ public class Micropolis
         pol[loc.x][loc.y] = pol[loc.y][loc.x]/10;
         int polutionAdd = pol[loc.y][loc.x]*8; //spreading pollution is 1/3 the original pollution on that point
 
-        int w = 20;
-
         polutionAdd /= Math.ceil(size * size); // same pollution for all fields
         int startx = loc.x - size/2;
         int starty = loc.y - size/2;
@@ -1332,9 +1330,6 @@ public class Micropolis
             int ptotal = 0;
             int pmax = 0;
 
-
-
-
             final int HWLDX = (getWidth());
             final int HWLDY = (getHeight());
             for (int x = 0; x < HWLDX; x++)
@@ -1342,7 +1337,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((float) getPollutionValue(tile) * 0.6);
+                    int curPollution = (int)  ((float) getPollutionValue(tile) * 1.0);
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -1363,7 +1358,7 @@ public class Micropolis
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
             pollutionMem = doSmooth(pollutionMem);
-            spreadPollution(pollutionMem,30,10);
+            spreadPollution(pollutionMem,13,8);
         }
     }
 
