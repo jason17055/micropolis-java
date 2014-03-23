@@ -1194,38 +1194,38 @@ public class Micropolis
 		return loci;
 	}
 
-	void powerScan()
-	{
-		// clear powerMap
-		int localPower=0;
+    void powerScan()
+    {
+        // clear powerMap
+        int localPower=0;
         int numPower=0;
-		Stack<CityLocation> toDo=new Stack<CityLocation>();
-		HashSet<CityLocation> done=new HashSet<CityLocation>();
-		CityLocation current=new CityLocation(1,1);
-		for (boolean [] f : powerMap)
-		{
-			Arrays.fill(f, false);
-		}
+        Stack<CityLocation> toDo=new Stack<CityLocation>();
+        HashSet<CityLocation> done=new HashSet<CityLocation>();
+        CityLocation current=new CityLocation(1,1);
+        for (boolean [] f : powerMap)
+        {
+            Arrays.fill(f, false);
+        }
 
-		while (!powerPlants.isEmpty()) {
-			CityLocation loc = powerPlants.pop();
-			if (!done.contains(loc)) {
-				char g=getTile(loc.x,loc.y);
-				
-				if (g==NUCLEAR) {
-					localPower=2000;
-				}
-				else if (g==POWERPLANT) {
-					localPower=500; //original was 700
-				}
-				else if (g==SOLAR) {
-					localPower=325;
-				}
-				else if (g==WIND) {
-					localPower=30;
-				}
+        while (!powerPlants.isEmpty()) {
+            CityLocation loc = powerPlants.pop();
+            if (!done.contains(loc)) {
+                char g=getTile(loc.x,loc.y);
 
-				toDo.add(loc);
+                if (g==NUCLEAR) {
+                    localPower=2000;
+                }
+                else if (g==POWERPLANT) {
+                    localPower=500; //original was 700
+                }
+                else if (g==SOLAR) {
+                    localPower=325;
+                }
+                else if (g==WIND) {
+                    localPower=30;
+                }
+
+                toDo.add(loc);
             }
         }
 
