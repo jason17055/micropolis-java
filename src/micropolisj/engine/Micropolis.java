@@ -765,7 +765,7 @@ public class Micropolis
 
     private void addPolutionToArea(int [][] pol, CityLocation loc, int size, int randomRange){
         pol[loc.x][loc.y] = pol[loc.y][loc.x]/10;
-        int polutionAdd = pol[loc.y][loc.x]*8; //spreading pollution is 1/3 the original pollution on that point
+        int polutionAdd = pol[loc.y][loc.x]*9; //spreading pollution is 1/3 the original pollution on that point
 
         polutionAdd /= Math.ceil(size * size); // same pollution for all fields
         int startx = loc.x - size/2;
@@ -773,7 +773,10 @@ public class Micropolis
         for(int y = starty; y < starty + size; y++){
             for(int x = startx; x < startx + size; x++){
                 if(onMap(x,y)){
-                    pol[y][x] += clamp((polutionAdd + PRNG.nextInt(randomRange) - randomRange/2), 1, 250);
+                    int polCenterDistance = (Math.abs(x - loc.x) + Math.abs(x - loc.y))/2;
+                    double factor = (((size/2)+1) / (polCenterDistance+1)) * 1.5;
+                    System.out.println("z: " + factor);
+                    pol[y][x] += (int) (clamp((polutionAdd + PRNG.nextInt(randomRange) - randomRange/2), 1, 250) * factor);
                 }
             }
         }
@@ -793,7 +796,7 @@ public class Micropolis
             for (int x = 1; x < w; x++)
             {
 
-                if(pol[y][x] > 15) highPollutionLocs.add(new CityLocation(x,y));
+                if(pol[y][x] > 20) highPollutionLocs.add(new CityLocation(x,y));
             }
         }
         for(CityLocation l : highPollutionLocs){
@@ -1324,8 +1327,6 @@ public class Micropolis
 	//power, terrain, land value
     public void pollutionScan(){
         {
-            final int qX = (getWidth());
-            final int qY = (getHeight());
             int pcount = 0;
             int ptotal = 0;
             int pmax = 0;
@@ -1337,7 +1338,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((float) getPollutionValue(tile) * 1.0);
+                    int curPollution = (int)  ((float) getPollutionValue(tile) * 0.8);
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -1358,7 +1359,7 @@ public class Micropolis
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
             pollutionMem = doSmooth(pollutionMem);
-            spreadPollution(pollutionMem,13,8);
+            spreadPollution(pollutionMem,15,8);
         }
     }
 
