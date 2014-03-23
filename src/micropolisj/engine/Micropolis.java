@@ -773,17 +773,14 @@ public class Micropolis
         for(int y = starty; y < starty + size; y++){
             for(int x = startx; x < startx + size; x++){
                 if(onMap(x,y)){
-                    int polCenterDistance = (Math.abs(x - loc.x) + Math.abs(x - loc.y))/2;
-                    double factor = (((size/2)+1) / (polCenterDistance+1)) * 1.5;
-                    System.out.println("z: " + factor);
-                    pol[y][x] += (int) (clamp((polutionAdd + PRNG.nextInt(randomRange) - randomRange/2), 1, 250) * factor);
+                    pol[y][x] += (int) clamp(polutionAdd + PRNG.nextInt(randomRange) - randomRange/2, 1, 254);
                 }
             }
         }
     }
 
 
-    private void spreadPollution(int [][] pol, int size, int randomRange){
+    private void spreadPollution(int [][] pol, int size, int randomRange, int minValue){
         //TODO: GAUSSIAN SPREAD
         final int h = pol.length;
         final int w = pol.length;
@@ -795,8 +792,7 @@ public class Micropolis
         {
             for (int x = 1; x < w; x++)
             {
-
-                if(pol[y][x] > 20) highPollutionLocs.add(new CityLocation(x,y));
+                if(pol[y][x] > minValue) highPollutionLocs.add(new CityLocation(x,y));
             }
         }
         for(CityLocation l : highPollutionLocs){
@@ -1010,7 +1006,7 @@ public class Micropolis
 
 	void crimeScan()
 	{
-        spreadPollution(policeMap,15,4);
+        spreadPollution(policeMap,15,4, 20);
 
 
 		for (int sy = 0; sy < policeMap.length; sy++) {
@@ -1359,7 +1355,7 @@ public class Micropolis
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
             pollutionMem = doSmooth(pollutionMem);
-            spreadPollution(pollutionMem,15,8);
+            spreadPollution(pollutionMem,17,8,15);
         }
     }
 
