@@ -1213,16 +1213,16 @@ public class Micropolis
                 char g=getTile(loc.x,loc.y);
 
                 if (g==NUCLEAR) {
-                    localPower=2000;
+                    localPower+=2000;
                 }
                 else if (g==POWERPLANT) {
-                    localPower=500; //original was 700
+                    localPower+=500; //original was 700
                 }
                 else if (g==SOLAR) {
-                    localPower=325;
+                    localPower+=325;
                 }
                 else if (g==WIND) {
-                    localPower=30;
+                    localPower+=30;
                 }
 
                 toDo.add(loc);
@@ -1232,33 +1232,18 @@ public class Micropolis
 
         while (!toDo.isEmpty()) {
             current=toDo.pop();
-            char g=getTile(current.x,current.y);
-            if (g==NUCLEAR) {
-                localPower+=2000;
-                done.add(current);
-            } else if (g==POWERPLANT)  {
-                localPower+=500; //original was 700
-                done.add(current);
-            }
-            else if (g==SOLAR) {
-                localPower+=325;
-                done.add(current);
-            }
-            else if (g==WIND) {
-                localPower+=30;
-                done.add(current);
-            }
-
-
+            done.add(current);
 
             if (++numPower > localPower) {
                 // trigger notification
+
                 sendMessage(MicropolisMessage.BROWNOUTS_REPORT);
                 return;
             }
             powerMap[current.y][current.x] = true;
             for (int dir=0;dir<4;dir++) {
                 if (testForCond(current, dir)) {
+                    // iteratively check power
                     toDo.add(goToAdj(current, dir));
                 }
             }

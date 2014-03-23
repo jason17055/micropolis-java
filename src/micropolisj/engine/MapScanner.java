@@ -149,6 +149,8 @@ class MapScanner extends TileBehavior
 		boolean newPower = (
 			tile == NUCLEAR ||
 			tile == POWERPLANT ||
+            tile == SOLAR ||
+            tile == WIND ||
 			city.hasPower(xpos,ypos)
 			);
 
