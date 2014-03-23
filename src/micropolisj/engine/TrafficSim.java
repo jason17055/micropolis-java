@@ -275,13 +275,14 @@ public class TrafficSim {
 		if (best==16384*3000) {
 			return -1;
 		}
-		Vector<CityLocation> way=new Vector<CityLocation>();
+        //Vector<CityLocation> way=new Vector<CityLocation>();
+        engine.paths.clear();
 		while (!RoadSpecifiedTile.equals(search(ready,fastGoal).getPred(),new RoadSpecifiedTile(new CityLocation(-1,-1),0))) { //add traffic to way 
 			engine.addTraffic(fastGoal.getLocation().x, fastGoal.getLocation().y, engine.getTrafficCost(fastGoal.getLocation(),fastGoal.getRoadType()));
-			way.add(fastGoal.getLocation());
+			//way.add(fastGoal.getLocation());
 			fastGoal=search(ready,fastGoal).getPred();
 		}
-		engine.paths(way);
+		//ngine.paths(way);
 		return best/16384;
 	}
 	
