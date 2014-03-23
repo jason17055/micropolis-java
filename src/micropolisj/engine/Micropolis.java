@@ -1220,7 +1220,7 @@ public class Micropolis
 				else if (g==SOLAR) {
 					localPower=325;
 				}
-				else {
+				else if (g==WIND) {
 					localPower=30;
 				}
 				int numPower=0;
@@ -1232,21 +1232,20 @@ public class Micropolis
 					if (g==NUCLEAR) {
 						localPower+=2000;
 						done.add(current);
-					} else {
-						if (g==POWERPLANT)  {
-							localPower+=500; //original was 700
-							done.add(current);
+					} else if (g==POWERPLANT)  {
+						localPower+=500; //original was 700
+						done.add(current);
 						}
-						if (g==SOLAR) {
-							localPower+=325;
-							done.add(current);
+					else if (g==SOLAR) {
+						localPower+=325;
+						done.add(current);
 						}
-						if (g==WIND) {
-							localPower+=30;
-							done.add(current);
+					else if (g==WIND) {
+						localPower+=30;
+					    done.add(current);
 						}
 						
-					}
+
 					
 					if (++numPower > localPower) {
 						// trigger notification
@@ -1406,7 +1405,7 @@ public class Micropolis
                     int dis = 34 - getDisCC(x, y);
                     dis *= 6;
                     dis += terrainMem[y][x]*8;
-                    dis -= pollutionMem[y][x]*4;
+                    dis -= pollutionMem[y][x]/8;
                     if (crimeMem[y][x] > 190) {
                         dis -= 20;
                     }
@@ -2434,6 +2433,14 @@ public class Micropolis
 					coalCount++;
 					powerPlants.add(new CityLocation(x,y));
 				}
+                else if (tile == WIND) {
+                    windCount++;
+                    powerPlants.add(new CityLocation(x,y));
+                }
+                else if (tile == SOLAR) {
+                    solarCount++;
+                    powerPlants.add(new CityLocation(x,y));
+                }
 			}
 		}
 
@@ -2854,7 +2861,7 @@ public class Micropolis
 		checkGrowth();
 
 		int totalZoneCount = resZoneCount + comZoneCount + indZoneCount;
-		int powerCount = nuclearCount + coalCount;
+		int powerCount = nuclearCount + coalCount + windCount + solarCount;
 
 		int z = cityTime % 64;
 		switch (z) {

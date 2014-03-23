@@ -540,7 +540,6 @@ class MapScanner extends TileBehavior
 	void doSolar()
 	{
 		checkZonePower();
-		city.solarCount++;
 		if ((city.cityTime % 8) == 0) {
 			repairZone(SOLAR, 4);
 		}
@@ -551,7 +550,6 @@ class MapScanner extends TileBehavior
 	void doWind()
 	{
 		checkZonePower();
-		city.windCount++;
 		city.powerPlants.add(new CityLocation(xpos, ypos));
 	}
 	
