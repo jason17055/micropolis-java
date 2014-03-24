@@ -291,7 +291,7 @@ public class TrafficSim {
 			ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(f.getLocation(),currentRoadType),true,search(ready,g).getRoadType()));
 			for (RoadSpecifiedTile RoadTile : findAdjRoads(g.getLocation(),g.getRoadType())) {
 				if (searchRoSpec(toHashSetTwo(ready),RoadTile)) {
-						updateReady(RoadTile,g);
+						//updateReady(RoadTile,g);
 				}
 			}
 		}
