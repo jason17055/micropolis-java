@@ -376,8 +376,8 @@ class MapScanner extends TileBehavior
         z = z * (visits+1);
         // z = city.clamp(z,0,1000);
 
-        double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
-        city.scienceEEPoints += sciencePoint;
+        double techPoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
+        city.technologyEEPoints += techPoint;
         //System.out.println("scienceEEPoints " + city.scienceEEPoints);
 
 
@@ -407,8 +407,8 @@ class MapScanner extends TileBehavior
         z = z * (visits+1);
         // z = city.clamp(z,0,1000);
 
-        double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
-        city.scienceInfraPoints += sciencePoint;
+        double techPoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
+        city.technologyInfraPoints += techPoint;
         //System.out.println("scienceInfraPoints " + city.scienceInfraPoints);
 
         oldTraffic.mapX = xpos;

@@ -8,6 +8,8 @@
 
 package micropolisj.engine;
 
+import micropolisj.engine.techno.BuildingTechnology;
+
 import static micropolisj.engine.TileConstants.*;
 
 /**
@@ -47,6 +49,7 @@ public enum MicropolisTool
 	int size;
 	int cost;
     int minPopulation;
+    BuildingTechnology requiredTechnology;
 
     private MicropolisTool(int size, int cost, int minPopulation) {
 		this.size = size;

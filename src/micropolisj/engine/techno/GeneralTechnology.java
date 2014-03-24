@@ -21,11 +21,13 @@ public class GeneralTechnology implements Technology {
 
 
     public boolean tryToApply(){
-        if(pointsUsed >= pointsNeeded){
-            isResearched = true;
+        if(pointsUsed >= pointsNeeded && isResearched == false){
+            this.isResearched = true;
             resetResearchPoints();
             return true;
         }
+
+        // already applied
         return false;
     }
 
@@ -33,11 +35,11 @@ public class GeneralTechnology implements Technology {
         return pointsNeeded;
     }
     public void addResearchPoints(double points){
-        pointsUsed += points;
+        this.pointsUsed += points;
         tryToApply();
     }
     public void resetResearchPoints(){
-        pointsUsed = 0;
+        this.pointsUsed = 0;
     }
 
 
@@ -50,11 +52,13 @@ public class GeneralTechnology implements Technology {
         return description;
     }
 
-    public MicropolisTool getBuildingNumber(){
+    public MicropolisTool getTool(){
         return buildingNumber;
     }
 
     public boolean getIsResearched(){
+        this.tryToApply();
+        System.out.println("isResearched: " + isResearched);
         return isResearched;
     }
 

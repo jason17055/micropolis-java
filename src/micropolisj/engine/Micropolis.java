@@ -9,6 +9,7 @@
 package micropolisj.engine;
 
 import micropolisj.engine.techno.BuildingTechnology;
+import micropolisj.engine.techno.GeneralTechnology;
 import micropolisj.engine.techno.StreetUpgradeTech;
 import micropolisj.engine.techno.Technology;
 
@@ -216,8 +217,10 @@ public class Micropolis
     ArrayList<BuildingTechnology> buildingTechs;
     ArrayList<Technology> eetechs;
     ArrayList<Technology> infraTechs;
-    double scienceEEPoints;
-    double scienceInfraPoints;
+    double technologyEEPoints;
+    double technologyInfraPoints;
+    Technology selectedInfraTech = null;
+    Technology selectedEETech = null;
 
 	//
 	// budget stuff
@@ -317,8 +320,9 @@ public class Micropolis
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
 
-        scienceEEPoints = 0;
-        scienceInfraPoints = 0;
+        technologyEEPoints = 0;
+        technologyInfraPoints = 0;
+
         initTechs();
 
 
@@ -348,6 +352,9 @@ public class Micropolis
 
         StreetUpgradeTech streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
         infraTechs.add(streetUpgradeTech);
+
+        selectedInfraTech = airportTech;
+        selectedEETech = windTech;
 
     }
 
@@ -731,6 +738,7 @@ public class Micropolis
 			}
 
 			collectTaxPartial();
+            spendTechnologyPoints();
 
 			if (cityTime % TAXFREQ == 0) {
 				collectTax();
@@ -1211,7 +1219,7 @@ public class Micropolis
 
     void updateEducationAverage(int z){
         educationValue += z;
-        educationAverage = educationValue / Math.max((schoolCount + uniaCount + unibCount), 1);
+        educationAverage = educationValue / Math.max((lastSchoolCount + lastUniACount + lastUniBCount), 1);
     }
 
     void updateCultureAverage(int z){
@@ -1771,6 +1779,18 @@ public class Micropolis
 			throw new Error("Unknown behavior: "+behaviorStr);
 		}
 	}
+
+    void spendTechnologyPoints(){
+        if(selectedEETech != null && technologyEEPoints != 0.0){
+            selectedEETech.addResearchPoints(technologyEEPoints);
+            System.out.println("infraTech points already: " + selectedEETech.getPointsUsed() + "/" + selectedEETech.getPointsNeeded());
+        }
+
+        if(selectedInfraTech != null && technologyInfraPoints != 0.0){
+            selectedInfraTech.addResearchPoints(technologyInfraPoints);
+            System.out.println("infraTech points already: " + selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded());
+        }
+    }
 
 	void generateShip()
 	{

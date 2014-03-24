@@ -1319,6 +1319,10 @@ public class MainWindow extends JFrame
                 messagesPane.appendCityMessage(MicropolisMessage.NEED_MORE_CITIZENS);
                 citySound(Sound.SORRY, loc);
                 break;
+            case RESEARCH_REQUIRED:
+                messagesPane.appendCityMessage(MicropolisMessage.RESEARCH_REQUIRED);
+                citySound(Sound.SORRY, loc);
+                break;
             case NO_MORE_CITYHALLS:
                 messagesPane.appendCityMessage(MicropolisMessage.NO_MORE_CITYHALLS);
                 citySound(Sound.SORRY, loc);

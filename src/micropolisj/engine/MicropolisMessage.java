@@ -62,6 +62,7 @@ public enum MicropolisMessage
 	NEED_MORE_CITIZENS,
 	NEED_A_SCHOOL,
 	NO_MORE_CITYHALLS,
+    RESEARCH_REQUIRED,
 	
 	// added by Jason
 	NO_NUCLEAR_PLANTS,

@@ -8,7 +8,8 @@
 
 package micropolisj.engine;
 
-import static micropolisj.engine.TileConstants.CITYHALLBUILDING;
+import micropolisj.engine.techno.BuildingTechnology;
+
 import static micropolisj.engine.TileConstants.CLEAR;
 
 class ToolEffect implements ToolEffectIfc
@@ -95,6 +96,15 @@ class ToolEffect implements ToolEffectIfc
 			return ToolResult.INSUFFICIENT_FUNDS;
 		}
 
+
+        // testing if tool need a certain BuildingTechnology to be applied
+        // iterate tech list if building is inside one of the building technos
+        for(BuildingTechnology t : city.buildingTechs){
+            if(t.getTool() == preview.getTool()){
+                if(t.getIsResearched() == false) return ToolResult.RESEARCH_REQUIRED ; //fix deny message
+            }
+        }
+
         if (city.getCityPopulation() < preview.getTool().getMinPopulation()) {
             return ToolResult.INSUFFICIENT_POPULATION;
         }
@@ -106,7 +116,7 @@ class ToolEffect implements ToolEffectIfc
                 return ToolResult.NO_MORE_CITYHALLS;
         }
 
-        if ((preview.getTool() == MicropolisTool.UNIA || preview.getTool() == MicropolisTool.UNIB) && city.schoolCount < 1)
+        if ((preview.getTool() == MicropolisTool.UNIA || preview.getTool() == MicropolisTool.UNIB) && city.lastSchoolCount < 1)
             return ToolResult.NEED_A_SCHOOL;
 
 
