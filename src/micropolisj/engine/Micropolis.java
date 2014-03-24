@@ -1005,7 +1005,8 @@ public class Micropolis
                 if(cultureMap[sy][sx] > 0) count++;
             }
         }
-
+        
+        count = Math.max(1,count);
         educationAverage = v / count;
 
 
@@ -1029,6 +1030,7 @@ public class Micropolis
             }
         }
 
+        count = Math.max(1,count);
         cultureAverage = v / count;
     }
 
