@@ -19,7 +19,7 @@ public class TrafficSim {
 	HashMap<RoadSpecifiedTile,Integer> mapBack;
 	HashSet<RoadSpecifiedTile> goal;
 	HashSet<RoadSpecifiedTile> found;
-	HashSet<VerySpecifiedTile> found2;
+	HashSet<VerySpecifiedTile> found2; //FIXME change to found 
 	int currentRoadType;
 	
 	
@@ -285,7 +285,7 @@ public class TrafficSim {
 		return best;
 	}
 	
-	void updateReady(RoadSpecifiedTile g, RoadSpecifiedTile f) {
+	private void updateReady(RoadSpecifiedTile g, RoadSpecifiedTile f) {
 		int c=engine.getTrafficCost(f.getLocation(), f.getRoadType())+search(ready,search(ready,g).getPred()).getCosts()+engine.getTrafficCost(g.getLocation(), g.getRoadType());
 		if (search(ready,g).getCosts()<=c) {
 			ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(f.getLocation(),currentRoadType),true,search(ready,g).getRoadType()));
@@ -487,7 +487,7 @@ public class TrafficSim {
 	
 	
 	/**
-	 * Classic BradthFirstSearch, determines the ratio (the intensity) of City-Buildings like police, school, etc.
+	 * Classic BradthFirstSearch, determines the ratio (the intensity) of City-Buildings like police, etc.
 	 * 
 	 * @param loc
 	 * @param depth
