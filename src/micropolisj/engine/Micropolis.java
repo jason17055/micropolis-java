@@ -51,14 +51,6 @@ public class Micropolis
 	 */
 	public int [][] crimeMem;
 
-    /**
-     * For each section of the city, the education level of the city (0-250).
-     * 0 is no education; 250 is maximum education.
-     * Updated each cycle by educationScan(); affects land value.
-     */
-
-    public int [][] educationMem;
-
 	/**
 	 * For each section of the city, the population density (0-?).
 	 * Used for map overlays and as a factor for crime rates.
@@ -96,7 +88,6 @@ public class Micropolis
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
 	int [][] educationMap;
-	public int [][] educationMapEffect;//school reach- used for overlay graphs
 
 	int [][] cityhallMap;
 	public int [][] cityhallEffect;//unib reach- used for overlay graphs
@@ -297,7 +288,6 @@ public class Micropolis
 
 		landValueMem = new int[height][width];
 		pollutionMem = new int[height][width];
-        educationMem = new int[height][width];
 		crimeMem = new int[height][width];
 		popDensity = new int[height][width];
 		trfDensity = new int[height][width];
@@ -309,7 +299,6 @@ public class Micropolis
 		cityhallMap = new int[height][width];
 		cultureMap = new int[height][width];
 		policeMapEffect = new int[height][width];
-		educationMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
         scienceEEPoints = 0;
@@ -992,12 +981,6 @@ public class Micropolis
     // maybe reducing crime when education is up
     void educationSan()
     {
-
-        for (int sy = 0; sy < educationMap.length; sy++) {
-            for (int sx = 0; sx < educationMap[sy].length; sx++) {
-                educationMapEffect[sy][sx] = educationMap[sy][sx];
-            }
-        }
         fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
     }
 
@@ -1469,7 +1452,7 @@ public class Micropolis
 	{
 		double normResPop = (double)resPop / 8.0;
 		totalPop = (int) (normResPop + comPop + indPop);
-		//refactor this on base of visits
+		//TODO refactor this on base of visits
 		double employment;
 		if (normResPop != 0.0)
 		{
@@ -3037,11 +3020,7 @@ public class Micropolis
 					} else {
 						if (g=="rateOGMem") {
 							return rateOGMem[y][x];
-						} else {
-                            if (g=="educationMem") {
-                                return educationMem[y][x];
-                            }
-                        }
+						}
 					}
 				}
 			}
