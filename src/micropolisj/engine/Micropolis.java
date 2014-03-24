@@ -127,8 +127,9 @@ public class Micropolis
 	int poweredZoneCount;
 	int unpoweredZoneCount;
 	int roadTotal;
-	// int bigRoadTotal;
+	int bigroadTotal;
 	int railTotal;
+	int stationTotal;
 	int firePop;
 	int resZoneCount;
 	int comZoneCount;
@@ -162,7 +163,8 @@ public class Micropolis
 	// used in generateBudget()
 	int lastRoadTotal;
 	int lastRailTotal;
-	// int lastBigRoadTotal;
+	int lastStationTotal;
+	int lastBigRoadTotal;
 	int lastTotalPop;
 	int lastFireStationCount;
 	int lastPoliceCount;
@@ -596,8 +598,9 @@ public class Micropolis
 		unpoweredZoneCount = 0;
 		firePop = 0;
 		roadTotal = 0;
+		bigroadTotal = 0;
 		railTotal = 0;
-		// bigRoadTotal = 0;
+		stationTotal = 0; 
 		resPop = 0;
 		comPop = 0;
 		indPop = 0;
@@ -1686,7 +1689,9 @@ public class Micropolis
 		bb.put("FLOOD", new TerrainBehavior(this, TerrainBehavior.B.FLOOD));
 		bb.put("RADIOACTIVE", new TerrainBehavior(this, TerrainBehavior.B.RADIOACTIVE));
 		bb.put("ROAD", new TerrainBehavior(this, TerrainBehavior.B.ROAD));
+		bb.put("BIGROAD", new TerrainBehavior(this, TerrainBehavior.B.BIGROAD));
 		bb.put("RAIL", new TerrainBehavior(this, TerrainBehavior.B.RAIL));
+		bb.put("STATION", new TerrainBehavior(this, TerrainBehavior.B.STATION));
 		bb.put("EXPLOSION", new TerrainBehavior(this, TerrainBehavior.B.EXPLOSION));
 		bb.put("RESIDENTIAL", new MapScanner(this, MapScanner.B.RESIDENTIAL));
 		bb.put("HOSPITAL_CHURCH", new MapScanner(this, MapScanner.B.HOSPITAL_CHURCH));
@@ -1978,7 +1983,9 @@ public class Micropolis
 	void collectTaxPartial()
 	{
 		lastRoadTotal = roadTotal;
+		lastBigRoadTotal = bigroadTotal;
 		lastRailTotal = railTotal;
+		lastStationTotal = stationTotal;
 		lastTotalPop = totalPop;
 		lastFireStationCount = fireStationCount;
 		lastPoliceCount = policeCount;

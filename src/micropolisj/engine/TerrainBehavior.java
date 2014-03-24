@@ -26,7 +26,9 @@ class TerrainBehavior extends TileBehavior
 		FLOOD,
 		RADIOACTIVE,
 		ROAD,
+		BIGROAD,
 		RAIL,
+		STATION,
 		EXPLOSION;
 	}
 
@@ -45,6 +47,9 @@ class TerrainBehavior extends TileBehavior
 			return;
 		case ROAD:
 			doRoad();
+			return;
+		case BIGROAD:
+			doBigRoad();
 			return;
 		case RAIL:
 			doRail();
@@ -213,6 +218,66 @@ class TerrainBehavior extends TileBehavior
 		}
 	}
 
+	
+	void doBigRoad()
+	{
+		city.bigroadTotal++;
+
+		if (city.roadEffect < 30)
+		{
+			// deteriorating roads
+			if (PRNG.nextInt(512) == 0)
+			{
+				if (!isConductive(tile))
+				{
+					if (city.roadEffect < PRNG.nextInt(32))
+					{
+						if (isOverWater(tile))
+							city.setTile(xpos, ypos, RIVER);
+						else
+							city.setTile(xpos, ypos, (char)(RUBBLE + PRNG.nextInt(4)));
+						return;
+					}
+				}
+			}
+		}
+
+		if (!isCombustible(tile)) //bridge
+		{
+			city.bigroadTotal += 4;
+			if (doBridge())
+				return;
+		}
+
+		int tden;
+		if (tile < BIGLTRFBASE)
+			tden = 0;
+		else if (tile < BIGHTRFBASE)
+			tden = 1;
+		else {
+			city.bigroadTotal++;
+			tden = 2;
+		}
+
+		int trafficDensity = city.getTrafficDensity(xpos, ypos);
+		int newLevel = trafficDensity < 64 ? 0 :
+			trafficDensity < 192 ? 1 : 2;
+		
+		assert newLevel >= 0 && newLevel < TRAFFIC_DENSITY_TAB.length;
+
+		if (tden != newLevel)
+		{
+			int z = (((rawTile & LOMASK) - ROADBASE) & 15) + TRAFFIC_DENSITY_TAB[newLevel];
+			z += rawTile & ALLBITS;
+
+			city.setTile(xpos, ypos, (char) z);
+		}
+	}
+	
+	
+	
+	
+	
 	/**
 	 * Called when the current tile is railroad.
 	 */
