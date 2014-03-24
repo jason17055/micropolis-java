@@ -86,6 +86,7 @@ class ToolEffect implements ToolEffectIfc
 			return ToolResult.INSUFFICIENT_FUNDS;
 		}
 
+
 		boolean anyFound = false;
 		for (int y = 0; y < preview.tiles.length; y++) {
 			for (int x = 0; x < preview.tiles[y].length; x++) {
