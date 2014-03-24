@@ -737,7 +737,8 @@ public class Micropolis
             crimeScan();
 			break;
         case 15:
-            educationSan();
+            educationScan();
+            cultureScan();
             fireAnalysis();
             doDisasters();
 			break;
@@ -991,7 +992,7 @@ public class Micropolis
 
     // basically copying functionality of crimeScan first and then applying relevant changes
     // maybe reducing crime when education is up
-    void educationSan()
+    void educationScan()
     {
         int count = 0;
         int v = 0;
@@ -1028,10 +1029,6 @@ public class Micropolis
         }
 
         cultureAverage = v / count;
-
-
-
-        fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
     }
 
 
