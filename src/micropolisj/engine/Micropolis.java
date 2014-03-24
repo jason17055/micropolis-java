@@ -3087,7 +3087,7 @@ public class Micropolis
 	}
 	/**
 	 * Traffic costs to pass this field.
-	 * @param
+	 * @param cur: current road type.
 	 * @return costs
 	 */
 	public int getTrafficCost(CityLocation loc, int cur) { //TODO test values
