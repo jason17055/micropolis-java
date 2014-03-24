@@ -105,7 +105,7 @@ public class TrafficSim {
 			return 0;
 		}
 		if(evalfunc(start,toHashSet(findPeriphereRoad(end)))<10){
-			return 100;
+			return (200000/(evalfunc(start,toHashSet(findPeriphereRoad(end))))+20)*factor/100;
 		}
 		else{
 			return (200000/(evalfunc(start,toHashSet(findPeriphereRoad(end))))+20)*factor; 
