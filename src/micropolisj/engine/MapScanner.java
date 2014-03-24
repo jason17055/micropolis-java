@@ -294,11 +294,9 @@ class MapScanner extends TileBehavior
 	}
 	void doSchool()
 	{
-        city.educationMap[ypos][xpos] /= 4;
-
 		boolean powerOn = checkZonePower();
 		city.schoolCount++;
-		
+
 		if (0==city.PRNG.nextInt(5)) {
 			traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
@@ -323,12 +321,18 @@ class MapScanner extends TileBehavior
         oldTraffic.mapX = xpos;
 		oldTraffic.mapY = ypos;
 
-		city.educationMap[ypos][xpos] += z;
+
+        city.updateEducationAverage(z);
+
+
 	}
+
+
+
+
 	
 	void doMuseum()
 	{
-        city.cultureMap[ypos][xpos] /= 4;
 
 		boolean powerOn = checkZonePower();
 		city.museumCount++;
@@ -349,13 +353,11 @@ class MapScanner extends TileBehavior
 			z /= 2;
 		}
 
-		city.cultureMap[ypos][xpos] += z;
+		city.updateCultureAverage(z);
 	}
 	
 	void doUniA() // researches scienceEEPoints
 	{
-        city.educationMap[ypos][xpos] /= 4;
-
 		boolean powerOn = checkZonePower();
 		city.uniaCount++;
 		if ((city.cityTime % 8) == 0) {
@@ -382,15 +384,11 @@ class MapScanner extends TileBehavior
 		oldTraffic.mapX = xpos;
 		oldTraffic.mapY = ypos;
 
-		city.educationMap[ypos][xpos] += z;
+        city.updateEducationAverage(z);
 	}
 	
 	void doUniB() // researches scienceInfraPoints
 	{
-        // first reduce educationmap for inertia
-        city.educationMap[ypos][xpos] /= 4;
-
-
 		boolean powerOn = checkZonePower();
 		city.unibCount++;
 		if ((city.cityTime % 8) == 0) {
@@ -417,7 +415,7 @@ class MapScanner extends TileBehavior
 		oldTraffic.mapY = ypos;
 
 
-		city.educationMap[ypos][xpos] += z;
+        city.updateEducationAverage(z);
 	}
 	
 	void doCityHall()
@@ -448,8 +446,6 @@ class MapScanner extends TileBehavior
 	
 	void doOpenAir()
 	{
-        city.cultureMap[ypos][xpos] /= 4;
-
 			boolean powerOn = checkZonePower();
 			city.openairCount++;
 			if ((city.cityTime % 8) == 0) {
@@ -473,14 +469,11 @@ class MapScanner extends TileBehavior
         int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
         z = z * (visits+1);
 
-		city.cultureMap[ypos][xpos] += z;
-
+        city.updateCultureAverage(z);
 	}
 	
 	void doStadiumEmpty()
 	{
-        city.cultureMap[ypos][xpos] /= 4;
-
 		boolean powerOn = checkZonePower();
 		city.stadiumCount++;
 		if ((city.cityTime % 16) == 0) {
@@ -496,9 +489,7 @@ class MapScanner extends TileBehavior
 			}
 		}else z = city.cultureEffect/2;
 
-        city.cultureMap[ypos][xpos] += z;
-
-
+        city.updateCultureAverage(z);
 	}
 
 	void doStadiumFull()
@@ -756,7 +747,7 @@ class MapScanner extends TileBehavior
 		//TODO design new algorithms for growth of main zones
 		
 		if (tile == RESCLR || PRNG.nextInt(8) == 0) {
-			int visit = city.dummySearch(city.visits, new CityLocation(xpos,ypos));
+			int visit = city.dummySearch(city.visits, new CityLocation(xpos, ypos));
 			int r =0;
 			if (!powerOn) {
 				r+=4;
@@ -764,7 +755,7 @@ class MapScanner extends TileBehavior
 			if (trafficGood==-1) {
 				r++;
 			}
-			if (city.PRNG.nextInt(125*tpop)>=r) { //let zone decrease if there is no power or roads
+			if (city.PRNG.nextInt(125 * Math.max(tpop,1))>=r) { //let zone decrease if there is no power or roads
 				int value = getCRValue();
 				doResidentialOut(tpop, value);
 				return;
@@ -919,7 +910,7 @@ class MapScanner extends TileBehavior
 			assert houseNumber >= 0 && houseNumber < 12;
 
 			assert city.testBounds(xx, yy);
-			city.setTile(xx, yy, (char)(HOUSE + houseNumber));
+			city.setTile(xx, yy, (char) (HOUSE + houseNumber));
 		}
 	}
 

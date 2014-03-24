@@ -87,12 +87,11 @@ public class Micropolis
 	public int [][] fireRate;       //firestations reach- used for overlay graphs
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
-	int [][] educationMap;
+    public int educationValue;
+    public int cultureValue;
 
 	int [][] cityhallMap;
-	public int [][] cityhallEffect;//unib reach- used for overlay graphs
-	int [][] cultureMap;
-	public int [][] cultureMapEffect;
+	public int [][] cityhallEffect; //unib reach- used for overlay graphs
 
 	/** For each section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
@@ -296,9 +295,7 @@ public class Micropolis
 		rateOGMem = new int[height][width];
 		fireStMap = new int[height][width];
 		policeMap = new int[height][width];
-		educationMap = new int[height][width];
 		cityhallMap = new int[height][width];
-		cultureMap = new int[height][width];
 		policeMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
@@ -623,8 +620,6 @@ public class Micropolis
 			for (int x = 0; x < fireStMap[y].length; x++) {
 				fireStMap[y][x] = 0;
 				policeMap[y][x] = 0;
-				educationMap[y][x] = 0;
-				cultureMap[y][x] = 0;
 				cityhallMap[y][x] = 0;
 			}
 		}
@@ -726,8 +721,6 @@ public class Micropolis
             crimeScan();
 			break;
         case 15:
-            educationScan();
-            cultureScan();
             fireAnalysis();
             doDisasters();
 			break;
@@ -979,44 +972,6 @@ public class Micropolis
 		}
 	}
 
-    // basically copying functionality of crimeScan first and then applying relevant changes
-    // maybe reducing crime when education is up
-    void educationScan()
-    {
-        int count = 0;
-        int v = 0;
-
-        for (int sy = 0; sy < educationMap.length; sy++) {
-            for (int sx = 0; sx < educationMap[sy].length; sx++) {
-                count++;
-            }
-        }
-
-        educationAverage = v / count;
-        fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
-    }
-
-
-    // basically copying functionality of crimeScan first and then applying relevant changes
-    // maybe reducing crime when education is up
-    void cultureScan()
-    {
-        int count = 0;
-        int v = 0;
-
-        for (int sy = 0; sy < cultureMap.length; sy++) {
-            for (int sx = 0; sx < cultureMap[sy].length; sx++) {
-                cultureMapEffect[sy][sx] = cultureMap[sy][sx];
-                count++;
-                v += cultureMap[sy][sx];
-            }
-        }
-
-        cultureAverage = v / count;
-    }
-
-
-
 	void crimeScan()
 	{
         spreadPollution(policeMap,15,4, 20);
@@ -1207,6 +1162,17 @@ public class Micropolis
 		return loci;
 	}
 
+    void updateEducationAverage(int z){
+        educationValue += z;
+        educationAverage = educationValue / Math.max((schoolCount + uniaCount + unibCount), 1);
+    }
+
+    void updateCultureAverage(int z){
+        cultureValue += z;
+        cultureAverage = cultureValue / Math.max((museumCount + stadiumCount + openairCount), 1);
+    }
+
+
     void powerScan()
     {
         // clear powerMap
@@ -1370,6 +1336,7 @@ public class Micropolis
             spreadPollution(pollutionMem,17,8,15);
         }
     }
+
 
 
 
@@ -1870,6 +1837,12 @@ public class Micropolis
 		int resMax = 0;
 		int comMax = 0;
 		int indMax = 0;
+
+        // inertia for education and culture
+        educationValue /= 4;
+        cultureValue /= 4;
+        updateEducationAverage(0);
+        updateCultureAverage(0);
 
 		for (int i = 118; i >= 0; i--)
 		{
