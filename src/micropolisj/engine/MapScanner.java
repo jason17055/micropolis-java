@@ -733,6 +733,7 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.resZoneCount++;
+		int tHelp=1;
 
 		int tpop; //population of this zone
 		if (tile == RESCLR)
@@ -742,9 +743,11 @@ class MapScanner extends TileBehavior
 		else
 		{
 			tpop = residentialZonePop(tile);
+			tHelp=tpop;
 		}
 
 		city.resPop += tpop;
+		
 
 		int trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		for (int i=2;i<tpop/8;i++) {
@@ -767,10 +770,11 @@ class MapScanner extends TileBehavior
 				return;
 			}
 			trafficGood+=2;
-			int res=100*visit+city.valueMapping(trafficGood, 0, 60000, 100, 0)/trafficGood;
+			int res=100*visit/tHelp+city.valueMapping(trafficGood, 0, 60000, 100, 0)/trafficGood;
 			res+=getLandValue3x3();
-			res+=getPollution3x3()/4;
-			res+=getCrime3x3()/2;
+			res-=getPollution3x3()/4;
+			res-=getCrime3x3()/2;
+			res+=city.cultureAverage+city.educationAverage;
 			if (true)
 			{
 				if (tpop == 0 && PRNG.nextInt(4) == 0) {
