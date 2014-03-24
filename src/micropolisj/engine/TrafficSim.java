@@ -278,7 +278,6 @@ public class TrafficSim {
 		if (best==16384*3000*20) {
 			return -1;
 		}
-		System.out.println(best);
         //Vector<CityLocation> way=new Vector<CityLocation>();
         engine.paths.clear();
 		while (!RoadSpecifiedTile.equals(search(ready,fastGoal).getPred(),new RoadSpecifiedTile(new CityLocation(-1,-1),0))) { //add traffic to way 
@@ -288,10 +287,6 @@ public class TrafficSim {
 		}
 		return best;
 	}
-	
-	/*private boolean sameRoadType(int roadType1, int roadType2) {
-		return roadType1==4 || roadType2==4 || (RoadSpecifiedTile.isRoad(roadType1)==RoadSpecifiedTile.isRoad(roadType2) && RoadSpecifiedTile.isRail(roadType1)==RoadSpecifiedTile.isRail(roadType2));
-	}*/
 	
 	/**
 	 *  caluclate possible roadTypes
