@@ -191,6 +191,7 @@ public class Micropolis
 	int needChurch;   // -1 too many already, 0 just right, 1 not enough
 
 	int crimeAverage;
+    int cultureAverage;
     int educationAverage;
 	int pollutionAverage;
 	int landValueAverage;
@@ -992,15 +993,46 @@ public class Micropolis
     // maybe reducing crime when education is up
     void educationSan()
     {
+        int count = 0;
+        int v = 0;
 
         for (int sy = 0; sy < educationMap.length; sy++) {
             for (int sx = 0; sx < educationMap[sy].length; sx++) {
                 educationMapEffect[sy][sx] = educationMap[sy][sx];
+                count++;
+                v += educationMap[sy][sx];
             }
         }
+
+        educationAverage = v / count;
+
+
+
         fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
     }
 
+
+    // basically copying functionality of crimeScan first and then applying relevant changes
+    // maybe reducing crime when education is up
+    void cultureScan()
+    {
+        int count = 0;
+        int v = 0;
+
+        for (int sy = 0; sy < cultureMap.length; sy++) {
+            for (int sx = 0; sx < cultureMap[sy].length; sx++) {
+                cultureMapEffect[sy][sx] = cultureMap[sy][sx];
+                count++;
+                v += cultureMap[sy][sx];
+            }
+        }
+
+        cultureAverage = v / count;
+
+
+
+        fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
+    }
 
 
 
@@ -1888,7 +1920,6 @@ public class Micropolis
 
 		crimeRamp = (crimeAverage);
 		history.crime[0] = Math.min(255, crimeRamp);
-
 
 		polluteRamp = pollutionAverage;
 		history.pollution[0] = Math.min(255, polluteRamp);
