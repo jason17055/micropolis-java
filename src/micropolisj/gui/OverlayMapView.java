@@ -214,17 +214,6 @@ public class OverlayMapView extends JComponent
 		}
 	}
 
-    private void drawEducationMap(Graphics gr)
-    {
-        int [][] A = engine.educationMem;
-
-        for (int y = 0; y < A.length; y++) {
-            for (int x = 0; x < A[y].length; x++) {
-                maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,3,3);
-            }
-        }
-    }
-
 	private void drawPopDensity(Graphics gr)
 	{
 		int [][] A = engine.popDensity;
@@ -271,14 +260,7 @@ public class OverlayMapView extends JComponent
 
     private void drawSchoolRadius(Graphics gr)
     {
-        System.out.println("draw school radius");
-        int [][] A = engine.educationMapEffect;
-
-        for (int y = 0; y < A.length; y++) {
-            for (int x = 0; x < A[y].length; x++) {
-                maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,3,3);
-            }
-        }
+        return;
     }
 
 	private void maybeDrawRect(Graphics gr, Color col, int x, int y, int width, int height)

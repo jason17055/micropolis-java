@@ -977,67 +977,74 @@ public class MainWindow extends JFrame
         gridBox.add(b1, c);
 
         b1.add(makeToolBtn(MicropolisTool.ROADS));
-        b1.add(makeToolBtn(MicropolisTool.RAIL));
-
+        b1.add(makeToolBtn(MicropolisTool.BIGROADS));
+        
         c.gridy++;
         Box b2 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b2, c);
-
-        b2.add(makeToolBtn(MicropolisTool.RESIDENTIAL));
-        b2.add(makeToolBtn(MicropolisTool.COMMERCIAL));
-        b2.add(makeToolBtn(MicropolisTool.INDUSTRIAL));
+        
+        b2.add(makeToolBtn(MicropolisTool.RAIL));
+        b2.add(makeToolBtn(MicropolisTool.STATION));
 
         c.gridy++;
         Box b3 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b3, c);
 
-        b3.add(makeToolBtn(MicropolisTool.FIRE));
-        b3.add(makeToolBtn(MicropolisTool.QUERY));
-        b3.add(makeToolBtn(MicropolisTool.POLICE));
+        b3.add(makeToolBtn(MicropolisTool.RESIDENTIAL));
+        b3.add(makeToolBtn(MicropolisTool.COMMERCIAL));
+        b3.add(makeToolBtn(MicropolisTool.INDUSTRIAL));
 
         c.gridy++;
         Box b4 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b4, c);
 
-        b4.add(makeToolBtn(MicropolisTool.POWERPLANT));
-        b4.add(makeToolBtn(MicropolisTool.NUCLEAR));
-        b4.add(makeToolBtn(MicropolisTool.SOLAR));
-        b4.add(makeToolBtn(MicropolisTool.WIND));
-        
+        b4.add(makeToolBtn(MicropolisTool.FIRE));
+        b4.add(makeToolBtn(MicropolisTool.QUERY));
+        b4.add(makeToolBtn(MicropolisTool.POLICE));
+
         c.gridy++;
         Box b5 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b5, c);
 
-    //    b5.add(makeToolBtn(MicropolisTool.STADIUM));
-      //  b5.add(makeToolBtn(MicropolisTool.SEAPORT));
-        b5.add(makeToolBtn(MicropolisTool.SCHOOL));
-        b5.add(makeToolBtn(MicropolisTool.UNIA));
-        b5.add(makeToolBtn(MicropolisTool.UNIB));
+        b5.add(makeToolBtn(MicropolisTool.POWERPLANT));
+        b5.add(makeToolBtn(MicropolisTool.NUCLEAR));
+        b5.add(makeToolBtn(MicropolisTool.SOLAR));
+        b5.add(makeToolBtn(MicropolisTool.WIND));
         
-
         c.gridy++;
         Box b6 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b6, c);
 
-        b6.add(makeToolBtn(MicropolisTool.OPENAIR));
-        b6.add(makeToolBtn(MicropolisTool.STADIUM));
-    //   b6.add(makeToolBtn(MicropolisTool.AIRPORT));
-        b6.add(makeToolBtn(MicropolisTool.MUSEUM));
+    //    b5.add(makeToolBtn(MicropolisTool.STADIUM));
+      //  b5.add(makeToolBtn(MicropolisTool.SEAPORT));
+        b6.add(makeToolBtn(MicropolisTool.SCHOOL));
+        b6.add(makeToolBtn(MicropolisTool.UNIA));
+        b6.add(makeToolBtn(MicropolisTool.UNIB));
         
+
         c.gridy++;
         Box b7 = new Box(BoxLayout.X_AXIS);
-	    gridBox.add(b7, c);
+        gridBox.add(b7, c);
+
+        b7.add(makeToolBtn(MicropolisTool.OPENAIR));
+        b7.add(makeToolBtn(MicropolisTool.STADIUM));
+    //   b6.add(makeToolBtn(MicropolisTool.AIRPORT));
+        b7.add(makeToolBtn(MicropolisTool.MUSEUM));
+        
+        c.gridy++;
+        Box b8 = new Box(BoxLayout.X_AXIS);
+	    gridBox.add(b8, c);
 	    
 	//    b7.add(makeToolBtn(MicropolisTool.STATION));
-	    b7.add(makeToolBtn(MicropolisTool.SEAPORT));
-	    b7.add(makeToolBtn(MicropolisTool.AIRPORT));
+	    b8.add(makeToolBtn(MicropolisTool.SEAPORT));
+	    b8.add(makeToolBtn(MicropolisTool.AIRPORT));
 	    
 	    c.gridy++;
-        Box b8 = new Box(BoxLayout.X_AXIS);
-        gridBox.add(b8, c);
+        Box b9 = new Box(BoxLayout.X_AXIS);
+        gridBox.add(b9, c);
         
-        b8.add(makeToolBtn(MicropolisTool.CITYHALL));
-        b8.add(makeToolBtn(MicropolisTool.BIGPARK));
+        b9.add(makeToolBtn(MicropolisTool.CITYHALL));
+        b9.add(makeToolBtn(MicropolisTool.BIGPARK));
 
         // add glue to make all elements align toward top
         c.gridy++;

@@ -16,7 +16,7 @@ public class MakeTiles
 
 	static final Charset UTF8 = Charset.forName("UTF-8");
 	static int SKIP_TILES = 0;
-	static int NTILES = 1067;
+	static int NTILES = 1226;
 	static int TILE_SIZE = 16;
 
 	public static void main(String [] args)

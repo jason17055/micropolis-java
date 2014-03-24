@@ -7,11 +7,12 @@
 // See the README file, included in this distribution, for details.
 
 package micropolisj.engine;
+import java.lang.Comparable;
 
 /**
  * Coordinates of a location (x,y) in the city.
  */
-public class CityLocation
+public class CityLocation implements Comparable<CityLocation>
 {
 	/** The X coordinate of this location.
 	 * Increasing X coordinates correspond to East,
@@ -70,6 +71,21 @@ public class CityLocation
 		}else{
 			return false;
 		}
+	}
+	
+	public int compareTo(CityLocation b){
+		if(this.equals(this,b)){
+			return 0;
+		}else if(this.x<b.x){
+			return -1;
+		}else if(this.x>b.x){
+			return 1;
+		}else if(this.y<b.y){
+			return -1;
+		}else{
+			return 1;
+		}
+		
 	}
 	
 	

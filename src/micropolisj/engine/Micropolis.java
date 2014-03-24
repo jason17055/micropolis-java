@@ -51,14 +51,6 @@ public class Micropolis
 	 */
 	public int [][] crimeMem;
 
-    /**
-     * For each section of the city, the education level of the city (0-250).
-     * 0 is no education; 250 is maximum education.
-     * Updated each cycle by educationScan(); affects land value.
-     */
-
-    public int [][] educationMem;
-
 	/**
 	 * For each section of the city, the population density (0-?).
 	 * Used for map overlays and as a factor for crime rates.
@@ -95,13 +87,11 @@ public class Micropolis
 	public int [][] fireRate;       //firestations reach- used for overlay graphs
 	int [][] policeMap;      //police stations- cleared and rebuilt each sim cycle
 	public int [][] policeMapEffect;//police stations reach- used for overlay graphs
-	int [][] educationMap;
-	public int [][] educationMapEffect;//school reach- used for overlay graphs
+    public int educationValue;
+    public int cultureValue;
 
 	int [][] cityhallMap;
-	public int [][] cityhallEffect;//unib reach- used for overlay graphs
-	int [][] cultureMap;
-	public int [][] cultureMapEffect;
+	public int [][] cityhallEffect; //unib reach- used for overlay graphs
 
 	/** For each section of city, this is an integer between 0 and 64,
 	 * with higher numbers being closer to the center of the city. */
@@ -127,8 +117,9 @@ public class Micropolis
 	int poweredZoneCount;
 	int unpoweredZoneCount;
 	int roadTotal;
-	// int bigRoadTotal;
+	int bigroadTotal;
 	int railTotal;
+	int stationTotal;
 	int firePop;
 	int resZoneCount;
 	int comZoneCount;
@@ -162,7 +153,8 @@ public class Micropolis
 	// used in generateBudget()
 	int lastRoadTotal;
 	int lastRailTotal;
-	// int lastBigRoadTotal;
+	int lastStationTotal;
+	int lastBigRoadTotal;
 	int lastTotalPop;
 	int lastFireStationCount;
 	int lastPoliceCount;
@@ -298,7 +290,6 @@ public class Micropolis
 
 		landValueMem = new int[height][width];
 		pollutionMem = new int[height][width];
-        educationMem = new int[height][width];
 		crimeMem = new int[height][width];
 		popDensity = new int[height][width];
 		trfDensity = new int[height][width];
@@ -306,11 +297,8 @@ public class Micropolis
 		rateOGMem = new int[height][width];
 		fireStMap = new int[height][width];
 		policeMap = new int[height][width];
-		educationMap = new int[height][width];
 		cityhallMap = new int[height][width];
-		cultureMap = new int[height][width];
 		policeMapEffect = new int[height][width];
-		educationMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
         scienceEEPoints = 0;
@@ -597,8 +585,9 @@ public class Micropolis
 		unpoweredZoneCount = 0;
 		firePop = 0;
 		roadTotal = 0;
+		bigroadTotal = 0;
 		railTotal = 0;
-		// bigRoadTotal = 0;
+		stationTotal = 0; 
 		resPop = 0;
 		comPop = 0;
 		indPop = 0;
@@ -634,8 +623,6 @@ public class Micropolis
 			for (int x = 0; x < fireStMap[y].length; x++) {
 				fireStMap[y][x] = 0;
 				policeMap[y][x] = 0;
-				educationMap[y][x] = 0;
-				cultureMap[y][x] = 0;
 				cityhallMap[y][x] = 0;
 			}
 		}
@@ -737,8 +724,6 @@ public class Micropolis
             crimeScan();
 			break;
         case 15:
-            educationScan();
-            cultureScan();
             fireAnalysis();
             doDisasters();
 			break;
@@ -990,49 +975,6 @@ public class Micropolis
 		}
 	}
 
-    // basically copying functionality of crimeScan first and then applying relevant changes
-    // maybe reducing crime when education is up
-    void educationScan()
-    {
-        int count = 0;
-        int v = 0;
-
-        for (int sy = 0; sy < educationMap.length; sy++) {
-            for (int sx = 0; sx < educationMap[sy].length; sx++) {
-                educationMapEffect[sy][sx] = educationMap[sy][sx];
-                count++;
-                v += educationMap[sy][sx];
-            }
-        }
-
-        educationAverage = v / count;
-
-
-
-        fireMapOverlayDataChanged(MapState.SCHOOL_OVERLAY);
-    }
-
-
-    // basically copying functionality of crimeScan first and then applying relevant changes
-    // maybe reducing crime when education is up
-    void cultureScan()
-    {
-        int count = 0;
-        int v = 0;
-
-        for (int sy = 0; sy < cultureMap.length; sy++) {
-            for (int sx = 0; sx < cultureMap[sy].length; sx++) {
-                cultureMapEffect[sy][sx] = cultureMap[sy][sx];
-                count++;
-                v += cultureMap[sy][sx];
-            }
-        }
-
-        cultureAverage = v / count;
-    }
-
-
-
 	void crimeScan()
 	{
         spreadPollution(policeMap,15,4, 20);
@@ -1223,6 +1165,17 @@ public class Micropolis
 		return loci;
 	}
 
+    void updateEducationAverage(int z){
+        educationValue += z;
+        educationAverage = educationValue / Math.max((schoolCount + uniaCount + unibCount), 1);
+    }
+
+    void updateCultureAverage(int z){
+        cultureValue += z;
+        cultureAverage = cultureValue / Math.max((museumCount + stadiumCount + openairCount), 1);
+    }
+
+
     void powerScan()
     {
         // clear powerMap
@@ -1389,6 +1342,7 @@ public class Micropolis
 
 
 
+
     void ptlScan()
     {
         final int qX = (getWidth());
@@ -1498,7 +1452,7 @@ public class Micropolis
 	{
 		double normResPop = (double)resPop / 8.0;
 		totalPop = (int) (normResPop + comPop + indPop);
-		//refactor this on base of visits
+		//TODO refactor this on base of visits
 		double employment;
 		if (normResPop != 0.0)
 		{
@@ -1715,7 +1669,9 @@ public class Micropolis
 		bb.put("FLOOD", new TerrainBehavior(this, TerrainBehavior.B.FLOOD));
 		bb.put("RADIOACTIVE", new TerrainBehavior(this, TerrainBehavior.B.RADIOACTIVE));
 		bb.put("ROAD", new TerrainBehavior(this, TerrainBehavior.B.ROAD));
+		bb.put("BIGROAD", new TerrainBehavior(this, TerrainBehavior.B.BIGROAD));
 		bb.put("RAIL", new TerrainBehavior(this, TerrainBehavior.B.RAIL));
+		bb.put("STATION", new TerrainBehavior(this, TerrainBehavior.B.STATION));
 		bb.put("EXPLOSION", new TerrainBehavior(this, TerrainBehavior.B.EXPLOSION));
 		bb.put("RESIDENTIAL", new MapScanner(this, MapScanner.B.RESIDENTIAL));
 		bb.put("HOSPITAL_CHURCH", new MapScanner(this, MapScanner.B.HOSPITAL_CHURCH));
@@ -1887,6 +1843,12 @@ public class Micropolis
 		int comMax = 0;
 		int indMax = 0;
 
+        // inertia for education and culture
+        educationValue /= 4;
+        cultureValue /= 4;
+        updateEducationAverage(0);
+        updateCultureAverage(0);
+
 		for (int i = 118; i >= 0; i--)
 		{
 			if (history.res[i] > resMax)
@@ -2006,7 +1968,9 @@ public class Micropolis
 	void collectTaxPartial()
 	{
 		lastRoadTotal = roadTotal;
+		lastBigRoadTotal = bigroadTotal;
 		lastRailTotal = railTotal;
+		lastStationTotal = stationTotal;
 		lastTotalPop = totalPop;
 		lastFireStationCount = fireStationCount;
 		lastPoliceCount = policeCount;
@@ -3065,11 +3029,7 @@ public class Micropolis
 					} else {
 						if (g=="rateOGMem") {
 							return rateOGMem[y][x];
-						} else {
-                            if (g=="educationMem") {
-                                return educationMem[y][x];
-                            }
-                        }
+						}
 					}
 				}
 			}
@@ -3134,7 +3094,7 @@ public class Micropolis
 	}
 	/**
 	 * Traffic costs to pass this field.
-	 * @param
+	 * @param cur: current road type.
 	 * @return costs
 	 */
 	public int getTrafficCost(CityLocation loc, int cur) { //TODO test values

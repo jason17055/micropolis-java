@@ -164,12 +164,41 @@ public class TileConstants
 	static final char WIND = 1066;
 	public static final char LAST_TILE = 1066;
 	static final char NEWLASTZONE = 1067;
+	static final char BIGROADBASE = 1067;
+	static final char BIGHBRIDGE = 1067;
+	static final char BIGVBRIDGE = 1068;
+	static final char BIGROADS = 1069;
+	static final char BIGROADS2 = 1070;
+	private static final char BIGROADS3 = 1071;
+	private static final char BIGROADS4 = 1072;
+	private static final char BIGROADS5 = 1073;
+	private static final char BIGROADS6 = 1074;
+	private static final char BIGROADS7 = 1075;
+	private static final char BIGROADS8 = 1076;
+	private static final char BIGROADS9 = 1077;
+	private static final char BIGROADS10 = 1078;
+	static final char BIGINTERSECTION = 1079;
+	static final char BIGHROADPOWER = 1080;
+	static final char BIGVROADPOWER = 1081;
+	static final char BIGBRWH = 1082;       //horz bridge, open
+	static final char BIGLTRFBASE = 1083;
+	static final char BIGBRWV = 1098;       //vert bridge, open
+	static final char BIGHTRFBASE = 1147;
+	private static final char BIGLASTROAD = 1209;
+	static final char STATION = 1210;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,
 		ROADS2, ROADS2, ROADS4, ROADS8,
 		ROADS, ROADS6, ROADS, ROADS7,
 		ROADS5, ROADS10, ROADS9, INTERSECTION
+		};
+	
+	static final char [] BigRoadTable = new char[] {
+		BIGROADS, BIGROADS2, BIGROADS, BIGROADS3,
+		BIGROADS2, BIGROADS2, BIGROADS4, BIGROADS8,
+		BIGROADS, BIGROADS6, BIGROADS, BIGROADS7,
+		BIGROADS5, BIGROADS10, BIGROADS9, BIGINTERSECTION
 		};
 
 	static final char [] RailTable = new char[] {
@@ -522,6 +551,62 @@ public class TileConstants
 			(tile != HRAILROAD) &&
 			(tile != VBRIDGE));
 	}
+	
+	
+	
+	
+	public static boolean isBigRoadDynamic(int tile)
+	{
+		int tmp = neutralizeRoad(tile);
+		return (tmp >= BIGROADS && tmp <= BIGINTERSECTION);
+	}
+
+	public static boolean bigroadConnectsEast(int tile)
+	{
+		tile = neutralizeRoad(tile);
+		return (((tile == VRAILROAD) ||
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			) &&
+			(tile != BIGVROADPOWER) &&
+			(tile != HRAILROAD) &&
+			(tile != BIGVBRIDGE));
+	}
+
+	public static boolean bigroadConnectsNorth(int tile)
+	{
+		tile = neutralizeRoad(tile);
+		return (((tile == HRAILROAD) ||
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			) &&
+			(tile != BIGHROADPOWER) &&
+			(tile != VRAILROAD) &&
+			(tile != BIGROADBASE));
+	}
+
+	public static boolean bigroadConnectsSouth(int tile)
+	{
+		tile = neutralizeRoad(tile);
+		return (((tile == HRAILROAD) ||
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			) &&
+			(tile != BIGHROADPOWER) &&
+			(tile != VRAILROAD) &&
+			(tile != BIGROADBASE));
+	}
+
+	public static boolean bigroadConnectsWest(int tile)
+	{
+		tile = neutralizeRoad(tile);
+		return (((tile == VRAILROAD) ||
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)	
+			) &&
+			(tile != BIGVROADPOWER) &&
+			(tile != HRAILROAD) &&
+			(tile != BIGVBRIDGE));
+	}
+	
+	
+	
 
 	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad crossover)
 	{

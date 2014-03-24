@@ -19,7 +19,9 @@ public enum MicropolisTool
 	BULLDOZER(1, 1),
 	WIRE(1, 5),   //cost=25 for underwater
 	ROADS(1, 10), //cost=50 for over water
-	RAIL(1, 20),  //cost=100 for underwater
+	BIGROADS(1, 20), //cost=xx for over water
+	RAIL(1, 25),  //cost=100 for underwater
+	STATION(1, 200),  
 	RESIDENTIAL(3, 100),
 	COMMERCIAL(3, 100),
 	INDUSTRIAL(3, 100),
@@ -68,7 +70,9 @@ public enum MicropolisTool
 		}
 		else if (this == WIRE ||
 			this == ROADS ||
-			this == RAIL) {
+			this == BIGROADS ||
+			this == RAIL ||
+			this == STATION ) {
 			return new RoadLikeTool(engine, this, xpos, ypos);
 		}
 		else {
