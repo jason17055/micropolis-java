@@ -127,7 +127,7 @@ class ToolEffect implements ToolEffectIfc
 		}
 
         if (anyFound && preview.getTool().getToolCost() != 0) {
-            city.spend(preview.getTool().getToolCost());
+            city.spend(preview.cost);
             return ToolResult.SUCCESS;
 		}
 		else {

@@ -58,7 +58,7 @@ class Bulldozer extends ToolStroke
 		assert dim.width >= 3;
 		assert dim.height >= 3;
 
-        //eff.spend(1);
+        eff.spend(1);
         eff.setTool(tool);
 
 		// make explosion sound;
@@ -94,7 +94,7 @@ class Bulldozer extends ToolStroke
 		}
 
 		fixZone(eff);
-        //eff.spend(1);
+        eff.spend(1);
         eff.setTool(tool);
         return;
 	}

@@ -96,38 +96,25 @@ public class ToolStroke
 		case MUSEUM:
 				return applyZone(eff, MUSEUMBUILDING);
 
-
             case UNIA:
-
                 return applyZone(eff, UNIABUILDING);
 
-
-		case UNIB:
-
+            case UNIB:
             return applyZone(eff, UNIBBUILDING);
 
-
-		case CITYHALL:
-
+            case CITYHALL:
             return applyZone(eff, CITYHALLBUILDING);
 
-			
 		case OPENAIR:
-
-
             return applyZone(eff, OPENAIRBUILDING);
 
-			
 		case SEAPORT:
 			return applyZone(eff, PORT);
-			
-		case BIGPARK:
 
-
+            case BIGPARK:
             return applyZone(eff, BIGPARKBUILDING);
 
-
-		case NUCLEAR:
+            case NUCLEAR:
 			return applyZone(eff, NUCLEAR);
 
 		case SOLAR:
@@ -137,7 +124,6 @@ public class ToolStroke
 			return applyZone(eff, WIND);			
 			
 		case AIRPORT:
-
             return applyZone(eff, AIRPORT);
 
 
