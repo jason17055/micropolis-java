@@ -1198,7 +1198,6 @@ public class Micropolis
     {
         // clear powerMap
         int localPower=0;
-        int numPower=0;
         Stack<CityLocation> toDo=new Stack<CityLocation>();
         HashSet<CityLocation> done=new HashSet<CityLocation>();
         CityLocation current=new CityLocation(1,1);
@@ -1213,43 +1212,55 @@ public class Micropolis
                 char g=getTile(loc.x,loc.y);
 
                 if (g==NUCLEAR) {
-                    localPower+=2000;
+                    localPower=2000;
                 }
                 else if (g==POWERPLANT) {
-                    localPower+=500; //original was 700
+                    localPower=500; //original was 700
                 }
                 else if (g==SOLAR) {
-                    localPower+=325;
+                    localPower=325;
                 }
                 else if (g==WIND) {
-                    localPower+=30;
+                    localPower=30;
                 }
-
+                int numPower=0;
                 toDo.add(loc);
-            }
-        }
+
+                while (!toDo.isEmpty()) {
+                    current=toDo.pop();
+                    g=getTile(current.x,current.y);
+                    if (g==NUCLEAR) {
+                        localPower+=2000;
+                        done.add(current);
+                    } else if (g==POWERPLANT)  {
+                        localPower+=500; //original was 700
+                        done.add(current);
+                    }
+                    else if (g==SOLAR) {
+                        localPower+=325;
+                        done.add(current);
+                    }
+                    else if (g==WIND) {
+                        localPower+=30;
+                        done.add(current);
+                    }
 
 
-        while (!toDo.isEmpty()) {
-            current=toDo.pop();
-            done.add(current);
 
-            if (++numPower > localPower) {
-                // trigger notification
-
-                sendMessage(MicropolisMessage.BROWNOUTS_REPORT);
-                return;
-            }
-            powerMap[current.y][current.x] = true;
-            for (int dir=0;dir<4;dir++) {
-                if (testForCond(current, dir)) {
-                    // iteratively check power
-                    toDo.add(goToAdj(current, dir));
+                    if (++numPower > localPower) {
+                        // trigger notification
+                        sendMessage(MicropolisMessage.BROWNOUTS_REPORT);
+                        return;
+                    }
+                    powerMap[current.y][current.x] = true;
+                    for (int dir=0;dir<4;dir++) {
+                        if (testForCond(current, dir)) {
+                            toDo.add(goToAdj(current, dir));
+                        }
+                    }
                 }
             }
         }
-
-
     }
 
 	/**
