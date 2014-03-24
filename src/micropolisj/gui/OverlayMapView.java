@@ -184,7 +184,9 @@ public class OverlayMapView extends JComponent
         for (Map.Entry<CityLocation,Integer> entry : engine.visits.entrySet()) {
             CityLocation visitloc = entry.getKey();
             Integer visits = entry.getValue();
+            if (visits==0) {} else {
             System.out.println(visits + " visits at: " + visitloc.x + "," + visitloc.y);
+            }
             if(visitloc != null){
                 if(visits > 0){
                     System.out.println("draw visit at: " + visitloc.x + ", " + visitloc.y);

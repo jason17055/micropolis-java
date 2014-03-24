@@ -199,6 +199,7 @@ public class TrafficSim {
 		CityLocation currentLocation=new CityLocation(-1,-1);
 		ready = new HashMap<RoadSpecifiedTile,SpecifiedTile>();
 		unready = new HashMap<Integer,SpecifiedTile>();
+		found.clear();
 		HashMap<CityLocation,SpecifiedTile> temp=findPeriphereRoad(startpos);
 		for (CityLocation f : temp.keySet()) {
 			for (Integer tm : calcRoadType(f,1)) {
@@ -212,7 +213,7 @@ public class TrafficSim {
 				goal.add(new RoadSpecifiedTile(f,g)); //generate ends
 			}
 		}
-		int best=16384*3000;
+		int best=16384*3000*20;
 		RoadSpecifiedTile fastGoal=new RoadSpecifiedTile(new CityLocation(-1,-1),1);
 		if (ready.isEmpty()) {
 			return -1;
@@ -242,12 +243,10 @@ public class TrafficSim {
 			unready.remove(current);
 			for (RoadSpecifiedTile g : findAdjRoads(currentLocation, currentRoadType)) { //go through adj roads
 				if (!searchRoSpec(found,g)) { //new road part found
-					this.found.add(g);
 					int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*600+g.getLocation().x*5+g.getRoadType();
-					for (int roadType : calcRoadType(TileConstants.roadType(engine.getTile(g.getLocation())),currentRoadType)) {
-						unready.put(keyi+roadType,new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,roadType));
-						mapBack.put(new RoadSpecifiedTile(g.getLocation(),roadType), keyi+roadType);
-					}
+					unready.put(keyi+g.getRoadType(),new SpecifiedTile(g.getLocation(),new RoadSpecifiedTile(currentLocation,currentRoadType),false,g.getRoadType()));
+					mapBack.put(g, keyi+g.getRoadType());
+					this.found.add(g);
 				} else { //was already found before
 					if (!RoadSpecifiedTile.equals(g,search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getPred())) {//if not pred
 						if (searchRoSpec(toHashSetTwo(ready),g)) { //if it is already ready update ready
@@ -272,9 +271,10 @@ public class TrafficSim {
 				fastGoal=new RoadSpecifiedTile(new CityLocation(currentLocation.x,currentLocation.y),currentRoadType);
 			}
 		}
-		if (best==16384*3000) {
+		if (best==16384*3000*20) {
 			return -1;
 		}
+		System.out.println(best);
         //Vector<CityLocation> way=new Vector<CityLocation>();
         engine.paths.clear();
 		while (!RoadSpecifiedTile.equals(search(ready,fastGoal).getPred(),new RoadSpecifiedTile(new CityLocation(-1,-1),0))) { //add traffic to way 
@@ -282,8 +282,7 @@ public class TrafficSim {
 			//way.add(fastGoal.getLocation());
 			fastGoal=search(ready,fastGoal).getPred();
 		}
-		//ngine.paths(way);
-		return best/16384;
+		return best;
 	}
 	
 	/*private boolean sameRoadType(int roadType1, int roadType2) {
