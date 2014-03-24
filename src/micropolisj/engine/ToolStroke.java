@@ -9,6 +9,9 @@
 package micropolisj.engine;
 
 import static micropolisj.engine.TileConstants.*;
+import micropolisj.engine.techno.BuildingTechnology;
+import micropolisj.engine.techno.Technology;
+
 
 public class ToolStroke
 {
@@ -63,6 +66,14 @@ public class ToolStroke
 
 	boolean apply1(ToolEffectIfc eff)
 	{
+        // iterate tech list if building is inside one of the building technos
+        for(BuildingTechnology t : city.buildingTechs){
+            if(t.getBuildingNumber() == tool){
+                if(t.getIsResearched() == false) return false;
+            }
+        }
+
+
 		switch (tool)
 		{
 		case PARK:

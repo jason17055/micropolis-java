@@ -8,6 +8,10 @@
 
 package micropolisj.engine;
 
+import micropolisj.engine.techno.BuildingTechnology;
+import micropolisj.engine.techno.StreetUpgradeTech;
+import micropolisj.engine.techno.Technology;
+
 import java.io.*;
 import java.util.*;
 
@@ -113,7 +117,14 @@ public class Micropolis
 
     boolean autoGo;
 
+
+
+
     // census numbers, reset in phase 0 of each cycle, summed during map scan
+
+
+
+
 	int poweredZoneCount;
 	int unpoweredZoneCount;
 	int roadTotal;
@@ -201,6 +212,10 @@ public class Micropolis
     int educationRamp;
 
 
+    // science/tech stuff
+    ArrayList<BuildingTechnology> buildingTechs;
+    ArrayList<Technology> eetechs;
+    ArrayList<Technology> infraTechs;
     double scienceEEPoints;
     double scienceInfraPoints;
 
@@ -301,11 +316,40 @@ public class Micropolis
 		policeMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
+
         scienceEEPoints = 0;
         scienceInfraPoints = 0;
+        initTechs();
 
 
 	}
+
+
+    void initTechs(){
+        buildingTechs = new ArrayList<BuildingTechnology>();
+        eetechs = new ArrayList<Technology>();
+        infraTechs = new ArrayList<Technology>();
+
+        BuildingTechnology windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
+        buildingTechs.add(windTech);
+        eetechs.add(windTech);
+
+        BuildingTechnology solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
+        buildingTechs.add(solarTech);
+        eetechs.add(solarTech);
+
+        BuildingTechnology airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
+        buildingTechs.add(airportTech);
+        infraTechs.add(airportTech);
+
+        BuildingTechnology twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        buildingTechs.add(twoLaneRoadTech);
+        infraTechs.add(twoLaneRoadTech);
+
+        StreetUpgradeTech streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
+        infraTechs.add(streetUpgradeTech);
+
+    }
 
 	void fireCensusChanged()
 	{
