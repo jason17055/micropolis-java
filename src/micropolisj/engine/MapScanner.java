@@ -579,7 +579,7 @@ class MapScanner extends TileBehavior
 	 */
 	void doHospitalChurch()
 	{
-		boolean powerOn = checkZonePower();
+		checkZonePower();
 		if (tile == HOSPITAL)
 		{
 			city.hospitalCount++;
@@ -1010,7 +1010,7 @@ class MapScanner extends TileBehavior
 
 	private void doResidentialIn(int pop, int value)
 	{
-		assert value >= 0 && value <= 3; //FIXME assert doesnt make sense
+		assert value >= 0 && value <= 3;
 
 		int z = city.pollutionMem[ypos][xpos];
 		if (z > 128)

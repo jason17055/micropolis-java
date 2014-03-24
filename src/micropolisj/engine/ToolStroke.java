@@ -374,10 +374,53 @@ public class ToolStroke
 			{
 				adjTile |= 8;
 			}
+			
 
 			eff.setTile(0, 0, RoadTable[adjTile]);
 		} //endif on a road tile
 
+		
+		
+		else if (isBigRoadDynamic(tile))
+		{
+			// cleanup bigroad
+			int adjTile = 0;
+
+			// check bigroad to north
+			if (bigroadConnectsSouth(eff.getTile(0, -1)))
+			{
+				adjTile |= 1;
+			}
+
+			// check bigroad to east
+			if (bigroadConnectsWest(eff.getTile(1, 0)))
+			{
+				adjTile |= 2;
+			}
+
+			// check bigroad to south
+			if (bigroadConnectsNorth(eff.getTile(0, 1)))
+			{
+				adjTile |= 4;
+			}
+
+			// check bigroad to west
+			if (bigroadConnectsEast(eff.getTile(-1, 0)))
+			{
+				adjTile |= 8;
+			}
+			
+			
+			
+			
+			
+			
+			
+
+			eff.setTile(0, 0, BigRoadTable[adjTile]);
+		} //endif on a bigroad tile	
+		
+		
 		else if (isRailDynamic(tile))
 		{
 			// cleanup Rail
