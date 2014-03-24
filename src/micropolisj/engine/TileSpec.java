@@ -79,14 +79,15 @@ public class TileSpec
 
 		bi.members = new short[bi.width*bi.height];
 		int startTile = tileNumber;
-		if (bi.width >= 3) { startTile--; }
-		if (bi.height >= 3) { startTile -= bi.width; }
+		    if (bi.width >= 3) { startTile--; }
+		    if (bi.height >= 3) { startTile -= bi.width; }
 
-		for (int row = 0; row < bi.height; row++) {
-			for (int col = 0; col < bi.width; col++) {
-				bi.members[row*bi.width+col] = (short)startTile;
-				startTile++;
-			}
+		    for (int row = 0; row < bi.height; row++) {
+			    for (int col = 0; col < bi.width; col++) {
+			    	bi.members[row*bi.width+col] = (short)startTile;
+			    	startTile++;
+			    }
+
 		}
 
 		this.buildingInfo = bi;
