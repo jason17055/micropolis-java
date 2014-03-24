@@ -31,7 +31,7 @@ class TrafficGen
 		this.city = city;
 	}
 
-	int makeTraffic()
+/*	int makeTraffic()
 	{
 		if (findPerimeterRoad()) //look for road on this zone's perimeter
 		{
@@ -71,7 +71,7 @@ class TrafficGen
 				city.addTraffic(mapX, mapY, cost);
 			}
 		}
-	}
+	} */
 
 	static final int [] PerimX = { -1, 0, 1,  2, 2, 2,  1, 0,-1, -2,-2,-2 };
 	static final int [] PerimY = { -2,-2,-2, -1, 0, 1,  2, 2, 2,  1, 0,-1 };
@@ -110,7 +110,7 @@ class TrafficGen
 			return true;
 	}
 
-	boolean tryDrive()
+	/*boolean tryDrive()
 	{
 		lastdir = 5;
 		positions.clear();
@@ -143,7 +143,7 @@ class TrafficGen
 
 		// gone maxdis
 		return false;
-	}
+	} 
 
 	static final int [] DX = { 0, 1, 0, -1 };
 	static final int [] DY = { -1, 0, 1, 0 };
@@ -223,7 +223,7 @@ class TrafficGen
 				return true;
 		}
 		return false;
-	}
+	}*/
 
 	/**
 	 * The three main types of zones found in Micropolis.
