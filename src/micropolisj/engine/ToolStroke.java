@@ -50,8 +50,9 @@ public class ToolStroke
 	{
 		ToolEffect eff = new ToolEffect(city);
 		applyArea(eff);
-		return eff.apply();
-	}
+        return eff.apply();
+
+    }
 
 	protected void applyArea(ToolEffectIfc eff)
 	{
@@ -98,71 +99,33 @@ public class ToolStroke
 			return applyZone(eff, POWERPLANT);
 
 		case STADIUM:
-			if (city.evaluation.cityClass >= 1 ){
-				return applyZone(eff, STADIUM);
-				}
-			else {
-				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
-				return false;}
+            return applyZone(eff, STADIUM);
+
 		case SCHOOL:
 			return applyZone(eff, SCHOOLBUILDING);
 
 		case MUSEUM:
-			if (city.evaluation.cityClass >= 1 ){
 				return applyZone(eff, MUSEUMBUILDING);
-				}
-			else {
-				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
-				return false;}
-			
-		case UNIA:
-			if (city.lastSchoolCount > 0){
-				return applyZone(eff, UNIABUILDING);
-			}
-			else {
-				city.sendMessageAt(MicropolisMessage.NEED_A_SCHOOL, xpos, ypos);
-				return false;
-			}
-		case UNIB:
-			if (city.lastSchoolCount > 0){
-				return applyZone(eff, UNIBBUILDING);
-			}
-			else {
-				city.sendMessageAt(MicropolisMessage.NEED_A_SCHOOL, xpos, ypos);
-				return false;
-			}		
-		case CITYHALL:
-			city.evaluation.doPopNum();
-			if (city.cityhallCountMem < city.evaluation.cityClass  ){
-				return applyZone(eff, CITYHALLBUILDING);
-				}
-			else if (city.cityhallCountMem == 5){
-				city.sendMessageAt(MicropolisMessage.NO_MORE_CITYHALLS, xpos, ypos);
-				return false;
-			}
-			else {
-				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
-				return false;}
-			
+
+            case UNIA:
+                return applyZone(eff, UNIABUILDING);
+
+            case UNIB:
+            return applyZone(eff, UNIBBUILDING);
+
+            case CITYHALL:
+            return applyZone(eff, CITYHALLBUILDING);
+
 		case OPENAIR:
-			
-			if (city.evaluation.cityClass >= 1 ){
-				return applyZone(eff, OPENAIRBUILDING);
-				}
-		else {
-			city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
-			return false;}
-			
+            return applyZone(eff, OPENAIRBUILDING);
+
 		case SEAPORT:
 			return applyZone(eff, PORT);
-			
-		case BIGPARK:
-			
-			if (city.evaluation.cityClass >= 0 ){
-				return applyZone(eff, BIGPARKBUILDING);
-				}
 
-		case NUCLEAR:
+            case BIGPARK:
+            return applyZone(eff, BIGPARKBUILDING);
+
+            case NUCLEAR:
 			return applyZone(eff, NUCLEAR);
 
 		case SOLAR:
@@ -172,14 +135,10 @@ public class ToolStroke
 			return applyZone(eff, WIND);			
 			
 		case AIRPORT:
-			if (city.evaluation.cityClass >= 2 ){
-				return applyZone(eff, AIRPORT);
-				}
-			else {
-				city.sendMessageAt(MicropolisMessage.NEED_MORE_CITIZENS, xpos, ypos);
-				return false;}
+            return applyZone(eff, AIRPORT);
 
-		default:
+
+            default:
 			// not expected
 			throw new Error("unexpected tool: "+tool);
 		}
@@ -238,7 +197,8 @@ public class ToolStroke
 		}
 
 		int cost = tool.getToolCost();
-		boolean canBuild = true;
+
+        boolean canBuild = true;
 		for (int rowNum = 0; rowNum < bi.height; rowNum++) {
 			for (int columnNum = 0; columnNum < bi.width; columnNum++)
 			{
@@ -261,6 +221,7 @@ public class ToolStroke
 		}
 
 		eff.spend(cost);
+        eff.setTool(tool);
 
 		int i = 0;
 		for (int rowNum = 0; rowNum < bi.height; rowNum++)
@@ -331,6 +292,7 @@ public class ToolStroke
 
 		eff.spend(cost);
 		eff.setTile(0, 0, tile);
+        eff.setTool(tool);
 
 		return true;
 	}

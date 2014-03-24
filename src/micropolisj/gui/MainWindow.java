@@ -21,6 +21,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.metal.MetalIconFactory;
 
 import micropolisj.engine.*;
 import micropolisj.util.TranslationTool;
@@ -1314,6 +1315,19 @@ public class MainWindow extends JFrame
                 messagesPane.appendCityMessage(MicropolisMessage.INSUFFICIENT_FUNDS);
                 citySound(Sound.SORRY, loc);
                 break;
+            case INSUFFICIENT_POPULATION:
+                messagesPane.appendCityMessage(MicropolisMessage.NEED_MORE_CITIZENS);
+                citySound(Sound.SORRY, loc);
+                break;
+            case NO_MORE_CITYHALLS:
+                messagesPane.appendCityMessage(MicropolisMessage.NO_MORE_CITYHALLS);
+                citySound(Sound.SORRY, loc);
+                break;
+            case NEED_A_SCHOOL:
+                messagesPane.appendCityMessage(MicropolisMessage.NEED_A_SCHOOL);
+                citySound(Sound.SORRY, loc);
+                break;
+
 
             default:
                 assert false;

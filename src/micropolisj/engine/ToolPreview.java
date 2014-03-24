@@ -17,7 +17,8 @@ public class ToolPreview implements ToolEffectIfc
 	public int offsetY;
 	public short [][] tiles;
 	public int cost;
-	public ToolResult toolResult;
+    public MicropolisTool tool;
+    public ToolResult toolResult;
 	public List<SoundInfo> sounds;
 
 	public static class SoundInfo
@@ -39,7 +40,8 @@ public class ToolPreview implements ToolEffectIfc
 		this.tiles = new short[0][0];
 		this.sounds = new ArrayList<SoundInfo>();
 		this.toolResult = ToolResult.NONE;
-	}
+        this.tool = MicropolisTool.PARK;
+    }
 
 	//implements ToolEffectIfc
 	public int getTile(int dx, int dy)
@@ -157,6 +159,14 @@ public class ToolPreview implements ToolEffectIfc
 	{
 		cost += amount;
 	}
+
+    public void setTool(MicropolisTool tool) {
+        this.tool = tool;
+    }
+
+    public MicropolisTool getTool() {
+        return tool;
+    }
 
 	//implements ToolEffectIfc
 	public void toolResult(ToolResult tr)

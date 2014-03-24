@@ -45,6 +45,15 @@ class TranslatedToolEffect implements ToolEffectIfc
 		base.spend(amount);
 	}
 
+    public void setTool(MicropolisTool tool) {
+        base.setTool(tool);
+    }
+
+    public MicropolisTool getTool() {
+        return base.getTool();
+    }
+
+
 	//implements ToolEffectIfc
 	public void toolResult(ToolResult tr)
 	{
