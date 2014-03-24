@@ -680,6 +680,32 @@ public class TileConstants
         return false;
     }
 
+    public static boolean isUniversityA(int tile) {
+        assert (tile & LOMASK) == tile;
+
+        TileSpec ts = Tiles.get(tile);
+        if (ts != null) {
+            if (ts.owner != null) {
+                ts = ts.owner;
+            }
+            return ts.getBooleanAttribute("universitya");
+        }
+        return false;
+    }   
+    
+    public static boolean isUniversityB(int tile) {
+        assert (tile & LOMASK) == tile;
+
+        TileSpec ts = Tiles.get(tile);
+        if (ts != null) {
+            if (ts.owner != null) {
+                ts = ts.owner;
+            }
+            return ts.getBooleanAttribute("universityb");
+        }
+        return false;
+    }     
+    
 
     public static boolean isResidentialClear(int tile)
 	{

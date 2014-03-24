@@ -36,6 +36,8 @@ public class MainWindow extends JFrame
     OverlayMapView mapView;
     NotificationPane notificationPane;
     EvaluationPane evaluationPane;
+    ScienceFrameA scienceFrameA;
+    ScienceFrameB scienceFrameB;    
     GraphsPane graphsPane;
     JLabel dateLbl;
     JLabel fundsLbl;
@@ -93,6 +95,12 @@ public class MainWindow extends JFrame
         evaluationPane = new EvaluationPane(engine);
         evaluationPane.setVisible(false);
         evalGraphsBox.add(evaluationPane, BorderLayout.SOUTH);
+        
+        scienceFrameA = new ScienceFrameA(engine);
+        scienceFrameA.setVisible(false);
+        
+       scienceFrameB = new ScienceFrameB(engine);
+       scienceFrameB.setVisible(false);
 
         JPanel leftPane = new JPanel(new GridBagLayout());
         add(leftPane, BorderLayout.WEST);
@@ -1088,6 +1096,12 @@ public class MainWindow extends JFrame
         notificationPane.showZoneStatus(engine, xpos, ypos, z);
         if (TileConstants.isCityHallBuilding((int) engine.getTile(xpos, ypos))) {
             evaluationPane.setVisible(true);
+        }
+        if (TileConstants.isUniversityA((int) engine.getTile(xpos, ypos))) {
+            scienceFrameA.setVisible(true);
+        }
+        if (TileConstants.isUniversityB((int) engine.getTile(xpos, ypos))) {
+            scienceFrameB.setVisible(true);
         }
     }
 
