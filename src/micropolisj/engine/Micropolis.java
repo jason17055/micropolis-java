@@ -1000,8 +1000,9 @@ public class Micropolis
         for (int sy = 0; sy < educationMap.length; sy++) {
             for (int sx = 0; sx < educationMap[sy].length; sx++) {
                 educationMapEffect[sy][sx] = educationMap[sy][sx];
-                count++;
+
                 v += educationMap[sy][sx];
+                if(cultureMap[sy][sx] > 0) count++;
             }
         }
 
@@ -1022,9 +1023,9 @@ public class Micropolis
 
         for (int sy = 0; sy < cultureMap.length; sy++) {
             for (int sx = 0; sx < cultureMap[sy].length; sx++) {
-                cultureMapEffect[sy][sx] = cultureMap[sy][sx];
-                count++;
+
                 v += cultureMap[sy][sx];
+                if(cultureMap[sy][sx] > 0) count++;
             }
         }
 

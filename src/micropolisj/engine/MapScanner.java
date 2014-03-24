@@ -325,9 +325,12 @@ class MapScanner extends TileBehavior
 
 		city.educationMap[ypos][xpos] += z;
 	}
+
+
 	
 	void doMuseum()
 	{
+
         city.cultureMap[ypos][xpos] /= 4;
 
 		boolean powerOn = checkZonePower();
