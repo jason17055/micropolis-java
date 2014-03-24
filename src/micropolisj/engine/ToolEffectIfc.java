@@ -28,5 +28,9 @@ public interface ToolEffectIfc
 	 */
 	void spend(int amount);
 
+    MicropolisTool getTool();
+
+    void setTool(MicropolisTool tool);
+
 	void toolResult(ToolResult tr);
 }

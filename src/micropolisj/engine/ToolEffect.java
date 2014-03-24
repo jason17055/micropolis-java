@@ -8,6 +8,7 @@
 
 package micropolisj.engine;
 
+import static micropolisj.engine.TileConstants.CITYHALLBUILDING;
 import static micropolisj.engine.TileConstants.CLEAR;
 
 class ToolEffect implements ToolEffectIfc
@@ -66,6 +67,14 @@ class ToolEffect implements ToolEffectIfc
 		preview.spend(amount);
 	}
 
+    public void setTool(MicropolisTool tool) {
+        preview.setTool(tool);
+    }
+
+    public MicropolisTool getTool() {
+        return preview.getTool();
+    }
+
 	//implements ToolEffectIfc
 	public void toolResult(ToolResult tr)
 	{
@@ -86,6 +95,20 @@ class ToolEffect implements ToolEffectIfc
 			return ToolResult.INSUFFICIENT_FUNDS;
 		}
 
+        if (city.getCityPopulation() < preview.getTool().getMinPopulation()) {
+            return ToolResult.INSUFFICIENT_POPULATION;
+        }
+
+        if (preview.getTool() == MicropolisTool.CITYHALL) {
+            if (city.cityhallCountMem > city.evaluation.cityClass)
+                return ToolResult.INSUFFICIENT_POPULATION;
+            if (city.cityhallCountMem >= 5)
+                return ToolResult.NO_MORE_CITYHALLS;
+        }
+
+        if ((preview.getTool() == MicropolisTool.UNIA || preview.getTool() == MicropolisTool.UNIB) && city.schoolCount < 1)
+            return ToolResult.NEED_A_SCHOOL;
+
 
 		boolean anyFound = false;
 		for (int y = 0; y < preview.tiles.length; y++) {
@@ -103,9 +126,9 @@ class ToolEffect implements ToolEffectIfc
 			city.makeSound(si.x, si.y, si.sound);
 		}
 
-		if (anyFound && preview.cost != 0) {
-			city.spend(preview.cost);
-			return ToolResult.SUCCESS;
+        if (anyFound && preview.getTool().getToolCost() != 0) {
+            city.spend(preview.getTool().getToolCost());
+            return ToolResult.SUCCESS;
 		}
 		else {
 			return preview.toolResult;
