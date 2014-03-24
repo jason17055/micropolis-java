@@ -1783,12 +1783,16 @@ public class Micropolis
     void spendTechnologyPoints(){
         if(selectedEETech != null && technologyEEPoints != 0.0){
             selectedEETech.addResearchPoints(technologyEEPoints);
-            System.out.println("infraTech points already: " + selectedEETech.getPointsUsed() + "/" + selectedEETech.getPointsNeeded());
+            technologyEEPoints = 0;
+            System.out.println("technologyEEPoints points already: " +
+                    selectedEETech.getPointsUsed() + "/" + selectedEETech.getPointsNeeded() + " " + selectedEETech.getName());
         }
 
         if(selectedInfraTech != null && technologyInfraPoints != 0.0){
             selectedInfraTech.addResearchPoints(technologyInfraPoints);
-            System.out.println("infraTech points already: " + selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded());
+            technologyInfraPoints = 0;
+            System.out.println("infraTech points already: " +
+                    selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded() + " " + selectedInfraTech.getName());
         }
     }
 

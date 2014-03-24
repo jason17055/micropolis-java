@@ -378,7 +378,6 @@ class MapScanner extends TileBehavior
 
         double techPoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
         city.technologyEEPoints += techPoint;
-        //System.out.println("scienceEEPoints " + city.scienceEEPoints);
 
 
 		oldTraffic.mapX = xpos;
@@ -409,7 +408,6 @@ class MapScanner extends TileBehavior
 
         double techPoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
         city.technologyInfraPoints += techPoint;
-        //System.out.println("scienceInfraPoints " + city.scienceInfraPoints);
 
         oldTraffic.mapX = xpos;
 		oldTraffic.mapY = ypos;
