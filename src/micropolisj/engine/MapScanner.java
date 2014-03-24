@@ -294,6 +294,8 @@ class MapScanner extends TileBehavior
 	}
 	void doSchool()
 	{
+        city.educationMap[ypos][xpos] /= 4;
+
 		boolean powerOn = checkZonePower();
 		city.schoolCount++;
 		
@@ -326,6 +328,8 @@ class MapScanner extends TileBehavior
 	
 	void doMuseum()
 	{
+        city.cultureMap[ypos][xpos] /= 4;
+
 		boolean powerOn = checkZonePower();
 		city.museumCount++;
 		if ((city.cityTime % 8) == 0) {
@@ -350,6 +354,8 @@ class MapScanner extends TileBehavior
 	
 	void doUniA() // researches scienceEEPoints
 	{
+        city.educationMap[ypos][xpos] /= 4;
+
 		boolean powerOn = checkZonePower();
 		city.uniaCount++;
 		if ((city.cityTime % 8) == 0) {
@@ -363,13 +369,10 @@ class MapScanner extends TileBehavior
 			z = city.educationEffect /2 ;
 		}
 
-
-
-
         // multiply the effect by visits
         int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
         z = z * (visits+1);
-        z = city.clamp(z,0,1000);
+        // z = city.clamp(z,0,1000);
 
         double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
         city.scienceEEPoints += sciencePoint;
@@ -384,6 +387,10 @@ class MapScanner extends TileBehavior
 	
 	void doUniB() // researches scienceInfraPoints
 	{
+        // first reduce educationmap for inertia
+        city.educationMap[ypos][xpos] /= 4;
+
+
 		boolean powerOn = checkZonePower();
 		city.unibCount++;
 		if ((city.cityTime % 8) == 0) {
@@ -400,7 +407,7 @@ class MapScanner extends TileBehavior
         // multiply the effect by visits
         int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
         z = z * (visits+1);
-        z = city.clamp(z,0,1000);
+        // z = city.clamp(z,0,1000);
 
         double sciencePoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
         city.scienceInfraPoints += sciencePoint;
@@ -440,10 +447,9 @@ class MapScanner extends TileBehavior
 	
 	
 	void doOpenAir()
-	{	
-		
-	
-		
+	{
+        city.cultureMap[ypos][xpos] /= 4;
+
 			boolean powerOn = checkZonePower();
 			city.openairCount++;
 			if ((city.cityTime % 8) == 0) {
@@ -473,6 +479,8 @@ class MapScanner extends TileBehavior
 	
 	void doStadiumEmpty()
 	{
+        city.cultureMap[ypos][xpos] /= 4;
+
 		boolean powerOn = checkZonePower();
 		city.stadiumCount++;
 		if ((city.cityTime % 16) == 0) {
