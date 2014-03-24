@@ -250,10 +250,7 @@ public class TrafficSim {
 				} else { //was already found before
 					if (!RoadSpecifiedTile.equals(g,search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getPred())) {//if not pred
 						if (searchRoSpec(toHashSetTwo(ready),g)) { //if it is already ready update ready
-							int c=currentCost+search(ready,search(ready,g).getPred()).getCosts()+engine.getTrafficCost(g.getLocation(), g.getRoadType());
-							if (search(ready,g).getCosts()<=c) {
-								ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(currentLocation,currentRoadType),true,search(ready,g).getRoadType()));
-							}
+							updateReady(g,new RoadSpecifiedTile(currentLocation,currentRoadType));
 						} else { //if not, update it unready
 							int keyi=16384*(10*evalfuncHelp(currentLocation,goal)+search(ready,new RoadSpecifiedTile(currentLocation,currentRoadType)).getCosts())+g.getLocation().y*600+g.getLocation().x*5+g.getRoadType();
 							if (keyi<= searchTwo(mapBack,g)) {
@@ -282,6 +279,18 @@ public class TrafficSim {
 			fastGoal=search(ready,fastGoal).getPred();
 		}
 		return best;
+	}
+	
+	void updateReady(RoadSpecifiedTile g, RoadSpecifiedTile f) {
+		int c=engine.getTrafficCost(f.getLocation(), f.getRoadType())+search(ready,search(ready,g).getPred()).getCosts()+engine.getTrafficCost(g.getLocation(), g.getRoadType());
+		if (search(ready,g).getCosts()<=c) {
+			ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(f.getLocation(),currentRoadType),true,search(ready,g).getRoadType()));
+			for (RoadSpecifiedTile RoadTile : findAdjRoads(g.getLocation(),g.getRoadType())) {
+				if (searchRoSpec(toHashSetTwo(ready),RoadTile)) {
+						updateReady(RoadTile,g);
+				}
+			}
+		}
 	}
 	
 	/**
