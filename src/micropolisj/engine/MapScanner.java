@@ -768,12 +768,12 @@ class MapScanner extends TileBehavior
 			}
 			trafficGood+=2;
 			int res=100*visit+city.valueMapping(trafficGood, 0, 60000, 100, 0)/trafficGood;
-			res+=getLandValue();
-			res+=getPollution()/4;
+			res+=getLandValue3x3();
+			res+=getPollution3x3()/4;
+			res+=getCrime3x3()/2;
 			if (true)
 			{
-				if (tpop == 0 && PRNG.nextInt(4) == 0)
-				{
+				if (tpop == 0 && PRNG.nextInt(4) == 0) {
 					makeHospital();
 					return;
 				}
@@ -783,8 +783,7 @@ class MapScanner extends TileBehavior
 				return;
 			}
 
-			if (true)
-			{
+			if (true) {
 				int value = getCRValue();
 				doResidentialOut(tpop, value);
 			}
@@ -798,8 +797,14 @@ class MapScanner extends TileBehavior
 	 * @return
 	 */
 	
-	int getLandValue() {
-		return 0;
+	int getLandValue3x3() {
+		int ret=0;
+		for (int x=xpos-1;x<=xpos+1;x++) {
+			for (int y=ypos-1;y<=ypos+1;y++) {
+				ret+=city.landValueMem[y][x];
+			}
+		}
+		return ret/9;
 	}
 	
 	/**
@@ -807,8 +812,24 @@ class MapScanner extends TileBehavior
 	 * @return
 	 */
 	
-	int getPollution() {
-		return 0;
+	int getPollution3x3() {
+		int ret=0;
+		for (int x=xpos-1;x<=xpos+1;x++) {
+			for (int y=ypos-1;y<=ypos+1;y++) {
+				ret+=city.pollutionMem[y][x];
+			}
+		}
+		return ret/9;
+	}
+	
+	int getCrime3x3() {
+		int ret=0;
+		for (int x=xpos-1;x<=xpos+1;x++) {
+			for (int y=ypos-1;y<=ypos+1;y++) {
+				ret+=city.crimeMem[y][x];
+			}
+		}
+		return ret/9;
 	}
 	
 
