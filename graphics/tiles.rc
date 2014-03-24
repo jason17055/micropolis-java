@@ -1124,4 +1124,4 @@
 1064   solar@32,48          (conducts)
 1065   solar@48,48          (conducts)
 # BEGIN Wind POWER #
-1066   wind@0,0   (zone)(conducts)(building=1x1)(behavior=WIND)(description=#28)
+1066   wind@0,0   (zone)(bulldozable)(conducts)(building=1x1)(behavior=WIND)(description=#28)
