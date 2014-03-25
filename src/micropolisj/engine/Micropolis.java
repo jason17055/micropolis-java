@@ -343,9 +343,9 @@ public class Micropolis
         eetechs = new ArrayList<Technology>();
         infraTechs = new ArrayList<Technology>();
 
-        //windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
-        //buildingTechs.add(windTech);
-        //eetechs.add(windTech);
+        windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
+        buildingTechs.add(windTech);
+        eetechs.add(windTech);
 
         solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
         buildingTechs.add(solarTech);
@@ -1066,7 +1066,7 @@ public class Micropolis
 
 	void crimeScan()
 	{
-        spreadEffect(policeMap, 15, 4, 20);
+		policeMap=doSmooth(policeMap);
 
 
 		for (int sy = 0; sy < policeMap.length; sy++) {

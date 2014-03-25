@@ -1102,7 +1102,7 @@
 1042   bigpark@16,0            (bulldozable)
 1043   bigpark@32,0            (bulldozable)
 1044   bigpark@0,16            (bulldozable)
-1045   bigpark@16,16           (building=3x3)(behavior=BIGPARKBUILDING)(description=#17)
+1045   bigpark@16,16           (building=3x3)(behavior=BIGPARKBUILDING)(description=#36)
 1046   bigpark@32,16           (bulldozable)
 1047   bigpark@0,32            (bulldozable)
 1048   bigpark@16,32           (bulldozable)
