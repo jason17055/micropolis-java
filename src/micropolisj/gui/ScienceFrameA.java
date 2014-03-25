@@ -10,11 +10,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.awt.Dimension;
 
 import micropolisj.engine.Micropolis;
+import micropolisj.engine.techno.*;
 
 public class ScienceFrameA extends JFrame{
 
@@ -27,33 +29,17 @@ public class ScienceFrameA extends JFrame{
 	JButton jbSolar;
 	JButton jbWind;
 
-	//UNIVERSITAET FUER ENERGIE UND UMWELT
+	//UNIVERSITAET FUER NATURWISSENSCHAFT
 	
 	public ScienceFrameA(Micropolis m){
-		super("Support local research at your University for Environment and Energy!");
+		super("Support local research at your University for Science!");
 		engine=m;
-
-/*			image = ImageIO.read(new File("graphics/splash.png"));
-			jlStreetUpgrade = new JLabel("Street Upgrade");
-			jlRailUpgrade = new JLabel("Rail Upgrade");
-			jlPollution = new JLabel("Reduce Pollution");
-			jlPoliceUpgrade = new JLabel("Police Upgrade");
-			jlFireDepUpgrade = new JLabel("Fire Department Upgrade");
-			jlNuclear = new JLabel("Reduce Pollution Of Nuclear Power Plant");
-			jlPowerEfficiency = new JLabel("Improce Efficiency Of Wind And Solar Power Stations");
-			jlSolar = new JLabel("Research Solar Power Stations");
-			jlWind = new JLabel("Research Wind Power Stations");
-			jlTwoLaneRoad = new JLabel("Research Two-Lane Roads");
-			jlAirport = new JLabel("Research Airports");
-*/
-			
-
 		
-		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><font color=#666666>[XX points]</font></html>");
-		jbPowerEfficiency = new JButton ("<html>Improce Efficiency<br>Of Wind And Solar<br>Power Stations<br><br><font color=#666666>[XX points]</font></html>");
-		jbSolar = new JButton ("<html>Research Solar<br>Power Stations<br><br><br><font color=#666666>[XX points]</font></html>");
-		jbWind = new JButton ("<html>Research Wind<br>Power Stations<br><br><br><font color=#666666>[XX points]</font></html>");
+		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
+		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>[XX points]</font></html>");
+		jbPowerEfficiency = new JButton ("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>[XX points]</font></html>");
+		jbSolar = new JButton ("<html>Research Solar<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.solarTech.getPointsUsed()+"/"+(int)engine.solarTech.getPointsNeeded()+" points]</font></html>");
+		jbWind = new JButton ("<html>Research Wind<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.windTech.getPointsUsed()+"/"+(int)engine.windTech.getPointsNeeded()+" points]</font></html>");
 
 		jbPollution.setEnabled(true);
 		jbNuclear.setEnabled(true);
@@ -61,17 +47,33 @@ public class ScienceFrameA extends JFrame{
 		jbSolar.setEnabled(true);
 		jbWind.setEnabled(true);
 		
+		Color c1= new Color(255,229,168);
+		
+		jbPollution.setBackground(c1);
+		jbNuclear.setBackground(c1);
+		jbPowerEfficiency.setBackground(c1);
+		jbSolar.setBackground(c1);
+		jbWind.setBackground(c1);
+
+		Color c2= new Color(169,125,19);
+		
+		jbPollution.setForeground(c2);
+		jbNuclear.setForeground(c2);
+		jbPowerEfficiency.setForeground(c2);
+		jbSolar.setForeground(c2);
+		jbWind.setForeground(c2);		
+		
 		jbPollution.setToolTipText("Let more money flow towards research. They will discover new methods of decreasing air pollution.");
 		jbNuclear.setToolTipText("Let more money flow towards nuclear research. It will decrease air pollution immediately.");
 		jbPowerEfficiency.setToolTipText("Let more money flow towards research. You will have immediate results.");
 		jbSolar.setToolTipText("Let more money flow towards research. Researchers will work on finding a way to use solar power in your town.");
 		jbWind.setToolTipText("Let more money flow towards research. Researchers will work on finding a way to use wind power in your town.");
 		
-		jbPollution.setPreferredSize(new Dimension(150,110));
-		jbNuclear.setPreferredSize(new Dimension(150,110));
-		jbPowerEfficiency.setPreferredSize(new Dimension(150,110));
-		jbSolar.setPreferredSize(new Dimension(150,110));
-		jbWind.setPreferredSize(new Dimension(150,110));
+		jbPollution.setPreferredSize(new Dimension(180,125));
+		jbNuclear.setPreferredSize(new Dimension(180,125));
+		jbPowerEfficiency.setPreferredSize(new Dimension(180,125));
+		jbSolar.setPreferredSize(new Dimension(180,125));
+		jbWind.setPreferredSize(new Dimension(180,125));
 		
 		
 		jbPollution.addActionListener(new ActionListener(){
@@ -94,13 +96,46 @@ public class ScienceFrameA extends JFrame{
 		
 		jbSolar.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+			
+			engine.selectedEETech = engine.solarTech;
+			
+			jbPollution.setEnabled(true);
+			jbNuclear.setEnabled(true);
+			jbPowerEfficiency.setEnabled(true);
+			jbSolar.setEnabled(false);
+			jbWind.setEnabled(true);
+			
+			Color col2= new Color(169,125,19);
+			Color col3= new Color(255,229,168);
+
+			jbPollution.setBackground(col3);
+			jbNuclear.setBackground(col3);
+			jbPowerEfficiency.setBackground(col3);
+			jbSolar.setBackground(col2);
+			jbWind.setBackground(col3);
 			}
 			
 		});
 		
 		jbWind.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+				
+			engine.selectedEETech = engine.windTech;
+			
+			jbPollution.setEnabled(true);
+			jbNuclear.setEnabled(true);
+			jbPowerEfficiency.setEnabled(true);
+			jbSolar.setEnabled(true);
+			jbWind.setEnabled(false);
+			
+			Color col2= new Color(169,125,19);
+			Color col3= new Color(255,229,168);
 
+			jbPollution.setBackground(col3);
+			jbNuclear.setBackground(col3);
+			jbPowerEfficiency.setBackground(col3);
+			jbSolar.setBackground(col3);
+			jbWind.setBackground(col2);			
 			}
 		});
 		
@@ -118,8 +153,10 @@ public class ScienceFrameA extends JFrame{
 		panel.setLayout(new FlowLayout());
 		
 		pack();
-		setSize(350,390);
+		setSize(410,435);
 		setLocationRelativeTo(getParent());
+		Color color=new Color(245,181,28);  
+		panel.setBackground(color);
 	}	
 	
 	
