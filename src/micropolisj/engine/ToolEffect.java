@@ -110,10 +110,16 @@ class ToolEffect implements ToolEffectIfc
         }
 
         if (preview.getTool() == MicropolisTool.CITYHALL) {
-            if (city.cityHallList.size() > city.evaluation.cityClass)
+
+            if (city.cityhallCountMem >= city.evaluation.cityClass)
                 return ToolResult.INSUFFICIENT_POPULATION;
             if (city.cityhallCountMem >= 5)
                 return ToolResult.NO_MORE_CITYHALLS;
+
+            // stupid hacks because the map scanner is not fast enough
+            city.cityhallCount++;
+            city.lastCityHallCount++;
+            city.cityhallCountMem++;
         }
 
         if ((preview.getTool() == MicropolisTool.UNIA || preview.getTool() == MicropolisTool.UNIB) && city.lastSchoolCount < 1)

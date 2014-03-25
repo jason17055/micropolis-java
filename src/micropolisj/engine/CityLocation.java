@@ -74,17 +74,16 @@ public class CityLocation implements Comparable<CityLocation>
 	}
 	
 	public int compareTo(CityLocation b){
-		if(this.equals(this,b)){
+		if(CityLocation.equals(this,b)){
 			return 0;
-		}else if(this.x<b.x){
+		} if(this.x<b.x){
 			return -1;
-		}else if(this.x>b.x){
+		} if(this.x>b.x){
 			return 1;
-		}else if(this.y<b.y){
+		} if(this.y<b.y){
 			return -1;
-		}else{
-			return 1;
 		}
+			return 1;
 		
 	}
 	
