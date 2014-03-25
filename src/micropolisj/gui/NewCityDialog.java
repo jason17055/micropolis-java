@@ -31,9 +31,8 @@ public class NewCityDialog extends JDialog
 
 	static final ResourceBundle strings = MainWindow.strings;
 
-	public NewCityDialog(MainWindow owner, boolean showCancelOption)
-	{
-		super(owner);
+    public NewCityDialog(MainWindow owner, final boolean showCancelOption) {
+        super(owner);
 		setTitle(strings.getString("welcome.caption"));
 		setModal(true);
 
@@ -130,15 +129,17 @@ public class NewCityDialog extends JDialog
 		}
 
 		pack();
-		setSize(800,600);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(owner);
-		getRootPane().registerKeyboardAction(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				dispose();
-			}},
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
+        setSize(800, 600);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(owner);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent ev) {
+                if (!showCancelOption)
+                    Main.splash.setVisible(true);
+            }
+        });
+
+
 	}
 
 	private void onPreviousMapClicked()
