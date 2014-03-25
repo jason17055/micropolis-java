@@ -909,9 +909,10 @@
 865   misc_animation@0,608                      (bulldozable)(noburn)(description=#3)(becomes=866) (behavior=EXPLOSION)
 866   misc_animation@0,624                      (bulldozable)(noburn)(description=#3)(becomes=867) (behavior=EXPLOSION)
 867   misc_animation@0,640                      (bulldozable)(noburn)(description=#3)              (behavior=EXPLOSION)
-# not used
-868   misc_animation@0,656
-869   misc_animation@0,672
+# WIND POWER PLANT ANIMATION (CURRENTLY NOT WORKING) #
+868   misc_animation@0,656				(bulldozable)(conducts)(behavior=WIND)(description=#28)(becomes=869) 
+869   misc_animation@0,672				(bulldozable)(conducts)(behavior=WIND)(description=#28)(becomes=868)
+#not used
 870   misc_animation@0,688
 871   misc_animation@0,704
 872   misc_animation@0,720
@@ -1069,7 +1070,7 @@
 1011   openair@0,16           (conducts)
 1012   openair@16,16    (zone)(conducts)(building=6x6)(behavior=OPENAIRBUILDING)(description=#33)
 1013   openair@32,16          (conducts)
-1014   openair@48,16          (conducts)(onpower=832)
+1014   openair@48,16          (conducts)(onpower=1211)
 1015   openair@64,16          (conducts)
 1016   openair@80,16          (conducts)
 1017   openair@0,32           (conducts)
@@ -1124,7 +1125,7 @@
 1064   solar@32,48          (conducts)
 1065   solar@48,48          (conducts)
 # BEGIN Wind POWER #
-1066   wind@0,0   (zone)(bulldozable)(conducts)(building=1x1)(behavior=WIND)(description=#28)
+1066   misc_animation@0,656   (zone)(bulldozable)(conducts)(building=1x1)(behavior=WIND)(description=#28)
 
 
 
@@ -1285,5 +1286,8 @@
 1210   station@0,0                 (bulldozable)(description=#9)(behavior=STATION)
 
 
-
-
+# BEGIN OPEN AIR DANCERS #
+1211   misc_animation@0,2064   (conducts)(description=#33)   (becomes=1212)(onshutdown=1014)
+1212   misc_animation@0,2080   (conducts)(description=#33)   (becomes=1213)(onshutdown=1014)
+1213   misc_animation@0,2096   (conducts)(description=#33)   (becomes=1214)(onshutdown=1014)
+1214   misc_animation@0,2112   (conducts)(description=#33)   (becomes=1211)(onshutdown=1014)

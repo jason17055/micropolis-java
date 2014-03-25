@@ -40,8 +40,8 @@ public class NewCityDialog extends JDialog
 		assert owner != null;
 
 		JPanel p1 = new JPanel(new BorderLayout());
-		p1.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
-		getContentPane().add(p1, BorderLayout.CENTER);
+		p1.setBorder(BorderFactory.createEmptyBorder(111,40,111,40));
+		getContentPane().add(p1, BorderLayout.WEST);
 
 		engine = new Micropolis();
 		new MapGenerator(engine).generateNewCity();
@@ -130,6 +130,7 @@ public class NewCityDialog extends JDialog
 		}
 
 		pack();
+		setSize(800,600);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(owner);
 		getRootPane().registerKeyboardAction(new ActionListener() {

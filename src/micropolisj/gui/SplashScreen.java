@@ -27,6 +27,7 @@ import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.Dimension;
 
 public class SplashScreen extends JFrame{
 	
@@ -177,7 +178,10 @@ public class SplashScreen extends JFrame{
 		
 		//pack();
 		
-		
+//	setLocationRelativeTo(getParent());	
+		final Dimension d = this.getToolkit().getScreenSize(); 
+		this.setLocation((int) (((d.getWidth() - this.getWidth()) / 2)-400), (int) (((d.getHeight() - this.getHeight()) / 2)-300));
+
 	}
 	
 	private class HandlerNewGame implements MouseListener{

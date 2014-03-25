@@ -21,21 +21,16 @@ public class ScienceFrameA extends JFrame{
 	Micropolis engine;
 	
 	JPanel panel;
-	JButton jbStreetUpgrade;
-	JButton jbRailUpgrade;
 	JButton jbPollution;
-	JButton jbPoliceUpgrade;
-	JButton jbFireDepUpgrade;
 	JButton jbNuclear;
 	JButton jbPowerEfficiency;
 	JButton jbSolar;
 	JButton jbWind;
-	JButton jbTwoLaneRoad;
-	JButton jbAirport;
 
+	//UNIVERSITAET FUER ENERGIE UND UMWELT
 	
 	public ScienceFrameA(Micropolis m){
-		super("Fördere die Forschung!");
+		super("Support local research at your University for Environment and Energy!");
 		engine=m;
 
 /*			image = ImageIO.read(new File("graphics/splash.png"));
@@ -54,80 +49,32 @@ public class ScienceFrameA extends JFrame{
 			
 
 		
-		jbStreetUpgrade = new JButton("Street Upgrade");
-		jbRailUpgrade = new JButton ("Rail Upgrade");
-		jbPollution = new JButton ("Reduce Pollution");
-		jbPoliceUpgrade = new JButton ("Police Upgrade");
-		jbFireDepUpgrade = new JButton ("Fire Department Upgrade");
-		jbNuclear = new JButton ("Reduce Pollution Of Nuclear Power Plant");
-		jbPowerEfficiency = new JButton ("Improce Efficiency  Of Wind And Solar Power Stations");
-		jbSolar = new JButton ("Research Solar Power Stations");
-		jbWind = new JButton ("Research Wind Power Stations");
-		jbTwoLaneRoad = new JButton ("Research Two-Lane Roads");
-		jbAirport = new JButton ("Research Airports");
+		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><font color=#666666>[XX points]</font></html>");
+		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><font color=#666666>[XX points]</font></html>");
+		jbPowerEfficiency = new JButton ("<html>Improce Efficiency<br>Of Wind And Solar<br>Power Stations<br><br><font color=#666666>[XX points]</font></html>");
+		jbSolar = new JButton ("<html>Research Solar<br>Power Stations<br><br><br><font color=#666666>[XX points]</font></html>");
+		jbWind = new JButton ("<html>Research Wind<br>Power Stations<br><br><br><font color=#666666>[XX points]</font></html>");
 
-		jbStreetUpgrade.setEnabled(true);
-		jbRailUpgrade.setEnabled(true);
 		jbPollution.setEnabled(true);
-		jbPoliceUpgrade.setEnabled(true);
-		jbFireDepUpgrade.setEnabled(true);
 		jbNuclear.setEnabled(true);
 		jbPowerEfficiency.setEnabled(jbSolar.isEnabled() || jbWind.isEnabled());
 		jbSolar.setEnabled(true);
 		jbWind.setEnabled(true);
-		jbTwoLaneRoad.setEnabled(true);
-		jbAirport.setEnabled(true);
 		
-		jbStreetUpgrade.setToolTipText("Let more money flow towards road construction. You will have immediate results.");
-		jbRailUpgrade.setToolTipText("Let more money flow towards rail construction. You will have immediate results.");
 		jbPollution.setToolTipText("Let more money flow towards research. They will discover new methods of decreasing air pollution.");
-		jbPoliceUpgrade.setToolTipText("Let more money flow towards police stations. Police officers will be much more efficient.");
-		jbFireDepUpgrade.setToolTipText("Let more money flow towards fire departments. Fire fighters will be much more efficient.");
 		jbNuclear.setToolTipText("Let more money flow towards nuclear research. It will decrease air pollution immediately.");
 		jbPowerEfficiency.setToolTipText("Let more money flow towards research. You will have immediate results.");
-		jbSolar.setToolTipText("Let more money flow towards rail construction. You will have immediate results.");
-		jbWind.setToolTipText("Let more money flow towards rail construction. You will have immediate results.");
-		jbTwoLaneRoad.setToolTipText("Let more money flow towards rail construction. You will have immediate results.");
-		jbAirport.setToolTipText("Let more money flow towards rail construction. You will have immediate results.");
+		jbSolar.setToolTipText("Let more money flow towards research. Researchers will work on finding a way to use solar power in your town.");
+		jbWind.setToolTipText("Let more money flow towards research. Researchers will work on finding a way to use wind power in your town.");
 		
-		jbStreetUpgrade.setPreferredSize(new Dimension(150,90));
-		jbRailUpgrade.setPreferredSize(new Dimension(150,90));
-		jbPollution.setPreferredSize(new Dimension(150,90));
-		jbPoliceUpgrade.setPreferredSize(new Dimension(150,90));
-		jbFireDepUpgrade.setPreferredSize(new Dimension(150,90));
-		jbNuclear.setPreferredSize(new Dimension(150,90));
-		jbPowerEfficiency.setPreferredSize(new Dimension(150,90));
-		jbSolar.setPreferredSize(new Dimension(150,90));
-		jbWind.setPreferredSize(new Dimension(100,90));
-		jbTwoLaneRoad.setPreferredSize(new Dimension(150,90));
-		jbAirport.setPreferredSize(new Dimension(150,90));
+		jbPollution.setPreferredSize(new Dimension(150,110));
+		jbNuclear.setPreferredSize(new Dimension(150,110));
+		jbPowerEfficiency.setPreferredSize(new Dimension(150,110));
+		jbSolar.setPreferredSize(new Dimension(150,110));
+		jbWind.setPreferredSize(new Dimension(150,110));
 		
-		
-		jbStreetUpgrade.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-
-			}
-		});
-		
-		jbRailUpgrade.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-			}
-			
-		});
 		
 		jbPollution.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-
-			}
-		});
-		
-		jbPoliceUpgrade.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-			}
-			
-		});
-		
-		jbFireDepUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 
 			}
@@ -157,40 +104,22 @@ public class ScienceFrameA extends JFrame{
 			}
 		});
 		
-		jbTwoLaneRoad.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-			}
-			
-		});
-
-		jbAirport.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent event){
-			}
-			
-		});
 		
-		panel  = new JPanel(null,true);
-		setSize(600,400);		
+		panel  = new JPanel(null,true);	
 		getContentPane().add(panel);
 		
-		panel.add(jbStreetUpgrade);
-		panel.add(jbRailUpgrade);
 		panel.add(jbPollution);
-		panel.add(jbPoliceUpgrade);
-		panel.add(jbFireDepUpgrade);
 		panel.add(jbNuclear);
 		panel.add(jbPowerEfficiency);
 		panel.add(jbSolar);
 		panel.add(jbWind);
-		panel.add(jbTwoLaneRoad);
-		panel.add(jbAirport);
-		
+	
 		
 		panel.setLayout(new FlowLayout());
 		
 		pack();
-		
-		
+		setSize(350,390);
+		setLocationRelativeTo(getParent());
 	}	
 	
 	
