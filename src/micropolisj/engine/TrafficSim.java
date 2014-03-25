@@ -340,8 +340,6 @@ public class TrafficSim {
 		Vector<Integer> ret=new Vector<Integer>();
 		if (CityLocation.equals(new CityLocation(-1,-1), me)) {
 			ret.add(1);
-		} else {
-			ret.add(0);
 		}
 		return ret;
 	}
