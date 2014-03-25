@@ -287,11 +287,11 @@ public class TrafficSim {
 	
 	private void updateReady(RoadSpecifiedTile g, RoadSpecifiedTile f) {
 		int c=engine.getTrafficCost(f.getLocation(), f.getRoadType())+search(ready,search(ready,g).getPred()).getCosts()+engine.getTrafficCost(g.getLocation(), g.getRoadType());
-		if (search(ready,g).getCosts()<=c) {
+		if (search(ready,g).getCosts()>c) {
 			ready.put(g, new SpecifiedTile(c,new RoadSpecifiedTile(f.getLocation(),currentRoadType),true,search(ready,g).getRoadType()));
 			for (RoadSpecifiedTile RoadTile : findAdjRoads(g.getLocation(),g.getRoadType())) {
 				if (searchRoSpec(toHashSetTwo(ready),RoadTile)) {
-						//updateReady(RoadTile,g);
+					updateReady(RoadTile,g);
 				}
 			}
 		}
