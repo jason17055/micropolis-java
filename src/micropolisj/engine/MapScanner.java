@@ -257,16 +257,18 @@ class MapScanner extends TileBehavior
 		if (powerOn) {
 			z = city.fireEffect;  //if powered, get effect
 		} else {
-			z = city.fireEffect; // from the funding ratio
+			z = city.fireEffect/2; // from the funding ratio
 		}
 
-		oldTraffic.mapX = xpos;
-		oldTraffic.mapY = ypos;
-		if (!oldTraffic.findPerimeterRoad()) {
-			z /= 2;
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 3*z);
+		
+		for (int y=0;y<city.getHeight();y++) {
+			for (int x=0;x<city.getWidth();x++) {
+				if (help[y][x]!=0) {
+					city.fireStMap[y][x] += help[y][x]+20;
+				}
+			}
 		}
-
-		city.fireStMap[ypos][xpos] += z;
 	}
 
 	void doPoliceStation()
@@ -284,13 +286,15 @@ class MapScanner extends TileBehavior
 			z = city.policeEffect/4;
 		}
 
-		oldTraffic.mapX = xpos;
-		oldTraffic.mapY = ypos;
-		if (!oldTraffic.findPerimeterRoad()) {
-			z /= 2;
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), z);
+		
+		for (int y=0;y<city.getHeight();y++) {
+			for (int x=0;x<city.getWidth();x++) {
+				if (help[y][x]!=0) {
+					city.policeMap[y][x] += help[y][x]+20;
+				}
+			}
 		}
-
-		city.policeMap[ypos][xpos] += z;
 	}
 	void doSchool()
 	{

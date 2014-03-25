@@ -449,11 +449,11 @@ public class TileConstants
 	public static boolean isRoad(int tile) { //TODO add new tiles (new images)
 		assert (tile & LOMASK) == tile;
 
-		return (tile >= ROADBASE && tile < POWERBASE);
+		return ((tile >= ROADBASE && tile < POWERBASE) || tile==237 || tile==238);
 	}
 	
 	public static boolean isBigRoad(int tile) {
-		return (tile >= 1067 && tile < 1210);
+		return ((tile >= 1067 && tile < 1210) || tile == 1215 || tile==1216);
 	}
 	public static boolean isStation(int tile) {
 		return (tile==1210);
@@ -612,7 +612,7 @@ public class TileConstants
 	{
 		assert (tile & LOMASK) == tile;
 
-		return (tile >= RAILBASE && tile < RESBASE);
+		return ((tile >= RAILBASE && tile < RESBASE) || tile == 1215 || tile==1216);
 	}
 
 	public static boolean isRailAny(int tile)
