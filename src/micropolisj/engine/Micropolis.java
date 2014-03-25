@@ -1337,9 +1337,9 @@ public class Micropolis
 		// by random chance. why is there no cap
 		// the rest of the time?
 
-		if (z > 240 && PRNG.nextInt(6) == 0)
+		if (z > 480 && PRNG.nextInt(6) == 0)
 		{
-			z = 240;
+			z = 480;
 			trafficMaxLocationX = mapX;
 			trafficMaxLocationY = mapY;
 
@@ -1373,7 +1373,7 @@ public class Micropolis
 	public int getTrafficDensity(int xpos, int ypos)
 	{
 		if (testBounds(xpos, ypos)) {
-			return trfDensity[ypos][xpos];
+			return trfDensity[ypos][xpos]/2;
 		} else {
 			return 0;
 		}

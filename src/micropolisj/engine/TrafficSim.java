@@ -316,7 +316,7 @@ public class TrafficSim {
 				ret.add(myType);
 				return ret;
 			}
-			if ((myType==1 || myType==2) && (prevType%4==1 || prevType%4==2)) {
+			if ((myType==1 || myType==2) && (prevType%4==1 || prevType%4==2 || prevType==4)) {
 				ret.add(myType);
 				return ret;
 			}
