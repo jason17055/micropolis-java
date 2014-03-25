@@ -194,7 +194,7 @@ public class CityEval
 			}
 		}
 
-		engine.trafficAverage = (int)Math.round(((double)total / (double)count) * 2.4);
+		engine.trafficAverage = (int)Math.round(((double)total / (double)count) * 1.2);
 		return engine.trafficAverage;
 	}
 
