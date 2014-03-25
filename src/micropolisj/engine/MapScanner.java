@@ -9,7 +9,6 @@
 package micropolisj.engine;
 
 import static micropolisj.engine.TileConstants.*;
-import static micropolisj.engine.TrafficGen.ZoneType;
 
 /**
  * Process individual tiles of the map for each cycle.
