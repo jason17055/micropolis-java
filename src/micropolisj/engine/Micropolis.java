@@ -363,8 +363,10 @@ public class Micropolis
         streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
         infraTechs.add(streetUpgradeTech);
 
-        selectedInfraTech = airportTech;
-        selectedEETech = windTech;
+        //selectedInfraTech = airportTech;
+        //selectedEETech = windTech;
+        
+        System.out.println("inittechs");
 
     }
 
@@ -1839,6 +1841,15 @@ public class Micropolis
             System.out.println("infraTech points already: " +
                     selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded() + " " + selectedInfraTech.getName());
         }
+    }
+    
+    public void selectEETech(Technology t){
+    	selectedEETech = t;
+    }
+    
+    public void selectInfraTech(Technology t){
+    	System.out.println("selected an infratest");
+    	selectedInfraTech = t;
     }
 
 	void generateShip()
