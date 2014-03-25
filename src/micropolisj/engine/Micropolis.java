@@ -348,7 +348,6 @@ public class Micropolis
         BuildingTechnology twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
-
         StreetUpgradeTech streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
         infraTechs.add(streetUpgradeTech);
 

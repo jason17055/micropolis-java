@@ -186,27 +186,51 @@ public class TileConstants
 	static final char BIGHTRFBASE = 1147;
 	private static final char BIGLASTROAD = 1209;
 	static final char STATION = 1210;
+	static final char NARROWINGS   = 1221;
+	static final char NARROWINGS2  = 1222;
+	static final char NARROWINGS3  = 1223;
+	static final char NARROWINGS4  = 1224;
+	static final char NARROWINGS5  = 1225;
+	static final char NARROWINGS6  = 1226;
+	static final char NARROWINGS7  = 1227;  
+	static final char NARROWINGS8  = 1228;
+	static final char NARROWINGS9  = 1229; 
+	static final char NARROWINGS10 = 1230;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,
 		ROADS2, ROADS2, ROADS4, ROADS8,
 		ROADS, ROADS6, ROADS, ROADS7,
-		ROADS5, ROADS10, ROADS9, INTERSECTION
+		ROADS5, ROADS10, ROADS9, INTERSECTION,
+		NARROWINGS, NARROWINGS4, NARROWINGS2, BIGROADS3,
+		NARROWINGS3, BIGROADS2, BIGROADS4, BIGROADS8,
+		NARROWINGS, BIGROADS6, BIGROADS, BIGROADS7,
+		BIGROADS5, BIGROADS10, BIGROADS9, BIGINTERSECTION,
+		
+		
 		};
 	
 	static final char [] BigRoadTable = new char[] {
 		BIGROADS, BIGROADS2, BIGROADS, BIGROADS3,
 		BIGROADS2, BIGROADS2, BIGROADS4, BIGROADS8,
 		BIGROADS, BIGROADS6, BIGROADS, BIGROADS7,
-		BIGROADS5, BIGROADS10, BIGROADS9, BIGINTERSECTION
-		};
-
+		BIGROADS5, BIGROADS10, BIGROADS9, BIGINTERSECTION,
+		NARROWINGS, NARROWINGS3, NARROWINGS, ROADS3,
+		NARROWINGS4, ROADS2, ROADS4, ROADS8,
+		NARROWINGS2, ROADS6, ROADS, ROADS7,
+		ROADS5, ROADS10, ROADS9, INTERSECTION,
+    	};
+	
+	
+	
 	static final char [] RailTable = new char[] {
 		LHRAIL, LVRAIL, LHRAIL, LVRAIL2,
 		LVRAIL, LVRAIL, LVRAIL3, LVRAIL7,
 		LHRAIL, LVRAIL5, LHRAIL, LVRAIL6,
 		LVRAIL4, LVRAIL9, LVRAIL8, LVRAIL10
 		};
+	
+	
 
 	static final char [] WireTable = new char[] {
 		LHPOWER, LVPOWER, LHPOWER, LVPOWER2,
@@ -512,7 +536,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -523,7 +547,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != HROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -534,7 +558,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != HROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -545,7 +569,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)	
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)	
 			) &&
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -565,7 +589,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGVROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -576,7 +600,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGHROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -587,7 +611,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGHROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -598,7 +622,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)	
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)	
 			) &&
 			(tile != BIGVROADPOWER) &&
 			(tile != HRAILROAD) &&

@@ -316,32 +316,50 @@ public class ToolStroke
 		{
 			// cleanup road
 			int adjTile = 0;
-
 			// check road to north
 			if (roadConnectsSouth(eff.getTile(0, -1)))
+			{	
+				adjTile |= 1;
+			}
+			else if (bigroadConnectsSouth(eff.getTile(0,-1)))
 			{
+				adjTile |= 16;
 				adjTile |= 1;
 			}
 
 			// check road to east
 			if (roadConnectsWest(eff.getTile(1, 0)))
+			{	
+				adjTile |= 2;
+			}
+			else if (bigroadConnectsWest(eff.getTile(1, 0)))
 			{
+				adjTile |= 16;
 				adjTile |= 2;
 			}
 
 			// check road to south
 			if (roadConnectsNorth(eff.getTile(0, 1)))
+			{	
+				adjTile |= 4;
+			}
+			else if (bigroadConnectsNorth(eff.getTile(0, 1)))
 			{
+				adjTile |= 16;
 				adjTile |= 4;
 			}
 
 			// check road to west
 			if (roadConnectsEast(eff.getTile(-1, 0)))
+			{	
+				adjTile |= 8;
+			}
+			else if (bigroadConnectsEast(eff.getTile(-1, 0)))
 			{
+				adjTile |= 16;
 				adjTile |= 8;
 			}
 			
-
 			eff.setTile(0, 0, RoadTable[adjTile]);
 		} //endif on a road tile
 
@@ -351,10 +369,15 @@ public class ToolStroke
 		{
 			// cleanup bigroad
 			int adjTile = 0;
-
+			
 			// check bigroad to north
 			if (bigroadConnectsSouth(eff.getTile(0, -1)))
 			{
+				adjTile |= 1;
+			}
+			else if (roadConnectsSouth(eff.getTile(0, -1)))
+			{
+				adjTile |= 16;
 				adjTile |= 1;
 			}
 
@@ -363,10 +386,21 @@ public class ToolStroke
 			{
 				adjTile |= 2;
 			}
+			else if (roadConnectsWest(eff.getTile(1, 0)))
+			{
+				adjTile |= 16;
+				adjTile |= 2;
+			}
+			
 
 			// check bigroad to south
 			if (bigroadConnectsNorth(eff.getTile(0, 1)))
 			{
+				adjTile |= 4;
+			}
+			else if (roadConnectsNorth(eff.getTile(0, 1)))
+			{
+				adjTile |= 16;
 				adjTile |= 4;
 			}
 
@@ -375,14 +409,13 @@ public class ToolStroke
 			{
 				adjTile |= 8;
 			}
+			else if (roadConnectsEast(eff.getTile(-1, 0)))
+			{
+				adjTile |= 16;
+				adjTile |= 8;
+			}
+						
 			
-			
-			
-			
-			
-			
-			
-
 			eff.setTile(0, 0, BigRoadTable[adjTile]);
 		} //endif on a bigroad tile	
 		
