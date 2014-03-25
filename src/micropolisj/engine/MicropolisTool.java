@@ -8,6 +8,8 @@
 
 package micropolisj.engine;
 
+import micropolisj.engine.techno.BuildingTechnology;
+
 import static micropolisj.engine.TileConstants.*;
 
 /**
@@ -16,42 +18,44 @@ import static micropolisj.engine.TileConstants.*;
  */
 public enum MicropolisTool
 {
-	BULLDOZER(1, 1),
-	WIRE(1, 5),   //cost=25 for underwater
-	ROADS(1, 10), //cost=50 for over water
-	BIGROADS(1, 20), //cost=xx for over water
-	RAIL(1, 25),  //cost=100 for underwater
-	STATION(1, 200),  
-	RESIDENTIAL(3, 100),
-	COMMERCIAL(3, 100),
-	INDUSTRIAL(3, 100),
-	FIRE(3, 500),
-	POLICE(3, 500),
-	STADIUM(4, 5000),
-	PARK(1, 10),
-	SEAPORT(4, 3000),
-	POWERPLANT(4, 3000),
-	NUCLEAR(4, 5000),
-	AIRPORT(6, 10000),
-	SCHOOL(3,500),
-	MUSEUM(3,500),
-	UNIA(3,1000),
-	UNIB(3,1000),
-	OPENAIR(6,500),
-	CITYHALL(3,1500),
-	QUERY(1, 0),
-	BIGPARK(3, 100),
-	SOLAR(4, 4000),
-	WIND(1, 325);
+    BULLDOZER(1, 1, 0),
+    WIRE(1, 5, 0),   //cost=25 for underwater
+    ROADS(1, 10, 0), //cost=50 for over water
+    BIGROADS(1, 20, 0), //cost=xx for over water
+    RAIL(1, 25, 0),  //cost=100 for underwater
+    STATION(1, 200, 0),
+    RESIDENTIAL(3, 100, 0),
+    COMMERCIAL(3, 100, 0),
+    INDUSTRIAL(3, 100, 0),
+    FIRE(3, 500, 0),
+    POLICE(3, 500, 0),
+    STADIUM(4, 5000, 20),
+    PARK(1, 10, 0),
+    SEAPORT(4, 3000, 0),
+    POWERPLANT(4, 3000, 0),
+    NUCLEAR(4, 5000, 0),
+    AIRPORT(6, 10000, 1000),
+    SCHOOL(3, 500, 100),
+    MUSEUM(3, 500, 50),
+    UNIA(3, 1000, 0),
+    UNIB(3, 1000, 0),
+    OPENAIR(6, 500, 1500),
+    CITYHALL(3, 1500, 0),
+    QUERY(1, 0, 0),
+    BIGPARK(3, 100, 500),
+    SOLAR(4, 4000, 0),
+    WIND(1, 325, 0);
 
 	int size;
 	int cost;
+    int minPopulation;
+    BuildingTechnology requiredTechnology;
 
-	private MicropolisTool(int size, int cost)
-	{
+    private MicropolisTool(int size, int cost, int minPopulation) {
 		this.size = size;
 		this.cost = cost;
-	}
+        this.minPopulation = minPopulation;
+    }
 
 	public int getWidth()
 	{
@@ -95,4 +99,8 @@ public enum MicropolisTool
 	{
 		return cost;
 	}
+
+    public int getMinPopulation() {
+        return minPopulation;
+    }
 }

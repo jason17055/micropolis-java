@@ -272,7 +272,8 @@ class RoadLikeTool extends ToolStroke
 		}
 
 		eff.spend(cost);
-		return true;
+        eff.setTool(tool);
+        return true;
 	}
 
 	private boolean layBigRoad(ToolEffectIfc eff)
@@ -377,7 +378,8 @@ default:
 }
 
 eff.spend(cost);
-return true;
+        eff.setTool(tool);
+        return true;
 }
 			private boolean layRoad(ToolEffectIfc eff)
 			{
@@ -483,6 +485,7 @@ return true;
 		}
 	
 		eff.spend(cost);
+                eff.setTool(tool);
 		return true;
 	}
 
@@ -622,6 +625,7 @@ return true;
 		}
 
 		eff.spend(cost);
-		return true;
+        eff.setTool(tool);
+        return true;
 	}
 }

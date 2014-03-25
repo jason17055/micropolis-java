@@ -19,6 +19,6 @@ public enum CityProblem
 	TAXES,
 	TRAFFIC,
 	UNEMPLOYMENT,
-    ANALPHABETISM,
+    NOEDUCATION,
 	FIRE;
 }

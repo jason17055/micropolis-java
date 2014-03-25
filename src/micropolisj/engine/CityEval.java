@@ -134,7 +134,7 @@ public class CityEval
 		problemTable.put(CityProblem.TAXES, engine.cityTax * 10);
 		problemTable.put(CityProblem.TRAFFIC, averageTrf());
 		problemTable.put(CityProblem.UNEMPLOYMENT, getUnemployment());
-        problemTable.put(CityProblem.ANALPHABETISM, engine.educationAverage);
+        problemTable.put(CityProblem.NOEDUCATION, 255 - engine.educationAverage);
 		problemTable.put(CityProblem.FIRE, getFire());
 
 		problemVotes = voteProblems(problemTable);

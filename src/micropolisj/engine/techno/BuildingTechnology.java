@@ -1,40 +1,18 @@
 package micropolisj.engine.techno;
 import micropolisj.engine.*;
+import micropolisj.engine.MicropolisTool;
 
-public class BuildingTechnology implements Technology {
-    double pointsNeeded;
-    double pointsInvested;
-    String name;
-    String description;
-    int buildingNumber;
+public class BuildingTechnology extends GeneralTechnology {
+    MicropolisTool tool_;
 
-    void BuildingTechnology(double pointsNeeded_, String description_, String name_, int buildingNumber_){
-        pointsNeeded = pointsNeeded_;
-        name = name_;
-        description = description_;
-        buildingNumber = buildingNumber_;
-        pointsInvested = 0;
+     public BuildingTechnology(double pointsNeeded_, String description_, String name_, MicropolisTool tool_){
+        super(pointsNeeded_, description_, name_);
+        this.tool_ = tool_;
     }
 
 
-    public void apply(){
-        return;
-
+    public MicropolisTool getTool(){
+        return tool_;
     }
-
-    public double getPointsNeeded(){
-        return pointsNeeded;
-    }
-
-
-    public String getName(){
-        return name;
-    }
-
-
-    public String getDescription(){
-        return description;
-    }
-
 
 }

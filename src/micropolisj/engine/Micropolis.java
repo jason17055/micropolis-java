@@ -8,6 +8,10 @@
 
 package micropolisj.engine;
 
+import micropolisj.engine.techno.BuildingTechnology;
+import micropolisj.engine.techno.StreetUpgradeTech;
+import micropolisj.engine.techno.Technology;
+
 import java.io.*;
 import java.util.*;
 
@@ -113,7 +117,14 @@ public class Micropolis
 
     boolean autoGo;
 
+
+
+
     // census numbers, reset in phase 0 of each cycle, summed during map scan
+
+
+
+
 	int poweredZoneCount;
 	int unpoweredZoneCount;
 	int roadTotal;
@@ -201,8 +212,14 @@ public class Micropolis
     int educationRamp;
 
 
-    double scienceEEPoints;
-    double scienceInfraPoints;
+    // science/tech stuff
+    ArrayList<BuildingTechnology> buildingTechs;
+    ArrayList<Technology> eetechs;
+    ArrayList<Technology> infraTechs;
+    double technologyEEPoints;
+    double technologyInfraPoints;
+    Technology selectedInfraTech = null;
+    Technology selectedEETech = null;
 
 	//
 	// budget stuff
@@ -301,11 +318,44 @@ public class Micropolis
 		policeMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
-        scienceEEPoints = 0;
-        scienceInfraPoints = 0;
+
+        technologyEEPoints = 0;
+        technologyInfraPoints = 0;
+
+        initTechs();
 
 
 	}
+
+
+    void initTechs(){
+        buildingTechs = new ArrayList<BuildingTechnology>();
+        eetechs = new ArrayList<Technology>();
+        infraTechs = new ArrayList<Technology>();
+
+        BuildingTechnology windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
+        buildingTechs.add(windTech);
+        eetechs.add(windTech);
+
+        BuildingTechnology solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
+        buildingTechs.add(solarTech);
+        eetechs.add(solarTech);
+
+        BuildingTechnology airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
+        buildingTechs.add(airportTech);
+        infraTechs.add(airportTech);
+
+        BuildingTechnology twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        buildingTechs.add(twoLaneRoadTech);
+        infraTechs.add(twoLaneRoadTech);
+
+        StreetUpgradeTech streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
+        infraTechs.add(streetUpgradeTech);
+
+        selectedInfraTech = airportTech;
+        selectedEETech = windTech;
+
+    }
 
 	void fireCensusChanged()
 	{
@@ -687,6 +737,7 @@ public class Micropolis
 			}
 
 			collectTaxPartial();
+            spendTechnologyPoints();
 
 			if (cityTime % TAXFREQ == 0) {
 				collectTax();
@@ -750,8 +801,8 @@ public class Micropolis
 		return 0;
 	}
 
-    private void addPolutionToArea(int [][] pol, CityLocation loc, int size, int randomRange){
-        pol[loc.x][loc.y] = pol[loc.y][loc.x]/10;
+    private void areaSpread(int[][] pol, CityLocation loc, int size, int randomRange){
+        pol[loc.y][loc.x] = pol[loc.y][loc.x]/10;
         int polutionAdd = pol[loc.y][loc.x]*9; //spreading pollution is 1/3 the original pollution on that point
 
         polutionAdd /= Math.ceil(size * size); // same pollution for all fields
@@ -766,8 +817,25 @@ public class Micropolis
         }
     }
 
+    private void gaussianSpread(int [][] matrix, int standardDeviation, CityLocation loc){
+        int intensityPool = matrix[loc.y][loc.x];
+        while(intensityPool > 1){
+            double x_r = PRNG.nextGaussian();
+            double y_r = PRNG.nextGaussian();
+            double intensity_r = PRNG.nextGaussian();
+            int x = (int) ((standardDeviation * x_r) + loc.x);
+            int y = (int) ((standardDeviation * y_r) + loc.y);
 
-    private void spreadPollution(int [][] pol, int size, int randomRange, int minValue){
+            int intensity = (int) Math.ceil((2.0 * intensity_r) + 4.0);
+            intensityPool -= intensity;
+            if(onMap(x,y) == true){
+                matrix[y][x] += intensity;
+            }
+        }
+    }
+
+
+    private void spreadEffect(int[][] pol, int size, int randomRange, int minValue){
         //TODO: GAUSSIAN SPREAD
         final int h = pol.length;
         final int w = pol.length;
@@ -779,11 +847,12 @@ public class Micropolis
         {
             for (int x = 1; x < w; x++)
             {
-                if(pol[y][x] > minValue) highPollutionLocs.add(new CityLocation(x,y));
+                if(pol[y][x] > 5) highPollutionLocs.add(new CityLocation(x,y));
             }
         }
         for(CityLocation l : highPollutionLocs){
-            addPolutionToArea(pol, l, size , randomRange);
+            //areaSpread(pol, l, size, randomRange);
+            gaussianSpread(pol, 6, l);
         }
     }
 
@@ -977,7 +1046,7 @@ public class Micropolis
 
 	void crimeScan()
 	{
-        spreadPollution(policeMap,15,4, 20);
+        spreadEffect(policeMap, 15, 4, 20);
 
 
 		for (int sy = 0; sy < policeMap.length; sy++) {
@@ -1167,7 +1236,7 @@ public class Micropolis
 
     void updateEducationAverage(int z){
         educationValue += z;
-        educationAverage = educationValue / Math.max((schoolCount + uniaCount + unibCount), 1);
+        educationAverage = educationValue / Math.max((lastSchoolCount + lastUniACount + lastUniBCount), 1);
     }
 
     void updateCultureAverage(int z){
@@ -1304,6 +1373,9 @@ public class Micropolis
 	//power, terrain, land value
     public void pollutionScan(){
         {
+
+
+
             int pcount = 0;
             int ptotal = 0;
             int pmax = 0;
@@ -1315,7 +1387,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((float) getPollutionValue(tile) * 0.8);
+                    int curPollution = (int)  ((float) getPollutionValue(tile) * 2);
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -1336,7 +1408,7 @@ public class Micropolis
             pollutionAverage = pcount != 0 ? (ptotal / pcount) : 0;
 
             pollutionMem = doSmooth(pollutionMem);
-            spreadPollution(pollutionMem,17,8,15);
+            spreadEffect(pollutionMem, 17, 8, 15);
         }
     }
 
@@ -1727,6 +1799,22 @@ public class Micropolis
 			throw new Error("Unknown behavior: "+behaviorStr);
 		}
 	}
+
+    void spendTechnologyPoints(){
+        if(selectedEETech != null && technologyEEPoints != 0.0){
+            selectedEETech.addResearchPoints(technologyEEPoints);
+            technologyEEPoints = 0;
+            System.out.println("technologyEEPoints points already: " +
+                    selectedEETech.getPointsUsed() + "/" + selectedEETech.getPointsNeeded() + " " + selectedEETech.getName());
+        }
+
+        if(selectedInfraTech != null && technologyInfraPoints != 0.0){
+            selectedInfraTech.addResearchPoints(technologyInfraPoints);
+            technologyInfraPoints = 0;
+            System.out.println("infraTech points already: " +
+                    selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded() + " " + selectedInfraTech.getName());
+        }
+    }
 
 	void generateShip()
 	{
