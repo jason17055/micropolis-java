@@ -452,11 +452,11 @@ public class TileConstants
 		return (tile >= ROADBASE && tile < POWERBASE);
 	}
 	
-	public static boolean isBigRoad(int tile) {//TODO add bigRoads
-		return false;
+	public static boolean isBigRoad(int tile) {
+		return (tile >= 1067 && tile < 1210);
 	}
-	public static boolean isStation(int tile) {//TODO add station
-		return false;
+	public static boolean isStation(int tile) {
+		return (tile==1210);
 	}
 
 	public static boolean isRoadAny(int tile) {
