@@ -19,7 +19,6 @@ public class TrafficSim {
 	HashMap<RoadSpecifiedTile,Integer> mapBack;
 	HashSet<RoadSpecifiedTile> goal;
 	HashSet<RoadSpecifiedTile> found;
-	HashSet<VerySpecifiedTile> found2; //FIXME change to found 
 	int currentRoadType;
 	
 	
@@ -36,7 +35,6 @@ public class TrafficSim {
 		goal = new HashSet<RoadSpecifiedTile>();
 		found = new HashSet<RoadSpecifiedTile>();
 		mapBack = new HashMap<RoadSpecifiedTile,Integer>();
-		found2 = new HashSet<VerySpecifiedTile>();
 	}
 	/**
 	 * The function is called to generate traffic from the starting position
@@ -307,6 +305,9 @@ public class TrafficSim {
 	private static Vector<Integer> calcRoadType(int me,int prevType) {
 		Vector<Integer> ret =new Vector<Integer>();
 		int myType =TileConstants.roadType(me);
+		if (prevType==0) {
+			prevType=1;
+		}
 		if (myType==4) {
 			ret.add(4);
 			return ret;
@@ -492,19 +493,20 @@ public class TrafficSim {
 	 * @param loc
 	 * @param depth
 	 */
-	public void breadthFirstSearch(CityLocation loc, int depth){
-		found2.clear();
+	public int[][] breadthFirstSearch(CityLocation loc, int depth){
+		found.clear();
 		VerySpecifiedTile curloc = new VerySpecifiedTile(new CityLocation(-1,-1),1,1);
 		int dimension = 3;
 		int[][] help = new int[engine.getHeight()][engine.getWidth()];
-		for(int a=0;a<help[0].length;a++){			//initialize Help-Array 
-			for(int b=0;b<help[1].length;b++){
+		for(int a=0;a<help.length;a++){			//initialize Help-Array 
+			for(int b=0;b<help[0].length;b++){
 				help[a][b]=0;
 			}
 		}
 		for(int x=-1;x<2;x++){
 			for(int y=-1;y<2;y++){
-				help[loc.y+y][loc.x+x]=2*depth;
+				help[loc.y+y][loc.x+x]=depth;
+				found.add(new RoadSpecifiedTile(new CityLocation(loc.x,loc.y),0));
 			}
 		}
 		Queue<VerySpecifiedTile> queue = new LinkedList<VerySpecifiedTile>();
@@ -512,77 +514,89 @@ public class TrafficSim {
 		
 		for(int i=-1;i<dimension-1;i++){
 			if(calcRoadType(new CityLocation(loc.x-2,loc.y+i),1).isEmpty()&&engine.onMap(loc.x-2, loc.y+i)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),0,engine.getTrafficCost(loc,0)));
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),0,engine.getTrafficCost(loc,0)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),0,depth-engine.getTrafficCost(loc,0)));
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),0,depth-engine.getTrafficCost(loc,0)).getRoad());//FIXME RoadSpecifiedTile is enough (no need for VerySpecifiedTile)
 			}
 			for(int z : calcRoadType(new CityLocation(loc.x-2,loc.y+i),1)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),z,engine.getTrafficCost(loc,z)));	
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),z,engine.getTrafficCost(loc,z)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),z,depth-engine.getTrafficCost(loc,z)));	
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x-2,loc.y+i),z,depth-engine.getTrafficCost(loc,z)).getRoad());	
 			}
 			if(calcRoadType(new CityLocation(loc.x+dimension-1,loc.y+i),1).isEmpty()&&engine.onMap(loc.x+dimension-1, loc.y+i)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),0,engine.getTrafficCost(loc,0)));
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),0,engine.getTrafficCost(loc,0)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),0,depth-engine.getTrafficCost(loc,0)));
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),0,depth-engine.getTrafficCost(loc,0)).getRoad());
 			}
 			for(int z : calcRoadType(new CityLocation(loc.x+dimension-1,loc.y+i),1)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),z,engine.getTrafficCost(loc,z)));
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),z,engine.getTrafficCost(loc,z)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),z,depth-engine.getTrafficCost(loc,z)));
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x+dimension-1,loc.y+i),z,depth-engine.getTrafficCost(loc,z)).getRoad());
 			}
 			if(calcRoadType(new CityLocation(loc.x+i,loc.y-2),1).isEmpty()&&engine.onMap(loc.x+i, loc.y-2)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),0,engine.getTrafficCost(loc,0)));
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),0,engine.getTrafficCost(loc,0)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),0,depth-engine.getTrafficCost(loc,0)));
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),0,depth-engine.getTrafficCost(loc,0)).getRoad());
 			}
 			for(int z : calcRoadType(new CityLocation(loc.x+i,loc.y-2),1)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),z,engine.getTrafficCost(loc,z)));	
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),z,engine.getTrafficCost(loc,z)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),z,depth-engine.getTrafficCost(loc,z)));	
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y-2),z,depth-engine.getTrafficCost(loc,z)).getRoad());	
 			}
 			if(calcRoadType(new CityLocation(loc.x+i,loc.y+dimension-1),1).isEmpty()&&engine.onMap(loc.x+i, loc.y+dimension-1)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),0,engine.getTrafficCost(loc,0)));
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),0,engine.getTrafficCost(loc,0)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),0,depth-engine.getTrafficCost(loc,0)));
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),0,depth-engine.getTrafficCost(loc,0)).getRoad());
 			}
 			for(int z : calcRoadType(new CityLocation(loc.x+i,loc.y+dimension-1),1)){
-				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),z,engine.getTrafficCost(loc,z)));
-				found2.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),z,engine.getTrafficCost(loc,z)));
+				queue.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),z,depth-engine.getTrafficCost(loc,z)));
+				found.add(new VerySpecifiedTile(new CityLocation(loc.x+i,loc.y+dimension-1),z,depth-engine.getTrafficCost(loc,z)).getRoad());
 			}
 		}
 		
 		while(!queue.isEmpty()){
 			curloc=queue.remove();
-			if(calcRoadType(new CityLocation(curloc.loc.x,curloc.loc.y-1),curloc.roadType).isEmpty()&&engine.onMap(new CityLocation(curloc.loc.x,curloc.loc.y-1))){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x,curloc.loc.y-1),0,engine.getTrafficCost(loc,0)));
+			if (0<curloc.getValue()-engine.getTrafficCost(curloc.getLocation(), curloc.getRoadType())) {
+				int val=curloc.getValue()-engine.getTrafficCost(curloc.getLocation(), curloc.getRoadType());
+				if (!found.contains(curloc.getRoad()) || help[curloc.getLocation().y][curloc.getLocation().x]<val)  {
+					help[curloc.getLocation().y][curloc.getLocation().x]=Math.max(val, help[curloc.getLocation().y][curloc.getLocation().x]);
+					if (engine.onMap(new CityLocation(curloc.getLocation().x,curloc.getLocation().y-1))) {
+						if(calcRoadType(new CityLocation(curloc.getLocation().x,curloc.getLocation().y-1),curloc.getRoadType()).isEmpty()){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y-1),0,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y-1),0,val).getRoad()); 
+						}
+						for(int z : calcRoadType(new CityLocation(curloc.getLocation().x,curloc.getLocation().y-1),curloc.getRoadType())){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y-1),z,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y-1),z,val).getRoad());
+						}
+					}
+					if (engine.onMap(new CityLocation(curloc.getLocation().x-1,curloc.getLocation().y))) {
+						if(calcRoadType(new CityLocation(curloc.getLocation().x-1,curloc.getLocation().y),curloc.getRoadType()).isEmpty()){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x-1,curloc.getLocation().y),0,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x-1,curloc.getLocation().y),0,val).getRoad());
+						}
+						for(int z : calcRoadType(new CityLocation(curloc.getLocation().x-1,curloc.getLocation().y),curloc.getRoadType())){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x-1,curloc.getLocation().y),z,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x-1,curloc.getLocation().y),z,val).getRoad());
+						}
+					}
+					if (engine.onMap(new CityLocation(curloc.getLocation().x,curloc.getLocation().y+1))) {
+						if(calcRoadType(new CityLocation(curloc.getLocation().x,curloc.getLocation().y+1),curloc.getRoadType()).isEmpty()){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y+1),0,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y+1),0,val).getRoad());
+						}
+						for(int z : calcRoadType(new CityLocation(curloc.getLocation().x,curloc.getLocation().y+1),curloc.getRoadType())){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y+1),z,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x,curloc.getLocation().y+1),z,val).getRoad());
+						}
+					}
+					if (engine.onMap(new CityLocation(curloc.getLocation().x+1,curloc.getLocation().y))) {
+						if(calcRoadType(new CityLocation(curloc.getLocation().x+1,curloc.getLocation().y),curloc.getRoadType()).isEmpty()){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x+1,curloc.getLocation().y),0,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x+1,curloc.getLocation().y),0,val).getRoad());
+						}
+						for(int z : calcRoadType(new CityLocation(curloc.getLocation().x+1,curloc.getLocation().y),curloc.getRoadType())){
+							queue.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x+1,curloc.getLocation().y),z,val));
+							found.add(new VerySpecifiedTile(new CityLocation(curloc.getLocation().x+1,curloc.getLocation().y),z,val).getRoad());
+						}
+					}
+				}
 			}
-			for(int z : calcRoadType(new CityLocation(curloc.loc.x,curloc.loc.y-1),curloc.roadType)){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x,curloc.loc.y-1),z,engine.getTrafficCost(loc,z)));
-			}
-			if(calcRoadType(new CityLocation(curloc.loc.x-1,curloc.loc.y),curloc.roadType).isEmpty()&&engine.onMap(new CityLocation(curloc.loc.x-1,curloc.loc.y))){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x-1,curloc.loc.y),0,engine.getTrafficCost(loc,0)));
-			}
-			for(int z : calcRoadType(new CityLocation(curloc.loc.x-1,curloc.loc.y),curloc.roadType)){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x-1,curloc.loc.y),z,engine.getTrafficCost(loc,z)));
-			}
-			if(calcRoadType(new CityLocation(curloc.loc.x,curloc.loc.y+1),curloc.roadType).isEmpty()&&engine.onMap(new CityLocation(curloc.loc.x,curloc.loc.y+1))){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x,curloc.loc.y+1),0,engine.getTrafficCost(loc,0)));
-			}
-			for(int z : calcRoadType(new CityLocation(curloc.loc.x,curloc.loc.y+1),curloc.roadType)){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x,curloc.loc.y+1),z,engine.getTrafficCost(loc,z)));
-			}
-			if(calcRoadType(new CityLocation(curloc.loc.x+1,curloc.loc.y),curloc.roadType).isEmpty()&&engine.onMap(new CityLocation(curloc.loc.x+1,curloc.loc.y))){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x+1,curloc.loc.y),0,engine.getTrafficCost(loc,0)));
-			}
-			for(int z : calcRoadType(new CityLocation(curloc.loc.x+1,curloc.loc.y),curloc.roadType)){
-				found2.add(new VerySpecifiedTile(new CityLocation(curloc.loc.x+1,curloc.loc.y),z,engine.getTrafficCost(loc,z)));
-			}
-			
 		}
-		
-		
-		
-		
-
-		
-		
-		
-		
-		
+		return help;
 	}
 	
 	

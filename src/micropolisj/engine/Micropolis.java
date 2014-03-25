@@ -1066,7 +1066,7 @@ public class Micropolis
 
 	void crimeScan()
 	{
-        spreadEffect(policeMap, 15, 4, 20);
+		policeMap=doSmooth(policeMap);
 
 
 		for (int sy = 0; sy < policeMap.length; sy++) {
