@@ -9,6 +9,7 @@
 package micropolisj.engine;
 
 import micropolisj.engine.techno.BuildingTechnology;
+import micropolisj.engine.techno.GeneralTechnology;
 import micropolisj.engine.techno.StreetUpgradeTech;
 import micropolisj.engine.techno.Technology;
 
@@ -68,6 +69,7 @@ public class Micropolis
 	 * If 192 or higher, then the "heavy traffic" animation is used.
 	 */
 	int [][] trfDensity;
+	int [][] trfMem;
 
 	// quarter-size arrays
 
@@ -216,10 +218,16 @@ public class Micropolis
     ArrayList<BuildingTechnology> buildingTechs;
     ArrayList<Technology> eetechs;
     ArrayList<Technology> infraTechs;
-    double technologyEEPoints;
-    double technologyInfraPoints;
-    Technology selectedInfraTech = null;
-    Technology selectedEETech = null;
+    public double technologyEEPoints;
+    public double technologyInfraPoints;
+    public Technology selectedInfraTech = null;
+    public Technology selectedEETech = null;
+
+    public BuildingTechnology windTech;
+    public BuildingTechnology solarTech;
+    public BuildingTechnology airportTech;
+    public BuildingTechnology twoLaneRoadTech;
+    public StreetUpgradeTech streetUpgradeTech;
 
 	//
 	// budget stuff
@@ -310,6 +318,7 @@ public class Micropolis
 		crimeMem = new int[height][width];
 		popDensity = new int[height][width];
 		trfDensity = new int[height][width];
+		trfMem = new int[height][width];
 		terrainMem = new int[height][width];
 		rateOGMem = new int[height][width];
 		fireStMap = new int[height][width];
@@ -322,6 +331,7 @@ public class Micropolis
         technologyEEPoints = 0;
         technologyInfraPoints = 0;
 
+
         initTechs();
 
 
@@ -333,26 +343,30 @@ public class Micropolis
         eetechs = new ArrayList<Technology>();
         infraTechs = new ArrayList<Technology>();
 
-        BuildingTechnology windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
+        windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
         buildingTechs.add(windTech);
         eetechs.add(windTech);
 
-        BuildingTechnology solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
+        solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
         buildingTechs.add(solarTech);
         eetechs.add(solarTech);
 
-        BuildingTechnology airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
+        airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
         buildingTechs.add(airportTech);
         infraTechs.add(airportTech);
 
-        BuildingTechnology twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
-        StreetUpgradeTech streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
+
+
+        streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
         infraTechs.add(streetUpgradeTech);
 
-        selectedInfraTech = airportTech;
-        selectedEETech = windTech;
+        //selectedInfraTech = airportTech;
+        //selectedEETech = windTech;
+        
+        System.out.println("inittechs");
 
     }
 
@@ -748,6 +762,7 @@ public class Micropolis
 			if (scycle % 5 == 0) {  // every ~10 weeks
 				decROGMem();
 			}
+			copyTrafficMem();
 			decTrafficMem();
 			fireMapOverlayDataChanged(MapState.TRAFFIC_OVERLAY); //TDMAP
 			fireMapOverlayDataChanged(MapState.TRANSPORT);       //RDMAP
@@ -780,6 +795,14 @@ public class Micropolis
 
 		default:
 			throw new Error("unreachable");
+		}
+	}
+	
+	private void copyTrafficMem() {
+		for (int y=0;y<getHeight();y++) {
+			for (int x=0;x<getWidth();x++) {
+				trfMem[y][x]=trfDensity[y][x];
+			}
 		}
 	}
 
@@ -1026,8 +1049,8 @@ public class Micropolis
 		{
 			for (int x = 0; x < trfDensity[y].length; x++)
 			{
-				trfDensity[y][x]*=3;
-				trfDensity[y][x]/=4;
+				//trfDensity[y][x]*=2;
+				trfDensity[y][x]/=3;
 				/*original functionint z = trfDensity[y][x];
 				if (z != 0)
 				{
@@ -1045,7 +1068,7 @@ public class Micropolis
 
 	void crimeScan()
 	{
-        spreadEffect(policeMap, 15, 4, 20);
+		policeMap=doSmooth(policeMap);
 
 
 		for (int sy = 0; sy < policeMap.length; sy++) {
@@ -1321,26 +1344,31 @@ public class Micropolis
 	void addTraffic(int mapX, int mapY, int traffic)
 	{
 		int z = trfDensity[mapY][mapX];
-		z += traffic;
+		z += PRNG.nextInt(rd(traffic,4))+rd(3*traffic,4); //1/4 random, 3/4 without random
 
-		//FIXME- why is this only capped to 240
-		// by random chance. why is there no cap
-		// the rest of the time?
-
-		if (z > 240 && PRNG.nextInt(6) == 0)
+		if (z > 480)
 		{
-			z = 240;
+			z = 480;
 			trafficMaxLocationX = mapX;
 			trafficMaxLocationY = mapY;
-
-			HelicopterSprite copter = (HelicopterSprite) getSprite(SpriteKind.COP);
-			if (copter != null) {
-				copter.destX = mapX;
-				copter.destY = mapY;
+			if (PRNG.nextInt(6) == 0) {
+				HelicopterSprite copter = (HelicopterSprite) getSprite(SpriteKind.COP);
+				if (copter != null) {
+					copter.destX = mapX;
+					copter.destY = mapY;
+				}
 			}
 		}
 
 		trfDensity[mapY][mapX] = z;
+	}
+	
+	private int rd(int val, int rd) {
+		int ret=val/rd;
+		if (PRNG.nextInt(rd)<val%rd) {
+			ret++;
+		}
+		return ret;
 	}
 
 	/** Accessor method for fireRate[]. */
@@ -1363,7 +1391,7 @@ public class Micropolis
 	public int getTrafficDensity(int xpos, int ypos)
 	{
 		if (testBounds(xpos, ypos)) {
-			return trfDensity[ypos][xpos];
+			return this.trfMem[ypos][xpos]/4;
 		} else {
 			return 0;
 		}
@@ -1813,6 +1841,15 @@ public class Micropolis
             System.out.println("infraTech points already: " +
                     selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded() + " " + selectedInfraTech.getName());
         }
+    }
+    
+    public void selectEETech(Technology t){
+    	selectedEETech = t;
+    }
+    
+    public void selectInfraTech(Technology t){
+    	System.out.println("selected an infratest");
+    	selectedInfraTech = t;
     }
 
 	void generateShip()
