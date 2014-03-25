@@ -9,6 +9,7 @@
 package micropolisj.engine;
 
 import micropolisj.engine.techno.BuildingTechnology;
+import micropolisj.engine.techno.GeneralTechnology;
 import micropolisj.engine.techno.StreetUpgradeTech;
 import micropolisj.engine.techno.Technology;
 
@@ -216,10 +217,16 @@ public class Micropolis
     ArrayList<BuildingTechnology> buildingTechs;
     ArrayList<Technology> eetechs;
     ArrayList<Technology> infraTechs;
-    double technologyEEPoints;
-    double technologyInfraPoints;
-    Technology selectedInfraTech = null;
-    Technology selectedEETech = null;
+    public double technologyEEPoints;
+    public double technologyInfraPoints;
+    public Technology selectedInfraTech = null;
+    public Technology selectedEETech = null;
+
+    public BuildingTechnology windTech;
+    public BuildingTechnology solarTech;
+    public BuildingTechnology airportTech;
+    public BuildingTechnology twoLaneRoadTech;
+    public StreetUpgradeTech streetUpgradeTech;
 
 	//
 	// budget stuff
@@ -322,6 +329,7 @@ public class Micropolis
         technologyEEPoints = 0;
         technologyInfraPoints = 0;
 
+
         initTechs();
 
 
@@ -333,23 +341,24 @@ public class Micropolis
         eetechs = new ArrayList<Technology>();
         infraTechs = new ArrayList<Technology>();
 
-        BuildingTechnology windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
-        buildingTechs.add(windTech);
-        eetechs.add(windTech);
+        //windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
+        //buildingTechs.add(windTech);
+        //eetechs.add(windTech);
 
-        BuildingTechnology solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
+        solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
         buildingTechs.add(solarTech);
         eetechs.add(solarTech);
 
-        BuildingTechnology airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
+        airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
         buildingTechs.add(airportTech);
         infraTechs.add(airportTech);
 
-        BuildingTechnology twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
 
-        StreetUpgradeTech streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
+
+        streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
         infraTechs.add(streetUpgradeTech);
 
         selectedInfraTech = airportTech;
