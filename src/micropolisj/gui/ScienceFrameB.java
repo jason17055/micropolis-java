@@ -18,7 +18,7 @@ import java.awt.Color;
 import micropolisj.engine.Micropolis;
 import micropolisj.engine.techno.*;
 
-public class ScienceFrameB extends JFrame{
+public class ScienceFrameB extends JFrame {
 
 	Micropolis engine;
 	
@@ -129,8 +129,9 @@ public class ScienceFrameB extends JFrame{
 		
 		jbTwoLaneRoad.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+				System.out.println("bla");
 			
-			engine.selectedEETech = engine.twoLaneRoadTech;
+			engine.selectedInfraTech = engine.twoLaneRoadTech;
 			
 			jbStreetUpgrade.setEnabled(true);
 			jbRailUpgrade.setEnabled(true);
@@ -155,7 +156,7 @@ public class ScienceFrameB extends JFrame{
 		jbAirport.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 			
-			engine.selectedEETech = engine.airportTech;
+			engine.selectedInfraTech = engine.airportTech;
 			
 			jbStreetUpgrade.setEnabled(true);
 			jbRailUpgrade.setEnabled(true);

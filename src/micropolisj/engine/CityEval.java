@@ -127,6 +127,7 @@ public class CityEval
 
 	void doProblems()
 	{
+		
 		problemTable.clear();
 		problemTable.put(CityProblem.CRIME, engine.crimeAverage);
 		problemTable.put(CityProblem.POLLUTION, engine.pollutionAverage);

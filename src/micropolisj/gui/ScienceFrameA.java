@@ -2,8 +2,14 @@ package micropolisj.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -15,10 +21,12 @@ import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.awt.Dimension;
 
+import micropolisj.engine.CityLocation;
 import micropolisj.engine.Micropolis;
+import micropolisj.engine.Sound;
 import micropolisj.engine.techno.*;
 
-public class ScienceFrameA extends JFrame{
+public class ScienceFrameA extends JFrame {
 
 	Micropolis engine;
 	
@@ -34,6 +42,7 @@ public class ScienceFrameA extends JFrame{
 	public ScienceFrameA(Micropolis m){
 		super("Support local research at your University for Science!");
 		engine=m;
+//		System.out.pintln(engine.map[50][50]);
 		
 		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
 		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>[XX points]</font></html>");
@@ -97,7 +106,8 @@ public class ScienceFrameA extends JFrame{
 		jbSolar.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 			
-			engine.selectedEETech = engine.solarTech;
+			
+			engine.selectEETech(engine.solarTech);
 			
 			jbPollution.setEnabled(true);
 			jbNuclear.setEnabled(true);
@@ -159,5 +169,5 @@ public class ScienceFrameA extends JFrame{
 		panel.setBackground(color);
 	}	
 	
-	
+
 }
