@@ -19,14 +19,12 @@ import static micropolisj.engine.TrafficGen.ZoneType;
 class MapScanner extends TileBehavior
 {
 	final B behavior;
-	TrafficGen oldTraffic;
 	TrafficSim traffic;
 
 	MapScanner(Micropolis city, B behavior)
 	{
 		super(city);
 		this.behavior = behavior;
-		this.oldTraffic = new TrafficGen(city);
 		this.traffic= new TrafficSim(city);
 	}
 
@@ -322,9 +320,6 @@ class MapScanner extends TileBehavior
         
         z = z * (visits+1);
 
-        oldTraffic.mapX = xpos;
-		oldTraffic.mapY = ypos;
-
 
         city.updateEducationAverage(z);
 
@@ -351,11 +346,7 @@ class MapScanner extends TileBehavior
 			z = city.cultureEffect/2;
 		}
 
-		oldTraffic.mapX = xpos;
-		oldTraffic.mapY = ypos;
-		if (!oldTraffic.findPerimeterRoad()) {
-			z /= 2;
-		}
+		
 
 		city.updateCultureAverage(z);
 	}
@@ -384,8 +375,6 @@ class MapScanner extends TileBehavior
         city.technologyEEPoints += techPoint;
 
 
-		oldTraffic.mapX = xpos;
-		oldTraffic.mapY = ypos;
 
         city.updateEducationAverage(z);
 	}
@@ -412,9 +401,6 @@ class MapScanner extends TileBehavior
 
         double techPoint = city.valueMapping((double) z, 0.0, 1000.0, 0.0, 1.0);
         city.technologyInfraPoints += techPoint;
-
-        oldTraffic.mapX = xpos;
-		oldTraffic.mapY = ypos;
 
 
         city.updateEducationAverage(z);
@@ -461,11 +447,7 @@ class MapScanner extends TileBehavior
 				z = city.cultureEffect/2 ;
 			}
 
-		oldTraffic.mapX = xpos;
-		oldTraffic.mapY = ypos;
-		if (!oldTraffic.findPerimeterRoad()) {
-			z /= 2;
-		}
+		
 
         // multiply the effect by visits
         int visits = city.dummySearch(city.visits,new CityLocation(xpos, ypos));
@@ -855,7 +837,6 @@ class MapScanner extends TileBehavior
 		}
 	}
 	
-	//TODO write value functions
 	
 	/**
 	 * calculates for a 3x3
