@@ -1258,12 +1258,14 @@ public class Micropolis
 
     void updateEducationAverage(int z){
         educationValue += z;
-        educationAverage = educationValue / Math.max((lastSchoolCount + lastUniACount + lastUniBCount), 1);
+        //int educationBuildingCount = lastSchoolCount + lastUniACount + lastUniBCount;
+        educationAverage = clamp(educationValue / Math.max(resPop / 5, 1), 0, 255);
+        //System.out.println("educationAverage: " + educationAverage);
     }
 
     void updateCultureAverage(int z){
         cultureValue += z;
-        cultureAverage = cultureValue / Math.max((museumCount + stadiumCount + openairCount), 1);
+        cultureAverage = clamp(cultureValue / Math.max((resPop + comPop)/10, 1),0 , 255);
     }
 
 
@@ -1541,6 +1543,7 @@ public class Micropolis
 		public int [] pollution = new int[240];
 		public int [] crime = new int[240];
         public int [] education = new int[240];
+        public int [] culture = new int[240];
 		int resMax;
 		int comMax;
 		int indMax;
@@ -1967,11 +1970,12 @@ public class Micropolis
 		int comMax = 0;
 		int indMax = 0;
 
-        // inertia for education and culture
-        educationValue /= 4;
-        cultureValue /= 4;
-        updateEducationAverage(0);
-        updateCultureAverage(0);
+        // inertia for education and cultur  
+        educationValue *= 5.0/8.0;
+        cultureValue *= 5.0/8.0;
+        updateEducationAverage(1);
+        updateCultureAverage(1);
+
 
 		for (int i = 118; i >= 0; i--)
 		{
@@ -1987,6 +1991,7 @@ public class Micropolis
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
             history.education[i + 1] = history.education[i];
+            history.culture[i + 1] = history.culture[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -2009,6 +2014,8 @@ public class Micropolis
 
         educationRamp = (educationAverage);
         history.education[0] = Math.min(255, educationRamp);
+
+        history.culture[0] = Math.min(255, cultureAverage);
 
 		int moneyScaled = cashFlow / 20 + 128;
 		if (moneyScaled < 0)
@@ -2067,6 +2074,7 @@ public class Micropolis
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
             history.education[i + 1] = history.education[i];
+            history.culture[i + 1] = history.culture[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -2076,6 +2084,7 @@ public class Micropolis
 		history.ind[120] = indPop;
 		history.crime[120] = history.crime[0];
         history.education[120] = history.education[0];
+        history.culture[120] = history.culture[0];
 		history.pollution[120] = history.pollution[0];
 		history.money[120] = history.money[0];
 	}
