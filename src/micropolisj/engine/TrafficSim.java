@@ -262,7 +262,9 @@ public class TrafficSim {
 			currentLocation=unready.get(current).getLoc();
 			currentRoadType=unready.get(current).getRoadType();
 			currentCost=engine.getTrafficCost(currentLocation,currentRoadType);
-			
+			if (currentRoadType==3) {
+				System.out.println("I am a rail!");
+			}
 			RoadSpecifiedTile Pred=unready.get(current).getPred();
 			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(search(ready,Pred).getCosts()+currentCost,Pred,true,currentRoadType));
 			unready.remove(current);
@@ -336,11 +338,18 @@ public class TrafficSim {
 			return ret;
 		}
 		if (myType!=5 && myType!=6) {
+			if (prevType==4) {
+				ret.add(myType%4);
+				if (myType>=3) {
+					ret.add(3);
+				}
+				return ret;
+			}
 			if (myType==3 && prevType==3) {
 				ret.add(myType);
 				return ret;
 			}
-			if ((myType==1 || myType==2) && (prevType%4==1 || prevType%4==2 || prevType==4)) {
+			if ((myType==1 || myType==2) && (prevType%4==1 || prevType%4==2)) {
 				ret.add(myType);
 				return ret;
 			}
