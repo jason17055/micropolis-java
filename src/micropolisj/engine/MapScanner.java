@@ -263,6 +263,9 @@ class MapScanner extends TileBehavior
 			for (int x=0;x<city.getWidth();x++) {
 				if (help[y][x]!=0) {
 					city.fireStMap[y][x] += help[y][x]+20;
+					if (city.fireStMap[y][x] > 255) {
+						city.fireStMap[y][x]=255;
+					}
 				}
 			}
 		}
@@ -289,6 +292,9 @@ class MapScanner extends TileBehavior
 			for (int x=0;x<city.getWidth();x++) {
 				if (help[y][x]!=0) {
 					city.policeMap[y][x] += help[y][x]+20;
+					if (city.policeMap[y][x] > 255) {
+						city.policeMap[y][x]=255;
+					}
 				}
 			}
 		}
@@ -647,12 +653,11 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.comZoneCount++;
 
-        int tHelp=1;
 		int tpop = commercialZonePop(tile);
 		city.comPop += tpop;
 
-        int trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
-        for (int i=2;i<tpop/8;i++) {
+        int trafficGood = 0;
+        for (int i=0;i<tpop;i++) {
             trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
         }
         //TODO add workbase etc
@@ -660,33 +665,18 @@ class MapScanner extends TileBehavior
         if (tile == COMCLR || PRNG.nextInt(8) == 0) {
             int visit = city.dummySearch(city.visits, new CityLocation(xpos, ypos));
 
-            int r = 0;
-            if(!powerOn || trafficGood==-1){
-                if (!powerOn) r+=4;
-                if (trafficGood==-1) r++;
-                if (city.PRNG.nextInt(125 * Math.max(tpop,1))<r) { //let zone decrease if there is no power or roads
-                    int value = getCRValue();
-                    doCommercialOut(tpop, value);
-                    return;
-                }
-            }
-            trafficGood+=2;
-            int com = 10*visit/tHelp+city.valueMapping(trafficGood, 0, 60000, 100, 0)/trafficGood;
-            com += getLandValue3x3();
-            com -= getPollution3x3()/8;
-            com -= getCrime3x3();
-            com += (city.cultureAverage + city.educationAverage/2);
+            
+            int com = this.getGoodVal(trafficGood, powerOn, visit, tpop, 1);
 
 
-            int random = PRNG.nextInt(100);
-            if (com > 300 && random > Math.max(60, 100-city.resPop) && powerOn) // you need inhabitants for commercial development
+            if (PRNG.nextInt(10000)+600 < com)
             {
                 int value = getCRValue();
                 doCommercialIn(tpop, value);
                 return;
             }
 
-            else if (com < 200 && random > 95) {
+            else if (PRNG.nextInt(3000) > com && PRNG.nextInt(10)==0) {
                 int value = getCRValue();
                 doCommercialOut(tpop, value);
             }
@@ -703,7 +693,6 @@ class MapScanner extends TileBehavior
 
 
 
-        int tHelp=1;
         int tpop; //population of this zone
         if (tile == INDCLR)
         {
@@ -712,45 +701,25 @@ class MapScanner extends TileBehavior
         else
         {
             tpop = industrialZonePop(tile);
-            tHelp=tpop;
         }
 		city.indPop += tpop;
 
-        int trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
-        for (int i=2;i<tpop/8;i++) {
+        int trafficGood = 0;
+        for (int i=0;i<tpop;i++) {
             trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
         }
 
 
         int visit = city.dummySearch(city.visits, new CityLocation(xpos, ypos));
-        int r = 0;
-        if(!powerOn){
-            if (!powerOn) r+=4;
-            if (trafficGood==-1) r++;
-            if (city.PRNG.nextInt(125 * Math.max(tpop,1))<r) { //let zone decrease if there is no power or roads
-                int value = getCRValueInd();
-                doIndustrialOut(tpop, value);
-                return;
-            }
-        }
 
-        trafficGood += 2;
-        int ind = 10*visit/tHelp+city.valueMapping(trafficGood, 0, 60000, 100, 0)/trafficGood;
-        ind += Math.min(2*city.resPop, 60);
-        ind -= getCrime3x3()/2;
-        ind += (city.educationAverage / 2);
-        int random = PRNG.nextInt(100);
-        if (ind > 90 && random > Math.max(70, 100-(city.resPop/2)-city.comPop/2) && powerOn)
-        {
-            int value = getCRValueInd();
-            doIndustrialIn(tpop, value);
+        int ind = this.getGoodVal(trafficGood, powerOn, visit, tpop, 2);
+        if (city.PRNG.nextInt(10000)+600 < ind) {
+            doIndustrialIn(tpop, PRNG.nextInt(3));
             return;
         }
 
-        else if (ind < 50 && random > 45) {
-            // hier auch würfeln erstmal
-            int value = getCRValueInd();
-            doIndustrialOut(tpop, value);
+        else if (city.PRNG.nextInt(3000) > ind && PRNG.nextInt(10)==0) {
+            doIndustrialOut(tpop, PRNG.nextInt(3));
         }
     }
 
@@ -768,7 +737,6 @@ class MapScanner extends TileBehavior
 	{
 		boolean powerOn = checkZonePower();
 		city.resZoneCount++;
-		int tHelp=1;
 
 		int tpop; //population of this zone
 		if (tile == RESCLR)
@@ -778,42 +746,24 @@ class MapScanner extends TileBehavior
 		else
 		{
 			tpop = residentialZonePop(tile);
-			tHelp=tpop;
 		}
 
 		city.resPop += tpop;
 		
 
-		int trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
-		for (int i=2;i<tpop/8;i++) {
+		int trafficGood = 0;
+		int d=2;
+		if (tile == RESCLR) d-=2;
+		for (int i=d;i<city.rd(tpop,8);i++) {
 			trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
 		//TODO add workbase etc
 
 		if (tile == RESCLR || PRNG.nextInt(8) == 0) {
 			int visit = city.dummySearch(city.visits, new CityLocation(xpos, ypos));
-			int r =0;
+			int res = this.getGoodVal(trafficGood, powerOn, visit, tpop+2-d, 0);
 
-            if(!powerOn || trafficGood==-1){
-			    if (!powerOn) r+=4;
-			    if (trafficGood==-1) r++;
-			    if (city.PRNG.nextInt(125 * Math.max(tpop,1))<r) { //let zone decrease if there is no power or roads
-				    int value = getCRValue();
-				    doResidentialOut(tpop, value);
-				    return;
-			    }
-            }
-			trafficGood+=2;
-			int res = 10*visit/tHelp+city.valueMapping(trafficGood, 0, 60000, 100, 0)/trafficGood;
-			res += getLandValue3x3();
-			res -= getPollution3x3()/4;
-			res -= getCrime3x3()/2;
-			res += (city.cultureAverage + city.educationAverage);
-
-
-            int random = PRNG.nextInt(100);
-			if (res > 200 && random >70 && powerOn)
-			{
+			if (res > PRNG.nextInt(10000)+600) {
 				if (tpop == 0 && PRNG.nextInt(4) == 0) {
 					makeHospital();
 					return;
@@ -822,11 +772,59 @@ class MapScanner extends TileBehavior
 				int value = getCRValue();
 				doResidentialIn(tpop, value);
 				return;
-			} else if (res < 200 && random > 45) {
+			}
+			if (res < PRNG.nextInt(3000) && PRNG.nextInt(10)==0) {
 				int value = getCRValue();
 				doResidentialOut(tpop, value);
 			}
 		}
+	}
+	
+	/**
+	 * Calculate help value for the growth of a zone
+	 * @param type 0 means Res, 1 means com and 2 means ind
+	 * @return
+	 */
+	
+	private int getGoodVal(int traffics, boolean powerOn, int visit, int size, int type) {
+		int ret=-500;
+		if (powerOn) {
+			ret+=1500;
+		}
+		if (traffics==-1) {
+			traffics=200;
+		} else if (traffics==0) {
+			traffics=100;
+		} else {
+			traffics/=100;
+		}
+		if (size!=0) {
+			ret+=(2000*visit)/size-500;
+		} else {
+			ret+=500;
+		}
+		ret-=traffics;
+		ret-=getCrime3x3();
+		int tax=city.taxEffect+city.gameLevel-2;
+		ret-=25*tax/3+tax^2;
+		switch (type) {
+		case 0:
+			ret+=getLandValue3x3();
+			ret+=city.cultureAverage+city.educationAverage;
+			ret-=getPollution3x3();
+			ret+=500;
+			ret+=city.resValve/3;
+		case 1:
+			ret+=(3*getLandValue3x3())/2;
+			ret-=getPollution3x3()/2;
+			ret-=100;
+			ret+=city.comValve/3;
+		case 2:
+			ret+=city.educationAverage;
+			ret+=city.indValve/3;
+		}
+		System.out.println(type+": "+ret);
+		return ret;
 	}
 	
 	
@@ -835,7 +833,7 @@ class MapScanner extends TileBehavior
 	 * @return
 	 */
 	
-	int getLandValue3x3() {
+	private int getLandValue3x3() {
 		int ret=0;
 		for (int x=xpos-1;x<=xpos+1;x++) {
 			for (int y=ypos-1;y<=ypos+1;y++) {
@@ -850,7 +848,7 @@ class MapScanner extends TileBehavior
 	 * @return
 	 */
 	
-	int getPollution3x3() {
+	private int getPollution3x3() {
 		int ret=0;
 		for (int x=xpos-1;x<=xpos+1;x++) {
 			for (int y=ypos-1;y<=ypos+1;y++) {
@@ -860,7 +858,7 @@ class MapScanner extends TileBehavior
 		return ret/9;
 	}
 	
-	int getCrime3x3() {
+	private int getCrime3x3() {
 		int ret=0;
 		for (int x=xpos-1;x<=xpos+1;x++) {
 			for (int y=ypos-1;y<=ypos+1;y++) {
@@ -1138,20 +1136,6 @@ class MapScanner extends TileBehavior
 		int lval = city.getLandValue(xpos, ypos);
 		lval -= city.pollutionMem[ypos][xpos];
 
-		if (lval < 30)
-			return 0;
-
-		if (lval < 80)
-			return 1;
-
-		if (lval < 150)
-			return 2;
-
-		return 3;
-	}
-	
-	int getCRValueInd(){
-		int lval = 150-city.pollutionMem[ypos][xpos]/2;
 		if (lval < 30)
 			return 0;
 

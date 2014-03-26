@@ -159,6 +159,7 @@ public class Micropolis
 	int solarCount;
 	int windCount;
 	int noWay;
+	int longWay;
 
 	int totalPop;
 	int lastCityPop;
@@ -673,6 +674,7 @@ public class Micropolis
 		seaportCount = 0;
 		airportCount = 0;
 		noWay = 0;
+		longWay = 0;
 		paths.clear();
 		powerPlants.clear();
         cityHallList.clear();
@@ -1365,7 +1367,7 @@ public class Micropolis
 		trfDensity[mapY][mapX] = z;
 	}
 	
-	private int rd(int val, int rd) {
+	public int rd(int val, int rd) {
 		int ret=val/rd;
 		if (PRNG.nextInt(rd)<val%rd) {
 			ret++;
@@ -1554,15 +1556,14 @@ public class Micropolis
 	{
 		double normResPop = (double)resPop / 8.0;
 		totalPop = (int) (normResPop + comPop + indPop);
-		//TODO refactor this on base of visits
 		double employment;
 		if (normResPop != 0.0)
 		{
-			employment = (history.com[1] + history.ind[1]) / normResPop;
+			employment = 2*(history.com[1] + history.ind[1]) / (normResPop+history.com[1] + history.ind[1]);
 		}
 		else
 		{
-			employment = 1;
+			employment = 2;
 		}
 
 		double migration = normResPop * (employment - 1);
@@ -1570,57 +1571,42 @@ public class Micropolis
 		double births = (double)normResPop * BIRTH_RATE;
 		double projectedResPop = normResPop + migration + births;
 
-		double temp = (history.com[1] + history.ind[1]);
-		double laborBase;
-		if (temp != 0.0)
-		{
-			laborBase = history.res[1] / temp;
-		}
-		else
-		{
-			laborBase = 1;
-		}
-
 		// clamp laborBase to between 0.0 and 1.3
-		laborBase = Math.max(0.0, Math.min(1.3, laborBase));
-
-		double internalMarket = (double)(normResPop + comPop + indPop) / 3.7;
-		double projectedComPop = internalMarket * laborBase;
+		employment = Math.max(0.0, Math.min(1.3, employment));
 
 		int z = gameLevel;
-		temp = 1.0;
+		double temp = 1.0;
 		switch (z)
 		{
 		case 0: temp = 1.2; break;
 		case 1: temp = 1.1; break;
-		case 2: temp = 0.98; break;
+		case 2: temp = 1; break;
 		}
-
-		double projectedIndPop = indPop * laborBase * temp;
-		if (projectedIndPop < 5.0)
-			projectedIndPop = 5.0;
 
 		double resRatio;
-		if (normResPop != 0)
-		{
+		if (normResPop != 0) {
 			resRatio = (double)projectedResPop / (double)normResPop;
 		}
-		else
-		{
+		else {
 			resRatio = 1.3;
 		}
 
 		double comRatio;
 		if (comPop != 0)
-			comRatio = (double)projectedComPop / (double)comPop;
+			comRatio = 2*employment*(2-employment);
 		else
-			comRatio = projectedComPop;
+			comRatio = 2*employment*(2-employment);
+		if (comRatio>0) {
+			comRatio*=temp;
+		} else {
+			comRatio/=temp;
+		}
 
 		double indRatio;
 		if (indPop != 0)
-			indRatio = (double)projectedIndPop / (double)indPop;
+			indRatio = (2*temp-employment);
 		else
-			indRatio = projectedIndPop;
+			indRatio = (temp*2-employment);
 
 		if (resRatio > 2.0)
 			resRatio = 2.0;
@@ -1631,14 +1617,9 @@ public class Micropolis
 		if (indRatio > 2.0)
 			indRatio = 2.0;
 		
-		//growth depending on tax
-		int z2 = taxEffect + gameLevel;
-		if (z2 > 20)
-			z2 = 20;
-
-		resRatio = (resRatio - 1) * 600 + TaxTable[z2];
-		comRatio = (comRatio - 1) * 600 + TaxTable[z2];
-		indRatio = (indRatio - 1) * 600 + TaxTable[z2];
+		resRatio = (resRatio - 1) * 600+100;
+		comRatio = (comRatio - 1) * 600;
+		indRatio = (indRatio - 1) * 600;
 
 		// ratios are velocity changes to valves
 		resValve += (int) resRatio;
@@ -1659,12 +1640,6 @@ public class Micropolis
 			indValve = 1500;
 		else if (indValve < -1500)
 			indValve = -1500;
-
-
-		if (resCap && resValve > 0) {
-			// residents demand stadium
-			resValve = 0;
-		}
 
 		if (comCap && comValve > 0) {
 			// commerce demands airport
@@ -1729,7 +1704,7 @@ public class Micropolis
 		assert y >= 0 && y <= getHeight();
         int xdis = Math.abs(x - centerMassX);
         int ydis = Math.abs(y - centerMassY);
-        int centerMassDistance = (xdis+ydis)/2;
+        int centerMassDistance = 10+(xdis+ydis)/2;
         int ccDis;
 
         if(centerMassDistance > 32) centerMassDistance = 32;
@@ -3011,7 +2986,7 @@ public class Micropolis
 			}
 			break;
 		case 18:
-			if (false) { //TODO need to change
+			if (100*longWay>getCityPopulation()) { //TODO need to change
 				sendMessage(MicropolisMessage.NEED_RAILS);
 			}
 			break;
@@ -3145,6 +3120,9 @@ public class Micropolis
 	}
 	public void noWay() {
 		noWay++;
+	}
+	public void longWay() {
+		longWay++;
 	}
 	
 	private int accessMap(int x,int y, String g) { 
