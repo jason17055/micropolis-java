@@ -31,7 +31,6 @@ public class TrainSprite extends Sprite
 	static final int FRAME_EASTWEST = 2;
 	static final int FRAME_NW_SE = 3;
 	static final int FRAME_SW_NE = 4;
-	static final int FRAME_UNDERWATER = 5;
 
 	static final int DIR_NORTH = 0;
 	static final int DIR_EAST = 1;
@@ -82,11 +81,6 @@ public class TrainSprite extends Sprite
 					}
 					else {
 						this.frame = TrainPic2[d2];
-					}
-
-					if ((c == RAILBASE) || (c == (RAILBASE+1))) {
-						//underwater
-						this.frame = FRAME_UNDERWATER;
 					}
 					this.dir = d2;
 					return;
