@@ -98,10 +98,12 @@ public class MainWindow extends JFrame
         evaluationPane.setVisible(false);
         evalGraphsBox.add(evaluationPane, BorderLayout.SOUTH);
         
-        scienceFrameA = new ScienceFrameA(engine);
+        scienceFrameA = new ScienceFrameA(this, getEngine());
+        scienceFrameA.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         scienceFrameA.setVisible(false);
         
-       scienceFrameB = new ScienceFrameB(engine);
+       scienceFrameB = new ScienceFrameB(this, getEngine());
+       scienceFrameB.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
        scienceFrameB.setVisible(false);
 
         JPanel leftPane = new JPanel(new GridBagLayout());

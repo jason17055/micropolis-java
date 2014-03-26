@@ -10,14 +10,12 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Window;
 import java.awt.event.*;
 import java.awt.Dimension;
 
@@ -25,8 +23,9 @@ import micropolisj.engine.CityLocation;
 import micropolisj.engine.Micropolis;
 import micropolisj.engine.Sound;
 import micropolisj.engine.techno.*;
+import micropolisj.engine.*;
 
-public class ScienceFrameA extends JFrame {
+public class ScienceFrameA extends JDialog {
 
 	Micropolis engine;
 	
@@ -36,13 +35,14 @@ public class ScienceFrameA extends JFrame {
 	JButton jbPowerEfficiency;
 	JButton jbSolar;
 	JButton jbWind;
+	
 
 	//UNIVERSITAET FUER NATURWISSENSCHAFT
 	
-	public ScienceFrameA(Micropolis m){
-		super("Support local research at your University for Science!");
-		engine=m;
-//		System.out.pintln(engine.map[50][50]);
+	public ScienceFrameA(Window owner, Micropolis m){
+		super(owner);
+		this.engine=m;
+
 		
 		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
 		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>[XX points]</font></html>");

@@ -215,12 +215,12 @@ public class Micropolis
 
     // science/tech stuff
     ArrayList<BuildingTechnology> buildingTechs;
-    ArrayList<Technology> eetechs;
-    ArrayList<Technology> infraTechs;
+    ArrayList<GeneralTechnology> eetechs;
+    ArrayList<GeneralTechnology> infraTechs;
     public double technologyEEPoints;
     public double technologyInfraPoints;
-    public Technology selectedInfraTech = null;
-    public Technology selectedEETech = null;
+    public GeneralTechnology selectedInfraTech = null;
+    public GeneralTechnology selectedEETech = null;
 
     public BuildingTechnology windTech;
     public BuildingTechnology solarTech;
@@ -288,6 +288,18 @@ public class Micropolis
     public void incNCheats() {
         nCheats++;
     }
+    
+    public void testPrint(String s){
+    	System.out.println(s);
+    }
+    
+    public void setSelectedInfraTech(GeneralTechnology t){
+    	// System.out.println("select inra tech: + " t.getName());
+    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
+    	this.selectedInfraTech = t;
+    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
+    	
+    }
 
     public void incCityPopulation() {
         cheatedPopulation += 20000;
@@ -344,8 +356,8 @@ public class Micropolis
 
     void initTechs(){
         buildingTechs = new ArrayList<BuildingTechnology>();
-        eetechs = new ArrayList<Technology>();
-        infraTechs = new ArrayList<Technology>();
+        eetechs = new ArrayList<GeneralTechnology>();
+        infraTechs = new ArrayList<GeneralTechnology>();
 
         windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
         buildingTechs.add(windTech);
@@ -373,7 +385,7 @@ public class Micropolis
         reducePollutionTech = new ReducePollutionTech(800, "reduce pollution description", "reduce pollution tech");
         improveWindSolarTech = new ImproveWindSolarTech(800, "improve wind and solar power plants description", "wind solar upgrade tech");
 
-        //selectedInfraTech = airportTech;
+        selectedInfraTech = railUpgradeTech;
         //selectedEETech = windTech;
         
         System.out.println("inittechs");
@@ -1841,26 +1853,26 @@ public class Micropolis
 	}
 
     void spendTechnologyPoints(){
-        if(selectedEETech != null && technologyEEPoints != 0.0){
-            selectedEETech.addResearchPoints(technologyEEPoints);
-            technologyEEPoints = 0;
+        if(this.selectedEETech != null && this.technologyEEPoints != 0.0){
+            this.selectedEETech.addResearchPoints(this.technologyEEPoints);
+            this.technologyEEPoints = 0;
             System.out.println("technologyEEPoints points already: " +
-                    selectedEETech.getPointsUsed() + "/" + selectedEETech.getPointsNeeded() + " " + selectedEETech.getName());
+                    this.selectedEETech.getPointsUsed() + "/" + this.selectedEETech.getPointsNeeded() + " " + this.selectedEETech.getName());
         }
-
-        if(selectedInfraTech != null && technologyInfraPoints != 0.0){
-            selectedInfraTech.addResearchPoints(technologyInfraPoints);
+        System.out.println("selected ifnra tech (2)" + this.selectedInfraTech.getName());
+        if(this.selectedInfraTech != null && technologyInfraPoints != 0.0){
+            this.selectedInfraTech.addResearchPoints(technologyInfraPoints);
             technologyInfraPoints = 0;
             System.out.println("infraTech points already: " +
-                    selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded() + " " + selectedInfraTech.getName());
+                    this.selectedInfraTech.getPointsUsed() + "/" + this.selectedInfraTech.getPointsNeeded() + " " + this.selectedInfraTech.getName());
         }
     }
     
-    public void selectEETech(Technology t){
-    	selectedEETech = t;
+    public void selectEETech(GeneralTechnology t){
+    	this.selectedEETech = t;
     }
     
-    public void selectInfraTech(Technology t){
+    public void selectInfraTech(GeneralTechnology t){
     	System.out.println("selected an infratest");
     	selectedInfraTech = t;
     }
