@@ -485,7 +485,7 @@ public class ToolStroke
 			{
 				adjTile |= 8;
 			}
-			System.out.println(adjTile);
+			
 			eff.setTile(0, 0, RailTable[adjTile]);
 		} //end if on a rail tile
 

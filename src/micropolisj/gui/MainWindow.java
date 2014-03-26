@@ -1021,6 +1021,7 @@ public class MainWindow extends JFrame
         b0.add(makeToolBtn(MicropolisTool.BULLDOZER));
         b0.add(makeToolBtn(MicropolisTool.WIRE));
         b0.add(makeToolBtn(MicropolisTool.PARK));
+        b0.add(makeToolBtn(MicropolisTool.BIGPARK));
 
         c.gridy++;
         Box b1 = new Box(BoxLayout.X_AXIS);
@@ -1048,9 +1049,11 @@ public class MainWindow extends JFrame
         Box b4 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b4, c);
 
+        
+        b4.add(makeToolBtn(MicropolisTool.CITYHALL));
         b4.add(makeToolBtn(MicropolisTool.FIRE));
-        b4.add(makeToolBtn(MicropolisTool.QUERY));
         b4.add(makeToolBtn(MicropolisTool.POLICE));
+        b4.add(makeToolBtn(MicropolisTool.QUERY));
 
         c.gridy++;
         Box b5 = new Box(BoxLayout.X_AXIS);
@@ -1089,12 +1092,12 @@ public class MainWindow extends JFrame
 	    b8.add(makeToolBtn(MicropolisTool.SEAPORT));
 	    b8.add(makeToolBtn(MicropolisTool.AIRPORT));
 	    
-	    c.gridy++;
-        Box b9 = new Box(BoxLayout.X_AXIS);
-        gridBox.add(b9, c);
+	    //c.gridy++;
+       // Box b9 = new Box(BoxLayout.X_AXIS);
+        //gridBox.add(b9, c);
         
-        b9.add(makeToolBtn(MicropolisTool.CITYHALL));
-        b9.add(makeToolBtn(MicropolisTool.BIGPARK));
+        //b9.add(makeToolBtn(MicropolisTool.CITYHALL));
+       
 
         // add glue to make all elements align toward top
         c.gridy++;
