@@ -825,7 +825,7 @@ class MapScanner extends TileBehavior
 			ret+=city.educationAverage;
 			ret+=city.indValve/3;
 		}
-		System.out.println(type+": "+ret);
+		//System.out.println(type+": "+ret);
 		return ret;
 	}
 	
