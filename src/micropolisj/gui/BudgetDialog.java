@@ -360,6 +360,7 @@ public class BudgetDialog extends JDialog
 
 	private void onResetClicked()
 	{
+		engine.setSelectedInfraTech(engine.airportTech);
 		engine.cityTax = this.origTaxRate;
 		engine.roadPercent = this.origRoadPct;
 		engine.firePercent = this.origFirePct;

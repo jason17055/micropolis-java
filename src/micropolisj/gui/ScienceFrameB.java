@@ -9,16 +9,20 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import java.awt.FlowLayout;
 import java.awt.event.*;
+import java.awt.Window;
 import java.awt.Dimension;
 import java.awt.Color;
 
 import micropolisj.engine.Micropolis;
 import micropolisj.engine.techno.*;
+import micropolisj.engine.*;
 
-public class ScienceFrameB extends JFrame {
+public class ScienceFrameB extends JDialog {
 
 	Micropolis engine;
 	
@@ -32,9 +36,33 @@ public class ScienceFrameB extends JFrame {
 
 //UNIVERSITAET FUER MANAGEMENT
 	
-	public ScienceFrameB(Micropolis m){
-		super("Support local research at your University for Management!");
-		engine=m;
+	
+	
+	private void onAirporButtonClicked()
+	{
+		jbStreetUpgrade.setEnabled(true);
+		jbRailUpgrade.setEnabled(true);
+		jbPoliceUpgrade.setEnabled(true);
+		jbFireDepUpgrade.setEnabled(true);
+		jbTwoLaneRoad.setEnabled(true);
+		jbAirport.setEnabled(false);
+		
+		Color col2= new Color(100,50,101);
+		Color col3= new Color(232,188,231);
+
+		jbStreetUpgrade.setBackground(col3);
+		jbRailUpgrade.setBackground(col3);
+		jbPoliceUpgrade.setBackground(col3);
+		jbFireDepUpgrade.setBackground(col3);
+		jbTwoLaneRoad.setBackground(col3);
+		jbAirport.setBackground(col2);		
+		engine.setSelectedInfraTech(engine.airportTech);
+	}
+	
+	
+	public ScienceFrameB(Window owner, Micropolis m){
+		super(owner);
+		this.engine=m;
 		
 		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
 		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
@@ -129,9 +157,7 @@ public class ScienceFrameB extends JFrame {
 		
 		jbTwoLaneRoad.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				System.out.println("bla");
-			
-			engine.selectedInfraTech = engine.twoLaneRoadTech;
+
 			
 			jbStreetUpgrade.setEnabled(true);
 			jbRailUpgrade.setEnabled(true);
@@ -152,32 +178,20 @@ public class ScienceFrameB extends JFrame {
 			}
 			
 		});
+		
+		
+
 
 		jbAirport.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 			
-			engine.selectedInfraTech = engine.airportTech;
-			
-			jbStreetUpgrade.setEnabled(true);
-			jbRailUpgrade.setEnabled(true);
-			jbPoliceUpgrade.setEnabled(true);
-			jbFireDepUpgrade.setEnabled(true);
-			jbTwoLaneRoad.setEnabled(true);
-			jbAirport.setEnabled(false);
-			
-			Color col2= new Color(100,50,101);
-			Color col3= new Color(232,188,231);
-
-			jbStreetUpgrade.setBackground(col3);
-			jbRailUpgrade.setBackground(col3);
-			jbPoliceUpgrade.setBackground(col3);
-			jbFireDepUpgrade.setBackground(col3);
-			jbTwoLaneRoad.setBackground(col3);
-			jbAirport.setBackground(col2);			
+				onAirporButtonClicked();
+	
 			
 			}
 			
 		});
+		
 		
 		panel  = new JPanel(null,true);
 		getContentPane().add(panel);
