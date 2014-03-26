@@ -819,7 +819,7 @@ class MapScanner extends TileBehavior
 		case 1:
 			ret+=(3*getLandValue3x3())/2;
 			ret-=getPollution3x3()/2;
-			ret-=100;
+			ret-=400;
 			ret+=city.comValve/3;
 		case 2:
 			ret+=city.educationAverage;
