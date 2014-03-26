@@ -51,7 +51,7 @@ public class TrafficSim {
 	 * @return length of the way (-1 for no way)
 	 */
 	public int genTraffic(CityLocation startP) {
-		if (engine.PRNG.nextInt(engine.lastCityPop/25000)==0) {
+		if (citySize()) {
 		CityLocation end=findEnd(startP);
 		if(CityLocation.equals(end, new CityLocation(-1,-1))){
 			return -1;
@@ -78,6 +78,13 @@ public class TrafficSim {
 	 * @param startpos
 	 * @return the endpos
 	 */
+	
+	private boolean citySize() {
+		if ((int)engine.lastCityPop/25000 == 0) {
+			return true;
+		}
+		return engine.PRNG.nextInt(engine.lastCityPop/25000)==0;
+	}
 	
 	private CityLocation findEnd(CityLocation startpos){
 		/* iterates through engine.visits and puts them (together with a specifically calculated weight)
