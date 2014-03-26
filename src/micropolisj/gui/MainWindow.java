@@ -205,6 +205,11 @@ public class MainWindow extends JFrame
         inputMap.put(KeyStroke.getKeyStroke("MINUS"), "zoomOut");
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "escape");
         inputMap.put(KeyStroke.getKeyStroke("ENTER"), "openCheatBox");
+        inputMap.put(KeyStroke.getKeyStroke("P"), "setPaused");
+        inputMap.put(KeyStroke.getKeyStroke("1"), "setSlow");
+        inputMap.put(KeyStroke.getKeyStroke("2"), "setNormal");
+        inputMap.put(KeyStroke.getKeyStroke("3"), "setFast");
+        inputMap.put(KeyStroke.getKeyStroke("4"), "setSuperFast");
 
 
 
@@ -228,6 +233,31 @@ public class MainWindow extends JFrame
         actionMap.put("openCheatBox", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
                 openCheatBox();
+            }
+        });
+        actionMap.put("setPaused", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.PAUSED);
+            }
+        });
+        actionMap.put("setSlow", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.SLOW);
+            }
+        });
+        actionMap.put("setNormal", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.NORMAL);
+            }
+        });
+        actionMap.put("setFast", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.FAST);
+            }
+        });
+        actionMap.put("setSuperFast", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.SUPER_FAST);
             }
         });
 
