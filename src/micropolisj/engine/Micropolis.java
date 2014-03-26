@@ -104,6 +104,7 @@ public class Micropolis
     public int cultureValue;
 
 	int [][] cityhallMap;
+	int [][] lastWay;
 	public int [][] cityhallEffect; //unib reach- used for overlay graphs
 
 	/** For each section of city, this is an integer between 0 and 64,
@@ -167,6 +168,7 @@ public class Micropolis
 	int windCount;
 	int noWay;
 	int longWay;
+	
 
 	int totalPop;
 	int lastCityPop;
@@ -352,6 +354,7 @@ public class Micropolis
 		policeMapEffect = new int[height][width];
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
+		lastWay = new int[height][width];
 
         technologyEEPoints = 0;
         technologyInfraPoints = 0;

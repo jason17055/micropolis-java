@@ -51,6 +51,7 @@ public class TrafficSim {
 	 * @return length of the way (-1 for no way)
 	 */
 	public int genTraffic(CityLocation startP) {
+		if (engine.PRNG.nextInt(engine.lastCityPop/25000)==0) {
 		CityLocation end=findEnd(startP);
 		if(CityLocation.equals(end, new CityLocation(-1,-1))){
 			return -1;
@@ -65,7 +66,11 @@ public class TrafficSim {
 		} else {
 			engine.noWay();
 		}
+		engine.lastWay[startP.y][startP.x]=way;
 		return way;
+		} else {
+			return engine.lastWay[startP.y][startP.x];
+		}
 	}
 	
 	/**

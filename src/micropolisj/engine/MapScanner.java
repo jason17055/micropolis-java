@@ -678,7 +678,7 @@ class MapScanner extends TileBehavior
                 return;
             }
 
-            else if (PRNG.nextInt(3000) > com && PRNG.nextInt(10)==0) {
+            else if (PRNG.nextInt(4000) > com && PRNG.nextInt(10)==0) {
                 int value = getCRValue();
                 doCommercialOut(tpop, value);
             }
@@ -720,7 +720,7 @@ class MapScanner extends TileBehavior
             return;
         }
 
-        else if (city.PRNG.nextInt(3000) > ind && PRNG.nextInt(10)==0) {
+        else if (city.PRNG.nextInt(4000) > ind && PRNG.nextInt(10)==0) {
             doIndustrialOut(tpop, PRNG.nextInt(3));
         }
     }
@@ -775,7 +775,7 @@ class MapScanner extends TileBehavior
 				doResidentialIn(tpop, value);
 				return;
 			}
-			if (res < PRNG.nextInt(3000) && PRNG.nextInt(10)==0) {
+			if (res < PRNG.nextInt(4000) && PRNG.nextInt(10)==0) {
 				int value = getCRValue();
 				doResidentialOut(tpop, value);
 			}
@@ -821,9 +821,15 @@ class MapScanner extends TileBehavior
 			ret-=getPollution3x3()/2;
 			ret-=600;
 			ret+=city.comValve/3;
+			if (!powerOn) {
+				ret-=500;
+			}
 		case 2:
 			ret+=city.educationAverage;
 			ret+=city.indValve/3;
+			if (!powerOn) {
+				ret-=500;
+			}
 		}
 		//System.out.println(type+": "+ret);
 		return ret;
