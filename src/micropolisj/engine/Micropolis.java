@@ -1269,7 +1269,7 @@ public class Micropolis
     }
 	
 	public void putVisits(CityLocation loc) {
-		visitNew.put(loc,(dummySearch(visitNew,loc)+1));
+		visitNew.put(loc,(dummySearch(visitNew,loc)+(lastCityPop/25000+1)));
 	}
 	
 	public static CityLocation goToAdj(CityLocation loc, int dir)

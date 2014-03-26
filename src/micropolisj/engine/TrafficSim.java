@@ -292,7 +292,7 @@ public class TrafficSim {
         //Vector<CityLocation> way=new Vector<CityLocation>();
         engine.paths.clear();
 		while (!RoadSpecifiedTile.equals(search(ready,fastGoal).getPred(),new RoadSpecifiedTile(new CityLocation(-1,-1),0))) { //add traffic to way 
-			engine.addTraffic(fastGoal.getLocation().x, fastGoal.getLocation().y, engine.getTrafficCost(fastGoal.getLocation(),fastGoal.getRoadType()));
+			engine.addTraffic(fastGoal.getLocation().x, fastGoal.getLocation().y, (1+engine.lastCityPop/25000)*engine.getTrafficCost(fastGoal.getLocation(),fastGoal.getRoadType()));
 			//way.add(fastGoal.getLocation());
 			fastGoal=search(ready,fastGoal).getPred();
 		}
