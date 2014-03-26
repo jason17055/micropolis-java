@@ -748,7 +748,7 @@ class MapScanner extends TileBehavior
         }
 
         else if (ind < 50 && random > 45) {
-            // hier auch würfeln erstmal
+
             int value = getCRValueInd();
             doIndustrialOut(tpop, value);
         }
