@@ -607,7 +607,8 @@ public class MainWindow extends JFrame
                     public void actionPerformed(ActionEvent ev) {
                         onDisastersClicked();
                     }
-                }));
+                }
+        ));
         optionsMenu.add(disastersMenuItem);
 
         soundsMenuItem = new JCheckBoxMenuItem(strings.getString("menu.options.sound"));
@@ -709,7 +710,7 @@ public class MainWindow extends JFrame
         menuBar.add(priorityMenu);
 
         priorityMenuItems = new EnumMap<Speed, JMenuItem>(Speed.class);
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.SUPER_FAST"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.SUPER_FAST"));
         setupKeys(menuItem, "menu.speed.SUPER_FAST");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -720,7 +721,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.SUPER_FAST, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.FAST"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.FAST"));
         setupKeys(menuItem, "menu.speed.FAST");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -731,7 +732,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.FAST, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.NORMAL"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.NORMAL"));
         setupKeys(menuItem, "menu.speed.NORMAL");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -742,7 +743,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.NORMAL, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.SLOW"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.SLOW"));
         setupKeys(menuItem, "menu.speed.SLOW");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -753,7 +754,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.SLOW, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.PAUSED"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.PAUSED"));
         setupKeys(menuItem, "menu.speed.PAUSED");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -1577,8 +1578,10 @@ public class MainWindow extends JFrame
         if (isTimerActive()) {
             stopTimer();
         }
-
-        getEngine().setSpeed(newSpeed);
+        if (newSpeed == Speed.PAUSED)
+            getEngine().pauseUnpause();
+        else
+            getEngine().setSpeed(newSpeed);
         startTimer();
     }
 
