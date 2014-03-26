@@ -1,4 +1,5 @@
-// This file is part of MicropolisJ.
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
 // Copyright (C) 2013 Jason Long
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
@@ -30,7 +31,6 @@ public class TrainSprite extends Sprite
 	static final int FRAME_EASTWEST = 2;
 	static final int FRAME_NW_SE = 3;
 	static final int FRAME_SW_NE = 4;
-	static final int FRAME_UNDERWATER = 5;
 
 	static final int DIR_NORTH = 0;
 	static final int DIR_EAST = 1;
@@ -71,7 +71,9 @@ public class TrainSprite extends Sprite
 				int c = getChar(this.x + Cx[d2], this.y + Cy[d2]);
 				if (((c >= RAILBASE) && (c <= LASTRAIL)) || //track?
 					(c == RAILVPOWERH) ||
-					(c == RAILHPOWERV))
+					(c == RAILHPOWERV) ||
+					(c == RAILBASE) ||
+					(c == (RAILBASE+1)))
 				{
 					if ((this.dir != d2) && (this.dir != DIR_NONE)) {
 						if (this.dir + d2 == 3)
@@ -81,11 +83,6 @@ public class TrainSprite extends Sprite
 					}
 					else {
 						this.frame = TrainPic2[d2];
-					}
-
-					if ((c == RAILBASE) || (c == (RAILBASE+1))) {
-						//underwater
-						this.frame = FRAME_UNDERWATER;
 					}
 					this.dir = d2;
 					return;

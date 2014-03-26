@@ -1,5 +1,7 @@
-// This file is part of MicropolisJ.
-// Copyright (C) 2013 Jason Long
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
+// Copyright (C) 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck
+// Copyright (C) 2013 Jason Long for MicropolisJ
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
 // MicropolisJ is free software; you can redistribute it and/or modify
@@ -316,32 +318,50 @@ public class ToolStroke
 		{
 			// cleanup road
 			int adjTile = 0;
-
 			// check road to north
 			if (roadConnectsSouth(eff.getTile(0, -1)))
+			{	
+				adjTile |= 1;
+			}
+			else if (bigroadConnectsSouth(eff.getTile(0,-1)))
 			{
+				adjTile |= 16;
 				adjTile |= 1;
 			}
 
 			// check road to east
 			if (roadConnectsWest(eff.getTile(1, 0)))
+			{	
+				adjTile |= 2;
+			}
+			else if (bigroadConnectsWest(eff.getTile(1, 0)))
 			{
+				adjTile |= 16;
 				adjTile |= 2;
 			}
 
 			// check road to south
 			if (roadConnectsNorth(eff.getTile(0, 1)))
+			{	
+				adjTile |= 4;
+			}
+			else if (bigroadConnectsNorth(eff.getTile(0, 1)))
 			{
+				adjTile |= 16;
 				adjTile |= 4;
 			}
 
 			// check road to west
 			if (roadConnectsEast(eff.getTile(-1, 0)))
+			{	
+				adjTile |= 8;
+			}
+			else if (bigroadConnectsEast(eff.getTile(-1, 0)))
 			{
+				adjTile |= 16;
 				adjTile |= 8;
 			}
 			
-
 			eff.setTile(0, 0, RoadTable[adjTile]);
 		} //endif on a road tile
 
@@ -351,10 +371,15 @@ public class ToolStroke
 		{
 			// cleanup bigroad
 			int adjTile = 0;
-
+			
 			// check bigroad to north
 			if (bigroadConnectsSouth(eff.getTile(0, -1)))
 			{
+				adjTile |= 1;
+			}
+			else if (roadConnectsSouth(eff.getTile(0, -1)))
+			{
+				adjTile |= 16;
 				adjTile |= 1;
 			}
 
@@ -363,10 +388,21 @@ public class ToolStroke
 			{
 				adjTile |= 2;
 			}
+			else if (roadConnectsWest(eff.getTile(1, 0)))
+			{
+				adjTile |= 16;
+				adjTile |= 2;
+			}
+			
 
 			// check bigroad to south
 			if (bigroadConnectsNorth(eff.getTile(0, 1)))
 			{
+				adjTile |= 4;
+			}
+			else if (roadConnectsNorth(eff.getTile(0, 1)))
+			{
+				adjTile |= 16;
 				adjTile |= 4;
 			}
 
@@ -375,14 +411,13 @@ public class ToolStroke
 			{
 				adjTile |= 8;
 			}
+			else if (roadConnectsEast(eff.getTile(-1, 0)))
+			{
+				adjTile |= 16;
+				adjTile |= 8;
+			}
+						
 			
-			
-			
-			
-			
-			
-			
-
 			eff.setTile(0, 0, BigRoadTable[adjTile]);
 		} //endif on a bigroad tile	
 		
@@ -418,6 +453,46 @@ public class ToolStroke
 
 			eff.setTile(0, 0, RailTable[adjTile]);
 		} //end if on a rail tile
+		
+		
+		
+		else if (isStationDynamic(tile))
+		{
+			// cleanup Rail
+			int adjTile = 0;
+			adjTile |=16;
+
+			// check rail to north
+			if (railConnectsSouth(eff.getTile(0, -1)))
+			{
+				adjTile |= 1;
+			}
+
+			// check rail to east
+			if (railConnectsWest(eff.getTile(1, 0)))
+			{
+				adjTile |= 2;
+			}
+
+			// check rail to south
+			if (railConnectsNorth(eff.getTile(0, 1)))
+			{
+				adjTile |= 4;
+			}
+
+			// check rail to west
+			if (railConnectsEast(eff.getTile(-1, 0)))
+			{
+				adjTile |= 8;
+			}
+			
+			eff.setTile(0, 0, RailTable[adjTile]);
+		} //end if on a rail tile
+
+		
+		
+		
+		
 
 		else if (isWireDynamic(tile))
 		{

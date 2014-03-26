@@ -1,4 +1,5 @@
-// This file is part of MicropolisJ.
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
 // Copyright (C) 2013 Jason Long
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
@@ -10,6 +11,8 @@ package micropolisj.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -97,10 +100,12 @@ public class MainWindow extends JFrame
         evaluationPane.setVisible(false);
         evalGraphsBox.add(evaluationPane, BorderLayout.SOUTH);
         
-        scienceFrameA = new ScienceFrameA(engine);
+        scienceFrameA = new ScienceFrameA(this, getEngine());
+        scienceFrameA.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         scienceFrameA.setVisible(false);
         
-       scienceFrameB = new ScienceFrameB(engine);
+       scienceFrameB = new ScienceFrameB(this, getEngine());
+       scienceFrameB.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
        scienceFrameB.setVisible(false);
 
         JPanel leftPane = new JPanel(new GridBagLayout());
@@ -202,6 +207,11 @@ public class MainWindow extends JFrame
         inputMap.put(KeyStroke.getKeyStroke("MINUS"), "zoomOut");
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "escape");
         inputMap.put(KeyStroke.getKeyStroke("ENTER"), "openCheatBox");
+        inputMap.put(KeyStroke.getKeyStroke("P"), "setPaused");
+        inputMap.put(KeyStroke.getKeyStroke("1"), "setSlow");
+        inputMap.put(KeyStroke.getKeyStroke("2"), "setNormal");
+        inputMap.put(KeyStroke.getKeyStroke("3"), "setFast");
+        inputMap.put(KeyStroke.getKeyStroke("4"), "setSuperFast");
 
 
 
@@ -225,6 +235,31 @@ public class MainWindow extends JFrame
         actionMap.put("openCheatBox", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
                 openCheatBox();
+            }
+        });
+        actionMap.put("setPaused", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.PAUSED);
+            }
+        });
+        actionMap.put("setSlow", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.SLOW);
+            }
+        });
+        actionMap.put("setNormal", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.NORMAL);
+            }
+        });
+        actionMap.put("setFast", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.FAST);
+            }
+        });
+        actionMap.put("setSuperFast", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.SUPER_FAST);
             }
         });
 
@@ -284,6 +319,20 @@ public class MainWindow extends JFrame
         drawingArea.addMouseListener(mouse);
         drawingArea.addMouseMotionListener(mouse);
         drawingArea.addMouseWheelListener(mouse);
+
+        drawingArea.requestFocusInWindow();
+
+        final KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        focusManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                if (!(focusManager.getFocusOwner() == null || focusManager.getFocusOwner() == getRootPane()))
+                    drawingArea.requestFocusInWindow();
+            }
+        });
+
+
+
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
@@ -558,7 +607,8 @@ public class MainWindow extends JFrame
                     public void actionPerformed(ActionEvent ev) {
                         onDisastersClicked();
                     }
-                }));
+                }
+        ));
         optionsMenu.add(disastersMenuItem);
 
         soundsMenuItem = new JCheckBoxMenuItem(strings.getString("menu.options.sound"));
@@ -660,7 +710,7 @@ public class MainWindow extends JFrame
         menuBar.add(priorityMenu);
 
         priorityMenuItems = new EnumMap<Speed, JMenuItem>(Speed.class);
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.SUPER_FAST"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.SUPER_FAST"));
         setupKeys(menuItem, "menu.speed.SUPER_FAST");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -671,7 +721,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.SUPER_FAST, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.FAST"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.FAST"));
         setupKeys(menuItem, "menu.speed.FAST");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -682,7 +732,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.FAST, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.NORMAL"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.NORMAL"));
         setupKeys(menuItem, "menu.speed.NORMAL");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -693,7 +743,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.NORMAL, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.SLOW"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.SLOW"));
         setupKeys(menuItem, "menu.speed.SLOW");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -704,7 +754,7 @@ public class MainWindow extends JFrame
         priorityMenu.add(menuItem);
         priorityMenuItems.put(Speed.SLOW, menuItem);
 
-        menuItem = new JRadioButtonMenuItem(strings.getString("menu.speed.PAUSED"));
+        menuItem = new JMenuItem(strings.getString("menu.speed.PAUSED"));
         setupKeys(menuItem, "menu.speed.PAUSED");
         menuItem.addActionListener(wrapActionListener(
                 new ActionListener() {
@@ -972,6 +1022,7 @@ public class MainWindow extends JFrame
         b0.add(makeToolBtn(MicropolisTool.BULLDOZER));
         b0.add(makeToolBtn(MicropolisTool.WIRE));
         b0.add(makeToolBtn(MicropolisTool.PARK));
+        b0.add(makeToolBtn(MicropolisTool.BIGPARK));
 
         c.gridy++;
         Box b1 = new Box(BoxLayout.X_AXIS);
@@ -999,9 +1050,11 @@ public class MainWindow extends JFrame
         Box b4 = new Box(BoxLayout.X_AXIS);
         gridBox.add(b4, c);
 
+        
+        b4.add(makeToolBtn(MicropolisTool.CITYHALL));
         b4.add(makeToolBtn(MicropolisTool.FIRE));
-        b4.add(makeToolBtn(MicropolisTool.QUERY));
         b4.add(makeToolBtn(MicropolisTool.POLICE));
+        b4.add(makeToolBtn(MicropolisTool.QUERY));
 
         c.gridy++;
         Box b5 = new Box(BoxLayout.X_AXIS);
@@ -1040,12 +1093,12 @@ public class MainWindow extends JFrame
 	    b8.add(makeToolBtn(MicropolisTool.SEAPORT));
 	    b8.add(makeToolBtn(MicropolisTool.AIRPORT));
 	    
-	    c.gridy++;
-        Box b9 = new Box(BoxLayout.X_AXIS);
-        gridBox.add(b9, c);
+	    //c.gridy++;
+       // Box b9 = new Box(BoxLayout.X_AXIS);
+        //gridBox.add(b9, c);
         
-        b9.add(makeToolBtn(MicropolisTool.CITYHALL));
-        b9.add(makeToolBtn(MicropolisTool.BIGPARK));
+        //b9.add(makeToolBtn(MicropolisTool.CITYHALL));
+       
 
         // add glue to make all elements align toward top
         c.gridy++;
@@ -1525,8 +1578,11 @@ public class MainWindow extends JFrame
         if (isTimerActive()) {
             stopTimer();
         }
-
-        getEngine().setSpeed(newSpeed);
+        if (newSpeed == Speed.PAUSED){
+            //getEngine().pauseUnpause();   TODO cant find this method in micropolis.java!
+        }
+        else
+            getEngine().setSpeed(newSpeed);
         startTimer();
     }
 

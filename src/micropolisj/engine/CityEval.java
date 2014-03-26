@@ -1,5 +1,7 @@
-// This file is part of MicropolisJ.
-// Copyright (C) 2013 Jason Long
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
+// Copyright (C) 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck
+// Copyright (C) 2013 Jason Long for MicropolisJ
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
 // MicropolisJ is free software; you can redistribute it and/or modify
@@ -127,6 +129,7 @@ public class CityEval
 
 	void doProblems()
 	{
+		
 		problemTable.clear();
 		problemTable.put(CityProblem.CRIME, engine.crimeAverage);
 		problemTable.put(CityProblem.POLLUTION, engine.pollutionAverage);
@@ -194,7 +197,7 @@ public class CityEval
 			}
 		}
 
-		engine.trafficAverage = (int)Math.round(((double)total / (double)count) * 2.4);
+		engine.trafficAverage = (int)Math.round(((double)total / (double)count) * 1.2);
 		return engine.trafficAverage;
 	}
 

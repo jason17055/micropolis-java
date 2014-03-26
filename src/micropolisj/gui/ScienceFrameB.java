@@ -9,14 +9,20 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import java.awt.FlowLayout;
 import java.awt.event.*;
+import java.awt.Window;
 import java.awt.Dimension;
+import java.awt.Color;
 
 import micropolisj.engine.Micropolis;
+import micropolisj.engine.techno.*;
+import micropolisj.engine.*;
 
-public class ScienceFrameB extends JFrame{
+public class ScienceFrameB extends JDialog {
 
 	Micropolis engine;
 	
@@ -28,34 +34,42 @@ public class ScienceFrameB extends JFrame{
 	JButton jbTwoLaneRoad;
 	JButton jbAirport;
 
-//UNIVERSITAET FUER INFRASTRUKTUR
+//UNIVERSITAET FUER MANAGEMENT
 	
-	public ScienceFrameB(Micropolis m){
-		super("Support local research at your University for Infrastructure!");
-		engine=m;
-
-/*			image = ImageIO.read(new File("graphics/splash.png"));
-			jlStreetUpgrade = new JLabel("Street Upgrade");
-			jlRailUpgrade = new JLabel("Rail Upgrade");
-			jlPollution = new JLabel("Reduce Pollution");
-			jlPoliceUpgrade = new JLabel("Police Upgrade");
-			jlFireDepUpgrade = new JLabel("Fire Department Upgrade");
-			jlNuclear = new JLabel("Reduce Pollution Of Nuclear Power Plant");
-			jlPowerEfficiency = new JLabel("Improce Efficiency Of Wind And Solar Power Stations");
-			jlSolar = new JLabel("Research Solar Power Stations");
-			jlWind = new JLabel("Research Wind Power Stations");
-			jlTwoLaneRoad = new JLabel("Research Two-Lane Roads");
-			jlAirport = new JLabel("Research Airports");
-*/
-			
-
+	
+	
+	private void onAirporButtonClicked()
+	{
+		jbStreetUpgrade.setEnabled(true);
+		jbRailUpgrade.setEnabled(true);
+		jbPoliceUpgrade.setEnabled(true);
+		jbFireDepUpgrade.setEnabled(true);
+		jbTwoLaneRoad.setEnabled(true);
+		jbAirport.setEnabled(false);
 		
-		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbPoliceUpgrade = new JButton ("<html>Police Upgrade<br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbFireDepUpgrade = new JButton ("<html>Fire Department<br>Upgrade<br><br><br><font color=#666666>[XX points]</font></html>");
-		jbTwoLaneRoad = new JButton ("<html>Research<br>Two-Lane Roads<br><br><br><font color=#666666>[XX points]</font><html>");
-		jbAirport = new JButton ("<html>Research Airports<br><br><br><br><font color=#666666>[XX points]</font></html>");
+		Color col2= new Color(100,50,101);
+		Color col3= new Color(232,188,231);
+
+		jbStreetUpgrade.setBackground(col3);
+		jbRailUpgrade.setBackground(col3);
+		jbPoliceUpgrade.setBackground(col3);
+		jbFireDepUpgrade.setBackground(col3);
+		jbTwoLaneRoad.setBackground(col3);
+		jbAirport.setBackground(col2);		
+		engine.setSelectedInfraTech(engine.airportTech);
+	}
+	
+	
+	public ScienceFrameB(Window owner, Micropolis m){
+		super(owner);
+		this.engine=m;
+		
+		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
+		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
+		jbPoliceUpgrade = new JButton ("<html>Police Upgrade<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
+		jbFireDepUpgrade = new JButton ("<html>Fire Department<br>Upgrade<br><br><br><br><font color=#666666>[XX points]</font></html>");
+		jbTwoLaneRoad = new JButton ("<html>Research<br>Two-Lane Roads<br><br><br><br><font color=#666666>["+(int)engine.twoLaneRoadTech.getPointsUsed()+"/"+(int)engine.twoLaneRoadTech.getPointsNeeded()+" points]</font><html>");
+		jbAirport = new JButton ("<html>Research Airports<br><br><br><br><br><font color=#666666>["+(int)engine.airportTech.getPointsUsed()+"/"+(int)engine.airportTech.getPointsNeeded()+" points]</font></html>");
 
 		jbStreetUpgrade.setEnabled(true);
 		jbRailUpgrade.setEnabled(true);
@@ -64,6 +78,24 @@ public class ScienceFrameB extends JFrame{
 		jbTwoLaneRoad.setEnabled(true);
 		jbAirport.setEnabled(true);
 		
+		Color c1 = new Color(232,188,231);
+		
+		jbStreetUpgrade.setBackground(c1);
+		jbRailUpgrade.setBackground(c1);
+		jbPoliceUpgrade.setBackground(c1);
+		jbFireDepUpgrade.setBackground(c1);
+		jbTwoLaneRoad.setBackground(c1);
+		jbAirport.setBackground(c1);
+
+		Color c2 = new Color(100,50,101);
+		
+		jbStreetUpgrade.setForeground(c2);
+		jbRailUpgrade.setForeground(c2);
+		jbPoliceUpgrade.setForeground(c2);
+		jbFireDepUpgrade.setForeground(c2);
+		jbTwoLaneRoad.setForeground(c2);
+		jbAirport.setForeground(c2);
+		
 		jbStreetUpgrade.setToolTipText("Let more money flow towards road construction. The quality of your roads will improve.");
 		jbRailUpgrade.setToolTipText("Let more money flow towards rail construction. The quality of your roads will improve.");
 		jbPoliceUpgrade.setToolTipText("Let more money flow towards police stations. Police officers will be much more efficient.");
@@ -71,17 +103,37 @@ public class ScienceFrameB extends JFrame{
 		jbTwoLaneRoad.setToolTipText("Let more money flow towards rail construction. Eventually someone will find a way to reduce heavy traffic on your roads.");
 		jbAirport.setToolTipText("Let more money flow towards research. You will be able to build an airport... sooner or later...");
 		
-		jbStreetUpgrade.setPreferredSize(new Dimension(150,110));
-		jbRailUpgrade.setPreferredSize(new Dimension(150,110));
-		jbPoliceUpgrade.setPreferredSize(new Dimension(150,110));
-		jbFireDepUpgrade.setPreferredSize(new Dimension(150,110));
-		jbTwoLaneRoad.setPreferredSize(new Dimension(150,110));
-		jbAirport.setPreferredSize(new Dimension(150,110));
+		jbStreetUpgrade.setPreferredSize(new Dimension(180,125));
+		jbRailUpgrade.setPreferredSize(new Dimension(180,125));
+		jbPoliceUpgrade.setPreferredSize(new Dimension(180,125));
+		jbFireDepUpgrade.setPreferredSize(new Dimension(180,125));
+		jbTwoLaneRoad.setPreferredSize(new Dimension(180,125));
+		jbAirport.setPreferredSize(new Dimension(180,125));
+		
 		
 		
 		jbStreetUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 
+			engine.selectedEETech = engine.streetUpgradeTech;
+			
+			jbStreetUpgrade.setEnabled(false);
+			jbRailUpgrade.setEnabled(true);
+			jbPoliceUpgrade.setEnabled(true);
+			jbFireDepUpgrade.setEnabled(true);
+			jbTwoLaneRoad.setEnabled(true);
+			jbAirport.setEnabled(true);
+			
+			Color col2= new Color(100,50,101);
+			Color col3= new Color(232,188,231);
+
+			jbStreetUpgrade.setBackground(col2);
+			jbRailUpgrade.setBackground(col3);
+			jbPoliceUpgrade.setBackground(col3);
+			jbFireDepUpgrade.setBackground(col3);
+			jbTwoLaneRoad.setBackground(col3);
+			jbAirport.setBackground(col3);			
+			
 			}
 		});
 		
@@ -105,15 +157,41 @@ public class ScienceFrameB extends JFrame{
 		
 		jbTwoLaneRoad.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+
+			
+			jbStreetUpgrade.setEnabled(true);
+			jbRailUpgrade.setEnabled(true);
+			jbPoliceUpgrade.setEnabled(true);
+			jbFireDepUpgrade.setEnabled(true);
+			jbTwoLaneRoad.setEnabled(false);
+			jbAirport.setEnabled(true);
+			
+			Color col2= new Color(100,50,101);
+			Color col3= new Color(232,188,231);
+
+			jbStreetUpgrade.setBackground(col3);
+			jbRailUpgrade.setBackground(col3);
+			jbPoliceUpgrade.setBackground(col3);
+			jbFireDepUpgrade.setBackground(col3);
+			jbTwoLaneRoad.setBackground(col2);
+			jbAirport.setBackground(col3);			
 			}
 			
 		});
+		
+		
+
 
 		jbAirport.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+			
+				onAirporButtonClicked();
+	
+			
 			}
 			
 		});
+		
 		
 		panel  = new JPanel(null,true);
 		getContentPane().add(panel);
@@ -129,10 +207,11 @@ public class ScienceFrameB extends JFrame{
 		panel.setLayout(new FlowLayout());
 		
 		pack();
-		setSize(350,390);			
+		setSize(410,435);			
 		setLocationRelativeTo(getParent());
-		
-	}	
+		Color color=new Color(121,101,151);  
+		panel.setBackground(color);
+	}
 	
 	
 }

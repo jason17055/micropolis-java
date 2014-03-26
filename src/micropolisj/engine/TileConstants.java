@@ -1,11 +1,12 @@
-// This file is part of MicropolisJ.
-// Copyright (C) 2013 Jason Long
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
+// Copyright (C) 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck
+// Copyright (C) 2013 Jason Long for MicropolisJ
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
 // MicropolisJ is free software; you can redistribute it and/or modify
 // it under the terms of the GNU GPLv3, with additional terms.
 // See the README file, included in this distribution, for details.
-
 package micropolisj.engine;
 
 //import java.util.Arrays;
@@ -185,28 +186,66 @@ public class TileConstants
 	static final char BIGBRWV = 1098;       //vert bridge, open
 	static final char BIGHTRFBASE = 1147;
 	private static final char BIGLASTROAD = 1209;
-	static final char STATION = 1210;
+	static final char NARROWINGS   = 1221;
+	static final char NARROWINGS2  = 1222;
+	static final char NARROWINGS3  = 1223;
+	static final char NARROWINGS4  = 1224;
+	static final char NARROWINGS5  = 1225;
+	static final char NARROWINGS6  = 1226;
+	static final char NARROWINGS7  = 1227;  
+	static final char NARROWINGS8  = 1228;
+	static final char NARROWINGS9  = 1229; 
+	static final char NARROWINGS10 = 1230;
+	static final char STATION      = 1234;
+	static final char STATION2     = 1235;
+	static final char STATION3     = 1236;
+	static final char STATION4     = 1237;
+	static final char STATION5     = 1238;
+	static final char STATION6     = 1239;
+	static final char STATION7     = 1240;
+	static final char STATION8     = 1241;
+	static final char STATION9     = 1242;
+	static final char STATION10    = 1243;
+	static final char STATIONINTERSECTION = 1244;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,
 		ROADS2, ROADS2, ROADS4, ROADS8,
 		ROADS, ROADS6, ROADS, ROADS7,
-		ROADS5, ROADS10, ROADS9, INTERSECTION
+		ROADS5, ROADS10, ROADS9, INTERSECTION,
+		NARROWINGS, NARROWINGS4, NARROWINGS2, BIGROADS3,
+		NARROWINGS3, BIGROADS2, BIGROADS4, BIGROADS8,
+		NARROWINGS, BIGROADS6, BIGROADS, BIGROADS7,
+		BIGROADS5, BIGROADS10, BIGROADS9, BIGINTERSECTION,
+		
+		
 		};
 	
 	static final char [] BigRoadTable = new char[] {
 		BIGROADS, BIGROADS2, BIGROADS, BIGROADS3,
 		BIGROADS2, BIGROADS2, BIGROADS4, BIGROADS8,
 		BIGROADS, BIGROADS6, BIGROADS, BIGROADS7,
-		BIGROADS5, BIGROADS10, BIGROADS9, BIGINTERSECTION
-		};
-
+		BIGROADS5, BIGROADS10, BIGROADS9, BIGINTERSECTION,
+		NARROWINGS, NARROWINGS3, NARROWINGS, ROADS3,
+		NARROWINGS4, ROADS2, ROADS4, ROADS8,
+		NARROWINGS2, ROADS6, ROADS, ROADS7,
+		ROADS5, ROADS10, ROADS9, INTERSECTION,
+    	};
+	
+	
+	
 	static final char [] RailTable = new char[] {
 		LHRAIL, LVRAIL, LHRAIL, LVRAIL2,
 		LVRAIL, LVRAIL, LVRAIL3, LVRAIL7,
 		LHRAIL, LVRAIL5, LHRAIL, LVRAIL6,
-		LVRAIL4, LVRAIL9, LVRAIL8, LVRAIL10
+		LVRAIL4, LVRAIL9, LVRAIL8, LVRAIL10,
+		STATION, STATION2, STATION, STATION3,
+		STATION2, STATION2, STATION4, STATION8,
+		STATION, STATION6, STATION, STATION7,
+		STATION5, STATION10, STATION9, STATIONINTERSECTION
 		};
+	
+	
 
 	static final char [] WireTable = new char[] {
 		LHPOWER, LVPOWER, LHPOWER, LVPOWER2,
@@ -449,14 +488,14 @@ public class TileConstants
 	public static boolean isRoad(int tile) { //TODO add new tiles (new images)
 		assert (tile & LOMASK) == tile;
 
-		return (tile >= ROADBASE && tile < POWERBASE);
+		return ((tile >= ROADBASE && tile < POWERBASE) || tile==237 || tile==238 || (tile >= 1217 && tile <= 1225));
 	}
 	
-	public static boolean isBigRoad(int tile) {//TODO add bigRoads
-		return false;
+	public static boolean isBigRoad(int tile) {
+		return ((tile >= 1067 && tile < 1210) || tile == 1215 || tile==1216 || (tile >= 1225 && tile <= 1233));
 	}
-	public static boolean isStation(int tile) {//TODO add station
-		return false;
+	public static boolean isStation(int tile) {
+		return (tile>=1234 && tile<=1248 && tile!=1244);
 	}
 
 	public static boolean isRoadAny(int tile) {
@@ -512,7 +551,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -523,7 +562,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != HROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -534,7 +573,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != HROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -545,7 +584,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)	
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)	
 			) &&
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -565,7 +604,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGVROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -576,7 +615,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGHROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -587,7 +626,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGHROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -598,7 +637,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)	
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)	
 			) &&
 			(tile != BIGVROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -612,7 +651,7 @@ public class TileConstants
 	{
 		assert (tile & LOMASK) == tile;
 
-		return (tile >= RAILBASE && tile < RESBASE);
+		return ((tile >= RAILBASE && tile < RESBASE) || tile == 1215 || tile==1216 || tile==1244);
 	}
 
 	public static boolean isRailAny(int tile)
@@ -631,19 +670,29 @@ public class TileConstants
 		return (tile >= LHRAIL && tile <= LVRAIL10);
 	}
 
+	public static boolean isStationDynamic(int tile)
+	{
+		assert (tile & LOMASK) == tile;
+
+		return (tile >= STATION && tile <= STATIONINTERSECTION);
+	}
+
+	
+	
 	public static boolean railConnectsEast(int tile)
 	{
 		tile = neutralizeRoad(tile);
-		return (tile >= RAILHPOWERV && tile <= VRAILROAD &&
+		return ((tile >= RAILHPOWERV && tile <= VRAILROAD || tile >= STATION && tile <= STATIONINTERSECTION) &&
 			tile != RAILVPOWERH &&
 			tile != VRAILROAD &&
-			tile != VRAIL);
+			tile != VRAIL 
+		);
 	}
 
 	public static boolean railConnectsNorth(int tile)
 	{
 		tile = neutralizeRoad(tile);
-		return (tile >= RAILHPOWERV && tile <= VRAILROAD &&
+		return ((tile >= RAILHPOWERV && tile <= VRAILROAD || tile >= STATION && tile <= STATIONINTERSECTION) &&
 			tile != RAILHPOWERV &&
 			tile != HRAILROAD &&
 			tile != HRAIL);
@@ -652,7 +701,7 @@ public class TileConstants
 	public static boolean railConnectsSouth(int tile)
 	{
 		tile = neutralizeRoad(tile);
-		return (tile >= RAILHPOWERV && tile <= VRAILROAD &&
+		return ((tile >= RAILHPOWERV && tile <= VRAILROAD || tile >= STATION && tile <= STATIONINTERSECTION) &&
 			tile != RAILHPOWERV &&
 			tile != HRAILROAD &&
 			tile != HRAIL);
@@ -661,7 +710,7 @@ public class TileConstants
 	public static boolean railConnectsWest(int tile)
 	{
 		tile = neutralizeRoad(tile);
-		return (tile >= RAILHPOWERV && tile <= VRAILROAD &&
+		return ((tile >= RAILHPOWERV && tile <= VRAILROAD || tile >= STATION && tile <= STATIONINTERSECTION) &&
 			tile != RAILVPOWERH &&
 			tile != VRAILROAD &&
 			tile != VRAIL);
