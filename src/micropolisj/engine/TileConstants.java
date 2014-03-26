@@ -488,7 +488,7 @@ public class TileConstants
 	public static boolean isRoad(int tile) { //TODO add new tiles (new images)
 		assert (tile & LOMASK) == tile;
 
-		return ((tile >= ROADBASE && tile < POWERBASE) || tile==237 || tile==238);
+		return ((tile >= ROADBASE && tile < POWERBASE) || tile==237 || tile==238 || (tile >= 1217 && tile <= 1225));
 	}
 	
 	public static boolean isBigRoad(int tile) {
