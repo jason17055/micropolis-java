@@ -97,8 +97,8 @@ public class NotificationPane extends JPanel
 		}
 
 		headerLbl.setText(mstrings.getString(msg.name()+".title"));
-
 		headerLbl.setBackground(parseColor(mstrings.getString(msg.name()+".color")));
+		//headerLbl.setBackground(parseColor("#ff4f4f"));
 
 		JLabel myLabel = new JLabel("<html><p>"+
 			mstrings.getString(msg.name()+".detail") + "</p></html>");
