@@ -1,5 +1,7 @@
-// This file is part of MicropolisJ.
-// Copyright (C) 2013 Jason Long
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
+// Copyright (C) 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck
+// Copyright (C) 2013 Jason Long for MicropolisJ
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
 // MicropolisJ is free software; you can redistribute it and/or modify
@@ -8,13 +10,18 @@
 
 package micropolisj.engine;
 
-import micropolisj.engine.techno.BuildingTechnology;
-import micropolisj.engine.techno.GeneralTechnology;
-import micropolisj.engine.techno.StreetUpgradeTech;
-import micropolisj.engine.techno.Technology;
+import micropolisj.engine.techno.*;
 
 import java.io.*;
 import java.util.*;
+
+import micropolisj.engine.techno.BuildingTechnology;
+
+import micropolisj.engine.techno.GeneralTechnology;
+
+import micropolisj.engine.techno.StreetUpgradeTech;
+
+import micropolisj.engine.techno.Technology;
 
 import static micropolisj.engine.TileConstants.*;
 
@@ -229,6 +236,11 @@ public class Micropolis
     public BuildingTechnology airportTech;
     public BuildingTechnology twoLaneRoadTech;
     public StreetUpgradeTech streetUpgradeTech;
+    public RailUpgradeTech railUpgradeTech;
+    public FireUpdateTech fireUpdateTech;
+    public PoliceUpgradeTech policeUpgradeTech;
+    public ReducePollutionTech reducePollutionTech;
+    public ImproveWindSolarTech improveWindSolarTech;
 
 	//
 	// budget stuff
@@ -356,13 +368,19 @@ public class Micropolis
         buildingTechs.add(airportTech);
         infraTechs.add(airportTech);
 
-        twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        twoLaneRoadTech = new BuildingTechnology(200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
 
 
-        streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
+        streetUpgradeTech = new StreetUpgradeTech(800, "street upgrade description", "street upgrade Tech");
         infraTechs.add(streetUpgradeTech);
+
+        railUpgradeTech = new RailUpgradeTech(400, "rail upgrade description", "rail upgrade tech");
+        fireUpdateTech = new FireUpdateTech(400, "fire upgrade description", "fire upgrade tech");
+        policeUpgradeTech = new PoliceUpgradeTech(400, "police upgrade description", "police upgrade tech");
+        reducePollutionTech = new ReducePollutionTech(800, "reduce pollution description", "reduce pollution tech");
+        improveWindSolarTech = new ImproveWindSolarTech(800, "improve wind and solar power plants description", "wind solar upgrade tech");
 
         //selectedInfraTech = airportTech;
         //selectedEETech = windTech;

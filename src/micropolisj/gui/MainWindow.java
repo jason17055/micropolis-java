@@ -1,4 +1,5 @@
-// This file is part of MicropolisJ.
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
 // Copyright (C) 2013 Jason Long
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
@@ -10,6 +11,8 @@ package micropolisj.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -284,6 +287,20 @@ public class MainWindow extends JFrame
         drawingArea.addMouseListener(mouse);
         drawingArea.addMouseMotionListener(mouse);
         drawingArea.addMouseWheelListener(mouse);
+
+        drawingArea.requestFocusInWindow();
+
+        final KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        focusManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                if (!(focusManager.getFocusOwner() == null || focusManager.getFocusOwner() == getRootPane()))
+                    drawingArea.requestFocusInWindow();
+            }
+        });
+
+
+
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {

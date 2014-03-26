@@ -1,4 +1,5 @@
-// This file is part of MicropolisJ.
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
 // Copyright (C) 2013 Jason Long
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
@@ -97,7 +98,6 @@ public class NotificationPane extends JPanel
 		}
 
 		headerLbl.setText(mstrings.getString(msg.name()+".title"));
-
 		headerLbl.setBackground(parseColor(mstrings.getString(msg.name()+".color")));
 
 		JLabel myLabel = new JLabel("<html><p>"+
