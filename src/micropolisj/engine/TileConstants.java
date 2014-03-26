@@ -492,10 +492,10 @@ public class TileConstants
 	}
 	
 	public static boolean isBigRoad(int tile) {
-		return ((tile >= 1067 && tile < 1210) || tile == 1215 || tile==1216);
+		return ((tile >= 1067 && tile < 1210) || tile == 1215 || tile==1216 || (tile >= 1225 && tile <= 1233));
 	}
 	public static boolean isStation(int tile) {
-		return ((tile==1234) || (tile==1235));
+		return (tile>=1234 && tile<=1248 && tile!=1244);
 	}
 
 	public static boolean isRoadAny(int tile) {
@@ -651,7 +651,7 @@ public class TileConstants
 	{
 		assert (tile & LOMASK) == tile;
 
-		return ((tile >= RAILBASE && tile < RESBASE) || tile == 1215 || tile==1216);
+		return ((tile >= RAILBASE && tile < RESBASE) || tile == 1215 || tile==1216 || tile==1244);
 	}
 
 	public static boolean isRailAny(int tile)
