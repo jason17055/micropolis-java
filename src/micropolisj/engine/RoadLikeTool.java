@@ -291,7 +291,7 @@ class RoadLikeTool extends ToolStroke
 		int cost = STATION_COST;
 
 		char tile = (char) eff.getTile(0, 0);
-		tile = neutralizeRoad(tile); // eventuell nicht nötig
+		tile = neutralizeRoad(tile); // eventuell nicht noetig
 
 		switch (tile)
 		{
