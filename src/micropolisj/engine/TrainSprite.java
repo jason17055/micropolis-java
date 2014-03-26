@@ -71,7 +71,9 @@ public class TrainSprite extends Sprite
 				int c = getChar(this.x + Cx[d2], this.y + Cy[d2]);
 				if (((c >= RAILBASE) && (c <= LASTRAIL)) || //track?
 					(c == RAILVPOWERH) ||
-					(c == RAILHPOWERV))
+					(c == RAILHPOWERV) ||
+					(c == RAILBASE) ||
+					(c == (RAILBASE+1)))
 				{
 					if ((this.dir != d2) && (this.dir != DIR_NONE)) {
 						if (this.dir + d2 == 3)
