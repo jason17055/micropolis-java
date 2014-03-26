@@ -8,15 +8,18 @@
 
 package micropolisj.engine.techno;
 
-public class StreetUpgradeTech extends GeneralTechnology {
-    public StreetUpgradeTech(double pointsNeeded_, String description_, String name_){
+/**
+ * Created by tom on 26.03.14.
+ */
+public class ImproveWindSolarTech extends GeneralTechnology {
+    public ImproveWindSolarTech(double pointsNeeded_, String description_, String name_){
         super(pointsNeeded_, description_, name_);
     }
 
     public boolean tryToApply(){
         if(super.tryToApply() == true){
             // do some fancy street Upgrade stuff
-            System.out.println("street upgrade");
+            System.out.println("improve wind and solar");
             return true;
         }
         return false;

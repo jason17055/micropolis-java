@@ -7,16 +7,15 @@
 // See the README file, included in this distribution, for details.
 
 package micropolisj.engine.techno;
-
-public class StreetUpgradeTech extends GeneralTechnology {
-    public StreetUpgradeTech(double pointsNeeded_, String description_, String name_){
+public class ReducePollutionTech extends GeneralTechnology {
+    public ReducePollutionTech(double pointsNeeded_, String description_, String name_){
         super(pointsNeeded_, description_, name_);
     }
 
     public boolean tryToApply(){
         if(super.tryToApply() == true){
             // do some fancy street Upgrade stuff
-            System.out.println("street upgrade");
+            System.out.println("reduce polltion");
             return true;
         }
         return false;

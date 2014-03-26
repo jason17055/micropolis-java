@@ -8,8 +8,8 @@
 
 package micropolisj.engine.techno;
 
-public class StreetUpgradeTech extends GeneralTechnology {
-    public StreetUpgradeTech(double pointsNeeded_, String description_, String name_){
+public class RailUpgradeTech extends GeneralTechnology {
+    public RailUpgradeTech(double pointsNeeded_, String description_, String name_){
         super(pointsNeeded_, description_, name_);
     }
 
