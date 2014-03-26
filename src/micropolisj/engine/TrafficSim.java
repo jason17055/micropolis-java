@@ -59,6 +59,9 @@ public class TrafficSim {
 		if (way!=-1) {
 			engine.putVisits(startP);
 			engine.putVisits(end);
+			if (way>2000) {
+				engine.longWay();
+			}
 		} else {
 			engine.noWay();
 		}
