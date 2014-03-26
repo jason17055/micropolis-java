@@ -714,7 +714,15 @@ public class Micropolis
 		powerPlants.clear();
         cityHallList.clear();
         
-        visits=new HashMap<CityLocation,Integer>(visitNew);
+        HashMap<CityLocation,Integer> zw =new HashMap<CityLocation,Integer>();
+        for (CityLocation f : visitNew.keySet()) {
+        	if (visits.get(f)==null) {
+        		zw.put(f,visitNew.get(f));
+        	} else {
+        		zw.put(f,rd(visits.get(f)+visitNew.get(f),2));
+        	}
+        }
+        visits =new HashMap<CityLocation,Integer>(zw);
         visitNew.clear();
         solarCount = 0;
 		windCount = 0;
@@ -1269,7 +1277,7 @@ public class Micropolis
     }
 	
 	public void putVisits(CityLocation loc) {
-		visitNew.put(loc,(dummySearch(visitNew,loc)+(lastCityPop/25000+1)));
+		visitNew.put(loc,(dummySearch(visitNew,loc)+(1+lastCityPop/25000)));
 	}
 	
 	public static CityLocation goToAdj(CityLocation loc, int dir)
