@@ -59,6 +59,13 @@ public class MicropolisDrawingArea extends JComponent
 		public void ancestorMoved(AncestorEvent evt) {}
 		});
 
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                requestFocusInWindow();
+            }
+        });
+
         addMouseListener(new MouseListener() {
 
             @Override
