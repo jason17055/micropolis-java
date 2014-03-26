@@ -1959,8 +1959,7 @@ public class Micropolis
 	Stack<CityLocation> powerPlants = new Stack<CityLocation>();
 
 	// counts the population in a certain type of residential zone
-	int doFreePop(int xpos, int ypos)
-	{
+	int doFreePop(int xpos, int ypos) {
 		int count = 0;
 
 		for (int x = xpos - 1; x <= xpos + 1; x++)
@@ -1975,7 +1974,6 @@ public class Micropolis
 				}
 			}
 		}
-
 		return count;
 	}
 
