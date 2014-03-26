@@ -8,10 +8,7 @@
 
 package micropolisj.engine;
 
-import micropolisj.engine.techno.BuildingTechnology;
-import micropolisj.engine.techno.GeneralTechnology;
-import micropolisj.engine.techno.StreetUpgradeTech;
-import micropolisj.engine.techno.Technology;
+import micropolisj.engine.techno.*;
 
 import java.io.*;
 import java.util.*;
@@ -228,6 +225,11 @@ public class Micropolis
     public BuildingTechnology airportTech;
     public BuildingTechnology twoLaneRoadTech;
     public StreetUpgradeTech streetUpgradeTech;
+    public RailUpgradeTech railUpgradeTech;
+    public FireUpdateTech fireUpdateTech;
+    public PoliceUpgradeTech policeUpgradeTech;
+    public ReducePollutionTech reducePollutionTech;
+    public ImproveWindSolarTech improveWindSolarTech;
 
 	//
 	// budget stuff
@@ -355,13 +357,19 @@ public class Micropolis
         buildingTechs.add(airportTech);
         infraTechs.add(airportTech);
 
-        twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        twoLaneRoadTech = new BuildingTechnology(200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
 
 
-        streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
+        streetUpgradeTech = new StreetUpgradeTech(800, "street upgrade description", "street upgrade Tech");
         infraTechs.add(streetUpgradeTech);
+
+        railUpgradeTech = new RailUpgradeTech(400, "rail upgrade description", "rail upgrade tech");
+        fireUpdateTech = new FireUpdateTech(400, "fire upgrade description", "fire upgrade tech");
+        policeUpgradeTech = new PoliceUpgradeTech(400, "police upgrade description", "police upgrade tech");
+        reducePollutionTech = new ReducePollutionTech(800, "reduce pollution description", "reduce pollution tech");
+        improveWindSolarTech = new ImproveWindSolarTech(800, "improve wind and solar power plants description", "wind solar upgrade tech");
 
         //selectedInfraTech = airportTech;
         //selectedEETech = windTech;
