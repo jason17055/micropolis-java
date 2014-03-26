@@ -451,6 +451,46 @@ public class ToolStroke
 
 			eff.setTile(0, 0, RailTable[adjTile]);
 		} //end if on a rail tile
+		
+		
+		
+		else if (isStationDynamic(tile))
+		{
+			// cleanup Rail
+			int adjTile = 0;
+			adjTile |=16;
+
+			// check rail to north
+			if (railConnectsSouth(eff.getTile(0, -1)))
+			{
+				adjTile |= 1;
+			}
+
+			// check rail to east
+			if (railConnectsWest(eff.getTile(1, 0)))
+			{
+				adjTile |= 2;
+			}
+
+			// check rail to south
+			if (railConnectsNorth(eff.getTile(0, 1)))
+			{
+				adjTile |= 4;
+			}
+
+			// check rail to west
+			if (railConnectsEast(eff.getTile(-1, 0)))
+			{
+				adjTile |= 8;
+			}
+			System.out.println(adjTile);
+			eff.setTile(0, 0, RailTable[adjTile]);
+		} //end if on a rail tile
+
+		
+		
+		
+		
 
 		else if (isWireDynamic(tile))
 		{

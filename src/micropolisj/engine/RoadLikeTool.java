@@ -124,9 +124,13 @@ class RoadLikeTool extends ToolStroke
 
 	boolean applyStationTool(ToolEffectIfc eff)
 	{
-		
-			return true;
-		
+		if (layStation(eff)) {
+		   fixZone(eff);
+		   return true;
+	}
+	    else {
+		   return false;
+	    }
 	}
 	
 	boolean applyRoadTool(ToolEffectIfc eff)
@@ -276,6 +280,129 @@ class RoadLikeTool extends ToolStroke
         return true;
 	}
 
+	
+	
+	private boolean layStation(ToolEffectIfc eff)
+	{
+		final int STATION_COST = 20;
+		// final int TUNNEL_COST = 100;
+
+		int cost = STATION_COST;
+
+		char tile = (char) eff.getTile(0, 0);
+		tile = neutralizeRoad(tile); // eventuell nicht nötig
+
+		switch (tile)
+		{
+		// case RIVER:		// rail on water
+		// case REDGE:
+		// case CHANNEL: 
+
+			// cost = TUNNEL_COST;
+
+			// check east
+			/*{
+				char eTile = neutralizeRoad(eff.getTile(1, 0));
+				if (eTile == RAILHPOWERV ||
+					eTile == HRAIL ||
+					(eTile >= LHRAIL && eTile <= HRAILROAD))
+				{
+					eff.setTile(0, 0, HRAIL);
+					break;
+				}
+			}
+
+			// check west
+			{
+				char wTile = neutralizeRoad(eff.getTile(-1, 0));
+				if (wTile == RAILHPOWERV ||
+					wTile == HRAIL ||
+					(wTile > VRAIL && wTile < VRAILROAD))
+				{
+					eff.setTile(0, 0, HRAIL);
+					break;
+				}
+			}
+
+			// check south
+			{
+				char sTile = neutralizeRoad(eff.getTile(0, 1));
+				if (sTile == RAILVPOWERH ||
+					sTile == VRAILROAD ||
+					(sTile > HRAIL && sTile < HRAILROAD))
+				{
+					eff.setTile(0, 0, VRAIL);
+					break;
+				}
+			}
+
+			// check north
+			{
+				char nTile = neutralizeRoad(eff.getTile(0, -1));
+				if (nTile == RAILVPOWERH ||
+					nTile == VRAILROAD ||
+					(nTile > HRAIL && nTile < HRAILROAD))
+				{
+					eff.setTile(0, 0, VRAIL);
+					break;
+				}
+			}
+
+			// cannot do road here
+			return false;*/
+
+		/*case LHPOWER: // rail on power
+			eff.setTile(0, 0, RAILVPOWERH);
+			break;
+
+		case LVPOWER: // rail on power
+			eff.setTile(0, 0, RAILHPOWERV);
+			break;   
+
+		case TileConstants.ROADS:	// rail on road (case 1)
+			eff.setTile(0, 0, VRAILROAD);
+			break;
+
+		case ROADS2:	// rail on road (case 2)
+			eff.setTile(0, 0, HRAILROAD);
+			break;
+
+		case TileConstants.BIGROADS:	// rail on road (case 1)
+			eff.setTile(0, 0, VRAILROAD);
+			break;
+
+		case BIGROADS2:	// rail on road (case 2)
+			eff.setTile(0, 0, HRAILROAD);  
+			break;    */
+
+		default:
+			if (tile != DIRT) {
+				if (city.autoBulldoze && canAutoBulldozeRRW(tile)) {
+					cost += 1; //autodoze cost
+				}
+				else {
+					// cannot do station here
+					return false;
+				}
+			}
+
+		  	//station on dirt
+			eff.setTile(0, 0, STATION);
+			break;
+		}
+
+		eff.spend(cost);
+        eff.setTool(tool);
+        return true;
+	}
+
+	
+	
+	
+	
+	
+	
+	
 	private boolean layBigRoad(ToolEffectIfc eff)
 	{
 		final int BIGROAD_COST = 10;

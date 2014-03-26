@@ -1282,8 +1282,7 @@
 1207   (76) |traffic@112,192                                      (becomes=188)(pollution=75)
 1208   bigroads@0,32 |traffic@112,0  |roadwire@0,0  (bulldozable)(conducts)(becomes=189)(description=#7)(behavior=BIGROAD)(pollution=75)
 1209   bigroads@0,48 |traffic@112,16 |roadwire@0,16 (bulldozable)(conducts)(becomes=190)(description=#7)(behavior=BIGROAD)(pollution=75)
-# BEGIN STATION #
-1210   station@0,0                 (bulldozable)(description=#9)(behavior=STATION)
+
 
 
 # BEGIN OPEN AIR DANCERS #
@@ -1314,3 +1313,20 @@
 1231 narrowings@0,224			(pollution=75)
 1232 narrowings@0,32  |roadwire@0,0       (bulldozable)(conducts)(description=#7)(behavior=BIGROAD)
 1233 narrowings@0,48  |roadwire@0,16      (bulldozable)(conducts)(description=#7)(behavior=BIGROAD)
+
+# BEGIN STATION #
+1234   station@0,0                 (bulldozable)(description=#9)(behavior=STATION)
+1235   station@0,16                (bulldozable)(description=#9)(behavior=STATION)
+1236   station@0,32                (bulldozable)(description=#9)(behavior=STATION)
+1237   station@0,48                (bulldozable)(description=#9)(behavior=STATION)
+1238   station@0,64                (bulldozable)(description=#9)(behavior=STATION)
+1239   station@0,80                (bulldozable)(description=#9)(behavior=STATION)
+1240   station@0,96                (bulldozable)(description=#9)(behavior=STATION)
+1241   station@0,112               (bulldozable)(description=#9)(behavior=STATION)
+1242   station@0,128               (bulldozable)(description=#9)(behavior=STATION)
+1243   station@0,144               (bulldozable)(description=#9)(behavior=STATION)
+1244   station@0,160               (bulldozable)(description=#9)(behavior=RAIL)
+1245   station@0,176               (bulldozable)(description=#9)(behavior=STATION)
+1246   station@0,192               (bulldozable)(description=#9)(behavior=STATION)
+1247   station@0,208               (bulldozable)(description=#9)(behavior=STATION)
+1248   station@0,224               (bulldozable)(description=#9)(behavior=STATION)
