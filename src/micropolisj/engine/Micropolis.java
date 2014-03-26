@@ -1,5 +1,7 @@
-// This file is part of MicropolisJ.
-// Copyright (C) 2013 Jason Long
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
+// Copyright (C) 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck
+// Copyright (C) 2013 Jason Long for MicropolisJ
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
 // MicropolisJ is free software; you can redistribute it and/or modify
@@ -8,13 +10,18 @@
 
 package micropolisj.engine;
 
-import micropolisj.engine.techno.BuildingTechnology;
-import micropolisj.engine.techno.GeneralTechnology;
-import micropolisj.engine.techno.StreetUpgradeTech;
-import micropolisj.engine.techno.Technology;
+import micropolisj.engine.techno.*;
 
 import java.io.*;
 import java.util.*;
+
+import micropolisj.engine.techno.BuildingTechnology;
+
+import micropolisj.engine.techno.GeneralTechnology;
+
+import micropolisj.engine.techno.StreetUpgradeTech;
+
+import micropolisj.engine.techno.Technology;
 
 import static micropolisj.engine.TileConstants.*;
 
@@ -159,6 +166,7 @@ public class Micropolis
 	int solarCount;
 	int windCount;
 	int noWay;
+	int longWay;
 
 	int totalPop;
 	int lastCityPop;
@@ -216,18 +224,23 @@ public class Micropolis
 
     // science/tech stuff
     ArrayList<BuildingTechnology> buildingTechs;
-    ArrayList<Technology> eetechs;
-    ArrayList<Technology> infraTechs;
+    ArrayList<GeneralTechnology> eetechs;
+    ArrayList<GeneralTechnology> infraTechs;
     public double technologyEEPoints;
     public double technologyInfraPoints;
-    public Technology selectedInfraTech = null;
-    public Technology selectedEETech = null;
+    public GeneralTechnology selectedInfraTech = null;
+    public GeneralTechnology selectedEETech = null;
 
     public BuildingTechnology windTech;
     public BuildingTechnology solarTech;
     public BuildingTechnology airportTech;
     public BuildingTechnology twoLaneRoadTech;
     public StreetUpgradeTech streetUpgradeTech;
+    public RailUpgradeTech railUpgradeTech;
+    public FireUpdateTech fireUpdateTech;
+    public PoliceUpgradeTech policeUpgradeTech;
+    public ReducePollutionTech reducePollutionTech;
+    public ImproveWindSolarTech improveWindSolarTech;
 
 	//
 	// budget stuff
@@ -283,6 +296,18 @@ public class Micropolis
 
     public void incNCheats() {
         nCheats++;
+    }
+    
+    public void testPrint(String s){
+    	System.out.println(s);
+    }
+    
+    public void setSelectedInfraTech(GeneralTechnology t){
+    	// System.out.println("select inra tech: + " t.getName());
+    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
+    	this.selectedInfraTech = t;
+    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
+    	
     }
 
     public void incCityPopulation() {
@@ -340,8 +365,8 @@ public class Micropolis
 
     void initTechs(){
         buildingTechs = new ArrayList<BuildingTechnology>();
-        eetechs = new ArrayList<Technology>();
-        infraTechs = new ArrayList<Technology>();
+        eetechs = new ArrayList<GeneralTechnology>();
+        infraTechs = new ArrayList<GeneralTechnology>();
 
         windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
         buildingTechs.add(windTech);
@@ -355,17 +380,23 @@ public class Micropolis
         buildingTechs.add(airportTech);
         infraTechs.add(airportTech);
 
-        twoLaneRoadTech = new BuildingTechnology(400.0, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        twoLaneRoadTech = new BuildingTechnology(200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
         
         twoLaneRoadTech.addResearchPoints(401);
 
 
-        streetUpgradeTech = new StreetUpgradeTech(400.0, "street upgrade description", "upgrade Tech");
+        streetUpgradeTech = new StreetUpgradeTech(800, "street upgrade description", "street upgrade Tech");
         infraTechs.add(streetUpgradeTech);
 
-        //selectedInfraTech = airportTech;
+        railUpgradeTech = new RailUpgradeTech(400, "rail upgrade description", "rail upgrade tech");
+        fireUpdateTech = new FireUpdateTech(400, "fire upgrade description", "fire upgrade tech");
+        policeUpgradeTech = new PoliceUpgradeTech(400, "police upgrade description", "police upgrade tech");
+        reducePollutionTech = new ReducePollutionTech(800, "reduce pollution description", "reduce pollution tech");
+        improveWindSolarTech = new ImproveWindSolarTech(800, "improve wind and solar power plants description", "wind solar upgrade tech");
+
+        selectedInfraTech = railUpgradeTech;
         //selectedEETech = windTech;
         
         System.out.println("inittechs");
@@ -675,6 +706,7 @@ public class Micropolis
 		seaportCount = 0;
 		airportCount = 0;
 		noWay = 0;
+		longWay = 0;
 		paths.clear();
 		powerPlants.clear();
         cityHallList.clear();
@@ -1367,7 +1399,7 @@ public class Micropolis
 		trfDensity[mapY][mapX] = z;
 	}
 	
-	private int rd(int val, int rd) {
+	public int rd(int val, int rd) {
 		int ret=val/rd;
 		if (PRNG.nextInt(rd)<val%rd) {
 			ret++;
@@ -1556,15 +1588,14 @@ public class Micropolis
 	{
 		double normResPop = (double)resPop / 8.0;
 		totalPop = (int) (normResPop + comPop + indPop);
-		//TODO refactor this on base of visits
 		double employment;
 		if (normResPop != 0.0)
 		{
-			employment = (history.com[1] + history.ind[1]) / normResPop;
+			employment = 2*(history.com[1] + history.ind[1]) / (normResPop+history.com[1] + history.ind[1]);
 		}
 		else
 		{
-			employment = 1;
+			employment = 2;
 		}
 
 		double migration = normResPop * (employment - 1);
@@ -1572,57 +1603,42 @@ public class Micropolis
 		double births = (double)normResPop * BIRTH_RATE;
 		double projectedResPop = normResPop + migration + births;
 
-		double temp = (history.com[1] + history.ind[1]);
-		double laborBase;
-		if (temp != 0.0)
-		{
-			laborBase = history.res[1] / temp;
-		}
-		else
-		{
-			laborBase = 1;
-		}
-
 		// clamp laborBase to between 0.0 and 1.3
-		laborBase = Math.max(0.0, Math.min(1.3, laborBase));
-
-		double internalMarket = (double)(normResPop + comPop + indPop) / 3.7;
-		double projectedComPop = internalMarket * laborBase;
+		employment = Math.max(0.0, Math.min(1.3, employment));
 
 		int z = gameLevel;
-		temp = 1.0;
+		double temp = 1.0;
 		switch (z)
 		{
 		case 0: temp = 1.2; break;
 		case 1: temp = 1.1; break;
-		case 2: temp = 0.98; break;
+		case 2: temp = 1; break;
 		}
-
-		double projectedIndPop = indPop * laborBase * temp;
-		if (projectedIndPop < 5.0)
-			projectedIndPop = 5.0;
 
 		double resRatio;
-		if (normResPop != 0)
-		{
+		if (normResPop != 0) {
 			resRatio = (double)projectedResPop / (double)normResPop;
 		}
-		else
-		{
+		else {
 			resRatio = 1.3;
 		}
 
 		double comRatio;
 		if (comPop != 0)
-			comRatio = (double)projectedComPop / (double)comPop;
+			comRatio = 2*employment*(2-employment);
 		else
-			comRatio = projectedComPop;
+			comRatio = 2*employment*(2-employment);
+		if (comRatio>0) {
+			comRatio*=temp;
+		} else {
+			comRatio/=temp;
+		}
 
 		double indRatio;
 		if (indPop != 0)
-			indRatio = (double)projectedIndPop / (double)indPop;
+			indRatio = (2*temp-employment);
 		else
-			indRatio = projectedIndPop;
+			indRatio = (temp*2-employment);
 
 		if (resRatio > 2.0)
 			resRatio = 2.0;
@@ -1633,14 +1649,9 @@ public class Micropolis
 		if (indRatio > 2.0)
 			indRatio = 2.0;
 		
-		//growth depending on tax
-		int z2 = taxEffect + gameLevel;
-		if (z2 > 20)
-			z2 = 20;
-
-		resRatio = (resRatio - 1) * 600 + TaxTable[z2];
-		comRatio = (comRatio - 1) * 600 + TaxTable[z2];
-		indRatio = (indRatio - 1) * 600 + TaxTable[z2];
+		resRatio = (resRatio - 1) * 600+100;
+		comRatio = (comRatio - 1) * 600;
+		indRatio = (indRatio - 1) * 600;
 
 		// ratios are velocity changes to valves
 		resValve += (int) resRatio;
@@ -1661,12 +1672,6 @@ public class Micropolis
 			indValve = 1500;
 		else if (indValve < -1500)
 			indValve = -1500;
-
-
-		if (resCap && resValve > 0) {
-			// residents demand stadium
-			resValve = 0;
-		}
 
 		if (comCap && comValve > 0) {
 			// commerce demands airport
@@ -1731,7 +1736,7 @@ public class Micropolis
 		assert y >= 0 && y <= getHeight();
         int xdis = Math.abs(x - centerMassX);
         int ydis = Math.abs(y - centerMassY);
-        int centerMassDistance = (xdis+ydis)/2;
+        int centerMassDistance = 10+(xdis+ydis)/2;
         int ccDis;
 
         if(centerMassDistance > 32) centerMassDistance = 32;
@@ -1833,26 +1838,26 @@ public class Micropolis
 	}
 
     void spendTechnologyPoints(){
-        if(selectedEETech != null && technologyEEPoints != 0.0){
-            selectedEETech.addResearchPoints(technologyEEPoints);
-            technologyEEPoints = 0;
+        if(this.selectedEETech != null && this.technologyEEPoints != 0.0){
+            this.selectedEETech.addResearchPoints(this.technologyEEPoints);
+            this.technologyEEPoints = 0;
             System.out.println("technologyEEPoints points already: " +
-                    selectedEETech.getPointsUsed() + "/" + selectedEETech.getPointsNeeded() + " " + selectedEETech.getName());
+                    this.selectedEETech.getPointsUsed() + "/" + this.selectedEETech.getPointsNeeded() + " " + this.selectedEETech.getName());
         }
-
-        if(selectedInfraTech != null && technologyInfraPoints != 0.0){
-            selectedInfraTech.addResearchPoints(technologyInfraPoints);
+        System.out.println("selected ifnra tech (2)" + this.selectedInfraTech.getName());
+        if(this.selectedInfraTech != null && technologyInfraPoints != 0.0){
+            this.selectedInfraTech.addResearchPoints(technologyInfraPoints);
             technologyInfraPoints = 0;
             System.out.println("infraTech points already: " +
-                    selectedInfraTech.getPointsUsed() + "/" + selectedInfraTech.getPointsNeeded() + " " + selectedInfraTech.getName());
+                    this.selectedInfraTech.getPointsUsed() + "/" + this.selectedInfraTech.getPointsNeeded() + " " + this.selectedInfraTech.getName());
         }
     }
     
-    public void selectEETech(Technology t){
-    	selectedEETech = t;
+    public void selectEETech(GeneralTechnology t){
+    	this.selectedEETech = t;
     }
     
-    public void selectInfraTech(Technology t){
+    public void selectInfraTech(GeneralTechnology t){
     	System.out.println("selected an infratest");
     	selectedInfraTech = t;
     }
@@ -3013,7 +3018,7 @@ public class Micropolis
 			}
 			break;
 		case 18:
-			if (false) { //TODO need to change
+			if (100*longWay>getCityPopulation()) { //TODO need to change
 				sendMessage(MicropolisMessage.NEED_RAILS);
 			}
 			break;
@@ -3147,6 +3152,9 @@ public class Micropolis
 	}
 	public void noWay() {
 		noWay++;
+	}
+	public void longWay() {
+		longWay++;
 	}
 	
 	private int accessMap(int x,int y, String g) { 

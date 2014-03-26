@@ -1,4 +1,5 @@
-// This file is part of MicropolisJ.
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
 // Copyright (C) 2013 Jason Long
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
@@ -10,6 +11,8 @@ package micropolisj.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -97,10 +100,12 @@ public class MainWindow extends JFrame
         evaluationPane.setVisible(false);
         evalGraphsBox.add(evaluationPane, BorderLayout.SOUTH);
         
-        scienceFrameA = new ScienceFrameA(engine);
+        scienceFrameA = new ScienceFrameA(this, getEngine());
+        scienceFrameA.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         scienceFrameA.setVisible(false);
         
-       scienceFrameB = new ScienceFrameB(engine);
+       scienceFrameB = new ScienceFrameB(this, getEngine());
+       scienceFrameB.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
        scienceFrameB.setVisible(false);
 
         JPanel leftPane = new JPanel(new GridBagLayout());
@@ -202,6 +207,11 @@ public class MainWindow extends JFrame
         inputMap.put(KeyStroke.getKeyStroke("MINUS"), "zoomOut");
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "escape");
         inputMap.put(KeyStroke.getKeyStroke("ENTER"), "openCheatBox");
+        inputMap.put(KeyStroke.getKeyStroke("P"), "setPaused");
+        inputMap.put(KeyStroke.getKeyStroke("1"), "setSlow");
+        inputMap.put(KeyStroke.getKeyStroke("2"), "setNormal");
+        inputMap.put(KeyStroke.getKeyStroke("3"), "setFast");
+        inputMap.put(KeyStroke.getKeyStroke("4"), "setSuperFast");
 
 
 
@@ -225,6 +235,31 @@ public class MainWindow extends JFrame
         actionMap.put("openCheatBox", new AbstractAction() {
             public void actionPerformed(ActionEvent evt) {
                 openCheatBox();
+            }
+        });
+        actionMap.put("setPaused", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.PAUSED);
+            }
+        });
+        actionMap.put("setSlow", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.SLOW);
+            }
+        });
+        actionMap.put("setNormal", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.NORMAL);
+            }
+        });
+        actionMap.put("setFast", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.FAST);
+            }
+        });
+        actionMap.put("setSuperFast", new AbstractAction() {
+            public void actionPerformed(ActionEvent evt) {
+                onPriorityClicked(Speed.SUPER_FAST);
             }
         });
 
@@ -284,6 +319,20 @@ public class MainWindow extends JFrame
         drawingArea.addMouseListener(mouse);
         drawingArea.addMouseMotionListener(mouse);
         drawingArea.addMouseWheelListener(mouse);
+
+        drawingArea.requestFocusInWindow();
+
+        final KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        focusManager.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                if (!(focusManager.getFocusOwner() == null || focusManager.getFocusOwner() == getRootPane()))
+                    drawingArea.requestFocusInWindow();
+            }
+        });
+
+
+
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {

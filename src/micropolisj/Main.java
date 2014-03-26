@@ -1,4 +1,5 @@
-// This file is part of MicropolisJ.
+// This file is part of DiverCity
+// DiverCity is based on MicropolisJ
 // Copyright (C) 2013 Jason Long
 // Portions Copyright (C) 1989-2007 Electronic Arts Inc.
 //
