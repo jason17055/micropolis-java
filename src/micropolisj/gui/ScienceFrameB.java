@@ -12,11 +12,13 @@ import javax.swing.JPanel;
 import javax.swing.*;
 import javax.swing.event.*;
 
+
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.awt.Window;
 import java.awt.Dimension;
 import java.awt.Color;
+import java.util.ArrayList;
 
 import micropolisj.engine.Micropolis;
 import micropolisj.engine.techno.*;
@@ -27,6 +29,7 @@ public class ScienceFrameB extends JDialog {
 	Micropolis engine;
 	
 	JPanel panel;
+    ArrayList<JButton> buttonList;
 	JButton jbStreetUpgrade;
 	JButton jbRailUpgrade;
 	JButton jbPoliceUpgrade;
@@ -35,8 +38,20 @@ public class ScienceFrameB extends JDialog {
 	JButton jbAirport;
     JProgressBar progressBar;
     JLabel noTechSelectedLabel;
+
+    Color col2= new Color(100,50,101);
+    Color col3= new Color(232,188,231);
+
 //UNIVERSITAET FUER MANAGEMENT
-	
+
+    private void disableAllButtonsBut(JButton bNotToBeDisabled){
+        for(JButton b : buttonList){
+            b.setEnabled(false);
+            b.setBackground(col2);
+        }
+        bNotToBeDisabled.setEnabled(true);
+        bNotToBeDisabled.setBackground(col3);
+    }
 
 
     private void updateProgressBar(){
@@ -63,6 +78,7 @@ public class ScienceFrameB extends JDialog {
 	public ScienceFrameB(Window owner, Micropolis m){
 		super(owner);
 		this.engine=m;
+        buttonList = new ArrayList<JButton>();
 
 
 		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
@@ -71,6 +87,13 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade = new JButton ("<html>Fire Department<br>Upgrade<br><br><br><br><font color=#666666>[XX points]</font></html>");
 		jbTwoLaneRoad = new JButton ("<html>Research<br>Two-Lane Roads<br><br><br><br><font color=#666666>["+(int)engine.twoLaneRoadTech.getPointsUsed()+"/"+(int)engine.twoLaneRoadTech.getPointsNeeded()+" points]</font><html>");
 		jbAirport = new JButton ("<html>Research Airports<br><br><br><br><br><font color=#666666>["+(int)engine.airportTech.getPointsUsed()+"/"+(int)engine.airportTech.getPointsNeeded()+" points]</font></html>");
+        buttonList.add(jbStreetUpgrade);
+        buttonList.add(jbRailUpgrade);
+        buttonList.add(jbPoliceUpgrade);
+        buttonList.add(jbFireDepUpgrade);
+        buttonList.add(jbTwoLaneRoad);
+        buttonList.add(jbAirport);
+
 
 		jbStreetUpgrade.setEnabled(true);
 		jbRailUpgrade.setEnabled(true);
@@ -119,23 +142,8 @@ public class ScienceFrameB extends JDialog {
 			public void actionPerformed(ActionEvent event){
 
 			engine.setSelectedInfraTech(engine.streetUpgradeTech);
-			
-			jbStreetUpgrade.setEnabled(false);
-			jbRailUpgrade.setEnabled(true);
-			jbPoliceUpgrade.setEnabled(true);
-			jbFireDepUpgrade.setEnabled(true);
-			jbTwoLaneRoad.setEnabled(true);
-			jbAirport.setEnabled(true);
-			
-			Color col2= new Color(100,50,101);
-			Color col3= new Color(232,188,231);
 
-			jbStreetUpgrade.setBackground(col2);
-			jbRailUpgrade.setBackground(col3);
-			jbPoliceUpgrade.setBackground(col3);
-			jbFireDepUpgrade.setBackground(col3);
-			jbTwoLaneRoad.setBackground(col3);
-			jbAirport.setBackground(col3);
+            disableAllButtonsBut(jbStreetUpgrade);
             updateProgressBar();
 			
 			}
@@ -144,6 +152,7 @@ public class ScienceFrameB extends JDialog {
 		jbRailUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedInfraTech(engine.railUpgradeTech);
+                disableAllButtonsBut(jbRailUpgrade);
                 updateProgressBar();
 			}
 			
@@ -152,6 +161,7 @@ public class ScienceFrameB extends JDialog {
 		jbPoliceUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedInfraTech(engine.policeUpgradeTech);
+                disableAllButtonsBut(jbPoliceUpgrade);
                 updateProgressBar();
 			}
 			
@@ -160,6 +170,7 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedInfraTech(engine.fireUpdateTech);
+                disableAllButtonsBut(jbFireDepUpgrade);
                 updateProgressBar();
 
 
@@ -169,26 +180,9 @@ public class ScienceFrameB extends JDialog {
 		jbTwoLaneRoad.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 
-			
-			jbStreetUpgrade.setEnabled(true);
-			jbRailUpgrade.setEnabled(true);
-			jbPoliceUpgrade.setEnabled(true);
-			jbFireDepUpgrade.setEnabled(true);
-			jbTwoLaneRoad.setEnabled(false);
-			jbAirport.setEnabled(true);
-			
-			Color col2= new Color(100,50,101);
-			Color col3= new Color(232,188,231);
-
-			jbStreetUpgrade.setBackground(col3);
-			jbRailUpgrade.setBackground(col3);
-			jbPoliceUpgrade.setBackground(col3);
-			jbFireDepUpgrade.setBackground(col3);
-			jbTwoLaneRoad.setBackground(col2);
-			jbAirport.setBackground(col3);
-
-                engine.setSelectedInfraTech(engine.twoLaneRoadTech);
-                updateProgressBar();
+            disableAllButtonsBut(jbTwoLaneRoad);
+            engine.setSelectedInfraTech(engine.twoLaneRoadTech);
+            updateProgressBar();
 			}
 			
 		});
@@ -199,23 +193,7 @@ public class ScienceFrameB extends JDialog {
 		jbAirport.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 
-                jbStreetUpgrade.setEnabled(true);
-                jbRailUpgrade.setEnabled(true);
-                jbPoliceUpgrade.setEnabled(true);
-                jbFireDepUpgrade.setEnabled(true);
-                jbTwoLaneRoad.setEnabled(true);
-                jbAirport.setEnabled(false);
-
-                Color col2= new Color(100,50,101);
-                Color col3= new Color(232,188,231);
-
-                jbStreetUpgrade.setBackground(col3);
-                jbRailUpgrade.setBackground(col3);
-                jbPoliceUpgrade.setBackground(col3);
-                jbFireDepUpgrade.setBackground(col3);
-                jbTwoLaneRoad.setBackground(col3);
-                jbAirport.setBackground(col2);
-
+                disableAllButtonsBut(jbAirport);
                 engine.setSelectedInfraTech(engine.airportTech);
                 updateProgressBar();
 

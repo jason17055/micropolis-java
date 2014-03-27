@@ -1886,11 +1886,19 @@ public class Micropolis
     }
     
     public void setSelectedEETech(GeneralTechnology t){
+        if(this.selectedEETech != null){
+            // reset previous research
+            this.selectedEETech.resetResearchPoints();
+        }
     	this.selectedEETech = t;
     }
     
     public void setSelectInfraTech(GeneralTechnology t){
-    	selectedInfraTech = t;
+        if(this.selectedInfraTech != null){
+            // reset previous research
+            this.selectedInfraTech.resetResearchPoints();
+        }
+    	this.selectedInfraTech = t;
     }
 
 	void generateShip()
