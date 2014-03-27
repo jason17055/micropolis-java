@@ -408,7 +408,11 @@ public class ToolStroke
 							adjTile |= (int) Math.pow(2, 3-i);
 						}
 					}
-					eff.setTile(0, 0, RailTable[adjTile]);
+					if (me==3) {
+						eff.setTile(0, 0, RailTable[adjTile]);
+					} else {
+						eff.setTile(0, 0, StationTable[adjTile]);
+					}
 				}
 				if (me==5|| me==6) {
 					if (anyRoadCount!=0 || (anyRoadCount%2!=0 && railCount%2!=0)) {
