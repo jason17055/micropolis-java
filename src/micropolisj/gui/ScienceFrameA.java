@@ -73,9 +73,9 @@ public class ScienceFrameA extends JDialog {
 
         buttonList = new ArrayList<JButton>();
         jbReset = new JButton("Reset current Research.");
-		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbPowerEfficiency = new JButton ("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>[XX points]</font></html>");
+		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[" +(int)engine.reducePollutionTech.getPointsUsed()+ " " +(int)engine.reducePollutionTech.getPointsNeeded()+ " points]</font></html>");
+		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
+		jbPowerEfficiency = new JButton ("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
 		jbSolar = new JButton ("<html>Research Solar<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.solarTech.getPointsUsed()+"/"+(int)engine.solarTech.getPointsNeeded()+" points]</font></html>");
 		jbWind = new JButton ("<html>Research Wind<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.windTech.getPointsUsed()+"/"+(int)engine.windTech.getPointsNeeded()+" points]</font></html>");
         buttonList.add(jbPollution);
@@ -92,7 +92,11 @@ public class ScienceFrameA extends JDialog {
                 disableAllButtonsBut(jbSolar);
             } else if(selectedTech.isSame(engine.windTech)){
                disableAllButtonsBut(jbWind);
+            } else if(selectedTech.isSame(engine.improveWindSolarTech)){
+                disableAllButtonsBut(jbPowerEfficiency);
             }
+            jbNuclear.setEnabled(false);
+
         }
 
 		jbNuclear.setEnabled(true);
@@ -187,6 +191,7 @@ public class ScienceFrameA extends JDialog {
                for(JButton b : buttonList){
                    b.setEnabled(true);
                }
+                updateProgressBar();
             }
         });
 		
@@ -207,7 +212,7 @@ public class ScienceFrameA extends JDialog {
 		panel.setLayout(new FlowLayout());
 		
 		pack();
-		setSize(410,435);
+		setSize(410,500);
 		setLocationRelativeTo(getParent());
 		Color color=new Color(245,181,28);  
 		panel.setBackground(color);
