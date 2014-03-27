@@ -27,6 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.metal.MetalIconFactory;
 
 import micropolisj.engine.*;
+import micropolisj.engine.techno.GeneralTechnology;
 import micropolisj.util.TranslationTool;
 
 public class MainWindow extends JFrame
@@ -1195,6 +1196,30 @@ public class MainWindow extends JFrame
         }
         if (text.equals(strings.getString("cheating.populationcheat"))) {
             engine.incCityPopulation();
+            engine.incNCheats();
+        }    
+        if (text.equals(strings.getString("cheating.twolaneroadcheat"))) {
+            engine.twoLaneRoadTech.addResearchPoints(4000);
+            engine.incNCheats();
+        }
+        if (text.equals(strings.getString("cheating.windcheat"))) {
+            engine.windTech.addResearchPoints(4000);
+            engine.incNCheats();
+        }
+        if (text.equals(strings.getString("cheating.solarcheat"))) {
+            engine.solarTech.addResearchPoints(4000);
+            engine.incNCheats();
+        }
+        if (text.equals(strings.getString("cheating.alltechscheat"))) {
+            
+        	for (GeneralTechnology t:engine.eetechs) {
+        		t.addResearchPoints(4000);
+        	}
+
+        	for (GeneralTechnology t:engine.infraTechs) {
+        		t.addResearchPoints(4000);
+        	}
+        	
             engine.incNCheats();
         }
     }

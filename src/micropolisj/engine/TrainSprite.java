@@ -54,7 +54,7 @@ public class TrainSprite extends Sprite
 		if (frame == 3 || frame == 4) {
 			frame = TrainPic2[this.dir];
 		}
-		if (!(city.PRNG.nextInt(3)!=0 && getChar(x,y)>=1234 && getChar(x,y)<1248)) {
+		if (!(city.PRNG.nextInt(3)!=0 && getChar(x,y)>=TileConstants.STATION && getChar(x,y)<TileConstants.STATION10)) {
 		x += Dx[this.dir];
 		y += Dy[this.dir];
 		}

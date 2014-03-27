@@ -38,6 +38,7 @@ public class ScienceFrameB extends JDialog {
 	JButton jbAirport;
     JProgressBar progressBar;
     JLabel noTechSelectedLabel;
+    JButton jbReset;
 
     Color col2= new Color(100,50,101);
     Color col3= new Color(232,188,231);
@@ -80,6 +81,7 @@ public class ScienceFrameB extends JDialog {
 		this.engine=m;
         buttonList = new ArrayList<JButton>();
 
+        jbReset = new JButton("Reset current Research.");
 
 		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
 		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
@@ -95,12 +97,22 @@ public class ScienceFrameB extends JDialog {
         buttonList.add(jbAirport);
 
 
-		jbStreetUpgrade.setEnabled(true);
-		jbRailUpgrade.setEnabled(true);
-		jbPoliceUpgrade.setEnabled(true);
-		jbFireDepUpgrade.setEnabled(true);
-		jbTwoLaneRoad.setEnabled(true);
-		jbAirport.setEnabled(true);
+        GeneralTechnology selectedTech = engine.getSelectedInfraTech();
+        if(selectedTech != null){
+            if(selectedTech.isSame(engine.streetUpgradeTech)){
+                disableAllButtonsBut(jbStreetUpgrade);
+            } else if(selectedTech.isSame(engine.railUpgradeTech)){
+                disableAllButtonsBut(jbRailUpgrade);
+            } else if(selectedTech.isSame(engine.policeUpgradeTech)){
+                disableAllButtonsBut(jbPoliceUpgrade);
+            } else if(selectedTech.isSame(engine.fireUpdateTech)){
+                disableAllButtonsBut(jbFireDepUpgrade);
+            } else if(selectedTech.isSame(engine.twoLaneRoadTech)){
+                disableAllButtonsBut(jbTwoLaneRoad);
+            } else if(selectedTech.isSame(engine.airportTech)){
+                disableAllButtonsBut(jbAirport);
+            }
+        }
 		
 		Color c1 = new Color(232,188,231);
 		
@@ -126,7 +138,8 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade.setToolTipText("Let more money flow towards fire departments. Fire fighters will be much more efficient.");
 		jbTwoLaneRoad.setToolTipText("Let more money flow towards rail construction. Eventually someone will find a way to reduce heavy traffic on your roads.");
 		jbAirport.setToolTipText("Let more money flow towards research. You will be able to build an airport... sooner or later...");
-		
+        jbReset.setToolTipText("You will lose all current research progress, but can research something differnt.");
+
 		jbStreetUpgrade.setPreferredSize(new Dimension(180,125));
 		jbRailUpgrade.setPreferredSize(new Dimension(180,125));
 		jbPoliceUpgrade.setPreferredSize(new Dimension(180,125));
@@ -142,7 +155,6 @@ public class ScienceFrameB extends JDialog {
 			public void actionPerformed(ActionEvent event){
 
 			engine.setSelectedInfraTech(engine.streetUpgradeTech);
-
             disableAllButtonsBut(jbStreetUpgrade);
             updateProgressBar();
 			
@@ -179,7 +191,6 @@ public class ScienceFrameB extends JDialog {
 		
 		jbTwoLaneRoad.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-
             disableAllButtonsBut(jbTwoLaneRoad);
             engine.setSelectedInfraTech(engine.twoLaneRoadTech);
             updateProgressBar();
@@ -192,15 +203,21 @@ public class ScienceFrameB extends JDialog {
 
 		jbAirport.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-
                 disableAllButtonsBut(jbAirport);
                 engine.setSelectedInfraTech(engine.airportTech);
                 updateProgressBar();
-
-			
 			}
 			
 		});
+
+        jbReset.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                engine.getSelectedInfraTech().resetResearchPoints();
+                for(JButton b : buttonList){
+                    b.setEnabled(true);
+                }
+            }
+        });
 		
 		
 		panel  = new JPanel(null,true);
@@ -212,6 +229,7 @@ public class ScienceFrameB extends JDialog {
 		panel.add(jbFireDepUpgrade);
 		panel.add(jbTwoLaneRoad);
 		panel.add(jbAirport);
+        panel.add(jbReset);
         updateProgressBar();
 
 

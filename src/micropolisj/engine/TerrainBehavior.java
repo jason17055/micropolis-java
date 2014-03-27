@@ -30,7 +30,11 @@ class TerrainBehavior extends TileBehavior
 		BIGROAD,
 		RAIL,
 		STATION,
-		EXPLOSION;
+		EXPLOSION,
+		NARROWING0,
+		NARROWING1,
+		NARROWING2,
+		NARROWING3;
 	}
 
 	@Override
@@ -58,6 +62,19 @@ class TerrainBehavior extends TileBehavior
 		case EXPLOSION:
 			doExplosion();
 			return;
+		case NARROWING0:
+			doNarrowing0();
+			return;
+		case NARROWING1:
+			doNarrowing1();
+			return;
+		case NARROWING2:
+			doNarrowing2();
+			return;
+		case NARROWING3:
+			doNarrowing3();
+			return;
+		
 		default:
 			assert false;
 		}
@@ -441,5 +458,90 @@ class TerrainBehavior extends TileBehavior
 	{
 		// clear AniRubble
 		city.setTile(xpos, ypos, (char)(RUBBLE + PRNG.nextInt(4)));
+	}
+	
+	void doNarrowing0(){
+		city.roadTotal++;
+		if (city.roadEffect < 30)
+		{
+			// deteriorating roads
+			if (PRNG.nextInt(512) == 0)
+			{
+				if (!isConductive(tile))
+				{
+					if (city.roadEffect < PRNG.nextInt(32))
+					{
+						if (isOverWater(tile))
+							city.setTile(xpos, ypos, RIVER);
+						else
+							city.setTile(xpos, ypos, (char)(RUBBLE + PRNG.nextInt(4)));
+						return;
+					}
+				}
+			}}
+	}
+	void doNarrowing1(){
+		city.roadTotal++;
+		if (city.roadEffect < 30)
+		{
+			// deteriorating roads
+			if (PRNG.nextInt(512) == 0){
+				
+			
+				if (!isConductive(tile))
+				{
+					if (city.roadEffect < PRNG.nextInt(32))
+					{
+						if (isOverWater(tile))
+							city.setTile(xpos, ypos, RIVER);
+						else
+							city.setTile(xpos, ypos, (char)(RUBBLE + PRNG.nextInt(4)));
+						return;
+					}
+				}
+			}}
+	}
+	void doNarrowing2(){
+		city.roadTotal++;
+		if (city.roadEffect < 30)
+		{
+			// deteriorating roads
+			if (PRNG.nextInt(512) == 0){
+				
+			
+				if (!isConductive(tile))
+				{
+					if (city.roadEffect < PRNG.nextInt(32))
+					{
+						if (isOverWater(tile))
+							city.setTile(xpos, ypos, RIVER);
+						else
+							city.setTile(xpos, ypos, (char)(RUBBLE + PRNG.nextInt(4)));
+						return;
+					}
+				}
+			}}
+		
+	}
+	void doNarrowing3(){
+		city.roadTotal++;
+		if (city.roadEffect < 30)
+		{
+			// deteriorating roads
+			if (PRNG.nextInt(512) == 0){
+				
+			
+				if (!isConductive(tile))
+				{
+					if (city.roadEffect < PRNG.nextInt(32))
+					{
+						if (isOverWater(tile))
+							city.setTile(xpos, ypos, RIVER);
+						else
+							city.setTile(xpos, ypos, (char)(RUBBLE + PRNG.nextInt(4)));
+						return;
+					}
+				}
+			}}
 	}
 }

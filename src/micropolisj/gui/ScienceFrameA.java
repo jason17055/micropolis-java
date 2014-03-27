@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 import micropolisj.engine.Micropolis;
+import micropolisj.engine.techno.GeneralTechnology;
 
 public class ScienceFrameA extends JDialog {
 
@@ -21,6 +22,7 @@ public class ScienceFrameA extends JDialog {
 	JButton jbPowerEfficiency;
 	JButton jbSolar;
 	JButton jbWind;
+    JButton jbReset;
     JProgressBar progressBar;
     JLabel noTechSelectedLabel;
     ArrayList<JButton> buttonList;
@@ -70,6 +72,7 @@ public class ScienceFrameA extends JDialog {
 
 
         buttonList = new ArrayList<JButton>();
+        jbReset = new JButton("Reset current Research.");
 		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
 		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>[XX points]</font></html>");
 		jbPowerEfficiency = new JButton ("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>[XX points]</font></html>");
@@ -81,12 +84,22 @@ public class ScienceFrameA extends JDialog {
         buttonList.add(jbSolar);
         buttonList.add(jbWind);
 
+        GeneralTechnology selectedTech = engine.getSelectedEETech();
+        if(selectedTech != null){
+            if(selectedTech.isSame(engine.reducePollutionTech)){
+                disableAllButtonsBut(jbPollution);
+            } else if(selectedTech.isSame(engine.solarTech)){
+                disableAllButtonsBut(jbSolar);
+            } else if(selectedTech.isSame(engine.windTech)){
+               disableAllButtonsBut(jbWind);
+            }
+        }
 
-		jbPollution.setEnabled(true);
 		jbNuclear.setEnabled(true);
 		jbPowerEfficiency.setEnabled(engine.windTech.getIsResearched() && engine.solarTech.getIsResearched());
 		jbSolar.setEnabled(true);
 		jbWind.setEnabled(true);
+        jbReset.setEnabled(true);
 		
 		Color c1= new Color(255,229,168);
 		
@@ -109,6 +122,7 @@ public class ScienceFrameA extends JDialog {
 		jbPowerEfficiency.setToolTipText("Let more money flow towards research. You will have immediate results.");
 		jbSolar.setToolTipText("Let more money flow towards research. Researchers will work on finding a way to use solar power in your town.");
 		jbWind.setToolTipText("Let more money flow towards research. Researchers will work on finding a way to use wind power in your town.");
+        jbReset.setToolTipText("You will lose all current research progress, but can research something differnt.");
 		
 		jbPollution.setPreferredSize(new Dimension(180,125));
 		jbNuclear.setPreferredSize(new Dimension(180,125));
@@ -130,7 +144,7 @@ public class ScienceFrameA extends JDialog {
 		
 		jbNuclear.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-
+                disableAllButtonsBut(jbNuclear);
                 updateProgressBar();
 
 			}
@@ -165,6 +179,16 @@ public class ScienceFrameA extends JDialog {
             updateProgressBar();
 			}
 		});
+
+        jbReset.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+
+                engine.getSelectedEETech().resetResearchPoints();
+               for(JButton b : buttonList){
+                   b.setEnabled(true);
+               }
+            }
+        });
 		
 		
 		panel  = new JPanel(null,true);	
@@ -175,8 +199,10 @@ public class ScienceFrameA extends JDialog {
 		panel.add(jbPowerEfficiency);
 		panel.add(jbSolar);
 		panel.add(jbWind);
+        panel.add(jbReset);
         updateProgressBar();
-	
+
+
 		
 		panel.setLayout(new FlowLayout());
 		
