@@ -263,7 +263,7 @@ public class TrafficSim {
 			currentRoadType=unready.get(current).getRoadType();
 			currentCost=engine.getTrafficCost(currentLocation,currentRoadType);
 			if (currentRoadType==3) {
-				System.out.println("I am a rail!");
+//				System.out.println("I am a rail!");
 			}
 			RoadSpecifiedTile Pred=unready.get(current).getPred();
 			ready.put(new RoadSpecifiedTile(currentLocation,currentRoadType), new SpecifiedTile(search(ready,Pred).getCosts()+currentCost,Pred,true,currentRoadType));
