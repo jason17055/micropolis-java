@@ -272,6 +272,13 @@ public class Micropolis
 	int fireEffect = 1000;
     int educationEffect = 1000;
     int cultureEffect = 1000;
+    
+    public int firesccount      =1;
+    public int policesccount    =1;
+    public int windsolarsccount =1;
+    public int pollutionsccount =1;
+    public int streetsccount    =1;
+    public int railsccount      =1;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -2151,7 +2158,7 @@ public class Micropolis
 	//tax income
 	/** Tax income multiplier, for various difficulty settings.
 	 */
-	static final double [] FLevels = { 1.4, 1.2, 0.8 };
+	static final double [] FLevels = { 2.1, 1.8, 1.2 };
 
 	void collectTaxPartial()
 	{

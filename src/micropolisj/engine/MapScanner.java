@@ -808,7 +808,7 @@ class MapScanner extends TileBehavior
 		ret-=traffics;
 		ret-=getCrime3x3();
 		int tax=city.taxEffect+city.gameLevel-2;
-		ret-=300*tax+60*tax^2;
+		ret-=400*tax+20*tax^2;
 		switch (type) {
 		case 0:
 			ret+=getLandValue3x3();

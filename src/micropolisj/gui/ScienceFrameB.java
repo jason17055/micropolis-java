@@ -84,9 +84,9 @@ public class ScienceFrameB extends JDialog {
         jbReset = new JButton("Reset current Research.");
 
 		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
-		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbPoliceUpgrade = new JButton ("<html>Police Upgrade<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
-		jbFireDepUpgrade = new JButton ("<html>Fire Department<br>Upgrade<br><br><br><br><font color=#666666>[XX points]</font></html>");
+		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.railUpgradeTech.getPointsUsed()+"/"+(int)engine.railUpgradeTech.getPointsNeeded()+" points]</font></html>");
+		jbPoliceUpgrade = new JButton ("<html>Police Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.policeUpgradeTech.getPointsUsed()+"/"+(int)engine.policeUpgradeTech.getPointsNeeded()+" points]</font></html>");
+		jbFireDepUpgrade = new JButton ("<html>Fire Department<br>Upgrade<br><br><br><br><font color=#666666>["+(int)engine.fireUpdateTech.getPointsUsed()+"/"+(int)engine.fireUpdateTech.getPointsNeeded()+" points]</font></html>");
 		jbTwoLaneRoad = new JButton ("<html>Research<br>Two-Lane Roads<br><br><br><br><font color=#666666>["+(int)engine.twoLaneRoadTech.getPointsUsed()+"/"+(int)engine.twoLaneRoadTech.getPointsNeeded()+" points]</font><html>");
 		jbAirport = new JButton ("<html>Research Airports<br><br><br><br><br><font color=#666666>["+(int)engine.airportTech.getPointsUsed()+"/"+(int)engine.airportTech.getPointsNeeded()+" points]</font></html>");
         buttonList.add(jbStreetUpgrade);
@@ -216,6 +216,7 @@ public class ScienceFrameB extends JDialog {
                 for(JButton b : buttonList){
                     b.setEnabled(true);
                 }
+                updateProgressBar();
             }
         });
 		
@@ -240,7 +241,7 @@ public class ScienceFrameB extends JDialog {
 		panel.setLayout(new FlowLayout());
 		
 		pack();
-		setSize(410,435);			
+		setSize(410,500);
 		setLocationRelativeTo(getParent());
 		Color color=new Color(121,101,151);  
 		panel.setBackground(color);

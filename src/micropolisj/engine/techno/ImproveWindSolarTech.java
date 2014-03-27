@@ -21,7 +21,7 @@ public class ImproveWindSolarTech extends GeneralTechnology {
 
     public boolean tryToApply(){
         if(super.tryToApply() == true){
-            // do some fancy street Upgrade stuff
+            engine.windsolarsccount +=1;// do some fancy street Upgrade stuff
             System.out.println("improve wind and solar");
             return true;
         }
