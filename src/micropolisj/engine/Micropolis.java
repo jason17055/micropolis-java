@@ -40,8 +40,6 @@ public class Micropolis
 	char [][] map;
 	boolean [][] powerMap;
 
-	// half-size arrays
-
 	/**
 	 * For each section of the city, the land value of the city (0-250).
 	 * 0 is lowest land value; 250 is maximum land value.
@@ -240,6 +238,9 @@ public class Micropolis
 	public GeneralTechnology getSelectedInfraTech() {
 		return selectedInfraTech;
 	}
+    public GeneralTechnology getSelectedEETech() {
+        return selectedEETech;
+    }
 
 	public GeneralTechnology selectedEETech = null;
 
@@ -1883,11 +1884,19 @@ public class Micropolis
     }
     
     public void setSelectedEETech(GeneralTechnology t){
+        if(this.selectedEETech != null){
+            // reset previous research
+            this.selectedEETech.resetResearchPoints();
+        }
     	this.selectedEETech = t;
     }
     
     public void setSelectInfraTech(GeneralTechnology t){
-    	selectedInfraTech = t;
+        if(this.selectedInfraTech != null){
+            // reset previous research
+            this.selectedInfraTech.resetResearchPoints();
+        }
+    	this.selectedInfraTech = t;
     }
 
 	void generateShip()
