@@ -22,8 +22,8 @@ public enum MicropolisTool
     BULLDOZER(1, 1, 0),
     WIRE(1, 5, 0),   //cost=25 for underwater
     ROADS(1, 10, 0), //cost=50 for over water
-    BIGROADS(1, 20, 0), //cost=xx for over water
-    RAIL(1, 25, 0),  //cost=100 for underwater
+    BIGROADS(1, 20, 0),
+    RAIL(1, 25, 0),
     STATION(1, 200, 0),
     RESIDENTIAL(3, 100, 0),
     COMMERCIAL(3, 100, 0),
