@@ -138,7 +138,8 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade.setToolTipText("Let more money flow towards fire departments. Fire fighters will be much more efficient.");
 		jbTwoLaneRoad.setToolTipText("Let more money flow towards rail construction. Eventually someone will find a way to reduce heavy traffic on your roads.");
 		jbAirport.setToolTipText("Let more money flow towards research. You will be able to build an airport... sooner or later...");
-		
+        jbReset.setToolTipText("You will lose all current research progress, but can research something differnt.");
+
 		jbStreetUpgrade.setPreferredSize(new Dimension(180,125));
 		jbRailUpgrade.setPreferredSize(new Dimension(180,125));
 		jbPoliceUpgrade.setPreferredSize(new Dimension(180,125));

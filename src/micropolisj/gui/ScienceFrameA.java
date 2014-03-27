@@ -144,7 +144,7 @@ public class ScienceFrameA extends JDialog {
 		
 		jbNuclear.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-
+                disableAllButtonsBut(jbNuclear);
                 updateProgressBar();
 
 			}
