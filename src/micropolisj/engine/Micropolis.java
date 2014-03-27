@@ -271,6 +271,13 @@ public class Micropolis
 	int fireEffect = 1000;
     int educationEffect = 1000;
     int cultureEffect = 1000;
+    
+    public int firesccount      =1;
+    public int policesccount    =1;
+    public int windsolarsccount =1;
+    public int pollutionsccount =1;
+    public int streetsccount    =1;
+    public int railsccount      =1;
 
 	int cashFlow; //net change in totalFunds in previous year
 

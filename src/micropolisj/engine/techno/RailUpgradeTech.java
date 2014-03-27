@@ -18,7 +18,7 @@ public class RailUpgradeTech extends GeneralTechnology {
 
     public boolean tryToApply(){
         if(super.tryToApply() == true){
-            // do some fancy street Upgrade stuff
+            engine.railsccount +=1;// do some fancy street Upgrade stuff
             System.out.println("street upgrade");
             return true;
         }
