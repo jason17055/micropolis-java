@@ -118,7 +118,9 @@ public class Micropolis
 	public boolean autoBulldoze = true;
 	public boolean autoBudget = false;
 	public Speed simSpeed = Speed.NORMAL;
-	public boolean noDisasters = false;
+    public boolean isPaused;
+    public Speed oldSpeed = simSpeed;
+    public boolean noDisasters = false;
 
 	public int gameLevel;
 
@@ -2665,11 +2667,29 @@ public class Micropolis
 		fireOptionsChanged();
 	}
 
+    public boolean isPaused() {
+        return isPaused;
+    }
+
 	public void setSpeed(Speed newSpeed)
 	{
-		simSpeed = newSpeed;
-		fireOptionsChanged();
+        if (!isPaused)
+            simSpeed = newSpeed;
+        oldSpeed = newSpeed;
+        fireOptionsChanged();
 	}
+
+    public void pauseUnpause() {
+        if (!isPaused) {
+            simSpeed = Speed.PAUSED;
+            isPaused = true;
+
+        } else {
+            simSpeed = oldSpeed;
+            isPaused = false;
+
+        }
+    }
 
 	public void animate()
 	{

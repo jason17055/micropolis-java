@@ -1574,7 +1574,7 @@ public class MainWindow extends JFrame
             stopTimer();
         }
         if (newSpeed == Speed.PAUSED){
-            //getEngine().pauseUnpause();   TODO cant find this method in micropolis.java!
+            getEngine().pauseUnpause();
         }
         else
             getEngine().setSpeed(newSpeed);
