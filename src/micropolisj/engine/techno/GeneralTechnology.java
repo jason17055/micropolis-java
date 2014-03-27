@@ -42,7 +42,7 @@ public class GeneralTechnology implements Technology {
 
     public boolean tryToApply(){
         if(pointsUsed >= pointsNeeded && isResearched == false){
-            this.isResearched = true;
+
             resetResearchPoints();
             
             if (message != null) {
