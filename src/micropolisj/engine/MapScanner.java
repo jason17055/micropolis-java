@@ -811,7 +811,7 @@ class MapScanner extends TileBehavior
 		switch (type) {
 		case 0:
 			ret+=getLandValue3x3();
-			ret+=4*city.cultureAverage+2*city.educationAverage;
+			ret+=2*city.cultureAverage+city.educationAverage;
 			ret-=getPollution3x3();
 			ret+=city.resValve/2;
 			ret+=100;
