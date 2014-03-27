@@ -1469,7 +1469,7 @@ public class Micropolis
 	public int getTrafficDensity(int xpos, int ypos)
 	{
 		if (testBounds(xpos, ypos)) {
-			return this.trfMem[ypos][xpos]/4;
+			return this.trfMem[ypos][xpos]/2;
 		} else {
 			return 0;
 		}
@@ -3335,7 +3335,10 @@ public class Micropolis
 				return 50;
 			}
 			if (TileConstants.isBigRoad(tile) && cur!=3) {
-				return 20;
+				return 10;
+			}
+			if (TileConstants.isRail(tile) && cur>2) {
+				return 5;
 			}
 			if (TileConstants.isRail(tile) && cur>2) {
 				return 10;

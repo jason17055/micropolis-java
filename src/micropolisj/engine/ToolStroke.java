@@ -378,6 +378,10 @@ public class ToolStroke
 						if ((anyRoadCount!=2 || roadCount==0) && !(anyRoadCount==1 && roadCount==1)) {
 							eff.setTile(0, 0, BigRoadTable[adjTile]);
 						} else {
+							if (anyRoadCount==2 && roadCount==2 && (dir[1]%4==dir[3]%4 || dir[0]%4==dir[2]%4)) { //modify bigRoad to smalRoad
+								eff.setTile(0, 0, RoadTable[0]);
+								fixSingle(eff);
+							}
 							if (roadCount==1 && bigRoadCount==1) {
 								if ((dir[0]%4==2 && dir[2]%4==1)) {
 									eff.setTile(0, 0, 1221);
