@@ -372,21 +372,30 @@ public class ToolStroke
 							adjTile |= (int) Math.pow(2, 3-i);
 						}
 					}
-					System.out.println(adjTile);
 					if (me==1) {
 						eff.setTile(0, 0, RoadTable[adjTile]);
 					} else {
-						if (anyRoadCount>2 || roadCount==0) {
+						if ((anyRoadCount!=2 || roadCount==0) && !(anyRoadCount==1 && roadCount==1)) {
 							eff.setTile(0, 0, BigRoadTable[adjTile]);
 						} else {
 							if (roadCount==1 && bigRoadCount==1) {
-								if ((dir[0]%4==1 && dir[2]%4==2)) {
+								if ((dir[0]%4==2 && dir[2]%4==1)) {
 									eff.setTile(0, 0, 1221);
-								} else if ((dir[1]%4==1 && dir[3]%4==2)) {
+								} else if (dir[1]%4==2 && dir[3]%4==1) {
 									eff.setTile(0, 0, 1223);
-								} else if ((dir[0]%4==2 && dir[2]%4==1)) {
+								} else if (dir[0]%4==1 && dir[2]%4==2) {
 									eff.setTile(0, 0, 1222);
-								} else if ((dir[1]%4==2 && dir[3]%4==1)) {
+								} else if (dir[1]%4==1 && dir[3]%4==2) {
+									eff.setTile(0, 0, 1224);
+								}
+							} else if (anyRoadCount==1 && roadCount==1) {
+								if (dir[2]%4==1) {
+									eff.setTile(0, 0, 1221);
+								} else if (dir[3]%4==1) {
+									eff.setTile(0, 0, 1223);
+								} else if (dir[0]%4==1) {
+									eff.setTile(0, 0, 1222);
+								} else if (dir[1]%4==1) {
 									eff.setTile(0, 0, 1224);
 								}
 							}
@@ -438,6 +447,6 @@ public class ToolStroke
 	}
 	
 	private boolean isUndynamicWire(int tile) {
-		return tile==239;
+		return TileConstants.isConductive(tile) && !isWireDynamic(tile);
 	}
 }
