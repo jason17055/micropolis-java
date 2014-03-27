@@ -43,6 +43,12 @@ public class GeneralTechnology implements Technology {
         if(pointsUsed >= pointsNeeded && isResearched == false){
             this.isResearched = true;
             resetResearchPoints();
+            if(engine.selectedInfraTech.isSame(this)){
+                engine.selectedInfraTech = null;
+            } else {
+                engine.selectedEETech = null;
+            }
+            
             if (message != null) {
             	engine.sendMessage(message);
             	

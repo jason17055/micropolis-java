@@ -54,6 +54,15 @@ public class ScienceFrameB extends JDialog {
         bNotToBeDisabled.setBackground(col3);
     }
 
+    private void enableAllButtons(JButton bNotToBeDisabled){
+        for(JButton b : buttonList){
+            b.setEnabled(false);
+            b.setBackground(col2);
+        }
+        bNotToBeDisabled.setEnabled(true);
+        bNotToBeDisabled.setBackground(col3);
+    }
+
 
     private void updateProgressBar(){
         if(engine.getSelectedInfraTech() != null){
@@ -80,6 +89,7 @@ public class ScienceFrameB extends JDialog {
 		super(owner);
 		this.engine=m;
         buttonList = new ArrayList<JButton>();
+        System.out.println("science frame A opened");
 
         jbReset = new JButton("Reset current Research.");
 
@@ -113,24 +123,27 @@ public class ScienceFrameB extends JDialog {
                 disableAllButtonsBut(jbAirport);
             }
         }
-		
-		Color c1 = new Color(232,188,231);
-		
-		jbStreetUpgrade.setBackground(c1);
-		jbRailUpgrade.setBackground(c1);
-		jbPoliceUpgrade.setBackground(c1);
-		jbFireDepUpgrade.setBackground(c1);
-		jbTwoLaneRoad.setBackground(c1);
-		jbAirport.setBackground(c1);
 
-		Color c2 = new Color(100,50,101);
+
+        //disable already researched buildings
+        if(engine.twoLaneRoadTech.getIsResearched()) jbTwoLaneRoad.setEnabled(false);
+        if(engine.airportTech.getIsResearched()) jbAirport.setEnabled(false);
+
+		jbStreetUpgrade.setBackground(col2);
+		jbRailUpgrade.setBackground(col2);
+		jbPoliceUpgrade.setBackground(col2);
+		jbFireDepUpgrade.setBackground(col2);
+		jbTwoLaneRoad.setBackground(col2);
+		jbAirport.setBackground(col2);
+
+
 		
-		jbStreetUpgrade.setForeground(c2);
-		jbRailUpgrade.setForeground(c2);
-		jbPoliceUpgrade.setForeground(c2);
-		jbFireDepUpgrade.setForeground(c2);
-		jbTwoLaneRoad.setForeground(c2);
-		jbAirport.setForeground(c2);
+		jbStreetUpgrade.setForeground(col3);
+		jbRailUpgrade.setForeground(col3);
+		jbPoliceUpgrade.setForeground(col3);
+		jbFireDepUpgrade.setForeground(col3);
+		jbTwoLaneRoad.setForeground(col3);
+		jbAirport.setForeground(col3);
 		
 		jbStreetUpgrade.setToolTipText("Let more money flow towards road construction. The quality of your roads will improve.");
 		jbRailUpgrade.setToolTipText("Let more money flow towards rail construction. The quality of your roads will improve.");

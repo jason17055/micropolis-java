@@ -69,6 +69,7 @@ public class ScienceFrameA extends JDialog {
 	public ScienceFrameA(Window owner, Micropolis m){
 		super(owner);
 		this.engine=m;
+        System.out.println("science frame A opened");
 
 
         buttonList = new ArrayList<JButton>();
@@ -96,6 +97,11 @@ public class ScienceFrameA extends JDialog {
                 disableAllButtonsBut(jbPowerEfficiency);
             }
             jbNuclear.setEnabled(false);
+
+            // disable already researched buildings
+            if(engine.solarTech.getIsResearched()) jbSolar.setEnabled(false);
+            if(engine.windTech.getIsResearched()) jbWind.setEnabled(false);
+
 
         }
 
@@ -133,6 +139,7 @@ public class ScienceFrameA extends JDialog {
 		jbPowerEfficiency.setPreferredSize(new Dimension(180,125));
 		jbSolar.setPreferredSize(new Dimension(180,125));
 		jbWind.setPreferredSize(new Dimension(180,125));
+
 		
 
 
@@ -187,11 +194,12 @@ public class ScienceFrameA extends JDialog {
         jbReset.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
 
-                engine.getSelectedEETech().resetResearchPoints();
+               engine.getSelectedEETech().resetResearchPoints();
                for(JButton b : buttonList){
                    b.setEnabled(true);
                }
-                updateProgressBar();
+               updateProgressBar();
+
             }
         });
 		
