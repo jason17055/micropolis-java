@@ -11,19 +11,19 @@ package micropolisj.engine.techno;
 import micropolisj.engine.Micropolis;
 import micropolisj.engine.MicropolisMessage;
 
-public class FireUpdateTech extends GeneralTechnology {
-    public FireUpdateTech(Micropolis engine_,double pointsNeeded_, String description_, String name_,MicropolisMessage m){
+
+public class ProbabilityMeltdown extends GeneralTechnology{
+	public ProbabilityMeltdown(Micropolis engine_,double pointsNeeded_, String description_, String name_,MicropolisMessage m){
         super(engine_,pointsNeeded_, description_, name_,m);
     }
-  
-  
+
     public boolean tryToApply(){
         if(super.tryToApply() == true){
-           // do some fancy street Upgrade stuff
-            System.out.println("fire upgrade");
-           engine.firesccount +=1;
+            
+            System.out.println("ProbabilityMeltdown");
             return true;
         }
         return false;
     }
 }
+

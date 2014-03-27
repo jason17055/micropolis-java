@@ -9,6 +9,7 @@
 package micropolisj.engine.techno;
 import micropolisj.engine.*;
 import micropolisj.gui.MessagesPane;
+import micropolisj.gui.NotificationPane;
 
 
 public class GeneralTechnology implements Technology {
@@ -50,8 +51,8 @@ public class GeneralTechnology implements Technology {
             }
             
             if (message != null) {
-            	engine.sendMessage(message);
-            	
+            	//engine.sendMessage(message);
+            	engine.sendMessageAt(message,engine.centerMassX,engine.centerMassY);
             }
             return true;
         }

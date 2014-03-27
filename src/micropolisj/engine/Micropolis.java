@@ -254,6 +254,7 @@ public class Micropolis
     public PoliceUpgradeTech policeUpgradeTech;
     public ReducePollutionTech reducePollutionTech;
     public ImproveWindSolarTech improveWindSolarTech;
+    public ProbabilityMeltdown meltdownTech;
 
 	//
 	// budget stuff
@@ -271,6 +272,13 @@ public class Micropolis
 	int fireEffect = 1000;
     int educationEffect = 1000;
     int cultureEffect = 1000;
+    
+    public int firesccount      =1;
+    public int policesccount    =1;
+    public int windsolarsccount =1;
+    public int pollutionsccount =1;
+    public int streetsccount    =1;
+    public int railsccount      =1;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -399,6 +407,10 @@ public class Micropolis
         twoLaneRoadTech = new BuildingTechnology(this, 200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS,MicropolisMessage.TWOLANEROAD_RESEARCH);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
+        
+        
+        meltdownTech = new ProbabilityMeltdown(this, 1500, "meltdown description", "meltdown Tech", MicropolisMessage.NUCLEAR_UPGRADE);
+        eetechs.add(meltdownTech);
     
 
 
@@ -1482,7 +1494,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((float) getPollutionValue(tile) * 2);
+                    int curPollution = (int)  ((double) (getPollutionValue(tile) * 2)-20*Math.sqrt((double) pollutionsccount));
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -2146,7 +2158,7 @@ public class Micropolis
 	//tax income
 	/** Tax income multiplier, for various difficulty settings.
 	 */
-	static final double [] FLevels = { 1.4, 1.2, 0.8 };
+	static final double [] FLevels = { 2.1, 1.8, 1.2 };
 
 	void collectTaxPartial()
 	{
@@ -3191,7 +3203,7 @@ public class Micropolis
 		fireCityMessage(message, null);
 	}
 
-	void sendMessageAt(MicropolisMessage message, int x, int y)
+	public void sendMessageAt(MicropolisMessage message, int x, int y)
 	{
 		fireCityMessage(message, new CityLocation(x,y));
 	}
