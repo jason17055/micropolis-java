@@ -304,10 +304,10 @@ public class ToolStroke
 
 		fixSingle(eff);
 		// "fix" the cells to the north, west, east, and south
-		fixSingle2(new TranslatedToolEffect(eff, 0, -1));
-		fixSingle2(new TranslatedToolEffect(eff, -1, 0));
-		fixSingle2(new TranslatedToolEffect(eff, 1, 0));
-		fixSingle2(new TranslatedToolEffect(eff, 0, 1));
+		fixSingle(new TranslatedToolEffect(eff, 0, -1));
+		fixSingle(new TranslatedToolEffect(eff, -1, 0));
+		fixSingle(new TranslatedToolEffect(eff, 1, 0));
+		fixSingle(new TranslatedToolEffect(eff, 0, 1));
 		
 
 
@@ -605,7 +605,7 @@ public class ToolStroke
 		return;
 	}
 	
-	private void fixSingle2(ToolEffectIfc eff)
+	/*private void fixSingle2(ToolEffectIfc eff)
 	{
 		int tile = eff.getTile(0, 0);
 
@@ -822,5 +822,5 @@ public class ToolStroke
 		} //end if on a rail tile
 
 		return;
-	}
+	}*/
 }
