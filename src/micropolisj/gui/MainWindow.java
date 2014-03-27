@@ -39,7 +39,7 @@ public class MainWindow extends JFrame
     MessagesPane messagesPane;
     JLabel mapLegendLbl;
     OverlayMapView mapView;
-    NotificationPane notificationPane;
+    public NotificationPane notificationPane;
     EvaluationPane evaluationPane;
     ScienceFrameA scienceFrameA;
     ScienceFrameB scienceFrameB;    
