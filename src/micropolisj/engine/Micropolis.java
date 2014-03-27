@@ -2146,7 +2146,7 @@ public class Micropolis
 	//tax income
 	/** Tax income multiplier, for various difficulty settings.
 	 */
-	static final double [] FLevels = { 1.4, 1.2, 0.8 };
+	static final double [] FLevels = { 2.1, 1.8, 1.2 };
 
 	void collectTaxPartial()
 	{
