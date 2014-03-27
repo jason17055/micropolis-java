@@ -493,11 +493,6 @@ public class TileConstants
 		return ((tile >= ROADBASE && tile < POWERBASE) || tile==237 || tile==238 || (tile >= 1217 && tile <= 1225));
 	}
 	
-	public static boolean isNarrowing(int tile){
-		assert (tile & LOMASK)== tile;
-		return (tile >=1217 && tile <= 1220);
-	}
-	
 	public static boolean isBigRoad(int tile) {
 		return ((tile >= 1067 && tile < 1210) || tile == 1215 || tile==1216 || (tile >= 1225 && tile <= 1233));
 	}
@@ -508,7 +503,7 @@ public class TileConstants
 	public static boolean isRoadAny(int tile) {
 		assert (tile & LOMASK) == tile;
 
-		return isRoad(tile) || isBigRoad(tile) || isRail(tile) || isStation(tile) || isNarrowing(tile);
+		return isRoad(tile) || isBigRoad(tile) || isRail(tile) || isStation(tile);
 	}
 	
 	/**
@@ -558,7 +553,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -569,7 +564,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != HROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -580,7 +575,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != HROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -591,51 +586,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER)
-			) &&
-			(tile != VROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != VBRIDGE));
-	}
-	
-	public static boolean roadConnectsEast2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER) || tile == NARROWINGS
-			) &&
-			(tile != VROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != VBRIDGE));
-	}
-
-	public static boolean roadConnectsNorth2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER) || tile == NARROWINGS3
-			) &&
-			(tile != HROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != ROADBASE));
-	}
-
-	public static boolean roadConnectsSouth2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == HRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER) || tile == NARROWINGS4
-			) &&
-			(tile != HROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != ROADBASE));
-	}
-
-	public static boolean roadConnectsWest2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == VRAILROAD) ||
-			(tile >= ROADBASE && tile <= VROADPOWER) || tile == NARROWINGS2
+			(tile >= ROADBASE && tile <= VROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)	
 			) &&
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -655,7 +606,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGVROADPOWER) &&
 			(tile != HRAILROAD) &&
@@ -666,7 +617,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGHROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -677,7 +628,7 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)
 			) &&
 			(tile != BIGHROADPOWER) &&
 			(tile != VRAILROAD) &&
@@ -688,149 +639,13 @@ public class TileConstants
 	{
 		tile = neutralizeRoad(tile);
 		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER)
+			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || (tile >= NARROWINGS && tile <= NARROWINGS10)	
 			) &&
 			(tile != BIGVROADPOWER) &&
 			(tile != HRAILROAD) &&
 			(tile != BIGVBRIDGE));
 	}
 	
-	public static boolean bigroadConnectsEast2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || tile == NARROWINGS2
-			) &&
-			(tile != BIGVROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != BIGVBRIDGE));
-	}
-
-	public static boolean bigroadConnectsNorth2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || tile == NARROWINGS4
-			) &&
-			(tile != BIGHROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != BIGROADBASE));
-	}
-
-	public static boolean bigroadConnectsSouth2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == HRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || tile == NARROWINGS3
-			) &&
-			(tile != BIGHROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != BIGROADBASE));
-	}
-
-	public static boolean bigroadConnectsWest2(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return (((tile == VRAILROAD) ||
-			(tile >= BIGROADBASE && tile <= BIGVROADPOWER) || tile == NARROWINGS
-			) &&
-			(tile != BIGVROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != BIGVBRIDGE));
-	}
-	
-	public static boolean isNarrowingDynamic(int tile){
-		int tmp = neutralizeRoad(tile);
-		return (tmp >= NARROWINGS && tmp <= NARROWINGS4);
-	}
-	
-	public static boolean smallNarrowingConnectsEast(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS4)
-			) &&
-			(tile != VROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != VBRIDGE));
-	}
-
-	public static boolean smallNarrowingConnectsNorth(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS3)
-			) &&
-			(tile != HROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != ROADBASE));
-	}
-
-	public static boolean smallNarrowingConnectsSouth(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS4)
-			) &&
-			(tile != HROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != ROADBASE));
-	}
-
-	public static boolean smallNarrowingConnectsWest(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS4)
-			) &&
-			(tile != VROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != VBRIDGE));
-	}
-	
-	public static boolean bigNarrowingConnectsEast(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS4)
-			) &&
-			(tile != VROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != VBRIDGE));
-	}
-
-	public static boolean bigNarrowingConnectsNorth(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS4)
-			) &&
-			(tile != HROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != ROADBASE));
-	}
-
-	public static boolean bigNarrowingConnectsSouth(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS3)
-			) &&
-			(tile != HROADPOWER) &&
-			(tile != VRAILROAD) &&
-			(tile != ROADBASE));
-	}
-
-	public static boolean bigNarrowingConnectsWest(int tile)
-	{
-		tile = neutralizeRoad(tile);
-		return ((
-			(tile >= NARROWINGS && tile <= NARROWINGS)
-			) &&
-			(tile != VROADPOWER) &&
-			(tile != HRAILROAD) &&
-			(tile != VBRIDGE));
-	}
 	
 	
 
@@ -1089,7 +904,7 @@ public class TileConstants
 			tile = ((tile - ROADBASE) & 0xf) + ROADBASE;
 		}
 		if (tile >= BIGROADBASE && tile <= BIGLASTROAD) {
-			tile = ((tile - BIGROADBASE) & 0xf) + BIGROADBASE;
+			tile = ((tile - BIGROADBASE) & 0xf) + ROADBASE;
 		}
 		return (char)tile;
 	}
