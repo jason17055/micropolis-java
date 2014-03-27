@@ -12,6 +12,7 @@ public class BuildingTechnology extends GeneralTechnology {
     public boolean tryToApply(){
         if(super.tryToApply() == true){
             // reset building tech. can't be researched again
+            this.isResearched = true;
             if(engine.selectedInfraTech.isSame(this)){
                 engine.selectedInfraTech = null;
             } else {
