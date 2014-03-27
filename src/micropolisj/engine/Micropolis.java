@@ -1494,7 +1494,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((float) getPollutionValue(tile) * 2);
+                    int curPollution = (int)  ((double) (getPollutionValue(tile) * 2)-20*Math.sqrt((double) pollutionsccount));
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
