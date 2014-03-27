@@ -321,7 +321,7 @@ public class GraphsPane extends JPanel
 
 				gr.setColor(col);
 				gr.setStroke(new BasicStroke(2));
-				gr.draw(path);grcul.png
+				gr.draw(path);
 
 				int x = rightEdge + LEGEND_PADDING;
 				int y = (int)Math.round(path.getCurrentPoint().getY()+fm.getAscent()/2);
