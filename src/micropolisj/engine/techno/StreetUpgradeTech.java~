@@ -18,11 +18,13 @@ public class StreetUpgradeTech extends GeneralTechnology {
 
     public boolean tryToApply(){
         if(super.tryToApply() == true){
-    
-
+<<<<<<< HEAD
+            // do some fancy street Upgrade stuff
+           
+=======
             engine.streetsccount +=1;// do some fancy street Upgrade stuff
             System.out.println("street upgrade");
-
+>>>>>>> 43d1a56bfe03cb46ab9533bd1bb84eb48f251f46
             return true;
         }
         return false;

@@ -186,7 +186,6 @@ public class ToolStroke
 		assert isZoneCenter(base);
 
 		TileSpec.BuildingInfo bi = Tiles.get(base).getBuildingInfo();
-		//System.out.println("base of tile: " + Tiles.get(base));
 		if (bi == null) {
 			throw new Error("Cannot applyZone to #"+base);
 		}
@@ -403,7 +402,6 @@ public class ToolStroke
 			
 			
 			eff.setTile(0, 0, RoadTable[adjTile]);
-			System.out.println("Ich bin "+ adjTile + "in RoadTable.");
 		} //endif on a road tile
 
 		
@@ -494,7 +492,6 @@ public class ToolStroke
 						
 			
 			eff.setTile(0, 0, BigRoadTable[adjTile]);
-			System.out.println("Ich bin "+ adjTile+ "in BigRoadTable");
 		} //endif on a bigroad tile	
 		
 		

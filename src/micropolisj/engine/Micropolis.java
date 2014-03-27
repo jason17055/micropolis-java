@@ -254,6 +254,7 @@ public class Micropolis
     public PoliceUpgradeTech policeUpgradeTech;
     public ReducePollutionTech reducePollutionTech;
     public ImproveWindSolarTech improveWindSolarTech;
+    public ProbabilityMeltdown meltdownTech;
 
 	//
 	// budget stuff
@@ -406,6 +407,10 @@ public class Micropolis
         twoLaneRoadTech = new BuildingTechnology(this, 200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS,MicropolisMessage.TWOLANEROAD_RESEARCH);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
+        
+        
+        meltdownTech = new ProbabilityMeltdown(this, 1500, "meltdown description", "meltdown Tech", MicropolisMessage.NUCLEAR_UPGRADE);
+        eetechs.add(meltdownTech);
     
 
 
@@ -3198,7 +3203,7 @@ public class Micropolis
 		fireCityMessage(message, null);
 	}
 
-	void sendMessageAt(MicropolisMessage message, int x, int y)
+	public void sendMessageAt(MicropolisMessage message, int x, int y)
 	{
 		fireCityMessage(message, new CityLocation(x,y));
 	}
