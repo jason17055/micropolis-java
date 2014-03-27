@@ -8,9 +8,12 @@
 
 package micropolisj.engine.techno;
 
+import micropolisj.engine.Micropolis;
+import micropolisj.engine.MicropolisMessage;
+
 public class RailUpgradeTech extends GeneralTechnology {
-    public RailUpgradeTech(double pointsNeeded_, String description_, String name_){
-        super(pointsNeeded_, description_, name_);
+    public RailUpgradeTech(Micropolis engine_,double pointsNeeded_, String description_, String name_,MicropolisMessage m){
+        super(engine_,pointsNeeded_, description_, name_,m);
     }
 
     public boolean tryToApply(){

@@ -60,16 +60,28 @@ public enum MicropolisMessage
 	FLOOD_REPORT,
 	MELTDOWN_REPORT,        // 43            doMeltdown
 	RIOTING_REPORT,
-	NEED_MORE_CITIZENS,
-	NEED_A_SCHOOL,
-	NO_MORE_CITYHALLS,
-    RESEARCH_REQUIRED,
+	
 	
 	// added by Jason
 	NO_NUCLEAR_PLANTS,
 	// added by team rocket
 	SCHOOL_NEED_FUNDING,
-	CULTURE_NEED_FUNDING,;
+	CULTURE_NEED_FUNDING,
+	NEED_MORE_CITIZENS,
+	NEED_A_SCHOOL,
+	NO_MORE_CITYHALLS,
+    RESEARCH_REQUIRED,
+    SOLAR_RESEARCH,
+    WIND_RESEARCH,
+    TWOLANEROAD_RESEARCH,
+    AIRPORT_RESEARCH,
+    ROAD_UPGRADE,
+    RAIL_UPGRADE,
+    POLLUTION_UPGRADE,
+    POLICE_UPGRADE,
+    FIRE_UPGRADE,
+    SOLARWIND_UPGRADE,
+    NUCLEAR_UPGRADE,;
 
 	/** Whether the message should be displayed in the notification pane. */
 	public boolean useNotificationPane = false;
@@ -84,7 +96,17 @@ public enum MicropolisMessage
 	POP_500K_REACHED.useNotificationPane = true;
 	HIGH_CRIME.useNotificationPane = true;
 	HIGH_POLLUTION.useNotificationPane = true;
-
+	SOLAR_RESEARCH.useNotificationPane = true;
+	WIND_RESEARCH.useNotificationPane = true;
+	TWOLANEROAD_RESEARCH.useNotificationPane = true;
+	AIRPORT_RESEARCH.useNotificationPane = true;
+	ROAD_UPGRADE.useNotificationPane = true;
+	RAIL_UPGRADE.useNotificationPane = true;
+	POLLUTION_UPGRADE.useNotificationPane = true;
+	POLICE_UPGRADE.useNotificationPane = true;
+	FIRE_UPGRADE.useNotificationPane = true;
+	SOLARWIND_UPGRADE.useNotificationPane = true;
+	NUCLEAR_UPGRADE.useNotificationPane = true;
 	// location-specific
 	FLOOD_REPORT.useNotificationPane = true;
 	FIRE_REPORT.useNotificationPane = true;

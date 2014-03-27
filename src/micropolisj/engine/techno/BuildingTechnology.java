@@ -1,12 +1,11 @@
 package micropolisj.engine.techno;
 import micropolisj.engine.*;
-import micropolisj.engine.MicropolisTool;
 
 public class BuildingTechnology extends GeneralTechnology {
     MicropolisTool tool_;
 
-     public BuildingTechnology(double pointsNeeded_, String description_, String name_, MicropolisTool tool_){
-        super(pointsNeeded_, description_, name_);
+     public BuildingTechnology(Micropolis engine_, double pointsNeeded_, String description_, String name_, MicropolisTool tool_, MicropolisMessage m){
+        super(engine_, pointsNeeded_, description_, name_,m);
         this.tool_ = tool_;
     }
 

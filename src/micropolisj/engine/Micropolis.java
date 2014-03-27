@@ -382,36 +382,44 @@ public class Micropolis
         eetechs = new ArrayList<GeneralTechnology>();
         infraTechs = new ArrayList<GeneralTechnology>();
 
-        windTech = new BuildingTechnology(2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND);
+        windTech = new BuildingTechnology(this,2000.0, "wind description", "Wind Power Plant Tech", MicropolisTool.WIND,MicropolisMessage.WIND_RESEARCH);
         buildingTechs.add(windTech);
         eetechs.add(windTech);
 
 
-        solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
+        solarTech = new BuildingTechnology(this,2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR,MicropolisMessage.SOLAR_RESEARCH);
         buildingTechs.add(solarTech);
         eetechs.add(solarTech);
 
 
-        airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
+        airportTech = new BuildingTechnology(this,2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT,MicropolisMessage.AIRPORT_RESEARCH);
         buildingTechs.add(airportTech);
-
-
-        twoLaneRoadTech = new BuildingTechnology(200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
+        infraTechs.add(airportTech);
+        
+        twoLaneRoadTech = new BuildingTechnology(this, 200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS,MicropolisMessage.TWOLANEROAD_RESEARCH);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
-        
+    
 
 
-
-        streetUpgradeTech = new StreetUpgradeTech(800, "street upgrade description", "street upgrade Tech");
+        streetUpgradeTech = new StreetUpgradeTech(this,800, "street upgrade description", "street upgrade Tech",MicropolisMessage.ROAD_UPGRADE);
         infraTechs.add(streetUpgradeTech);
 
-        railUpgradeTech = new RailUpgradeTech(400, "rail upgrade description", "rail upgrade tech");
-        fireUpdateTech = new FireUpdateTech(400, "fire upgrade description", "fire upgrade tech");
-        policeUpgradeTech = new PoliceUpgradeTech(400, "police upgrade description", "police upgrade tech");
-        reducePollutionTech = new ReducePollutionTech(800, "reduce pollution description", "reduce pollution tech");
-        improveWindSolarTech = new ImproveWindSolarTech(800, "improve wind and solar power plants description", "wind solar upgrade tech");
-
+        railUpgradeTech = new RailUpgradeTech(this,400, "rail upgrade description", "rail upgrade tech",MicropolisMessage.RAIL_UPGRADE);
+        infraTechs.add(railUpgradeTech);
+        
+        fireUpdateTech = new FireUpdateTech(this,400, "fire upgrade description", "fire upgrade tech",MicropolisMessage.FIRE_UPGRADE);
+        infraTechs.add(fireUpdateTech);
+        
+        policeUpgradeTech = new PoliceUpgradeTech(this,400, "police upgrade description", "police upgrade tech",MicropolisMessage.POLICE_UPGRADE);
+        infraTechs.add(policeUpgradeTech);
+        
+        reducePollutionTech = new ReducePollutionTech(this,800, "reduce pollution description", "reduce pollution tech",MicropolisMessage.POLLUTION_UPGRADE);
+        eetechs.add(reducePollutionTech);
+        
+        improveWindSolarTech = new ImproveWindSolarTech(this,800, "improve wind and solar power plants description", "wind solar upgrade tech",MicropolisMessage.SOLARWIND_UPGRADE);
+        eetechs.add(improveWindSolarTech);
+        
         selectedInfraTech = null;
         selectedEETech = null;
         
@@ -3178,7 +3186,7 @@ public class Micropolis
 		// if it is a repeat.
 	}
 
-	void sendMessage(MicropolisMessage message)
+	public void sendMessage(MicropolisMessage message)
 	{
 		fireCityMessage(message, null);
 	}

@@ -8,6 +8,7 @@
 
 package micropolisj.engine.techno;
 import micropolisj.engine.*;
+import micropolisj.gui.MessagesPane;
 
 
 public class GeneralTechnology implements Technology {
@@ -17,11 +18,16 @@ public class GeneralTechnology implements Technology {
     String description;
     MicropolisTool buildingNumber;
     boolean isResearched;
+    MicropolisMessage message;
+    Micropolis engine;
+   
 
-    public GeneralTechnology(double pointsNeeded_, String description_, String name_){
+    public GeneralTechnology(Micropolis engine_, double pointsNeeded_, String description_, String name_, MicropolisMessage m){
         pointsNeeded = pointsNeeded_;
         name = name_;
         description = description_;
+        message = m;
+        engine = engine_;
 
         pointsUsed = 0;
         isResearched = false;
@@ -32,6 +38,10 @@ public class GeneralTechnology implements Technology {
         if(pointsUsed >= pointsNeeded && isResearched == false){
             this.isResearched = true;
             resetResearchPoints();
+            if (message != null) {
+            	engine.sendMessage(message);
+            	
+            }
             return true;
         }
 

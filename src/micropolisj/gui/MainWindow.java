@@ -1621,6 +1621,8 @@ public class MainWindow extends JFrame
             notificationPane.showMessage(engine, m, p.x, p.y);
         }
     }
+    
+    
 
     //implements Micropolis.Listener
     public void fundsChanged() {
