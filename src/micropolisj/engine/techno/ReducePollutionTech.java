@@ -7,9 +7,13 @@
 // See the README file, included in this distribution, for details.
 
 package micropolisj.engine.techno;
+
+import micropolisj.engine.Micropolis;
+import micropolisj.engine.MicropolisMessage;
+
 public class ReducePollutionTech extends GeneralTechnology {
-    public ReducePollutionTech(double pointsNeeded_, String description_, String name_){
-        super(pointsNeeded_, description_, name_);
+    public ReducePollutionTech(Micropolis engine_,double pointsNeeded_, String description_, String name_,MicropolisMessage m){
+        super(engine_,pointsNeeded_, description_, name_,m);
     }
 
     public boolean tryToApply(){
