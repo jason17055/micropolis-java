@@ -120,7 +120,7 @@ public class GraphsPane extends JPanel
 		toolsPane.add(makeDataBtn(GraphData.POLLUTION), c);
         c.gridy = 5;
         toolsPane.add(makeDataBtn(GraphData.EDUCATION), c);
-        c.gridy = 6;
+        c.gridx = 0;
         toolsPane.add(makeDataBtn(GraphData.CULTURE), c);
 
 		graphArea = new GraphArea();
