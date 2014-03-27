@@ -57,6 +57,7 @@ public class ScienceFrameB extends JDialog {
                 panel.add(this.noTechSelectedLabel);
             }
         }
+        this.repaint();
     }
 	
 	public ScienceFrameB(Window owner, Micropolis m){
