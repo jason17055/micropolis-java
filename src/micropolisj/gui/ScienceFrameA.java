@@ -35,7 +35,7 @@ public class ScienceFrameA extends JDialog {
     //UNIVERSITAET FUER NATURWISSENSCHAFT
 
 
-    private void updateProgressBar(){
+    public void updateProgressBar(){
         if(engine.getSelectedEETech() != null){
             if(progressBar == null){
                 progressBar = new JProgressBar(0, (int) engine.getSelectedEETech().getPointsNeeded());
@@ -65,25 +65,34 @@ public class ScienceFrameA extends JDialog {
         bNotToBeDisabled.setBackground(col3);
         jbPowerEfficiency.setEnabled(engine.windTech.getIsResearched() && engine.solarTech.getIsResearched());
     }
+
+    public void updateButtons(){
+
+        jbPollution.setText("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[" +(int)engine.reducePollutionTech.getPointsUsed()+ " " +(int)engine.reducePollutionTech.getPointsNeeded()+ " points]</font></html>");
+        jbNuclear.setText("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
+        jbPowerEfficiency.setText("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
+        jbSolar.setText("<html>Research Solar<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.solarTech.getPointsUsed()+"/"+(int)engine.solarTech.getPointsNeeded()+" points]</font></html>");
+        jbWind.setText("<html>Research Wind<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.windTech.getPointsUsed()+"/"+(int)engine.windTech.getPointsNeeded()+" points]</font></html>");
+
+    }
 	
 	public ScienceFrameA(Window owner, Micropolis m){
 		super(owner);
 		this.engine=m;
-        System.out.println("science frame A opened");
-
 
         buttonList = new ArrayList<JButton>();
         jbReset = new JButton("Reset current Research.");
-		jbPollution = new JButton ("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[" +(int)engine.reducePollutionTech.getPointsUsed()+ " " +(int)engine.reducePollutionTech.getPointsNeeded()+ " points]</font></html>");
-		jbNuclear = new JButton ("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
-		jbPowerEfficiency = new JButton ("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
-		jbSolar = new JButton ("<html>Research Solar<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.solarTech.getPointsUsed()+"/"+(int)engine.solarTech.getPointsNeeded()+" points]</font></html>");
-		jbWind = new JButton ("<html>Research Wind<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.windTech.getPointsUsed()+"/"+(int)engine.windTech.getPointsNeeded()+" points]</font></html>");
+		jbPollution = new JButton();
+		jbNuclear = new JButton();
+		jbPowerEfficiency = new JButton();
+		jbSolar = new JButton();
+		jbWind = new JButton();
         buttonList.add(jbPollution);
         buttonList.add(jbNuclear);
         buttonList.add(jbPowerEfficiency);
         buttonList.add(jbSolar);
         buttonList.add(jbWind);
+        updateButtons();
 
 
         jbNuclear.setEnabled(true);
@@ -93,29 +102,6 @@ public class ScienceFrameA extends JDialog {
         jbReset.setEnabled(true);
         jbNuclear.setEnabled(true);
 
-        GeneralTechnology selectedTech = engine.getSelectedEETech();
-        if(selectedTech != null){
-            if(selectedTech.isSame(engine.reducePollutionTech)){
-                disableAllButtonsBut(jbPollution);
-            } else if(selectedTech.isSame(engine.solarTech)){
-                disableAllButtonsBut(jbSolar);
-            } else if(selectedTech.isSame(engine.windTech)){
-               disableAllButtonsBut(jbWind);
-            } else if(selectedTech.isSame(engine.improveWindSolarTech)){
-                disableAllButtonsBut(jbPowerEfficiency);
-            } else if(selectedTech.isSame(engine.meltdownTech)){
-                disableAllButtonsBut(jbNuclear);
-            }
-
-            // disable already researched buildings
-            if(engine.solarTech.getIsResearched()) jbSolar.setEnabled(false);
-            if(engine.windTech.getIsResearched()) jbWind.setEnabled(false);
-
-
-        }
-
-
-		
 		Color c1= new Color(255,229,168);
 		
 		jbPollution.setBackground(c1);
@@ -130,7 +116,29 @@ public class ScienceFrameA extends JDialog {
 		jbNuclear.setForeground(c2);
 		jbPowerEfficiency.setForeground(c2);
 		jbSolar.setForeground(c2);
-		jbWind.setForeground(c2);		
+		jbWind.setForeground(c2);
+
+
+        GeneralTechnology selectedTech = engine.getSelectedEETech();
+        if(selectedTech != null){
+            if(selectedTech.isSame(engine.reducePollutionTech)){
+                disableAllButtonsBut(jbPollution);
+            } else if(selectedTech.isSame(engine.solarTech)){
+                disableAllButtonsBut(jbSolar);
+            } else if(selectedTech.isSame(engine.windTech)){
+                disableAllButtonsBut(jbWind);
+            } else if(selectedTech.isSame(engine.improveWindSolarTech)){
+                disableAllButtonsBut(jbPowerEfficiency);
+            } else if(selectedTech.isSame(engine.meltdownTech)){
+                disableAllButtonsBut(jbNuclear);
+            }
+
+            // disable already researched buildings
+            if(engine.solarTech.getIsResearched()) jbSolar.setEnabled(false);
+            if(engine.windTech.getIsResearched()) jbWind.setEnabled(false);
+
+
+        }
 		
 		jbPollution.setToolTipText("Let more money flow towards research. They will discover new methods of decreasing air pollution.");
 		jbNuclear.setToolTipText("Let more money flow towards nuclear research. It will decrease air pollution immediately.");
@@ -144,9 +152,6 @@ public class ScienceFrameA extends JDialog {
 		jbPowerEfficiency.setPreferredSize(new Dimension(180,125));
 		jbSolar.setPreferredSize(new Dimension(180,125));
 		jbWind.setPreferredSize(new Dimension(180,125));
-
-		
-
 
 
 		jbPollution.addActionListener(new ActionListener(){
@@ -199,11 +204,12 @@ public class ScienceFrameA extends JDialog {
 
         jbReset.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
-
                engine.getSelectedEETech().resetResearchPoints();
+                engine.selectedEETech = null;
                for(JButton b : buttonList){
                    b.setEnabled(true);
                }
+                repaint();
                updateProgressBar();
 
             }

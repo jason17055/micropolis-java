@@ -1153,6 +1153,9 @@ public class MainWindow extends JFrame
             evaluationPane.setVisible(true);
         }
         if (TileConstants.isUniversityA((int) engine.getTile(xpos, ypos))) {
+
+
+
         	scienceFrameA = new ScienceFrameA(this, engine);
             scienceFrameA.setVisible(true);
         }
@@ -1212,12 +1215,15 @@ public class MainWindow extends JFrame
         }
         if (text.equals(strings.getString("cheating.alltechscheat"))) {
             
-        	for (GeneralTechnology t:engine.eetechs) {
-        		t.addResearchPoints(4000);
+        	for (GeneralTechnology t: engine.eetechs) {
+                if(t != null)
+
+        		    t.isResearched = true;
         	}
 
-        	for (GeneralTechnology t:engine.infraTechs) {
-        		t.addResearchPoints(4000);
+        	for (GeneralTechnology t: engine.infraTechs) {
+                if(t != null)
+        		    t.addResearchPoints(t.getPointsNeeded() + 1);
         	}
         	
             engine.incNCheats();
@@ -1469,6 +1475,17 @@ public class MainWindow extends JFrame
             public void actionPerformed(ActionEvent evt) {
                 for (int i = 0; i < count; i++) {
                     engine.animate();
+                    if(scienceFrameA != null){
+                        scienceFrameA.updateProgressBar();
+                        scienceFrameA.updateButtons();
+                    }
+                    if(scienceFrameB != null){
+                        scienceFrameB.updateProgressBar();
+                        scienceFrameB.updateButtons();
+                    }
+
+
+
                     if (!engine.autoBudget && engine.isBudgetTime()) {
                         showAutoBudget();
                         return;
