@@ -27,6 +27,11 @@ public class GeneralTechnology implements Technology {
         isResearched = false;
     }
 
+    public boolean isSame(GeneralTechnology t){
+        if(t.getName().equals(this.getName())) return true;
+        return false;
+    }
+
 
     public boolean tryToApply(){
         if(pointsUsed >= pointsNeeded && isResearched == false){
