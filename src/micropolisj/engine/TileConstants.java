@@ -255,6 +255,18 @@ public class TileConstants
 		LHPOWER, LVPOWER5, LHPOWER, LVPOWER6,
 		LVPOWER4, LVPOWER9, LVPOWER8, LVPOWER10
 		};
+	static final char [] smallCrossTable = new char[] {
+		LHPOWER, LVPOWER, LHPOWER, LVPOWER2,
+		LVPOWER, LVPOWER, LVPOWER3, LVPOWER7,
+		LHPOWER, LVPOWER5, LHPOWER, LVPOWER6,
+		LVPOWER4, LVPOWER9, LVPOWER8, LVPOWER10
+		};
+	static final char [] bigCrossTable = new char[] {
+		LHPOWER, LVPOWER, LHPOWER, LVPOWER2,
+		LVPOWER, LVPOWER, LVPOWER3, LVPOWER7,
+		LHPOWER, LVPOWER5, LHPOWER, LVPOWER6,
+		LVPOWER4, LVPOWER9, LVPOWER8, LVPOWER10
+		};
 
 	//
 	// status bits
@@ -504,6 +516,12 @@ public class TileConstants
 		assert (tile & LOMASK) == tile;
 
 		return isRoad(tile) || isBigRoad(tile) || isRail(tile) || isStation(tile);
+	}
+	
+	public static boolean isStrictRoadAny(int tile) {
+		assert (tile & LOMASK) == tile;
+
+		return isRoad(tile) || isBigRoad(tile);
 	}
 	
 	/**

@@ -259,7 +259,7 @@ class MapScanner extends TileBehavior
 			z = city.fireEffect/2; // from the funding ratio
 		}
 
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 3*z);
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 3*z+30*city.firesccount);
 		
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {
@@ -288,7 +288,7 @@ class MapScanner extends TileBehavior
 			z = city.policeEffect/4;
 		}
 
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), z);
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), z+15*city.policesccount);
 		
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {
