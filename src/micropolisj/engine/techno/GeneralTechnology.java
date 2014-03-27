@@ -42,10 +42,11 @@ public class GeneralTechnology implements Technology {
     public double getPointsNeeded(){
         return pointsNeeded;
     }
+
     public void addResearchPoints(double points){
         this.pointsUsed += points;
-        tryToApply();
     }
+
     public void resetResearchPoints(){
         this.pointsUsed = 0;
     }

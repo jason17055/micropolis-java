@@ -378,7 +378,7 @@ class RoadLikeTool extends ToolStroke
 
 		default:
 			if (tile != DIRT) {
-				if (city.autoBulldoze && canAutoBulldozeRRW(tile)) {
+				if (city.autoBulldoze && canAutoBulldozeRRW(tile) || TileConstants.isRail(tile)) {
 					cost += 1; //autodoze cost
 				}
 				else {
@@ -719,11 +719,11 @@ eff.spend(cost);
 			eff.setTile(0, 0, VROADPOWER);
 			break;
 
-		case TileConstants.BIGROADS: // wire on E/W road
+		case TileConstants.BIGROADS: // wire on E/W bigRoad
 			eff.setTile(0, 0, BIGHROADPOWER);
 			break;
 
-		case BIGROADS2: // wire on N/S road
+		case BIGROADS2: // wire on N/S bigRoad
 			eff.setTile(0, 0, BIGVROADPOWER);
 			break;
 			

@@ -54,8 +54,10 @@ public class TrainSprite extends Sprite
 		if (frame == 3 || frame == 4) {
 			frame = TrainPic2[this.dir];
 		}
+		if (!(city.PRNG.nextInt(3)!=0 && getChar(x,y)>=TileConstants.STATION && getChar(x,y)<TileConstants.STATION10)) {
 		x += Dx[this.dir];
 		y += Dy[this.dir];
+		}
 		if (city.acycle % 4 == 0) {
 			// should be at the center of a cell, if not, correct it
 			x = (x/16) * 16 + TRA_GROOVE_X;
@@ -73,7 +75,8 @@ public class TrainSprite extends Sprite
 					(c == RAILVPOWERH) ||
 					(c == RAILHPOWERV) ||
 					(c == RAILBASE) ||
-					(c == (RAILBASE+1)))
+					(c == (RAILBASE+1)) ||
+					(c>=1234 && c<1248))
 				{
 					if ((this.dir != d2) && (this.dir != DIR_NONE)) {
 						if (this.dir + d2 == 3)
