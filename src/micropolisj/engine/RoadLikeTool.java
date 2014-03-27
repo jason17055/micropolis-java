@@ -285,7 +285,7 @@ class RoadLikeTool extends ToolStroke
 	
 	private boolean layStation(ToolEffectIfc eff)
 	{
-		final int STATION_COST = 20;
+		final int STATION_COST = 200;
 		// final int TUNNEL_COST = 100;
 
 		int cost = STATION_COST;

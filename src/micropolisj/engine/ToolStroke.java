@@ -303,10 +303,10 @@ public class ToolStroke
 
 		fixSingle(eff);
 		// "fix" the cells to the north, west, east, and south
-		fixSingle2(new TranslatedToolEffect(eff, 0, -1));
-		fixSingle2(new TranslatedToolEffect(eff, -1, 0));
-		fixSingle2(new TranslatedToolEffect(eff, 1, 0));
-		fixSingle2(new TranslatedToolEffect(eff, 0, 1));
+		fixSingle(new TranslatedToolEffect(eff, 0, -1));
+		fixSingle(new TranslatedToolEffect(eff, -1, 0));
+		fixSingle(new TranslatedToolEffect(eff, 1, 0));
+		fixSingle(new TranslatedToolEffect(eff, 0, 1));
 		
 
 
@@ -315,509 +315,142 @@ public class ToolStroke
 	private void fixSingle(ToolEffectIfc eff)
 	{
 		int tile = eff.getTile(0, 0);
+		int me = TileConstants.roadType(tile);
 
-		if (isRoadDynamic(tile))
-		{
+		
+			int[] dir=new int[]{TileConstants.roadType(eff.getTile(-1, 0)),TileConstants.roadType(eff.getTile(0, 1)),TileConstants.roadType(eff.getTile(1, 0)),TileConstants.roadType(eff.getTile(0, -1))};
+			int bigRoadCount=0;
+			int roadCount=0;
+			int railCount=0;
+			for (int i : dir) {
+				if (i>=3) {
+					railCount++;
+				} else if (i%4==1) { //crossovers are calculated in a strange way
+					roadCount++;
+				} else if (i%4==2) {
+					bigRoadCount++;
+				}
+			}
+			int anyRoadCount=roadCount+bigRoadCount;
 			// cleanup road
 			int adjTile = 0;
 			// check road to north
-			if (roadConnectsSouth(eff.getTile(0, -1)))
-			{	
-				adjTile |= 1;
-			}
-			else if (bigroadConnectsSouth(eff.getTile(0,-1)))
-			{
-				adjTile |= 16;
-				adjTile |= 1;
-			}
-			else if (smallNarrowingConnectsSouth(eff.getTile(0, -1))){
-				adjTile |= 1;
-			}
-			
-			else if (bigNarrowingConnectsSouth(eff.getTile(0, -1))){
-				adjTile |= 16;
-				adjTile |=  1;
-			}
-			
-			
+			if (isWireDynamic(tile)) {
+				// Cleanup Wire
+				adjTile = 0;
 
-			// check road to east
-			if (roadConnectsWest(eff.getTile(1, 0)))
-			{	
-				adjTile |= 2;
-			}
-			else if (bigroadConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 2;
-			}
-			else if (smallNarrowingConnectsWest(eff.getTile(1, 0))){
-				adjTile |= 2;
-			}
-			
-			else if (bigNarrowingConnectsWest(eff.getTile(1, 0))){
-				adjTile |= 16;
-				adjTile |=  2;
-			}
-			
+				// check wire to north
+				if (wireConnectsSouth(eff.getTile(0, -1)))
+				{
+					adjTile |= 1;
+				}
 
-			// check road to south
-			if (roadConnectsNorth(eff.getTile(0, 1)))
-			{	
-				adjTile |= 4;
-			}
-			else if (bigroadConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 16;
-				adjTile |= 4;
-			}
-			else if (smallNarrowingConnectsNorth(eff.getTile(0, 1))){
-				adjTile |= 4;
-			}
-			
-			else if (bigNarrowingConnectsNorth(eff.getTile(0, 1))){
-				adjTile |= 16;
-				adjTile |=  4;
-			}
-			
+				// check wire to east
+				if (wireConnectsWest(eff.getTile(1, 0)))
+				{
+					adjTile |= 2;
+				}
 
-			// check road to west
-			if (roadConnectsEast(eff.getTile(-1, 0)))
-			{	
-				adjTile |= 8;
-			}
-			else if (bigroadConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 8;
-			}
-			else if (smallNarrowingConnectsEast(eff.getTile(-1, 0))){
-				adjTile |= 8;
-			}
-			
-			else if (bigNarrowingConnectsEast(eff.getTile(-1, 0))){
-				adjTile |= 16;
-				adjTile |=  8;
-			}
-			
-			
-			eff.setTile(0, 0, RoadTable[adjTile]);
-		} //endif on a road tile
+				// check wire to south
+				if (wireConnectsNorth(eff.getTile(0, 1)))
+				{
+					adjTile |= 4;
+				}
 
-		
-		
-		else if (isBigRoadDynamic(tile))
-		{
-			// cleanup bigroad
-			int adjTile = 0;
-			
-			// check bigroad to north
-			if (bigroadConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
-			}
-			else if (roadConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 16;
-				adjTile |= 1;
-			}
-			else if (smallNarrowingConnectsSouth(eff.getTile(0, -1))){
-				adjTile |= 16;
-				adjTile |= 1;
-			}
-			
-			else if (bigNarrowingConnectsSouth(eff.getTile(0, -1))){
-				adjTile |=  1;
-			}
-			
+				// check wire to west
+				if (wireConnectsEast(eff.getTile(-1, 0)))
+				{
+					adjTile |= 8;
+				}
 
-			// check bigroad to east
-			if (bigroadConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
+				eff.setTile(0, 0, WireTable[adjTile]);
 			}
-			else if (roadConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 2;
-			}
-			else if (smallNarrowingConnectsWest(eff.getTile(1, 0))){
-				adjTile |= 16;
-				adjTile |= 2;
-			}
-			
-			else if (bigNarrowingConnectsWest(eff.getTile(1, 0))){
-				adjTile |= 2;
-			}
-			
-
-			// check bigroad to south
-			if (bigroadConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-			else if (roadConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 16;
-				adjTile |= 4;
-			}
-			else if (smallNarrowingConnectsNorth(eff.getTile(0, 1))){
-				adjTile |= 16;
-				adjTile |= 4;
-			}
-			
-			else if (bigNarrowingConnectsNorth(eff.getTile(0, 1))){
-				adjTile |= 4;
-			}
-			
-
-			// check bigroad to west
-			if (bigroadConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-			else if (roadConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 8;
-			}
-			else if (smallNarrowingConnectsEast(eff.getTile(-1, 0))){
-				adjTile |= 16;
-				adjTile |= 8;
-			}
-			
-			else if (bigNarrowingConnectsEast(eff.getTile(-1, 0))){
-				adjTile |= 8;
-			}
+			if (!isUndynamicWire(tile)) {
+				if (me==1 || me==2) {
+					for (int i=0;i<4;i++) {
+						if (dir[i]==1 || dir[i]==2) {
+							adjTile |= (int) Math.pow(2, 3-i);
+						}
+					}
+					if (me==1) {
+						eff.setTile(0, 0, RoadTable[adjTile]);
+					} else {
+						if ((anyRoadCount!=2 || roadCount==0) && !(anyRoadCount==1 && roadCount==1)) {
+							eff.setTile(0, 0, BigRoadTable[adjTile]);
+						} else {
+							if (roadCount==1 && bigRoadCount==1) {
+								if ((dir[0]%4==2 && dir[2]%4==1)) {
+									eff.setTile(0, 0, 1221);
+								} else if (dir[1]%4==2 && dir[3]%4==1) {
+									eff.setTile(0, 0, 1223);
+								} else if (dir[0]%4==1 && dir[2]%4==2) {
+									eff.setTile(0, 0, 1222);
+								} else if (dir[1]%4==1 && dir[3]%4==2) {
+									eff.setTile(0, 0, 1224);
+								}
+							} else if (anyRoadCount==1 && roadCount==1) {
+								if (dir[2]%4==1) {
+									eff.setTile(0, 0, 1221);
+								} else if (dir[3]%4==1) {
+									eff.setTile(0, 0, 1223);
+								} else if (dir[0]%4==1) {
+									eff.setTile(0, 0, 1222);
+								} else if (dir[1]%4==1) {
+									eff.setTile(0, 0, 1224);
+								}
+							}
+						}
+					}
+				}
+				if (me==3 || me==4) {
+					for (int i=0;i<4;i++) {
+						if (dir[i]==3 || dir[i]==4) {
+							adjTile |= (int) Math.pow(2, 3-i);
+						}
+					}
+					if (me==3) {
+						eff.setTile(0, 0, RailTable[adjTile]);
+					} else {
+						eff.setTile(0, 0, StationTable[adjTile]);
+					}
+				}
+				if (me==5|| me==6) {
+					if (anyRoadCount!=0 || (anyRoadCount%2!=0 && railCount%2!=0)) {
+						for (int i=0;i<4;i++) {
+							if (dir[i]==1 || dir[i]==2) {
+								if (i%2==0) {
+									eff.setTile(0, 0, 238);
+									return;
+								} else {
+									eff.setTile(0, 0, 237);
+									return;
+								}
+							}
+						}
 						
-			
-			eff.setTile(0, 0, BigRoadTable[adjTile]);
-		} //endif on a bigroad tile	
-		
-		
-		else if (isRailDynamic(tile))
-		{
-			// cleanup Rail
-			int adjTile = 0;
-
-			// check rail to north
-			if (railConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
+					} else {
+						if (railCount!=0) {
+							for (int i=0;i<4;i++) {
+								if (dir[i]==3 || dir[i]==4) {
+									if (i%2==0) {
+										eff.setTile(0, 0, 237);
+										return;
+									} else {
+										eff.setTile(0, 0, 238);
+										return;
+									}
+								}
+							}
+						}
+					}
+					eff.setTile(0, 0, 237);
+				}
 			}
-
-			// check rail to east
-			if (railConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
-			}
-
-			// check rail to south
-			if (railConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-
-			// check rail to west
-			if (railConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-
-			eff.setTile(0, 0, RailTable[adjTile]);
-		} //end if on a rail tile
-		
-		
-		
-		else if (isStationDynamic(tile))
-		{
-			// cleanup Rail
-			int adjTile = 0;
-			adjTile |=16;
-
-			// check rail to north
-			if (railConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
-			}
-
-			// check rail to east
-			if (railConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
-			}
-
-			// check rail to south
-			if (railConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-
-			// check rail to west
-			if (railConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-			
-			eff.setTile(0, 0, RailTable[adjTile]);
-		} //end if on a rail tile
-
-		
-		
-		
-		
-
-		else if (isWireDynamic(tile))
-		{
-			// Cleanup Wire
-			int adjTile = 0;
-
-			// check wire to north
-			if (wireConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
-			}
-
-			// check wire to east
-			if (wireConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
-			}
-
-			// check wire to south
-			if (wireConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-
-			// check wire to west
-			if (wireConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-
-			eff.setTile(0, 0, WireTable[adjTile]);
-		} //end if on a rail tile
 
 		return;
 	}
 	
-	private void fixSingle2(ToolEffectIfc eff)
-	{
-		int tile = eff.getTile(0, 0);
-
-		if (isRoadDynamic(tile))
-		{
-			// cleanup road
-			int adjTile = 0;
-			// check road to north
-			if (roadConnectsSouth2(eff.getTile(0, -1)))
-			{	
-				adjTile |= 1;
-			}
-			else if (bigroadConnectsSouth2(eff.getTile(0,-1)))
-			{
-				adjTile |= 16;
-				adjTile |= 1;
-			}
-
-			// check road to east
-			if (roadConnectsWest2(eff.getTile(1, 0)))
-			{	
-				adjTile |= 2;
-			}
-			else if (bigroadConnectsWest2(eff.getTile(1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 2;
-			}
-
-			// check road to south
-			if (roadConnectsNorth2(eff.getTile(0, 1)))
-			{	
-				adjTile |= 4;
-			}
-			else if (bigroadConnectsNorth2(eff.getTile(0, 1)))
-			{
-				adjTile |= 16;
-				adjTile |= 4;
-			}
-
-			// check road to west
-			if (roadConnectsEast2(eff.getTile(-1, 0)))
-			{	
-				adjTile |= 8;
-			}
-			else if (bigroadConnectsEast2(eff.getTile(-1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 8;
-			}
-			
-			eff.setTile(0, 0, RoadTable[adjTile]);
-		} //endif on a road tile
-
-		
-		
-		else if (isBigRoadDynamic(tile))
-		{
-			// cleanup bigroad
-			int adjTile = 0;
-			
-			// check bigroad to north
-			if (bigroadConnectsSouth2(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
-			}
-			else if (roadConnectsSouth2(eff.getTile(0, -1)))
-			{
-				adjTile |= 16;
-				adjTile |= 1;
-			}
-
-			// check bigroad to east
-			if (bigroadConnectsWest2(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
-			}
-			else if (roadConnectsWest2(eff.getTile(1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 2;
-			}
-			
-
-			// check bigroad to south
-			if (bigroadConnectsNorth2(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-			else if (roadConnectsNorth2(eff.getTile(0, 1)))
-			{
-				adjTile |= 16;
-				adjTile |= 4;
-			}
-
-			// check bigroad to west
-			if (bigroadConnectsEast2(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-			else if (roadConnectsEast2(eff.getTile(-1, 0)))
-			{
-				adjTile |= 16;
-				adjTile |= 8;
-			}
-						
-			
-			eff.setTile(0, 0, BigRoadTable[adjTile]);
-		} //endif on a bigroad tile	
-		
-		
-		else if (isRailDynamic(tile))
-		{
-			// cleanup Rail
-			int adjTile = 0;
-
-			// check rail to north
-			if (railConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
-			}
-
-			// check rail to east
-			if (railConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
-			}
-
-			// check rail to south
-			if (railConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-
-			// check rail to west
-			if (railConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-
-			eff.setTile(0, 0, RailTable[adjTile]);
-		} //end if on a rail tile
-		
-		
-		
-		else if (isStationDynamic(tile))
-		{
-			// cleanup Rail
-			int adjTile = 0;
-			adjTile |=16;
-
-			// check rail to north
-			if (railConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
-			}
-
-			// check rail to east
-			if (railConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
-			}
-
-			// check rail to south
-			if (railConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-
-			// check rail to west
-			if (railConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-			
-			eff.setTile(0, 0, RailTable[adjTile]);
-		} //end if on a rail tile
-
-		
-		
-		
-		
-
-		else if (isWireDynamic(tile))
-		{
-			// Cleanup Wire
-			int adjTile = 0;
-
-			// check wire to north
-			if (wireConnectsSouth(eff.getTile(0, -1)))
-			{
-				adjTile |= 1;
-			}
-
-			// check wire to east
-			if (wireConnectsWest(eff.getTile(1, 0)))
-			{
-				adjTile |= 2;
-			}
-
-			// check wire to south
-			if (wireConnectsNorth(eff.getTile(0, 1)))
-			{
-				adjTile |= 4;
-			}
-
-			// check wire to west
-			if (wireConnectsEast(eff.getTile(-1, 0)))
-			{
-				adjTile |= 8;
-			}
-
-			eff.setTile(0, 0, WireTable[adjTile]);
-		} //end if on a rail tile
-
-		return;
+	private boolean isUndynamicWire(int tile) {
+		return TileConstants.isConductive(tile) && !isWireDynamic(tile);
 	}
 }

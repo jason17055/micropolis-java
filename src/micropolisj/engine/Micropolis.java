@@ -273,12 +273,12 @@ public class Micropolis
     int educationEffect = 1000;
     int cultureEffect = 1000;
     
-    public int firesccount      =1;
-    public int policesccount    =1;
-    public int windsolarsccount =1;
-    public int pollutionsccount =1;
-    public int streetsccount    =1;
-    public int railsccount      =1;
+    public int firesccount      =0;
+    public int policesccount    =0;
+    public int windsolarsccount =0;
+    public int pollutionsccount =0;
+    public int streetsccount    =0;
+    public int railsccount      =0;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -1127,8 +1127,8 @@ public class Micropolis
 		{
 			for (int x = 0; x < trfDensity[y].length; x++)
 			{
-				//trfDensity[y][x]*=2;
-				trfDensity[y][x]/=3;
+				trfDensity[y][x]*=3;
+				trfDensity[y][x]/=4;
 				/*original functionint z = trfDensity[y][x];
 				if (z != 0)
 				{
@@ -2158,7 +2158,7 @@ public class Micropolis
 	//tax income
 	/** Tax income multiplier, for various difficulty settings.
 	 */
-	static final double [] FLevels = { 2.1, 1.8, 1.2 };
+	static final double [] FLevels = { 2.2, 1.9, 1.5 };
 
 	void collectTaxPartial()
 	{
@@ -3317,13 +3317,28 @@ public class Micropolis
 		char tile=getTile(loc.x,loc.y);
 		if (TileConstants.isRoadAny(tile)) {
 			if (TileConstants.isRoad(tile) && cur!=3) {
-				return 70+trfDensity[loc.y][loc.x];
+				return 70+(trfDensity[loc.y][loc.x]*100)/(100+streetsccount);
 			}
 			if (TileConstants.isBigRoad(tile) && cur!=3) {
-				return 40+trfDensity[loc.y][loc.x];
+				return 40+(trfDensity[loc.y][loc.x]*100)/(100+streetsccount);
+			}
+			if (TileConstants.isRailAny(tile) && cur>2) {
+				return 30+(trfDensity[loc.y][loc.x]*100)/(100+railsccount);
+			}
+		}
+		return 999;
+	}
+	public int getTrafficN(CityLocation loc, int cur) { //TODO test values
+		char tile=getTile(loc.x,loc.y);
+		if (TileConstants.isRoadAny(tile)) {
+			if (TileConstants.isRoad(tile) && cur!=3) {
+				return 50;
+			}
+			if (TileConstants.isBigRoad(tile) && cur!=3) {
+				return 20;
 			}
 			if (TileConstants.isRail(tile) && cur>2) {
-				return 30+trfDensity[loc.y][loc.x];
+				return 10;
 			}
 		}
 		return 999;
