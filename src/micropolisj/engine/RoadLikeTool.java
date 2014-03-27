@@ -378,7 +378,7 @@ class RoadLikeTool extends ToolStroke
 
 		default:
 			if (tile != DIRT) {
-				if (city.autoBulldoze && canAutoBulldozeRRW(tile)) {
+				if (city.autoBulldoze && canAutoBulldozeRRW(tile) || TileConstants.isRail(tile)) {
 					cost += 1; //autodoze cost
 				}
 				else {

@@ -1,17 +1,6 @@
 package micropolisj.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
 import javax.swing.*;
-import javax.swing.event.*;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -19,11 +8,7 @@ import java.awt.Window;
 import java.awt.event.*;
 import java.awt.Dimension;
 
-import micropolisj.engine.CityLocation;
 import micropolisj.engine.Micropolis;
-import micropolisj.engine.Sound;
-import micropolisj.engine.techno.*;
-import micropolisj.engine.*;
 
 public class ScienceFrameA extends JDialog {
 
@@ -35,9 +20,32 @@ public class ScienceFrameA extends JDialog {
 	JButton jbPowerEfficiency;
 	JButton jbSolar;
 	JButton jbWind;
+    JProgressBar progressBar;
+    JLabel noTechSelectedLabel;
 	
 
 	//UNIVERSITAET FUER NATURWISSENSCHAFT
+
+
+    private void updateProgressBar(){
+        if(engine.getSelectedInfraTech() != null){
+            if(progressBar == null){
+                progressBar = new JProgressBar(0, (int) engine.getSelectedEETech().getPointsNeeded());
+                panel.add(progressBar);
+            }
+            if(noTechSelectedLabel != null) panel.remove(this.noTechSelectedLabel);
+            progressBar.setMaximum((int) engine.getSelectedEETech().getPointsNeeded());
+            progressBar.setValue((int) engine.getSelectedEETech().getPointsUsed());
+            progressBar.setStringPainted(true);
+        } else  {
+            if(this.noTechSelectedLabel != null){
+                panel.add(this.noTechSelectedLabel);
+            } else {
+                this.noTechSelectedLabel = new JLabel("No Technology selected to be researched.");
+                panel.add(this.noTechSelectedLabel);
+            }
+        }
+    }
 	
 	public ScienceFrameA(Window owner, Micropolis m){
 		super(owner);
@@ -87,18 +95,25 @@ public class ScienceFrameA extends JDialog {
 		
 		jbPollution.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+                engine.setSelectedEETech(engine.reducePollutionTech);
+                updateProgressBar();
 
 			}
 		});
 		
 		jbNuclear.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+
+                updateProgressBar();
+
 			}
 			
 		});
 		
 		jbPowerEfficiency.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+                engine.setSelectedEETech(engine.improveWindSolarTech);
+                updateProgressBar();
 
 			}
 		});
@@ -107,7 +122,8 @@ public class ScienceFrameA extends JDialog {
 			public void actionPerformed(ActionEvent event){
 			
 			
-			engine.selectEETech(engine.solarTech);
+			engine.setSelectedEETech(engine.solarTech);
+            updateProgressBar();
 			
 			jbPollution.setEnabled(true);
 			jbNuclear.setEnabled(true);
@@ -129,8 +145,9 @@ public class ScienceFrameA extends JDialog {
 		
 		jbWind.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				
-			engine.selectedEETech = engine.windTech;
+
+            engine.setSelectedEETech(engine.windTech);
+            updateProgressBar();
 			
 			jbPollution.setEnabled(true);
 			jbNuclear.setEnabled(true);
@@ -158,6 +175,7 @@ public class ScienceFrameA extends JDialog {
 		panel.add(jbPowerEfficiency);
 		panel.add(jbSolar);
 		panel.add(jbWind);
+        updateProgressBar();
 	
 		
 		panel.setLayout(new FlowLayout());

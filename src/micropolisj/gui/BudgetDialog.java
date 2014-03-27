@@ -192,6 +192,7 @@ public class BudgetDialog extends JDialog
 		JButton resetBtn = new JButton(strings.getString("budgetdlg.reset"));
 		resetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
+
 				onResetClicked();
 			}});
 		buttonPane.add(resetBtn);
@@ -404,6 +405,7 @@ public class BudgetDialog extends JDialog
 		c1.anchor = GridBagConstraints.EAST;
 		c1.weightx = 0.25;
 		c1.gridx = 0;
+
 
 		for (int i = 0; i < 2; i++) {
 
