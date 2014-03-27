@@ -100,13 +100,6 @@ public class MainWindow extends JFrame
         evaluationPane.setVisible(false);
         evalGraphsBox.add(evaluationPane, BorderLayout.SOUTH);
         
-        scienceFrameA = new ScienceFrameA(this, getEngine());
-        scienceFrameA.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-        scienceFrameA.setVisible(false);
-        
-       scienceFrameB = new ScienceFrameB(this, getEngine());
-       scienceFrameB.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-       scienceFrameB.setVisible(false);
 
         JPanel leftPane = new JPanel(new GridBagLayout());
         add(leftPane, BorderLayout.WEST);
@@ -1159,9 +1152,11 @@ public class MainWindow extends JFrame
             evaluationPane.setVisible(true);
         }
         if (TileConstants.isUniversityA((int) engine.getTile(xpos, ypos))) {
+        	scienceFrameA = new ScienceFrameA(this, engine);
             scienceFrameA.setVisible(true);
         }
         if (TileConstants.isUniversityB((int) engine.getTile(xpos, ypos))) {
+        	scienceFrameB = new ScienceFrameB(this, engine);
             scienceFrameB.setVisible(true);
         }
     }

@@ -1,17 +1,6 @@
 package micropolisj.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
 import javax.swing.*;
-import javax.swing.event.*;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -19,11 +8,7 @@ import java.awt.Window;
 import java.awt.event.*;
 import java.awt.Dimension;
 
-import micropolisj.engine.CityLocation;
 import micropolisj.engine.Micropolis;
-import micropolisj.engine.Sound;
-import micropolisj.engine.techno.*;
-import micropolisj.engine.*;
 
 public class ScienceFrameA extends JDialog {
 
@@ -87,18 +72,21 @@ public class ScienceFrameA extends JDialog {
 		
 		jbPollution.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+                engine.setSelectedEETech(engine.reducePollutionTech);
 
 			}
 		});
 		
 		jbNuclear.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+
 			}
 			
 		});
 		
 		jbPowerEfficiency.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+                engine.setSelectedEETech(engine.improveWindSolarTech);
 
 			}
 		});
@@ -107,7 +95,7 @@ public class ScienceFrameA extends JDialog {
 			public void actionPerformed(ActionEvent event){
 			
 			
-			engine.selectEETech(engine.solarTech);
+			engine.setSelectedEETech(engine.solarTech);
 			
 			jbPollution.setEnabled(true);
 			jbNuclear.setEnabled(true);
@@ -129,8 +117,8 @@ public class ScienceFrameA extends JDialog {
 		
 		jbWind.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				
-			engine.selectedEETech = engine.windTech;
+
+            engine.setSelectedEETech(engine.windTech);
 			
 			jbPollution.setEnabled(true);
 			jbNuclear.setEnabled(true);

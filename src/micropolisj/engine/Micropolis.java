@@ -231,7 +231,15 @@ public class Micropolis
     public double technologyEEPoints;
     public double technologyInfraPoints;
     public GeneralTechnology selectedInfraTech = null;
-    public GeneralTechnology selectedEETech = null;
+    public void setSelectedInfraTech(GeneralTechnology selectedInfraTech) {
+		this.selectedInfraTech = selectedInfraTech;
+	}
+
+	public GeneralTechnology getSelectedInfraTech() {
+		return selectedInfraTech;
+	}
+
+	public GeneralTechnology selectedEETech = null;
 
     public BuildingTechnology windTech;
     public BuildingTechnology solarTech;
@@ -304,13 +312,13 @@ public class Micropolis
     	System.out.println(s);
     }
     
-    public void setSelectedInfraTech(GeneralTechnology t){
-    	// System.out.println("select inra tech: + " t.getName());
-    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
-    	this.selectedInfraTech = t;
-    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
-    	
-    }
+//    public void setSelectedInfraTech(GeneralTechnology t){
+//    	// System.out.println("select inra tech: + " t.getName());
+//    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
+//    	this.selectedInfraTech = t;
+//    	if(this.selectedInfraTech != null) System.out.println("selected infra tech: " + this.selectedInfraTech.getName());
+//    	
+//    }
 
     public void incCityPopulation() {
         cheatedPopulation += 20000;
@@ -375,19 +383,21 @@ public class Micropolis
         buildingTechs.add(windTech);
         eetechs.add(windTech);
 
+
         solarTech = new BuildingTechnology(2000.0, "solar description", "Solar Power Plant Tech", MicropolisTool.SOLAR);
         buildingTechs.add(solarTech);
         eetechs.add(solarTech);
 
+
         airportTech = new BuildingTechnology(2000.0, "airport tech description", "Airport Tech", MicropolisTool.AIRPORT);
         buildingTechs.add(airportTech);
-        infraTechs.add(airportTech);
+
 
         twoLaneRoadTech = new BuildingTechnology(200, "two lane description", "two lane Tech", MicropolisTool.BIGROADS);
         buildingTechs.add(twoLaneRoadTech);
         infraTechs.add(twoLaneRoadTech);
         
-        twoLaneRoadTech.addResearchPoints(401);
+
 
 
         streetUpgradeTech = new StreetUpgradeTech(800, "street upgrade description", "street upgrade Tech");
@@ -399,10 +409,10 @@ public class Micropolis
         reducePollutionTech = new ReducePollutionTech(800, "reduce pollution description", "reduce pollution tech");
         improveWindSolarTech = new ImproveWindSolarTech(800, "improve wind and solar power plants description", "wind solar upgrade tech");
 
-        selectedInfraTech = railUpgradeTech;
-        //selectedEETech = windTech;
+        selectedInfraTech = null;
+        selectedEETech = null;
         
-        System.out.println("inittechs");
+        System.out.println("initialize Technology Objects.");
 
     }
 
@@ -1851,25 +1861,30 @@ public class Micropolis
     void spendTechnologyPoints(){
         if(this.selectedEETech != null && this.technologyEEPoints != 0.0){
             this.selectedEETech.addResearchPoints(this.technologyEEPoints);
+
+            // if a building technology got researched reset the selection
+            if(this.selectedEETech.getIsResearched() == true && (this.selectedEETech instanceof BuildingTechnology)){
+                this.selectedEETech = null;
+            }
             this.technologyEEPoints = 0;
-            System.out.println("technologyEEPoints points already: " +
-                    this.selectedEETech.getPointsUsed() + "/" + this.selectedEETech.getPointsNeeded() + " " + this.selectedEETech.getName());
         }
-        System.out.println("selected ifnra tech (2)" + this.selectedInfraTech.getName());
-        if(this.selectedInfraTech != null && technologyInfraPoints != 0.0){
-            this.selectedInfraTech.addResearchPoints(technologyInfraPoints);
+
+        if(this.selectedInfraTech != null && this.technologyInfraPoints != 0.0){
+            this.selectedInfraTech.addResearchPoints(this.technologyInfraPoints);
+
+            // if a building technology got researched reset the selection
+            if(this.selectedInfraTech.getIsResearched() == true && (this.selectedEETech instanceof BuildingTechnology)){
+                this.selectedInfraTech = null;
+            }
             technologyInfraPoints = 0;
-            System.out.println("infraTech points already: " +
-                    this.selectedInfraTech.getPointsUsed() + "/" + this.selectedInfraTech.getPointsNeeded() + " " + this.selectedInfraTech.getName());
         }
     }
     
-    public void selectEETech(GeneralTechnology t){
+    public void setSelectedEETech(GeneralTechnology t){
     	this.selectedEETech = t;
     }
     
-    public void selectInfraTech(GeneralTechnology t){
-    	System.out.println("selected an infratest");
+    public void setSelectInfraTech(GeneralTechnology t){
     	selectedInfraTech = t;
     }
 
