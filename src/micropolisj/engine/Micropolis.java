@@ -936,7 +936,6 @@ public class Micropolis
 
 
     private void spreadEffect(int[][] pol, int size, int randomRange, int minValue){
-        //TODO: GAUSSIAN SPREAD
         final int h = pol.length;
         final int w = pol.length;
 
@@ -1531,15 +1530,12 @@ public class Micropolis
 
         final int HWLDX = (getWidth());
         final int HWLDY = (getHeight());
-        int [][] tem = new int[HWLDY][HWLDX];
 
         pollutionScan();
 
         for (int x = 0; x < HWLDX; x++)
         {
-            for (int y = 0; y < HWLDY; y++)
-            {
-                int plevel = 0;
+            for (int y = 0; y < HWLDY; y++) {
                 int lvflag = 0;
 
                 int tile = getTile(x, y);
@@ -3086,7 +3082,7 @@ public class Micropolis
 			}
 			break;
 		case 14:
-			if (100*noWay>getCityPopulation()) { //TODO balance
+			if (200*noWay>getCityPopulation()) {
 				sendMessage(MicropolisMessage.NEED_ROADS);
 			}
 			break;
@@ -3127,7 +3123,7 @@ public class Micropolis
 			}
 			break;
 		case 35:
-			if (pollutionAverage > 60) { // FIXME, consider changing threshold to 80
+			if (pollutionAverage > 80) {
 				sendMessage(MicropolisMessage.HIGH_POLLUTION);
 			}
 			break;
@@ -3328,7 +3324,7 @@ public class Micropolis
 		}
 		return 999;
 	}
-	public int getTrafficN(CityLocation loc, int cur) { //TODO test values
+	public int getTrafficN(CityLocation loc, int cur) {
 		char tile=getTile(loc.x,loc.y);
 		if (TileConstants.isRoadAny(tile)) {
 			if (TileConstants.isRoad(tile) && cur!=3) {

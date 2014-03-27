@@ -725,11 +725,6 @@ class MapScanner extends TileBehavior
     }
 
 
-
-
-		//TODO design new algorithms for growth of main zones
-
-
 	/**
 	 * Called when the current tile is the key tile of a
 	 * residential zone.
@@ -806,7 +801,7 @@ class MapScanner extends TileBehavior
 		}
 		ret-=traffics;
 		ret-=getCrime3x3();
-		int tax=city.taxEffect+city.gameLevel-2;
+		int tax=city.taxEffect+2*city.gameLevel-2;
 		ret-=400*(tax-5)+20*(tax-6)^2;
 		switch (type) {
 		case 0:

@@ -365,7 +365,7 @@ public class ToolStroke
 
 				eff.setTile(0, 0, WireTable[adjTile]);
 			}
-			if (!isUndynamicWire(tile)) {
+			if (!isUndynamicWire(tile) && !TileConstants.isOverWater(tile)) {
 				if (me==1 || me==2) {
 					for (int i=0;i<4;i++) {
 						if (dir[i]==1 || dir[i]==2) {

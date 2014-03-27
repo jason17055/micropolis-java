@@ -477,7 +477,7 @@ public class TileConstants
 	 * Note: does not include rail/road tiles.
 	 * @see #isRoadAny
 	 */
-	public static boolean isRoad(int tile) { //TODO add new tiles (new images)
+	public static boolean isRoad(int tile) {
 		assert (tile & LOMASK) == tile;
 
 		return ((tile >= ROADBASE && tile < POWERBASE) || tile==237 || tile==238);
@@ -579,7 +579,7 @@ public class TileConstants
 	
 	
 
-	public static boolean isRail(int tile) //TODO add new tiles (rail and bigRoad crossover)
+	public static boolean isRail(int tile)
 	{
 		assert (tile & LOMASK) == tile;
 
