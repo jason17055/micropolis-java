@@ -33,15 +33,36 @@ public class ScienceFrameB extends JDialog {
 	JButton jbFireDepUpgrade;
 	JButton jbTwoLaneRoad;
 	JButton jbAirport;
-
+    JProgressBar progressBar;
+    JLabel noTechSelectedLabel;
 //UNIVERSITAET FUER MANAGEMENT
 	
 
-	
+
+    private void updateProgressBar(){
+        if(engine.getSelectedInfraTech() != null){
+            if(progressBar == null){
+                progressBar = new JProgressBar(0, (int) engine.getSelectedInfraTech().getPointsNeeded());
+                panel.add(progressBar);
+            }
+            if(noTechSelectedLabel != null) panel.remove(this.noTechSelectedLabel);
+            progressBar.setMaximum((int) engine.getSelectedInfraTech().getPointsNeeded());
+            progressBar.setValue((int) engine.getSelectedInfraTech().getPointsUsed());
+            progressBar.setStringPainted(true);
+        } else  {
+            if(this.noTechSelectedLabel != null){
+                panel.add(this.noTechSelectedLabel);
+            } else {
+                this.noTechSelectedLabel = new JLabel("No Technology selected to be researched.");
+                panel.add(this.noTechSelectedLabel);
+            }
+        }
+    }
 	
 	public ScienceFrameB(Window owner, Micropolis m){
 		super(owner);
 		this.engine=m;
+
 
 		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
 		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>[XX points]</font></html>");
@@ -88,6 +109,8 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade.setPreferredSize(new Dimension(180,125));
 		jbTwoLaneRoad.setPreferredSize(new Dimension(180,125));
 		jbAirport.setPreferredSize(new Dimension(180,125));
+
+
 		
 		
 		
@@ -111,7 +134,8 @@ public class ScienceFrameB extends JDialog {
 			jbPoliceUpgrade.setBackground(col3);
 			jbFireDepUpgrade.setBackground(col3);
 			jbTwoLaneRoad.setBackground(col3);
-			jbAirport.setBackground(col3);			
+			jbAirport.setBackground(col3);
+            updateProgressBar();
 			
 			}
 		});
@@ -119,6 +143,7 @@ public class ScienceFrameB extends JDialog {
 		jbRailUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedInfraTech(engine.railUpgradeTech);
+                updateProgressBar();
 			}
 			
 		});
@@ -126,6 +151,7 @@ public class ScienceFrameB extends JDialog {
 		jbPoliceUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedInfraTech(engine.policeUpgradeTech);
+                updateProgressBar();
 			}
 			
 		});
@@ -133,6 +159,7 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedInfraTech(engine.fireUpdateTech);
+                updateProgressBar();
 
 
 			}
@@ -160,6 +187,7 @@ public class ScienceFrameB extends JDialog {
 			jbAirport.setBackground(col3);
 
                 engine.setSelectedInfraTech(engine.twoLaneRoadTech);
+                updateProgressBar();
 			}
 			
 		});
@@ -188,6 +216,7 @@ public class ScienceFrameB extends JDialog {
                 jbAirport.setBackground(col2);
 
                 engine.setSelectedInfraTech(engine.airportTech);
+                updateProgressBar();
 
 			
 			}
@@ -204,6 +233,11 @@ public class ScienceFrameB extends JDialog {
 		panel.add(jbFireDepUpgrade);
 		panel.add(jbTwoLaneRoad);
 		panel.add(jbAirport);
+        updateProgressBar();
+
+
+
+
 		
 		
 		panel.setLayout(new FlowLayout());

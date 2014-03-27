@@ -240,6 +240,9 @@ public class Micropolis
 	public GeneralTechnology getSelectedInfraTech() {
 		return selectedInfraTech;
 	}
+    public GeneralTechnology getSelectedEETech() {
+        return selectedEETech;
+    }
 
 	public GeneralTechnology selectedEETech = null;
 

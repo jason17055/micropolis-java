@@ -20,9 +20,32 @@ public class ScienceFrameA extends JDialog {
 	JButton jbPowerEfficiency;
 	JButton jbSolar;
 	JButton jbWind;
+    JProgressBar progressBar;
+    JLabel noTechSelectedLabel;
 	
 
 	//UNIVERSITAET FUER NATURWISSENSCHAFT
+
+
+    private void updateProgressBar(){
+        if(engine.getSelectedInfraTech() != null){
+            if(progressBar == null){
+                progressBar = new JProgressBar(0, (int) engine.getSelectedEETech().getPointsNeeded());
+                panel.add(progressBar);
+            }
+            if(noTechSelectedLabel != null) panel.remove(this.noTechSelectedLabel);
+            progressBar.setMaximum((int) engine.getSelectedEETech().getPointsNeeded());
+            progressBar.setValue((int) engine.getSelectedEETech().getPointsUsed());
+            progressBar.setStringPainted(true);
+        } else  {
+            if(this.noTechSelectedLabel != null){
+                panel.add(this.noTechSelectedLabel);
+            } else {
+                this.noTechSelectedLabel = new JLabel("No Technology selected to be researched.");
+                panel.add(this.noTechSelectedLabel);
+            }
+        }
+    }
 	
 	public ScienceFrameA(Window owner, Micropolis m){
 		super(owner);
@@ -73,12 +96,15 @@ public class ScienceFrameA extends JDialog {
 		jbPollution.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedEETech(engine.reducePollutionTech);
+                updateProgressBar();
 
 			}
 		});
 		
 		jbNuclear.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+
+                updateProgressBar();
 
 			}
 			
@@ -87,6 +113,7 @@ public class ScienceFrameA extends JDialog {
 		jbPowerEfficiency.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
                 engine.setSelectedEETech(engine.improveWindSolarTech);
+                updateProgressBar();
 
 			}
 		});
@@ -96,6 +123,7 @@ public class ScienceFrameA extends JDialog {
 			
 			
 			engine.setSelectedEETech(engine.solarTech);
+            updateProgressBar();
 			
 			jbPollution.setEnabled(true);
 			jbNuclear.setEnabled(true);
@@ -119,6 +147,7 @@ public class ScienceFrameA extends JDialog {
 			public void actionPerformed(ActionEvent event){
 
             engine.setSelectedEETech(engine.windTech);
+            updateProgressBar();
 			
 			jbPollution.setEnabled(true);
 			jbNuclear.setEnabled(true);
@@ -146,6 +175,7 @@ public class ScienceFrameA extends JDialog {
 		panel.add(jbPowerEfficiency);
 		panel.add(jbSolar);
 		panel.add(jbWind);
+        updateProgressBar();
 	
 		
 		panel.setLayout(new FlowLayout());
