@@ -89,7 +89,6 @@ public class GeneralTechnology implements Technology {
 
     public boolean getIsResearched(){
         this.tryToApply();
-        System.out.println("isResearched: " + isResearched);
         return isResearched;
     }
 
