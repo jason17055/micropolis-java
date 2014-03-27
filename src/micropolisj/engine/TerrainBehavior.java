@@ -269,11 +269,7 @@ class TerrainBehavior extends TileBehavior
 
 		if (tden != newLevel)
 		{
-			System.out.println(rawTile);
 			int z = (((rawTile & LOMASK) - BIGROADBASE) & 15) + BIG_TRAFFIC_DENSITY_TAB[newLevel];
-			System.out.println("withoutraw"+z);
-			//z += rawTile & ALLBITS;
-			//System.out.println("withraw"+z);
 
 			city.setTile(xpos, ypos, (char) z);
 		}
