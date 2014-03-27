@@ -69,6 +69,7 @@ public class ScienceFrameA extends JDialog {
 	public ScienceFrameA(Window owner, Micropolis m){
 		super(owner);
 		this.engine=m;
+        System.out.println("science frame A opened");
 
 
         buttonList = new ArrayList<JButton>();
@@ -84,6 +85,14 @@ public class ScienceFrameA extends JDialog {
         buttonList.add(jbSolar);
         buttonList.add(jbWind);
 
+
+        jbNuclear.setEnabled(true);
+        jbPowerEfficiency.setEnabled(engine.windTech.getIsResearched() && engine.solarTech.getIsResearched());
+        jbSolar.setEnabled(true);
+        jbWind.setEnabled(true);
+        jbReset.setEnabled(true);
+        jbNuclear.setEnabled(true);
+
         GeneralTechnology selectedTech = engine.getSelectedEETech();
         if(selectedTech != null){
             if(selectedTech.isSame(engine.reducePollutionTech)){
@@ -94,16 +103,18 @@ public class ScienceFrameA extends JDialog {
                disableAllButtonsBut(jbWind);
             } else if(selectedTech.isSame(engine.improveWindSolarTech)){
                 disableAllButtonsBut(jbPowerEfficiency);
+            } else if(selectedTech.isSame(engine.meltdownTech)){
+                disableAllButtonsBut(jbNuclear);
             }
-            jbNuclear.setEnabled(false);
+
+            // disable already researched buildings
+            if(engine.solarTech.getIsResearched()) jbSolar.setEnabled(false);
+            if(engine.windTech.getIsResearched()) jbWind.setEnabled(false);
+
 
         }
 
-		jbNuclear.setEnabled(true);
-		jbPowerEfficiency.setEnabled(engine.windTech.getIsResearched() && engine.solarTech.getIsResearched());
-		jbSolar.setEnabled(true);
-		jbWind.setEnabled(true);
-        jbReset.setEnabled(true);
+
 		
 		Color c1= new Color(255,229,168);
 		
@@ -133,6 +144,7 @@ public class ScienceFrameA extends JDialog {
 		jbPowerEfficiency.setPreferredSize(new Dimension(180,125));
 		jbSolar.setPreferredSize(new Dimension(180,125));
 		jbWind.setPreferredSize(new Dimension(180,125));
+
 		
 
 
@@ -188,11 +200,12 @@ public class ScienceFrameA extends JDialog {
         jbReset.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
 
-                engine.getSelectedEETech().resetResearchPoints();
+               engine.getSelectedEETech().resetResearchPoints();
                for(JButton b : buttonList){
                    b.setEnabled(true);
                }
-                updateProgressBar();
+               updateProgressBar();
+
             }
         });
 		

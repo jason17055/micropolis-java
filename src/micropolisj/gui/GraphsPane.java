@@ -120,7 +120,7 @@ public class GraphsPane extends JPanel
 		toolsPane.add(makeDataBtn(GraphData.POLLUTION), c);
         c.gridy = 5;
         toolsPane.add(makeDataBtn(GraphData.EDUCATION), c);
-        c.gridy = 6;
+        c.gridx = 0;
         toolsPane.add(makeDataBtn(GraphData.CULTURE), c);
 
 		graphArea = new GraphArea();
@@ -321,7 +321,7 @@ public class GraphsPane extends JPanel
 
 				gr.setColor(col);
 				gr.setStroke(new BasicStroke(2));
-				gr.draw(path);grcul.png
+				gr.draw(path);
 
 				int x = rightEdge + LEGEND_PADDING;
 				int y = (int)Math.round(path.getCurrentPoint().getY()+fm.getAscent()/2);

@@ -1261,9 +1261,7 @@ public class Micropolis
 
 	void fireAnalysis()
 	{
-		fireStMap = smoothFirePoliceMap(fireStMap);
-		fireStMap = smoothFirePoliceMap(fireStMap);
-		fireStMap = smoothFirePoliceMap(fireStMap);
+		fireStMap = doSmooth(fireStMap);
 		for (int sy = 0; sy < fireStMap.length; sy++) {
 			for (int sx = 0; sx < fireStMap[sy].length; sx++) {
 				fireRate[sy][sx] = fireStMap[sy][sx];
@@ -1494,7 +1492,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((float) getPollutionValue(tile) * 2);
+                    int curPollution = (int)  ((double) (getPollutionValue(tile) * 2)-20*Math.sqrt((double) pollutionsccount));
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -2158,7 +2156,7 @@ public class Micropolis
 	//tax income
 	/** Tax income multiplier, for various difficulty settings.
 	 */
-	static final double [] FLevels = { 2.1, 1.8, 1.2 };
+	static final double [] FLevels = { 2.2, 1.9, 1.5 };
 
 	void collectTaxPartial()
 	{

@@ -258,9 +258,8 @@ class MapScanner extends TileBehavior
 		} else {
 			z = city.fireEffect/2; // from the funding ratio
 		}
-
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 3*z+30*city.firesccount);
 		
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 6*z+30*city.firesccount);
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {
 				if (help[y][x]!=0) {
@@ -808,7 +807,7 @@ class MapScanner extends TileBehavior
 		ret-=traffics;
 		ret-=getCrime3x3();
 		int tax=city.taxEffect+city.gameLevel-2;
-		ret-=400*tax+20*tax^2;
+		ret-=400*(tax-5)+20*(tax-6)^2;
 		switch (type) {
 		case 0:
 			ret+=getLandValue3x3();
