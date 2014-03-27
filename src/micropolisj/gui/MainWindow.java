@@ -262,6 +262,16 @@ public class MainWindow extends JFrame
 		drawingArea.addMouseListener(mouse);
 		drawingArea.addMouseMotionListener(mouse);
 		drawingArea.addMouseWheelListener(mouse);
+		drawingArea.requestFocusInWindow();
+
+		final KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        	focusManager.addPropertyChangeListener(new PropertyChangeListener() {
+            		@Override
+            		public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                		if (!(focusManager.getFocusOwner() == null || focusManager.getFocusOwner() == getRootPane()))
+                    		drawingArea.requestFocusInWindow();
+            		}
+        		});
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent ev)
