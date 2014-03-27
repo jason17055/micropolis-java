@@ -903,6 +903,9 @@ public class TileConstants
 		if (tile >= ROADBASE && tile <= LASTROAD) {
 			tile = ((tile - ROADBASE) & 0xf) + ROADBASE;
 		}
+		if (tile >= BIGROADBASE && tile <= BIGLASTROAD) {
+			tile = ((tile - BIGROADBASE) & 0xf) + BIGROADBASE;
+		}
 		return (char)tile;
 	}
 
