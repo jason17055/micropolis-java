@@ -583,7 +583,7 @@ public class TileConstants
 	{
 		assert (tile & LOMASK) == tile;
 
-		return ((tile >= RAILBASE && tile < RESBASE) || tile == 1215 || tile==1216 || tile==1244);
+		return ((tile >= RAILBASE && tile < RESBASE) || tile == 1215 || tile==1216 || tile==1244 || tile==221 || tile==222);
 	}
 
 	public static boolean isRailAny(int tile)

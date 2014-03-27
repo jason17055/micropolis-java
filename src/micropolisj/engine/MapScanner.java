@@ -788,9 +788,9 @@ class MapScanner extends TileBehavior
 	 */
 	
 	private int getGoodVal(int traffics, boolean powerOn, int visit, int size, int type) {
-		int ret=750;
+		int ret=250;
 		if (powerOn) {
-			ret+=1500;
+			ret+=2000;
 		}
 		if (traffics==-1) {
 			traffics=200;
@@ -811,10 +811,10 @@ class MapScanner extends TileBehavior
 		switch (type) {
 		case 0:
 			ret+=getLandValue3x3();
-			ret+=2*city.cultureAverage+city.educationAverage;
+			ret+=4*city.cultureAverage+2*city.educationAverage;
 			ret-=getPollution3x3();
 			ret+=city.resValve/2;
-			ret+=400;
+			ret+=100;
 		case 1:
 			ret+=(3*getLandValue3x3())/2;
 			ret-=getPollution3x3()/2;
@@ -827,7 +827,7 @@ class MapScanner extends TileBehavior
 			ret+=city.educationAverage;
 			ret+=city.indValve/3;
 			if (!powerOn) {
-				ret-=500;
+				ret-=1000;
 			}
 		}
 		//System.out.println(type+": "+ret);
