@@ -40,8 +40,6 @@ public class Micropolis
 	char [][] map;
 	boolean [][] powerMap;
 
-	// half-size arrays
-
 	/**
 	 * For each section of the city, the land value of the city (0-250).
 	 * 0 is lowest land value; 250 is maximum land value.

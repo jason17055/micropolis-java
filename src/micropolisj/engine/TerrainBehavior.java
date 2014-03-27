@@ -160,6 +160,7 @@ class TerrainBehavior extends TileBehavior
 	}
 
 	static int [] TRAFFIC_DENSITY_TAB = { ROADBASE, LTRFBASE, HTRFBASE };
+	static int [] BIG_TRAFFIC_DENSITY_TAB = { BIGROADBASE, BIGLIGHT, BIGHIGH };
 
 	/**
 	 * Called when the current tile is a road tile.
@@ -264,12 +265,15 @@ class TerrainBehavior extends TileBehavior
 		int newLevel = trafficDensity < 64 ? 0 :
 			trafficDensity < 192 ? 1 : 2;
 		
-		assert newLevel >= 0 && newLevel < TRAFFIC_DENSITY_TAB.length;
+		assert newLevel >= 0 && newLevel < BIG_TRAFFIC_DENSITY_TAB.length;
 
 		if (tden != newLevel)
 		{
-			int z = (((rawTile & LOMASK) - ROADBASE) & 15) + TRAFFIC_DENSITY_TAB[newLevel];
-			z += rawTile & ALLBITS;
+			System.out.println(rawTile);
+			int z = (((rawTile & LOMASK) - BIGROADBASE) & 15) + BIG_TRAFFIC_DENSITY_TAB[newLevel];
+			System.out.println("withoutraw"+z);
+			//z += rawTile & ALLBITS;
+			//System.out.println("withraw"+z);
 
 			city.setTile(xpos, ypos, (char) z);
 		}

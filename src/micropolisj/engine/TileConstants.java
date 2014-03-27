@@ -207,6 +207,8 @@ public class TileConstants
 	static final char STATION9     = 1242;
 	static final char STATION10    = 1243;
 	static final char STATIONINTERSECTION = 1244;
+	static final char BIGHIGH = 1147;
+	static final char BIGLIGHT = 1083;
 
 	static final char [] RoadTable = new char[] {
 		ROADS, ROADS2, ROADS, ROADS3,
