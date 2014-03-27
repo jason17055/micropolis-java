@@ -228,8 +228,8 @@ public class Micropolis
 
     // science/tech stuff
     ArrayList<BuildingTechnology> buildingTechs;
-    ArrayList<GeneralTechnology> eetechs;
-    ArrayList<GeneralTechnology> infraTechs;
+    public ArrayList<GeneralTechnology> eetechs;
+    public ArrayList<GeneralTechnology> infraTechs;
     public double technologyEEPoints;
     public double technologyInfraPoints;
     public GeneralTechnology selectedInfraTech = null;
