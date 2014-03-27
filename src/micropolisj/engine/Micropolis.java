@@ -1261,9 +1261,7 @@ public class Micropolis
 
 	void fireAnalysis()
 	{
-		fireStMap = smoothFirePoliceMap(fireStMap);
-		fireStMap = smoothFirePoliceMap(fireStMap);
-		fireStMap = smoothFirePoliceMap(fireStMap);
+		fireStMap = doSmooth(fireStMap);
 		for (int sy = 0; sy < fireStMap.length; sy++) {
 			for (int sx = 0; sx < fireStMap[sy].length; sx++) {
 				fireRate[sy][sx] = fireStMap[sy][sx];

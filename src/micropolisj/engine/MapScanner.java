@@ -259,7 +259,7 @@ class MapScanner extends TileBehavior
 			z = city.fireEffect/2; // from the funding ratio
 		}
 
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 3*z);
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 6*z);
 		
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {
