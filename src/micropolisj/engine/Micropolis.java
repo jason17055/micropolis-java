@@ -1880,6 +1880,8 @@ public class Micropolis
 	}
 
     void spendTechnologyPoints(){
+
+
         if(this.selectedEETech != null && this.technologyEEPoints != 0.0){
             this.selectedEETech.addResearchPoints(this.technologyEEPoints);
 
@@ -1887,7 +1889,6 @@ public class Micropolis
             if(this.selectedEETech.getIsResearched() == true && (this.selectedEETech instanceof BuildingTechnology)){
                 this.selectedEETech = null;
             }
-            this.technologyEEPoints = 0;
         }
 
         if(this.selectedInfraTech != null && this.technologyInfraPoints != 0.0){
@@ -1897,8 +1898,9 @@ public class Micropolis
             if(this.selectedInfraTech.getIsResearched() == true && (this.selectedEETech instanceof BuildingTechnology)){
                 this.selectedInfraTech = null;
             }
-            technologyInfraPoints = 0;
         }
+        this.technologyEEPoints = 0;
+        this.technologyInfraPoints = 0;
     }
     
     public void setSelectedEETech(GeneralTechnology t){

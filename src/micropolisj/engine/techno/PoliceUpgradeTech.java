@@ -18,6 +18,7 @@ public class PoliceUpgradeTech extends GeneralTechnology {
 
     public boolean tryToApply(){
         if(super.tryToApply() == true){
+
             engine.policesccount +=1;// do some fancy street Upgrade stuff
             System.out.println("police upgrade");
             return true;

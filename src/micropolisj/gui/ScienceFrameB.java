@@ -64,7 +64,7 @@ public class ScienceFrameB extends JDialog {
     }
 
 
-    private void updateProgressBar(){
+    public void updateProgressBar(){
         if(engine.getSelectedInfraTech() != null){
             if(progressBar == null){
                 progressBar = new JProgressBar(0, (int) engine.getSelectedInfraTech().getPointsNeeded());
@@ -84,45 +84,40 @@ public class ScienceFrameB extends JDialog {
         }
         this.repaint();
     }
+
+    public void updateButtons(){
+        jbStreetUpgrade.setText("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
+        jbRailUpgrade.setText("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.railUpgradeTech.getPointsUsed()+"/"+(int)engine.railUpgradeTech.getPointsNeeded()+" points]</font></html>");
+        jbPoliceUpgrade.setText("<html>Police Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.policeUpgradeTech.getPointsUsed()+"/"+(int)engine.policeUpgradeTech.getPointsNeeded()+" points]</font></html>");
+        jbFireDepUpgrade.setText("<html>Fire Department<br>Upgrade<br><br><br><br><font color=#666666>["+(int)engine.fireUpdateTech.getPointsUsed()+"/"+(int)engine.fireUpdateTech.getPointsNeeded()+" points]</font></html>");
+        jbTwoLaneRoad.setText("<html>Research<br>Two-Lane Roads<br><br><br><br><font color=#666666>["+(int)engine.twoLaneRoadTech.getPointsUsed()+"/"+(int)engine.twoLaneRoadTech.getPointsNeeded()+" points]</font><html>");
+        jbAirport.setText("<html>Research Airports<br><br><br><br><br><font color=#666666>["+(int)engine.airportTech.getPointsUsed()+"/"+(int)engine.airportTech.getPointsNeeded()+" points]</font></html>");
+    }
 	
 	public ScienceFrameB(Window owner, Micropolis m){
 		super(owner);
 		this.engine=m;
         buttonList = new ArrayList<JButton>();
-        System.out.println("science frame A opened");
+
 
         jbReset = new JButton("Reset current Research.");
 
-		jbStreetUpgrade = new JButton("<html>Street Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.streetUpgradeTech.getPointsUsed()+"/"+(int)engine.streetUpgradeTech.getPointsNeeded()+" points]</font></html>");
-		jbRailUpgrade = new JButton ("<html>Rail Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.railUpgradeTech.getPointsUsed()+"/"+(int)engine.railUpgradeTech.getPointsNeeded()+" points]</font></html>");
-		jbPoliceUpgrade = new JButton ("<html>Police Upgrade<br><br><br><br><br><font color=#666666>["+(int)engine.policeUpgradeTech.getPointsUsed()+"/"+(int)engine.policeUpgradeTech.getPointsNeeded()+" points]</font></html>");
-		jbFireDepUpgrade = new JButton ("<html>Fire Department<br>Upgrade<br><br><br><br><font color=#666666>["+(int)engine.fireUpdateTech.getPointsUsed()+"/"+(int)engine.fireUpdateTech.getPointsNeeded()+" points]</font></html>");
-		jbTwoLaneRoad = new JButton ("<html>Research<br>Two-Lane Roads<br><br><br><br><font color=#666666>["+(int)engine.twoLaneRoadTech.getPointsUsed()+"/"+(int)engine.twoLaneRoadTech.getPointsNeeded()+" points]</font><html>");
-		jbAirport = new JButton ("<html>Research Airports<br><br><br><br><br><font color=#666666>["+(int)engine.airportTech.getPointsUsed()+"/"+(int)engine.airportTech.getPointsNeeded()+" points]</font></html>");
+		jbStreetUpgrade = new JButton();
+		jbRailUpgrade = new JButton ();
+		jbPoliceUpgrade = new JButton ();
+		jbFireDepUpgrade = new JButton ();
+		jbTwoLaneRoad = new JButton ();
+		jbAirport = new JButton ();
         buttonList.add(jbStreetUpgrade);
         buttonList.add(jbRailUpgrade);
         buttonList.add(jbPoliceUpgrade);
         buttonList.add(jbFireDepUpgrade);
         buttonList.add(jbTwoLaneRoad);
         buttonList.add(jbAirport);
+        updateButtons();
 
 
-        GeneralTechnology selectedTech = engine.getSelectedInfraTech();
-        if(selectedTech != null){
-            if(selectedTech.isSame(engine.streetUpgradeTech)){
-                disableAllButtonsBut(jbStreetUpgrade);
-            } else if(selectedTech.isSame(engine.railUpgradeTech)){
-                disableAllButtonsBut(jbRailUpgrade);
-            } else if(selectedTech.isSame(engine.policeUpgradeTech)){
-                disableAllButtonsBut(jbPoliceUpgrade);
-            } else if(selectedTech.isSame(engine.fireUpdateTech)){
-                disableAllButtonsBut(jbFireDepUpgrade);
-            } else if(selectedTech.isSame(engine.twoLaneRoadTech)){
-                disableAllButtonsBut(jbTwoLaneRoad);
-            } else if(selectedTech.isSame(engine.airportTech)){
-                disableAllButtonsBut(jbAirport);
-            }
-        }
+
 
 
         //disable already researched buildings
@@ -144,6 +139,23 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade.setForeground(col3);
 		jbTwoLaneRoad.setForeground(col3);
 		jbAirport.setForeground(col3);
+
+        GeneralTechnology selectedTech = engine.getSelectedInfraTech();
+        if(selectedTech != null){
+            if(selectedTech.isSame(engine.streetUpgradeTech)){
+                disableAllButtonsBut(jbStreetUpgrade);
+            } else if(selectedTech.isSame(engine.railUpgradeTech)){
+                disableAllButtonsBut(jbRailUpgrade);
+            } else if(selectedTech.isSame(engine.policeUpgradeTech)){
+                disableAllButtonsBut(jbPoliceUpgrade);
+            } else if(selectedTech.isSame(engine.fireUpdateTech)){
+                disableAllButtonsBut(jbFireDepUpgrade);
+            } else if(selectedTech.isSame(engine.twoLaneRoadTech)){
+                disableAllButtonsBut(jbTwoLaneRoad);
+            } else if(selectedTech.isSame(engine.airportTech)){
+                disableAllButtonsBut(jbAirport);
+            }
+        }
 		
 		jbStreetUpgrade.setToolTipText("Let more money flow towards road construction. The quality of your roads will improve.");
 		jbRailUpgrade.setToolTipText("Let more money flow towards rail construction. The quality of your roads will improve.");
@@ -159,6 +171,7 @@ public class ScienceFrameB extends JDialog {
 		jbFireDepUpgrade.setPreferredSize(new Dimension(180,125));
 		jbTwoLaneRoad.setPreferredSize(new Dimension(180,125));
 		jbAirport.setPreferredSize(new Dimension(180,125));
+
 
 
 		
@@ -226,10 +239,13 @@ public class ScienceFrameB extends JDialog {
         jbReset.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 engine.getSelectedInfraTech().resetResearchPoints();
+                engine.selectedInfraTech = null;
                 for(JButton b : buttonList){
                     b.setEnabled(true);
                 }
                 updateProgressBar();
+                repaint();
+
             }
         });
 		

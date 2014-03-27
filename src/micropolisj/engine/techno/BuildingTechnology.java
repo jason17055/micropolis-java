@@ -8,6 +8,19 @@ public class BuildingTechnology extends GeneralTechnology {
         super(engine_, pointsNeeded_, description_, name_,m);
         this.tool_ = tool_;
     }
+    @Override
+    public boolean tryToApply(){
+        if(super.tryToApply() == true){
+            // reset building tech. can't be researched again
+            if(engine.selectedInfraTech.isSame(this)){
+                engine.selectedInfraTech = null;
+            } else {
+               engine.selectedEETech = null;
+            }
+            return true;
+        }
+        return false;
+    }
 
 
     public MicropolisTool getTool(){
