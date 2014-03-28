@@ -535,16 +535,6 @@ public class TileConstants
 	return 0;
 	}
 
-	/**
-	 * Checks whether the tile is a road that will automatically change to connect to
-	 * neighboring roads.
-	 */
-	public static boolean isRoadDynamic(int tile)
-	{
-		int tmp = neutralizeRoad(tile);
-		return (tmp >= ROADS && tmp <= INTERSECTION);
-	}
-
 	public static boolean roadConnects(int tile)
 	{
 		tile = neutralizeRoad(tile);
@@ -554,15 +544,6 @@ public class TileConstants
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
 			(tile != VBRIDGE));
-	}
-	
-	
-	
-	
-	public static boolean isBigRoadDynamic(int tile)
-	{
-		int tmp = neutralizeRoad(tile);
-		return (tmp >= BIGROADS && tmp <= BIGINTERSECTION);
 	}
 
 	public static boolean bigroadConnects(int tile)
@@ -591,20 +572,6 @@ public class TileConstants
 		assert (tile & LOMASK) == tile;
 
 		return isRail(tile) || isStation(tile);
-	}
-
-	public static boolean isRailDynamic(int tile)
-	{
-		assert (tile & LOMASK) == tile;
-
-		return (tile >= LHRAIL && tile <= LVRAIL10);
-	}
-
-	public static boolean isStationDynamic(int tile)
-	{
-		assert (tile & LOMASK) == tile;
-
-		return (tile >= STATION && tile <= STATIONINTERSECTION);
 	}
 
 	

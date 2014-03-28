@@ -2950,8 +2950,6 @@ public class Micropolis
 		assert dim.width >= 3;
 		assert dim.height >= 3;
 
-		int zoneBase = (zoneTile&LOMASK) - 1 - dim.width;
-
 		// this will take care of stopping smoke animations
 		shutdownZone(xpos, ypos, dim);
 	}
@@ -3324,7 +3322,7 @@ public class Micropolis
 		}
 		return 999;
 	}
-	public int getTrafficN(CityLocation loc, int cur) {
+	public int getTrafficAdds(CityLocation loc, int cur) {
 		char tile=getTile(loc.x,loc.y);
 		if (TileConstants.isRoadAny(tile)) {
 			if (TileConstants.isRoad(tile) && cur!=3) {
