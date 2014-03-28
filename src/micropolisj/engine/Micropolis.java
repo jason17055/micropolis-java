@@ -3336,7 +3336,7 @@ public class Micropolis
 			if (TileConstants.isRail(tile) && cur>2) {
 				return 5;
 			}
-			if (TileConstants.isRail(tile) && cur>2) {
+			if (TileConstants.isStation(tile) && cur>2) {
 				return 10;
 			}
 		}
