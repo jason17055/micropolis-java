@@ -1,11 +1,10 @@
-========================================================================
 
 Divercity
+-----------
 
-========================================================================
 
-Divercity is an Extension of MicropolisJ which is Micropolis for the Java platform.
-It was developed during a three-week programming course at Freie Universitaet Berlin.
+Divercity is an Extension of MicropolisJ which is Micropolis for the Java platform, which implements several new features and improvements over the original MicropolisJ.
+It was developed during a three-week programming course in 2014 at Freie Universitaet Berlin by Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck. (also see last two sections on this readme for author statements of the predecessor versions)
 
 
 ========================================================================
