@@ -691,8 +691,6 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.indZoneCount++;
 
-
-
         int tpop; //population of this zone
         if (tile == INDCLR)
         {
@@ -709,21 +707,20 @@ class MapScanner extends TileBehavior
             trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
         }
 
-
         int visit = city.dummySearch(city.visits, new CityLocation(xpos, ypos));
 
         int ind = this.getGoodVal(trafficGood, powerOn, visit, tpop, 2);
         if (city.PRNG.nextInt(10000)+600 < ind) {
-            //int value = PRNG.nextInt(3);
-            int value = getCRValue();
+            int value = PRNG.nextInt(3);
+
             city.rateOGMem[ypos][xpos] += value;
             doIndustrialIn(tpop, value);
             return;
         }
 
         else if (city.PRNG.nextInt(4000) > ind && PRNG.nextInt(10)==0) {
-            //int value = PRNG.nextInt(3);
-            int value = getCRValue();
+            int value = PRNG.nextInt(3);
+
             doIndustrialOut(tpop, value);
             city.rateOGMem[ypos][xpos] -= value;
         }
@@ -798,7 +795,7 @@ class MapScanner extends TileBehavior
 		if (traffics==-1) {
 			traffics=2000;
 		} else if (traffics==0) {
-			traffics=1900;
+			traffics=400;
 		} else {
 			traffics/=100;
 		}
@@ -817,7 +814,7 @@ class MapScanner extends TileBehavior
 			ret+=2*city.cultureAverage+city.educationAverage;
 			ret-=getPollution3x3();
 			ret+=city.resValve/2;
-			ret+=100;
+			ret+=50;
 		case 1:
 			ret+=(3*getLandValue3x3())/2;
 			ret-=getPollution3x3()/2;
@@ -827,8 +824,8 @@ class MapScanner extends TileBehavior
 				ret-=500;
 			}
 		case 2:
-			ret+=city.educationAverage;
-			ret+=city.indValve/3;
+			ret+=city.educationAverage/2;
+			ret+=city.indValve/2.5;
 			if (!powerOn) {
 				ret-=1000;
 			}
