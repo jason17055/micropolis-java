@@ -66,6 +66,12 @@ source code release.
 See the COPYING file for the full text copy of the GNU General Public
 License.
 
+
+new Features
+-------------
+
+![screenshot](https://raw.githubusercontent.com/Team--Rocket/divercity/master/betterScreenshot.png)
+
 ========================================================================
 
 This program is free software: you can redistribute it and/or modify
@@ -80,7 +86,7 @@ General Public License for more details.  You should have received a
 copy of the GNU General Public License along with this program.  If
 not, see <http://www.gnu.org/licenses/>.
 
-            ADDITIONAL TERMS per GNU GPL Section 7
+ADDITIONAL TERMS per GNU GPL Section 7
 
 No trademark or publicity rights are granted.  This license does NOT
 give you any right, title or interest in the trademark SimCity or any
