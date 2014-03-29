@@ -1,4 +1,3 @@
-
 Divercity
 -----------
 
@@ -59,7 +58,7 @@ new Features
 ========================================================================
 
 
-COPYRIGHT
+AUTHORS
 -----------------
 
 Copyright (C) for Divercity: 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck.
@@ -78,7 +77,7 @@ Copyright (C) 1989-2007 Electronic Arts Inc.
 The original Micropolis game was designed and implemented by Will Wright.
 Copyright (C) 2002 by Electronic Arts.
 
-LICENCE
+LICENCE STATEMENT
 ---------------------------------
 
 This program is free software: you can redistribute it and/or modify
