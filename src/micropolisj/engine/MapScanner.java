@@ -259,7 +259,7 @@ class MapScanner extends TileBehavior
 			z = city.fireEffect/2; // from the funding ratio
 		}
 		
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 6*z+30*city.firesccount);
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 12*z+30*city.firesccount);
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {
 				if (help[y][x]!=0) {
@@ -287,7 +287,7 @@ class MapScanner extends TileBehavior
 			z = city.policeEffect/4;
 		}
 
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), z+15*city.policesccount);
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 6*z+30*city.policesccount);
 		
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {
@@ -333,9 +333,6 @@ class MapScanner extends TileBehavior
 	}
 
 
-
-
-	
 	void doMuseum()
 	{
 
@@ -674,11 +671,13 @@ class MapScanner extends TileBehavior
             {
                 int value = getCRValue();
                 doCommercialIn(tpop, value);
+                city.rateOGMem[ypos][xpos] += value;
                 return;
             }
 
             else if (PRNG.nextInt(4000) > com && PRNG.nextInt(10)==0) {
                 int value = getCRValue();
+                city.rateOGMem[ypos][xpos] -= value;
                 doCommercialOut(tpop, value);
             }
         }
@@ -715,12 +714,18 @@ class MapScanner extends TileBehavior
 
         int ind = this.getGoodVal(trafficGood, powerOn, visit, tpop, 2);
         if (city.PRNG.nextInt(10000)+600 < ind) {
-            doIndustrialIn(tpop, PRNG.nextInt(3));
+            //int value = PRNG.nextInt(3);
+            int value = getCRValue();
+            city.rateOGMem[ypos][xpos] += value;
+            doIndustrialIn(tpop, value);
             return;
         }
 
         else if (city.PRNG.nextInt(4000) > ind && PRNG.nextInt(10)==0) {
-            doIndustrialOut(tpop, PRNG.nextInt(3));
+            //int value = PRNG.nextInt(3);
+            int value = getCRValue();
+            doIndustrialOut(tpop, value);
+            city.rateOGMem[ypos][xpos] -= value;
         }
     }
 
@@ -760,17 +765,20 @@ class MapScanner extends TileBehavior
 			int res = this.getGoodVal(trafficGood, powerOn, visit, tpop+2-d, 0);
 
 			if (res > PRNG.nextInt(10000)+600) {
-				if (tpop == 0 && PRNG.nextInt(4) == 0) {
-					makeHospital();
-					return;
-				}
+
 
 				int value = getCRValue();
+                city.rateOGMem[ypos][xpos] += value;
+                if (tpop == 0 && PRNG.nextInt(4) == 0) {
+                    makeHospital();
+                    return;
+                }
 				doResidentialIn(tpop, value);
 				return;
 			}
 			if (res < PRNG.nextInt(4000) && PRNG.nextInt(10)==0) {
 				int value = getCRValue();
+                city.rateOGMem[ypos][xpos] -= value;
 				doResidentialOut(tpop, value);
 			}
 		}
@@ -788,9 +796,9 @@ class MapScanner extends TileBehavior
 			ret+=2000;
 		}
 		if (traffics==-1) {
-			traffics=200;
+			traffics=2000;
 		} else if (traffics==0) {
-			traffics=100;
+			traffics=1900;
 		} else {
 			traffics/=100;
 		}

@@ -232,7 +232,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI_rog(A[y][x]),x*3,y*3,3,3);
+				maybeDrawRect(gr, getCI_rog(A[y][x]),x*6,y*6,3,3);
 			}
 		}
 	}

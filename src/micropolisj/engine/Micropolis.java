@@ -1561,7 +1561,7 @@ public class Micropolis
                     int dis = 34 - getDisCC(x, y);
                     dis *= 6;
                     dis += terrainMem[y][x]*8;
-                    dis -= pollutionMem[y][x]/8;
+                    dis -= pollutionMem[y][x]/4;
                     if (crimeMem[y][x] > 190) {
                         dis -= 20;
                     }
