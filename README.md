@@ -66,8 +66,8 @@ new Features
 * **improved graphics**: we tweaked some colors to be more eye pleasing
   * new splash screen
 * **more realistic pollution spreading**: we now use a gaussian distribution to spread pollution around the map
-* scolling with keyboard arrows works now
-* bug fixing
+* **usability improvements**: scolling with keyboard arrows works now
+* **bug fixing**
 
 
 ![screenshot](https://raw.githubusercontent.com/Team--Rocket/divercity/master/betterScreenshot.png)
