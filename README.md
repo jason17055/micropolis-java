@@ -7,21 +7,6 @@ Divercity
 Divercity is an Extension of MicropolisJ which is Micropolis for the Java platform.
 It was developed during a three-week programming course at Freie Universitaet Berlin.
 
-Copyright (C) for Divercity: 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck.
-
-Copyright (C) for MicropolisJ: 2013 Jason Long (jason@long.name).
-Portions Copyright (C) 1989-2007 Electronic Arts Inc.
-
-MicropolisJ is based on Micropolis, Unix version, which was developed by
-Don Hopkins (dhopkins@DonHopkins.com, http://www.DonHopkins.com) for
-DUX Software under license from Maxis, in or around 1990.  This version
-was later modified for inclusion in the One Laptop Per Child (OLPC)
-program, and released as free and open source software under the GPL in
-2008.
-Copyright (C) 1989-2007 Electronic Arts Inc.
-
-The original Micropolis game was designed and implemented by Will Wright.
-Copyright (C) 2002 by Electronic Arts.
 
 ========================================================================
 
@@ -39,7 +24,7 @@ QUICK DOWNLOAD, COMPILE and RUN
 
 to get the dev branch:
 run this command in commandline in your favorite directory:
-git clone git@github.com:Team--Rocket/micropolis-java.git divercity ; cd divercity; ant
+git clone git@github.com:Team--Rocket/divercity.git divercity ; cd divercity; ant
 
 then simply run (in divercity directory):
 java -jar micropolisj.jar
@@ -73,6 +58,26 @@ new Features
 ![screenshot](https://raw.githubusercontent.com/Team--Rocket/divercity/master/betterScreenshot.png)
 
 ========================================================================
+
+
+COPYRIGHT
+-----------------
+
+Copyright (C) for Divercity: 2014 Arne Roland, Benjamin Kretz, Estela Gretenkord i Berenguer, Fabian Mett, Marvin Becker, Tom Brewe, Tony Schwedek, Ullika Scholz, Vanessa Schreck.
+
+Copyright (C) for MicropolisJ: 2013 Jason Long (jason@long.name).
+Portions Copyright (C) 1989-2007 Electronic Arts Inc.
+
+MicropolisJ is based on Micropolis, Unix version, which was developed by
+Don Hopkins (dhopkins@DonHopkins.com, http://www.DonHopkins.com) for
+DUX Software under license from Maxis, in or around 1990.  This version
+was later modified for inclusion in the One Laptop Per Child (OLPC)
+program, and released as free and open source software under the GPL in
+2008.
+Copyright (C) 1989-2007 Electronic Arts Inc.
+
+The original Micropolis game was designed and implemented by Will Wright.
+Copyright (C) 2002 by Electronic Arts.
 
 LICENCE
 ---------------------------------
