@@ -37,12 +37,6 @@ program.
 QUICK DOWNLOAD, COMPILE and RUN
 ---------------------------------
 
-Wenn ihr die **letzte stabile Version** testen wollt cloned euch unser repo,
-und im Terminal führ git reset --hard 1618caf6280e95c5d4c01315f0aafca5bdc1bef4 aus.
-dann wie gewohnt ant ausführen und java -jar micropolisj.jar
-
-
-
 to get the dev branch:
 run this command in commandline in your favorite directory:
 git clone git@github.com:Team--Rocket/micropolis-java.git divercity ; cd divercity; ant
@@ -50,25 +44,31 @@ git clone git@github.com:Team--Rocket/micropolis-java.git divercity ; cd diverci
 then simply run (in divercity directory):
 java -jar micropolisj.jar
 
-ACHTUNG: 
-!Ton bitte aus lassen. Da es wegen eines Bugfixes für Sound auf Linux das Spiel verlangsamt.
-
-!Verkehr und Wachstum ist noch nicht voll funktionsfähig.
-Evtl. entwickeln sich Zonen noch nicht wie erwartet.
-
-
-How to Build This Program from Source
--------------------------------------
-
-See the INSTALL file for instructions on building the program from this
-source code release.
-
-See the COPYING file for the full text copy of the GNU General Public
-License.
+Attention: 
+Enabling sound might result in a slower UI experience.
 
 
 new Features
 -------------
+* **more realistic traffic**: we replaced old traffic generation with A* path finding. We generate paths from residential areas along roads and rails, is a road heavily used it's getting less likely for new cars to use that road, so the traffic balances.
+  * visits to buildings influence game variables like growth of zones, police efficience, culture effect etc. Visits are generated with our new traffic simulation
+  * police and fire efficience is dependent on the traffic and transportation situation as well now. instead of a fixed radius, a breadth-first-search is used now to determine the effect area, making it much more realistic 
+* **new buildings**:
+  * *school*: generates education points, is necessary to build a university
+  * two types of *university*: generates education points, enables research by right clicking or using the query tool
+  * *museum*: generates a culture effect
+  * *open air area*: generates a culture effect
+  * *city hall*: adds a new city center which increases the landvalue around it. Also statistics can be views by right clicking or using the query tool on it
+  * *big park*
+  * *Energy*: wind power plant and solar power plant can be researched in a university
+  * *transportation*: new big road type, rails now need a station to be used
+* **research**: in each of the two new universities continuos improvements can be researched as well as unlocking special buildings, such as the new power plants is possible there
+* **improved graphics**: we tweaked some colors to be more eye pleasing
+  * new splash screen
+* **more realistic pollution spreading**: we now use a gaussian distribution to spread pollution around the map
+* scolling with keyboard arrows works now
+* bug fixing
+
 
 ![screenshot](https://raw.githubusercontent.com/Team--Rocket/divercity/master/betterScreenshot.png)
 
