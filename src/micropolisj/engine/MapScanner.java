@@ -231,7 +231,7 @@ class MapScanner extends TileBehavior
 	void doNuclearPower()
 	{
 		checkZonePower();
-		if (!city.noDisasters && PRNG.nextInt(Micropolis.MltdwnTab[city.gameLevel]+1) == 0) {
+		if (!city.noDisasters && PRNG.nextInt(Micropolis.MltdwnTab[city.gameLevel] + (int) (3000.0 * Math.sqrt(city.meltdownsccount)) + 1) == 0) {
 			city.doMeltdown(xpos, ypos);
 			return;
 		}
@@ -259,7 +259,7 @@ class MapScanner extends TileBehavior
 			z = city.fireEffect/2; // from the funding ratio
 		}
 		
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 12*z+30*city.firesccount);
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 6*z+30*city.firesccount);
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {
 				if (help[y][x]!=0) {
@@ -287,7 +287,7 @@ class MapScanner extends TileBehavior
 			z = city.policeEffect/4;
 		}
 
-		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), 6*z+30*city.policesccount);
+		int[][] help=traffic.breadthFirstSearch(new CityLocation(xpos,ypos), z+30*city.policesccount);
 		
 		for (int y=0;y<city.getHeight();y++) {
 			for (int x=0;x<city.getWidth();x++) {

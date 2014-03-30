@@ -48,19 +48,19 @@ public class ScienceFrameB extends JDialog {
     private void disableAllButtonsBut(JButton bNotToBeDisabled){
         for(JButton b : buttonList){
             b.setEnabled(false);
-            b.setBackground(col2);
+            //b.setBackground(col2);
         }
         bNotToBeDisabled.setEnabled(true);
-        bNotToBeDisabled.setBackground(col3);
+        //bNotToBeDisabled.setBackground(col3);
     }
 
     private void enableAllButtons(JButton bNotToBeDisabled){
         for(JButton b : buttonList){
             b.setEnabled(false);
-            b.setBackground(col2);
+            //b.setBackground(col2);
         }
         bNotToBeDisabled.setEnabled(true);
-        bNotToBeDisabled.setBackground(col3);
+        //bNotToBeDisabled.setBackground(col3);
     }
 
 
@@ -124,21 +124,6 @@ public class ScienceFrameB extends JDialog {
         if(engine.twoLaneRoadTech.getIsResearched()) jbTwoLaneRoad.setEnabled(false);
         if(engine.airportTech.getIsResearched()) jbAirport.setEnabled(false);
 
-		jbStreetUpgrade.setBackground(col2);
-		jbRailUpgrade.setBackground(col2);
-		jbPoliceUpgrade.setBackground(col2);
-		jbFireDepUpgrade.setBackground(col2);
-		jbTwoLaneRoad.setBackground(col2);
-		jbAirport.setBackground(col2);
-
-
-		
-		jbStreetUpgrade.setForeground(col3);
-		jbRailUpgrade.setForeground(col3);
-		jbPoliceUpgrade.setForeground(col3);
-		jbFireDepUpgrade.setForeground(col3);
-		jbTwoLaneRoad.setForeground(col3);
-		jbAirport.setForeground(col3);
 
         GeneralTechnology selectedTech = engine.getSelectedInfraTech();
         if(selectedTech != null){

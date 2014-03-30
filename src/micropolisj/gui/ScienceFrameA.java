@@ -59,18 +59,18 @@ public class ScienceFrameA extends JDialog {
     private void disableAllButtonsBut(JButton bNotToBeDisabled){
         for(JButton b : buttonList){
             b.setEnabled(false);
-            b.setBackground(col2);
+            //b.setBackground(col2);
         }
         bNotToBeDisabled.setEnabled(true);
-        bNotToBeDisabled.setBackground(col3);
+        //bNotToBeDisabled.setBackground(col3);
         jbPowerEfficiency.setEnabled(engine.windTech.getIsResearched() && engine.solarTech.getIsResearched());
     }
 
     public void updateButtons(){
 
-        jbPollution.setText("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[" +(int)engine.reducePollutionTech.getPointsUsed()+ " " +(int)engine.reducePollutionTech.getPointsNeeded()+ " points]</font></html>");
-        jbNuclear.setText("<html>Reduce Pollution Of<br>Nuclear Power Plant<br><br><br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
-        jbPowerEfficiency.setText("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+" "+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
+        jbPollution.setText("<html>Reduce Pollution<br><br><br><br><br><font color=#666666>[" +(int)engine.reducePollutionTech.getPointsUsed()+ "/" +(int)engine.reducePollutionTech.getPointsNeeded()+ " points]</font></html>");
+        jbNuclear.setText("<html>Reduce Risk Of<br>Nuclear Meltdown<br><br><br><br><font color=#666666>["+(int)engine.meltdownTech.getPointsUsed()+"/"+(int)engine.meltdownTech.getPointsNeeded()+" points]</font></html>");
+        jbPowerEfficiency.setText("<html>Improve<br> Efficiency Of<br>Wind And Solar<br>Power Stations<br><br><font color=#666666>["+(int)engine.improveWindSolarTech.getPointsUsed()+"/"+(int)engine.improveWindSolarTech.getPointsNeeded()+" points]</font></html>");
         jbSolar.setText("<html>Research Solar<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.solarTech.getPointsUsed()+"/"+(int)engine.solarTech.getPointsNeeded()+" points]</font></html>");
         jbWind.setText("<html>Research Wind<br>Power Stations<br><br><br><br><font color=#666666>["+(int)engine.windTech.getPointsUsed()+"/"+(int)engine.windTech.getPointsNeeded()+" points]</font></html>");
 
@@ -101,22 +101,6 @@ public class ScienceFrameA extends JDialog {
         jbWind.setEnabled(true);
         jbReset.setEnabled(true);
         jbNuclear.setEnabled(true);
-
-		Color c1= new Color(255,229,168);
-		
-		jbPollution.setBackground(c1);
-		jbNuclear.setBackground(c1);
-		jbPowerEfficiency.setBackground(c1);
-		jbSolar.setBackground(c1);
-		jbWind.setBackground(c1);
-
-		Color c2= new Color(169,125,19);
-		
-		jbPollution.setForeground(c2);
-		jbNuclear.setForeground(c2);
-		jbPowerEfficiency.setForeground(c2);
-		jbSolar.setForeground(c2);
-		jbWind.setForeground(c2);
 
 
         GeneralTechnology selectedTech = engine.getSelectedEETech();

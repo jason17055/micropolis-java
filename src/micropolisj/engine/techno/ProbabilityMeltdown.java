@@ -20,7 +20,7 @@ public class ProbabilityMeltdown extends GeneralTechnology{
     public boolean tryToApply(){
         if(super.tryToApply() == true){
             
-            System.out.println("ProbabilityMeltdown");
+            engine.meltdownsccount++;
             return true;
         }
         return false;

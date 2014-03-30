@@ -153,7 +153,6 @@ public class MainWindow extends JFrame
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.GROWTHRATE_OVERLAY", MapState.GROWTHRATE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.LANDVALUE_OVERLAY", MapState.LANDVALUE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.CRIME_OVERLAY", MapState.CRIME_OVERLAY));
-        overlaysMenu.add(makeMapStateMenuItem("menu.overlays.SCHOOL_OVERLAY", MapState.SCHOOL_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POLLUTE_OVERLAY", MapState.POLLUTE_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.TRAFFIC_OVERLAY", MapState.TRAFFIC_OVERLAY));
         overlaysMenu.add(makeMapStateMenuItem("menu.overlays.POWER_OVERLAY", MapState.POWER_OVERLAY));

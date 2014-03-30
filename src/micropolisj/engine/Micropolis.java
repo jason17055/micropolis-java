@@ -273,12 +273,13 @@ public class Micropolis
     int educationEffect = 1000;
     int cultureEffect = 1000;
     
-    public int firesccount      =0;
-    public int policesccount    =0;
-    public int windsolarsccount =0;
-    public int pollutionsccount =0;
-    public int streetsccount    =0;
-    public int railsccount      =0;
+    public int firesccount      = 0;
+    public int policesccount    = 0;
+    public int windsolarsccount = 0;
+    public int pollutionsccount = 0;
+    public int streetsccount    = 0;
+    public int railsccount      = 0;
+    public int meltdownsccount = 0;
 
 	int cashFlow; //net change in totalFunds in previous year
 
@@ -1396,7 +1397,6 @@ public class Micropolis
                     }
 
 
-
                     if (++numPower > localPower) {
                         // trigger notification
                         sendMessage(MicropolisMessage.BROWNOUTS_REPORT);
@@ -1477,9 +1477,6 @@ public class Micropolis
 	//power, terrain, land value
     public void pollutionScan(){
         {
-
-
-
             int pcount = 0;
             int ptotal = 0;
             int pmax = 0;
@@ -1491,7 +1488,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((double) (getPollutionValue(tile) * 2)-20*Math.sqrt((double) pollutionsccount));
+                    int curPollution = (int)  ((double) (getPollutionValue(tile) * 2) - 20 * Math.sqrt((double) pollutionsccount));
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -2603,6 +2600,8 @@ public class Micropolis
 	{
 		coalCount = 0;
 		nuclearCount = 0;
+        solarCount = 0;
+        windCount = 0;
 
 		powerPlants.clear();
 		for (int y = 0; y < map.length; y++) {
@@ -3121,7 +3120,7 @@ public class Micropolis
 			}
 			break;
 		case 35:
-			if (pollutionAverage > 80) {
+			if (pollutionAverage > 120) {
 				sendMessage(MicropolisMessage.HIGH_POLLUTION);
 			}
 			break;
@@ -3146,7 +3145,7 @@ public class Micropolis
 			}
 			break;
         case 52:
-            if (totalPop > 60 && schoolCount == 0) {
+            if (totalPop > 60 && schoolCount == 0 && educationAverage < 100) {
                 sendMessage(MicropolisMessage.NEED_SCHOOL);
             }
             break;

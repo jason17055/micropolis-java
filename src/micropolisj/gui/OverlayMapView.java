@@ -190,7 +190,7 @@ public class OverlayMapView extends JComponent
             }*/
             if(visitloc != null){
                 if(visits > 0){
-                    System.out.println("draw visit at: " + visitloc.x + ", " + visitloc.y);
+                    //System.out.println("draw visit at: " + visitloc.x + ", " + visitloc.y);
                     // getCI determines color, see above. so i multiply with 100 to get some colors
 
                         maybeDrawRect(gr, getCI(10 + visits*50), visitloc.x*3, visitloc.y*3, 4, 4);
@@ -221,7 +221,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,3,3);
+				maybeDrawRect(gr, getCI(A[y][x]),x*3,y*3,6,6);
 			}
 		}
 	}
@@ -232,7 +232,7 @@ public class OverlayMapView extends JComponent
 
 		for (int y = 0; y < A.length; y++) {
 			for (int x = 0; x < A[y].length; x++) {
-				maybeDrawRect(gr, getCI_rog(A[y][x]),x*6,y*6,3,3);
+				maybeDrawRect(gr, getCI_rog(A[y][x]),x*3,y*3,6,6);
 			}
 		}
 	}
@@ -258,11 +258,6 @@ public class OverlayMapView extends JComponent
 			}
 		}
 	}
-
-    private void drawSchoolRadius(Graphics gr)
-    {
-        return;
-    }
 
 	private void maybeDrawRect(Graphics gr, Color col, int x, int y, int width, int height)
 	{
@@ -429,8 +424,6 @@ public class OverlayMapView extends JComponent
 		switch (mapState) {
 		case POLICE_OVERLAY:
 			drawPoliceRadius(gr); break;
-        case SCHOOL_OVERLAY:
-            drawSchoolRadius(gr); break;
         case VISIT_OVERLAY:
             drawVisitOverlay(gr); break;
 		case FIRE_OVERLAY:
