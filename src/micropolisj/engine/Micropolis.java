@@ -927,7 +927,7 @@ public class Micropolis
             int x = (int) ((standardDeviation * x_r) + loc.x);
             int y = (int) ((standardDeviation * y_r) + loc.y);
 
-            int intensity = (int) Math.ceil((2.0 * intensity_r) + 4.0);
+            int intensity = (int) Math.ceil((2.0 * intensity_r) + 5.0);
             intensityPool -= intensity;
             if(onMap(x,y) == true){
                 matrix[y][x] += intensity;
@@ -976,17 +976,8 @@ public class Micropolis
 				if (y + 1 < h)
 					z += tem[y+1][x];
 
-                // new adding values from diagonals
-               /* if (x > 0 && y > 0)
-                    z += tem[y-1][x-1];
-                if (x + 1 < w && y > 0)
-                    z += tem[y-1][x+1];
-                if (y + 1 < h && x + 1 < w)
-                    z += tem[y+1][x+1];
-                if (y + 1 < h && x > 0)
-                    z += tem[y+1][x-1];*/
 
-				z /= 8;
+				z /= 4;
 				if (z > 255)
 					z = 255;
 				tem2[y][x] = z;
@@ -1488,7 +1479,7 @@ public class Micropolis
                 for (int y = 0; y < HWLDY; y++)
                 {
                     int tile = getTile(x, y);
-                    int curPollution = (int)  ((double) (getPollutionValue(tile) * 2) - 20 * Math.sqrt((double) pollutionsccount));
+                    int curPollution = (int)  ((double) (getPollutionValue(tile) * 1.5) - 20 * Math.sqrt((double) pollutionsccount));
                     pollutionMem[y][x] = curPollution;
 
                     if (curPollution != 0)
@@ -3120,7 +3111,7 @@ public class Micropolis
 			}
 			break;
 		case 35:
-			if (pollutionAverage > 120) {
+			if (pollutionAverage > 95) {
 				sendMessage(MicropolisMessage.HIGH_POLLUTION);
 			}
 			break;
