@@ -1363,16 +1363,16 @@ public class Micropolis
                 char g=getTile(loc.x,loc.y);
 
                 if (g==NUCLEAR) {
-                    localPower=2000;
+                    localPower = 2000;
                 }
                 else if (g==POWERPLANT) {
-                    localPower=500; //original was 700
+                    localPower = 500; //original was 700
                 }
                 else if (g==SOLAR) {
-                    localPower=325;
+                    localPower = 325 + (int)(18.0 * Math.sqrt(windsolarsccount));
                 }
                 else if (g==WIND) {
-                    localPower=30;
+                    localPower = 30 + (int) (2.0 * Math.sqrt(windsolarsccount));
                 }
                 int numPower=0;
                 toDo.add(loc);
@@ -1381,18 +1381,18 @@ public class Micropolis
                     current=toDo.pop();
                     g=getTile(current.x,current.y);
                     if (g==NUCLEAR) {
-                        localPower+=2000;
+                        localPower += 2000;
                         done.add(current);
                     } else if (g==POWERPLANT)  {
-                        localPower+=500; //original was 700
+                        localPower += 500; //original was 700
                         done.add(current);
                     }
                     else if (g==SOLAR) {
-                        localPower+=325;
+                        localPower += (325 + (int)(18.0 * Math.sqrt(windsolarsccount)));
                         done.add(current);
                     }
                     else if (g==WIND) {
-                        localPower+=30;
+                        localPower += (30 + (int) (2.0 * Math.sqrt(windsolarsccount)));
                         done.add(current);
                     }
 
