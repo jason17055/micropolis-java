@@ -18,6 +18,7 @@ import javax.xml.stream.*;
 
 import micropolisj.engine.*;
 import static micropolisj.engine.TileConstants.*;
+import static micropolisj.XML_Helper.*;
 
 public class TileImages
 {
@@ -60,19 +61,26 @@ public class TileImages
 			throw new IOException("Unrecognized file format");
 		}
 
-		while (in.next() != XMLStreamConstants.END_ELEMENT) {
-			if (!in.isStartElement()) {
-				continue;
-			}
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			assert in.isStartElement();
 
 			String tagName = in.getLocalName();
 			if (!tagName.equals("tile")) {
-				in.next();
+				skipToEndElement(in);
 				continue;
 			}
 
 			String tileName = in.getAttributeValue(null, "name");
-			int imageNumber = Integer.parseInt(in.getAttributeValue(null, "offsetY"));
+			int imageNumber = -1;
+
+			while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+				assert in.isStartElement();
+				if (in.getLocalName().equals("image")) {
+					String tmp = in.getAttributeValue(null, "offsetY");
+					imageNumber = tmp != null ? Integer.parseInt(tmp) : 0;
+				}
+				skipToEndElement(in);
+			}
 
 			assert tileName != null;
 			assert imageNumber >= 0 && imageNumber < images.length;
@@ -80,7 +88,7 @@ public class TileImages
 			TileSpec ts = Tiles.load(tileName);
 			tileImageMap[ts.tileNumber] = imageNumber;
 
-			in.next();
+			assert in.isEndElement() && in.getLocalName().equals("tile");
 		}
 
 		in.close();

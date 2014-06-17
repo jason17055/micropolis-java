@@ -111,7 +111,9 @@ public class MakeTiles
 		for (int i = 0; i < tileNames.length; i++) {
 			out.writeStartElement("tile");
 			out.writeAttribute("name", tileNames[i]);
+			out.writeStartElement("image");
 			out.writeAttribute("offsetY", Integer.toString(i));
+			out.writeEndElement();
 			out.writeEndElement();
 		}
 		out.writeEndElement();
