@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import javax.imageio.*;
 import javax.swing.ImageIcon;
+import javax.xml.stream.*;
 
 import static micropolisj.engine.TileSpec.generateTileNames;
 
@@ -101,13 +102,27 @@ public class MakeTiles
 	static void writeIndexFile(String [] tileNames, File indexFile)
 		throws IOException
 	{
-		PrintWriter out = new PrintWriter(
-			new FileWriter(indexFile)
-			);
+		try {
+
+		FileOutputStream outStream = new FileOutputStream(indexFile);
+		XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(outStream, "UTF-8");
+		out.writeStartDocument();
+		out.writeStartElement("micropolis-tiles-index");
 		for (int i = 0; i < tileNames.length; i++) {
-			out.printf("%s %d\n", tileNames[i], i);
+			out.writeStartElement("tile");
+			out.writeAttribute("name", tileNames[i]);
+			out.writeAttribute("offsetY", Integer.toString(i));
+			out.writeEndElement();
 		}
+		out.writeEndElement();
+		out.writeEndDocument();
 		out.close();
+		outStream.close(); //because XMLStreamWriter does not call it for us
+
+		}
+		catch (XMLStreamException e) {
+			throw new IOException(e);
+		}
 	}
 
 	static void drawTo(FrameSpec ref, Graphics2D gr, int destX, int destY)
