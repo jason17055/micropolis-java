@@ -11,8 +11,10 @@ package micropolisj.gui;
 import java.awt.*;
 import java.awt.image.*;
 import java.net.URL;
+import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import javax.xml.stream.*;
 
 import micropolisj.engine.*;
 import static micropolisj.engine.TileConstants.*;
@@ -22,6 +24,7 @@ public class TileImages
 	final int TILE_WIDTH;
 	final int TILE_HEIGHT;
 	Image [] images;
+	int [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
 
 	private TileImages(int size)
@@ -29,8 +32,67 @@ public class TileImages
 		this.TILE_WIDTH = size;
 		this.TILE_HEIGHT = size;
 
-		this.images = loadTileImages("/"+size+"x"+size+"/tiles.png", size);
+		initTileImages(String.format("%dx%d", size, size), size);
 		loadSpriteImages();
+	}
+
+	void initTileImages(String baseName, int size)
+	{
+		this.images = loadTileImages("/" + baseName + "/tiles.png", size);
+		initTileImageMap(baseName);
+	}
+
+	void initTileImageMap(String baseName)
+	{
+		try
+		{
+
+		// load tile->image mapping
+		this.tileImageMap = new int[Tiles.getTileCount()];
+		String resourceName = "/" + baseName + "/tiles.idx";
+
+		InputStream inStream = TileImages.class.getResourceAsStream(resourceName);
+		XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(inStream, "UTF-8");
+
+		in.nextTag();
+		if (!(in.getEventType() == XMLStreamConstants.START_ELEMENT &&
+			in.getLocalName().equals("micropolis-tiles-index"))) {
+			throw new IOException("Unrecognized file format");
+		}
+
+		while (in.next() != XMLStreamConstants.END_ELEMENT) {
+			if (!in.isStartElement()) {
+				continue;
+			}
+
+			String tagName = in.getLocalName();
+			if (!tagName.equals("tile")) {
+				in.next();
+				continue;
+			}
+
+			String tileName = in.getAttributeValue(null, "name");
+			int imageNumber = Integer.parseInt(in.getAttributeValue(null, "offsetY"));
+
+			assert tileName != null;
+			assert imageNumber >= 0 && imageNumber < images.length;
+
+			TileSpec ts = Tiles.load(tileName);
+			tileImageMap[ts.tileNumber] = imageNumber;
+
+			in.next();
+		}
+
+		in.close();
+		inStream.close();
+
+		}
+		catch (XMLStreamException e) {
+			throw new Error("unexpected: "+e, e);
+		}
+		catch (IOException e) {
+			throw new Error("unexpected: "+e, e);
+		}
 	}
 
 	static Map<Integer,TileImages> savedInstances = new HashMap<Integer,TileImages>();
@@ -43,10 +105,13 @@ public class TileImages
 		return savedInstances.get(size);
 	}
 
-	public Image getTileImage(int cell)
+	public Image getTileImage(int tileNumber)
 	{
-		int tile = (cell & LOMASK) % images.length;
-		return images[tile];
+		assert (tileNumber & LOMASK) == tileNumber;
+		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
+
+		int imageNumber = tileImageMap[tileNumber];
+		return images[imageNumber];
 	}
 
 	private Image [] loadTileImages(String resourceName, int srcSize)

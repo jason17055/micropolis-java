@@ -12,8 +12,8 @@ import java.util.*;
 
 public class TileSpec
 {
-	int tileNumber;
-	String name;
+	public final int tileNumber;
+	public final String name;
 	TileSpec animNext;
 	TileSpec onPower;
 	TileSpec onShutdown;
