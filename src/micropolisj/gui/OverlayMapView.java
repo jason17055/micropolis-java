@@ -94,10 +94,11 @@ public class OverlayMapView extends JComponent
 		repaint();
 	}
 
-	static BufferedImage tileArrayImage = loadImage("/sm/tiles.png");
 	static final int TILE_WIDTH = 3;
 	static final int TILE_HEIGHT = 3;
 	static final int TILE_OFFSET_Y = 3;
+	static TileImages tileArray = TileImages.getInstance("sm", TILE_HEIGHT);
+	static BufferedImage tileArrayImage = loadImage(tileArray.getResourceName());
 
 	static BufferedImage loadImage(String resourceName)
 	{
@@ -411,12 +412,13 @@ public class OverlayMapView extends JComponent
 	{
 		assert tile >= 0;
 
+		int imageNumber = tileArray.tileImageMap[tile];
 		for (int yy = 0; yy < TILE_HEIGHT; yy++)
 		{
 			for (int xx = 0; xx < TILE_WIDTH; xx++)
 			{
 				img.setRGB(x*TILE_WIDTH+xx,y*TILE_HEIGHT+yy,
-					tileArrayImage.getRGB(xx,tile*TILE_OFFSET_Y+yy));
+					tileArrayImage.getRGB(xx,imageNumber*TILE_OFFSET_Y+yy));
 			}
 		}
 	}

@@ -22,35 +22,50 @@ import static micropolisj.XML_Helper.*;
 
 public class TileImages
 {
+	final String name;
 	final int TILE_WIDTH;
 	final int TILE_HEIGHT;
 	Image [] images;
 	int [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
 
-	private TileImages(int size)
+	private TileImages(String name, int size)
 	{
+		this.name = name;
 		this.TILE_WIDTH = size;
 		this.TILE_HEIGHT = size;
 
-		initTileImages(String.format("%dx%d", size, size), size);
-		loadSpriteImages();
+		initTileImageMap();
 	}
 
-	void initTileImages(String baseName, int size)
+	String getResourceName()
 	{
-		this.images = loadTileImages("/" + baseName + "/tiles.png", size);
-		initTileImageMap(baseName);
+		return "/" + name + "/tiles.png";
 	}
 
-	void initTileImageMap(String baseName)
+	void initTileImages()
 	{
+		if (this.images != null) {
+			// already loaded
+			return;
+		}
+
+		this.images = loadTileImages(getResourceName(), TILE_HEIGHT);
+	}
+
+	void initTileImageMap()
+	{
+		if (this.spriteImages != null) {
+			// already loaded
+			return;
+		}
+
 		try
 		{
 
 		// load tile->image mapping
 		this.tileImageMap = new int[Tiles.getTileCount()];
-		String resourceName = "/" + baseName + "/tiles.idx";
+		String resourceName = "/" + name + "/tiles.idx";
 
 		InputStream inStream = TileImages.class.getResourceAsStream(resourceName);
 		XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(inStream, "UTF-8");
@@ -83,7 +98,7 @@ public class TileImages
 			}
 
 			assert tileName != null;
-			assert imageNumber >= 0 && imageNumber < images.length;
+			assert imageNumber >= 0;
 
 			TileSpec ts = Tiles.load(tileName);
 			tileImageMap[ts.tileNumber] = imageNumber;
@@ -107,14 +122,23 @@ public class TileImages
 
 	public static TileImages getInstance(int size)
 	{
+		TileImages self = getInstance(String.format("%dx%d", size, size), size);
+		self.initTileImages();
+		self.loadSpriteImages();
+		return self;
+	}
+
+	public static TileImages getInstance(String name, int size)
+	{
 		if (!savedInstances.containsKey(size)) {
-			savedInstances.put(size, new TileImages(size));
+			savedInstances.put(size, new TileImages(name, size));
 		}
 		return savedInstances.get(size);
 	}
 
 	public Image getTileImage(int tileNumber)
 	{
+		assert images != null;
 		assert (tileNumber & LOMASK) == tileNumber;
 		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
 
@@ -148,11 +172,18 @@ public class TileImages
 
 	public Image getSpriteImage(SpriteKind kind, int frameNumber)
 	{
+		assert spriteImages != null;
+
 		return spriteImages.get(kind).get(frameNumber);
 	}
 
 	private void loadSpriteImages()
 	{
+		if (this.spriteImages != null) {
+			// already loaded
+			return;
+		}
+
 		spriteImages = new EnumMap<SpriteKind, Map<Integer,Image> >(SpriteKind.class);
 		for (SpriteKind kind : SpriteKind.values())
 		{
