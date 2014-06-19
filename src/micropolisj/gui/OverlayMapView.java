@@ -412,7 +412,7 @@ public class OverlayMapView extends JComponent
 	{
 		assert tile >= 0;
 
-		int imageNumber = tileArray.tileImageMap[tile];
+		int imageNumber = tileArray.getTileImageNumber(tile);
 		for (int yy = 0; yy < TILE_HEIGHT; yy++)
 		{
 			for (int xx = 0; xx < TILE_WIDTH; xx++)

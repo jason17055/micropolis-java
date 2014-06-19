@@ -26,8 +26,22 @@ public class TileImages
 	final int TILE_WIDTH;
 	final int TILE_HEIGHT;
 	Image [] images;
-	int [] tileImageMap;
+	TileImage [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
+
+	static abstract class TileImage
+	{
+	}
+
+	static class SimpleTileImage extends TileImage
+	{
+		int imageNumber;
+	}
+
+	static class AnimatedTile extends TileImage
+	{
+		SimpleTileImage [] frames;
+	}
 
 	private TileImages(String name, int size)
 	{
@@ -53,6 +67,33 @@ public class TileImages
 		this.images = loadTileImages(getResourceName(), TILE_HEIGHT);
 	}
 
+	SimpleTileImage readSimpleImage(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		SimpleTileImage img = new SimpleTileImage();
+		String tmp = in.getAttributeValue(null, "offsetY");
+		img.imageNumber = tmp != null ? Integer.parseInt(tmp) : 0;
+		return img;
+	}
+
+	AnimatedTile readAnimation(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		ArrayList<SimpleTileImage> frames = new ArrayList<SimpleTileImage>();
+
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			String tagName = in.getLocalName();
+			if (tagName.equals("frame")) {
+				frames.add(readSimpleImage(in));
+			}
+			skipToEndElement(in);
+		}
+
+		AnimatedTile anim = new AnimatedTile();
+		anim.frames = frames.toArray(new SimpleTileImage[0]);
+		return anim;
+	}
+
 	void initTileImageMap()
 	{
 		if (this.spriteImages != null) {
@@ -64,7 +105,7 @@ public class TileImages
 		{
 
 		// load tile->image mapping
-		this.tileImageMap = new int[Tiles.getTileCount()];
+		this.tileImageMap = new TileImage[Tiles.getTileCount()];
 		String resourceName = "/" + name + "/tiles.idx";
 
 		InputStream inStream = TileImages.class.getResourceAsStream(resourceName);
@@ -86,22 +127,24 @@ public class TileImages
 			}
 
 			String tileName = in.getAttributeValue(null, "name");
-			int imageNumber = -1;
+			TileImage img = null;
 
 			while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 				assert in.isStartElement();
 				if (in.getLocalName().equals("image")) {
-					String tmp = in.getAttributeValue(null, "offsetY");
-					imageNumber = tmp != null ? Integer.parseInt(tmp) : 0;
+					img = readSimpleImage(in);
+				}
+				else if (in.getLocalName().equals("animation")) {
+					img = readAnimation(in);
 				}
 				skipToEndElement(in);
 			}
 
 			assert tileName != null;
-			assert imageNumber >= 0;
+			assert img != null;
 
 			TileSpec ts = Tiles.load(tileName);
-			tileImageMap[ts.tileNumber] = imageNumber;
+			tileImageMap[ts.tileNumber] = img;
 
 			assert in.isEndElement() && in.getLocalName().equals("tile");
 		}
@@ -136,13 +179,30 @@ public class TileImages
 		return savedInstances.get(size);
 	}
 
-	public Image getTileImage(int tileNumber)
+	public int getTileImageNumber(int tileNumber)
 	{
-		assert images != null;
 		assert (tileNumber & LOMASK) == tileNumber;
 		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
 
-		int imageNumber = tileImageMap[tileNumber];
+		TileImage ti = tileImageMap[tileNumber];
+		if (ti instanceof SimpleTileImage) {
+			return ((SimpleTileImage) ti).imageNumber;
+		}
+		else if (ti instanceof AnimatedTile) {
+			AnimatedTile anim = (AnimatedTile) ti;
+			return anim.frames[0].imageNumber;
+		}
+		else {
+			assert false;
+			return 0;
+		}
+	}
+
+	public Image getTileImage(int tileNumber)
+	{
+		assert images != null;
+
+		int imageNumber = getTileImageNumber(tileNumber);
 		return images[imageNumber];
 	}
 
