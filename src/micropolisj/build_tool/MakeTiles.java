@@ -314,7 +314,7 @@ public class MakeTiles
 	static TileImage parseFrameSpec(String rawSpec)
 		throws IOException
 	{
-		String [] parts = rawSpec.split("|");
+		String [] parts = rawSpec.split("\\|");
 		for (int i = 0; i < parts.length; i++) {
 			parts[i] = parts[i].trim();
 		}
@@ -345,7 +345,7 @@ public class MakeTiles
 		throws IOException
 	{
 		String [] parts = layerStr.split("@", 2);
-		TileImage img = loadImage(parts[0]);
+		TileImage img = loadAnimation(parts[0]);
 
 		if (parts.length >= 2) {
 			TileImageSprite sprite = new TileImageSprite();
