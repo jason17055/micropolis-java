@@ -6,7 +6,7 @@ import java.util.*;
 import javax.xml.stream.*;
 import static micropolisj.XML_Helper.*;
 
-class Animation extends MakeTiles.TileImage
+class Animation extends TileImage
 {
 	static final int DEFAULT_DURATION = 125;
 	List<Frame> frames = new ArrayList<Frame>();
@@ -70,10 +70,10 @@ class Animation extends MakeTiles.TileImage
 
 	static class Frame
 	{
-		MakeTiles.TileImage frame;
+		TileImage frame;
 		int duration;
 
-		public Frame(MakeTiles.TileImage frame, int duration)
+		public Frame(TileImage frame, int duration)
 		{
 			this.frame = frame;
 			this.duration = duration;
