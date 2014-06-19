@@ -75,13 +75,13 @@ public class MakeTiles
 			assert rawSpec != null;
 
 			TileSpec tileSpec = TileSpec.parse(tileNumber, tileName, rawSpec, recipe);
-			FrameSpec ref = parseFrameSpec(tileSpec);
+			TileImage ref = parseFrameSpec(tileSpec);
 			if (ref == null) {
 				// tile is defined, but it has no images
 				continue;
 			}
 
-			drawTo(ref, gr, 0, TILE_SIZE*i);
+			ref.drawTo(gr, 0, TILE_SIZE*i, 0, 0);
 		}
 
 		// make parent directories if necessary
@@ -127,27 +127,40 @@ public class MakeTiles
 		}
 	}
 
-	static void drawTo(FrameSpec ref, Graphics2D gr, int destX, int destY)
-		throws IOException
+	static abstract class TileImage
 	{
-		if (ref.background != null) {
-			drawTo(ref.background, gr, destX, destY);
-		}
-
-		SourceImage sourceImg = ref.image;
-
-		gr.drawImage(
-			sourceImg.image,
-			destX, destY,
-			destX+TILE_SIZE, destY+TILE_SIZE,
-			ref.offsetX * sourceImg.basisSize / STD_SIZE,
-			ref.offsetY * sourceImg.basisSize / STD_SIZE,
-			(ref.offsetX + STD_SIZE) * sourceImg.basisSize / STD_SIZE,
-			(ref.offsetY + STD_SIZE) * sourceImg.basisSize / STD_SIZE,
-			null);
+		abstract void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY);
 	}
 
-	static class SourceImage
+	static class TileImageLayer extends TileImage
+	{
+		TileImageLayer below;
+		TileImage above;
+
+		@Override
+		void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		{
+			if (below != null) {
+				below.drawTo(gr, destX, destY, srcX, srcY);
+			}
+			above.drawTo(gr, destX, destY, srcX, srcY);
+		}
+	}
+
+	static class TileImageSprite extends TileImage
+	{
+		TileImage source;
+		int offsetX;
+		int offsetY;
+
+		@Override
+		void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		{
+			source.drawTo(gr, destX, destY, srcX+offsetX, srcY+offsetY);
+		}
+	}
+
+	static class SourceImage extends TileImage
 	{
 		Image image;
 		int basisSize;
@@ -156,44 +169,81 @@ public class MakeTiles
 			this.image = image;
 			this.basisSize = basisSize;
 		}
+
+		@Override
+		void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		{
+			srcX = srcX * basisSize / STD_SIZE;
+			srcY = srcY * basisSize / STD_SIZE;
+
+			gr.drawImage(
+				image,
+				destX, destY,
+				destX+TILE_SIZE, destY+TILE_SIZE,
+				srcX, srcY,
+				srcX+basisSize, srcY+basisSize,
+				null);
+		}
 	}
 
-	static class FrameSpec
-	{
-		FrameSpec background;
-		SourceImage image;
-		int offsetX;
-		int offsetY;
-	}
-
-	static FrameSpec parseFrameSpec(TileSpec spec)
+	static TileImage parseFrameSpec(TileSpec spec)
 		throws IOException
 	{
-		FrameSpec result = null;
+		return parseFrameSpec(spec.getImages());
+	}
 
-		for (String layerStr : spec.getImages()) {
+	static TileImage parseFrameSpec(String rawSpec)
+		throws IOException
+	{
+		String [] parts = rawSpec.split("|");
+		for (int i = 0; i < parts.length; i++) {
+			parts[i] = parts[i].trim();
+		}
+		return parseFrameSpec(parts);
+	}
 
-		FrameSpec rv = new FrameSpec();
-		rv.background = result;
-		result = rv;
+	static TileImage parseFrameSpec(String [] layerStrings)
+		throws IOException
+	{
+		if (layerStrings.length == 1) {
+			return parseLayerSpec(layerStrings[0]);
+		}
 
+		TileImageLayer result = null;
+
+		for (String layerStr : layerStrings) {
+
+			TileImageLayer rv = new TileImageLayer();
+			rv.below = result;
+			rv.above = parseLayerSpec(layerStr);
+			result = rv;
+		}
+
+		return result;
+	}
+
+	static TileImage parseLayerSpec(String layerStr)
+		throws IOException
+	{
 		String [] parts = layerStr.split("@", 2);
-		rv.image = loadImage(parts[0]);
+		TileImage img = loadImage(parts[0]);
 
 		if (parts.length >= 2) {
+			TileImageSprite sprite = new TileImageSprite();
+			sprite.source = img;
+
 			String offsetInfo = parts[1];
 			parts = offsetInfo.split(",");
 			if (parts.length >= 1) {
-				rv.offsetX = Integer.parseInt(parts[0]);
+				sprite.offsetX = Integer.parseInt(parts[0]);
 			}
 			if (parts.length >= 2) {
-				rv.offsetY = Integer.parseInt(parts[1]);
+				sprite.offsetY = Integer.parseInt(parts[1]);
 			}
+			return sprite;
 		}//endif something given after '@' in image specifier
 
-		}//end foreach layer in image specification
-
-		return result;
+		return img;
 	}
 
 	static File findInkscape()
