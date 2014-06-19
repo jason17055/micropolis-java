@@ -878,10 +878,10 @@
 838   misc_animation@0,176  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=839)(onshutdown=711)
 839   misc_animation@0,192  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=832)(onshutdown=711)
 # BEGIN FOUNTAIN #
-840   misc_animation@0,208                                       (bulldozable)(description=#22)(becomes=841)
-841   misc_animation@0,224                                       (bulldozable)(description=#22)(becomes=842)
-842   misc_animation@0,240                                       (bulldozable)(description=#22)(becomes=843)
-843   misc_animation@0,256                                       (bulldozable)(description=#22)(becomes=840)
+840   fountain     (bulldozable)(description=#22)
+841
+842
+843
 # unknown... (8 frames, known in source code as INDBASE2)
 844   misc_animation@0,272                                       (becomes=845)
 845   misc_animation@0,288                                       (becomes=846)
