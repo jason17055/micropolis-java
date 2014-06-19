@@ -93,9 +93,33 @@ public class MakeTiles
 				continue;
 			}
 
-			TileImageSprite dest = new TileImageSprite();
-			dest.offsetY = nextOffsetY;
-			nextOffsetY += TILE_SIZE;
+			TileImage dest;
+
+			if (ref.getFrameEndTime(0) > 0) {
+
+				Animation ani = new Animation();
+				int t = 0;
+				int n = ref.getFrameEndTime(t);
+				while (n > 0) {
+					TileImageSprite s = new TileImageSprite();
+					s.offsetY = nextOffsetY;
+					nextOffsetY += TILE_SIZE;
+
+					Animation.Frame f = new Animation.Frame(s, n-t);
+
+					ani.addFrame(f);
+
+					t = n;
+					n = ref.getFrameEndTime(t);
+				}
+				dest = ani;
+			}
+			else {			
+				TileImageSprite s = new TileImageSprite();
+				s.offsetY = nextOffsetY;
+				nextOffsetY += TILE_SIZE;
+				dest = s;
+			}
 
 			TileMapping m = new TileMapping(tileName, ref, dest);
 			mappings.add(m);
@@ -107,8 +131,19 @@ public class MakeTiles
 
 		for (TileMapping m : mappings) {
 
-			TileImageSprite sprite = (TileImageSprite) m.dest;
-			m.ref.drawTo(gr, sprite.offsetX, sprite.offsetY, 0, 0);
+			assert (m.dest instanceof Animation) || (m.dest instanceof TileImageSprite);
+
+			if (m.dest instanceof Animation) {
+				Animation ani = (Animation) m.dest;
+				for (Animation.Frame f : ani.frames) {
+					TileImageSprite s = (TileImageSprite) f.frame;
+					m.ref.drawTo(gr, s.offsetX, s.offsetY, 0, 0);
+				}
+			}
+			else {
+				TileImageSprite sprite = (TileImageSprite) m.dest;
+				m.ref.drawTo(gr, sprite.offsetX, sprite.offsetY, 0, 0);
+			}
 		}
 
 		// make parent directories if necessary
@@ -139,7 +174,20 @@ public class MakeTiles
 			out.writeStartElement("tile");
 			out.writeAttribute("name", m.tileName);
 
-			{ //assume it is a simple sprite
+			assert (m.dest instanceof Animation) || (m.dest instanceof TileImageSprite);
+			if (m.dest instanceof Animation) {
+
+				Animation ani = (Animation) m.dest;
+				out.writeStartElement("animation");
+				for (Animation.Frame f : ani.frames) {
+					TileImageSprite s = (TileImageSprite) f.frame;
+					out.writeStartElement("frame");
+					out.writeAttribute("offsetY", Integer.toString(s.offsetY / TILE_SIZE));
+					out.writeEndElement();
+				}
+				out.writeEndElement();
+			}
+			else { //assume it is a simple sprite
 
 				TileImageSprite s = (TileImageSprite ) m.dest;
 				out.writeStartElement("image");
@@ -162,7 +210,12 @@ public class MakeTiles
 
 	static abstract class TileImage
 	{
-		abstract void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY);
+		public abstract void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY);
+		/**
+		 * @return the end-time of the animation frame identified by frameTime;
+		 *   -1 if not an animation, or if frameTime is past the end of the animation
+		 */
+		public abstract int getFrameEndTime(int frameTime);
 	}
 
 	static class TileImageLayer extends TileImage
@@ -171,12 +224,33 @@ public class MakeTiles
 		TileImage above;
 
 		@Override
-		void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 		{
 			if (below != null) {
 				below.drawTo(gr, destX, destY, srcX, srcY);
 			}
 			above.drawTo(gr, destX, destY, srcX, srcY);
+		}
+
+		@Override
+		public int getFrameEndTime(int frameTime)
+		{
+			if (below == null) {
+				return above.getFrameEndTime(frameTime);
+			}
+
+			int belowEnd = below.getFrameEndTime(frameTime);
+			int aboveEnd = above.getFrameEndTime(frameTime);
+
+			if (belowEnd < 0) {
+				return aboveEnd;
+			}
+			else if (aboveEnd < 0 || belowEnd < aboveEnd) {
+				return belowEnd;
+			}
+			else {
+				return aboveEnd;
+			}
 		}
 	}
 
@@ -187,9 +261,14 @@ public class MakeTiles
 		int offsetY;
 
 		@Override
-		void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 		{
 			source.drawTo(gr, destX, destY, srcX+offsetX, srcY+offsetY);
+		}
+
+		@Override
+		public int getFrameEndTime(int frameTime) {
+			return source.getFrameEndTime(frameTime);
 		}
 	}
 
@@ -206,7 +285,7 @@ public class MakeTiles
 		}
 
 		@Override
-		void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 		{
 			srcX = srcX * basisSize / STD_SIZE;
 			srcY = srcY * basisSize / STD_SIZE;
@@ -218,6 +297,11 @@ public class MakeTiles
 				srcX, srcY,
 				srcX+basisSize, srcY+basisSize,
 				null);
+		}
+
+		@Override
+		public int getFrameEndTime(int frameTime) {
+			return -1;
 		}
 	}
 
