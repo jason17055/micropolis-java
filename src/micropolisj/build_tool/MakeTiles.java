@@ -164,10 +164,12 @@ public class MakeTiles
 	{
 		Image image;
 		int basisSize;
+		int targetSize;
 
-		SourceImage(Image image, int basisSize) {
+		SourceImage(Image image, int basisSize, int targetSize) {
 			this.image = image;
 			this.basisSize = basisSize;
+			this.targetSize = targetSize;
 		}
 
 		@Override
@@ -179,7 +181,7 @@ public class MakeTiles
 			gr.drawImage(
 				image,
 				destX, destY,
-				destX+TILE_SIZE, destY+TILE_SIZE,
+				destX+targetSize, destY+targetSize,
 				srcX, srcY,
 				srcX+basisSize, srcY+basisSize,
 				null);
@@ -359,6 +361,7 @@ public class MakeTiles
 			ImageIcon ii = new ImageIcon(pngFile.toString());
 			return new SourceImage(
 				ii.getImage(),
+				TILE_SIZE,
 				TILE_SIZE);
 		}
 
@@ -367,6 +370,7 @@ public class MakeTiles
 			ImageIcon ii = new ImageIcon(pngFile.toString());
 			return new SourceImage(
 				ii.getImage(),
+				TILE_SIZE,
 				TILE_SIZE);
 		}
 
@@ -375,7 +379,8 @@ public class MakeTiles
 			ImageIcon ii = new ImageIcon(pngFile.toString());
 			return new SourceImage(
 				ii.getImage(),
-				STD_SIZE);
+				STD_SIZE,
+				TILE_SIZE);
 		}
 
 		throw new IOException("File not found: "+fileName+".{svg,png}");
