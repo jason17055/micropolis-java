@@ -315,6 +315,18 @@ public class MakeTiles
 		return pngFile;
 	}
 
+	static TileImage loadAnimation(String fileName)
+		throws IOException
+	{
+		File f = new File(fileName + ".ani");
+		if (f.exists()) {
+			return Animation.load(f);
+		}
+		else {
+			return loadImage(fileName);
+		}
+	}
+
 	static SourceImage loadImage(String fileName)
 		throws IOException
 	{
