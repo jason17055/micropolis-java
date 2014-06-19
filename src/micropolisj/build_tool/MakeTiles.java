@@ -46,6 +46,18 @@ public class MakeTiles
 		generateFromRecipe(recipeFile, outputDir);
 	}
 
+	static class TileMapping {
+		String tileName;
+		TileImage ref;
+		TileImage dest;
+
+		TileMapping(String tileName, TileImage ref, TileImage dest) {
+			this.tileName = tileName;
+			this.ref = ref;
+			this.dest = dest;
+		}
+	}
+
 	static void generateFromRecipe(File recipeFile, File outputDir)
 		throws IOException
 	{
@@ -60,9 +72,9 @@ public class MakeTiles
 		String [] tileNames = generateTileNames(recipe);
 		int ntiles = COUNT_TILES == -1 ? tileNames.length : COUNT_TILES;
 
-		// actually assemble the image
-		BufferedImage buf = new BufferedImage(TILE_SIZE,TILE_SIZE*ntiles,BufferedImage.TYPE_INT_RGB);
-		Graphics2D gr = buf.createGraphics();
+		// prepare mapping data
+		int nextOffsetY = 0;
+		ArrayList<TileMapping> mappings = new ArrayList<TileMapping>();
 
 		for (int i = 0; i < ntiles; i++) {
 			int tileNumber = SKIP_TILES + i;
@@ -81,7 +93,22 @@ public class MakeTiles
 				continue;
 			}
 
-			ref.drawTo(gr, 0, TILE_SIZE*i, 0, 0);
+			TileImageSprite dest = new TileImageSprite();
+			dest.offsetY = nextOffsetY;
+			nextOffsetY += TILE_SIZE;
+
+			TileMapping m = new TileMapping(tileName, ref, dest);
+			mappings.add(m);
+		}
+
+		// actually assemble the image
+		BufferedImage buf = new BufferedImage(TILE_SIZE,nextOffsetY,BufferedImage.TYPE_INT_RGB);
+		Graphics2D gr = buf.createGraphics();
+
+		for (TileMapping m : mappings) {
+
+			TileImageSprite sprite = (TileImageSprite) m.dest;
+			m.ref.drawTo(gr, sprite.offsetX, sprite.offsetY, 0, 0);
 		}
 
 		// make parent directories if necessary
@@ -96,10 +123,10 @@ public class MakeTiles
 		// the composed tile array
 		File indexFile = new File(outputDir, "tiles.idx");
 		System.out.println("Generating tiles index: "+indexFile);
-		writeIndexFile(tileNames, indexFile);
+		writeIndexFile(mappings, indexFile);
 	}
 
-	static void writeIndexFile(String [] tileNames, File indexFile)
+	static void writeIndexFile(Collection<TileMapping> mappings, File indexFile)
 		throws IOException
 	{
 		try {
@@ -108,12 +135,18 @@ public class MakeTiles
 		XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(outStream, "UTF-8");
 		out.writeStartDocument();
 		out.writeStartElement("micropolis-tiles-index");
-		for (int i = 0; i < tileNames.length; i++) {
+		for (TileMapping m : mappings) {
 			out.writeStartElement("tile");
-			out.writeAttribute("name", tileNames[i]);
-			out.writeStartElement("image");
-			out.writeAttribute("offsetY", Integer.toString(i));
-			out.writeEndElement();
+			out.writeAttribute("name", m.tileName);
+
+			{ //assume it is a simple sprite
+
+				TileImageSprite s = (TileImageSprite ) m.dest;
+				out.writeStartElement("image");
+				out.writeAttribute("offsetY", Integer.toString(s.offsetY / TILE_SIZE));
+				out.writeEndElement();
+			}
+
 			out.writeEndElement();
 		}
 		out.writeEndElement();
