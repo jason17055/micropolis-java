@@ -7,7 +7,12 @@ public abstract class TileImage
 {
 	public static final int STD_SIZE = 16;
 
-	public abstract void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY);
+	public abstract void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY);
+	public final void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+	{
+		drawWithTimeTo(gr, 0, destX, destY, srcX, srcY);
+	}
+
 	/**
 	 * @return the end-time of the animation frame identified by frameTime;
 	 *   -1 if not an animation, or if frameTime is past the end of the animation
@@ -21,12 +26,12 @@ public abstract class TileImage
 		TileImage above;
 
 		@Override
-		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
 		{
 			if (below != null) {
-				below.drawTo(gr, destX, destY, srcX, srcY);
+				below.drawWithTimeTo(gr, time, destX, destY, srcX, srcY);
 			}
-			above.drawTo(gr, destX, destY, srcX, srcY);
+			above.drawWithTimeTo(gr, time, destX, destY, srcX, srcY);
 		}
 
 		@Override
@@ -58,9 +63,9 @@ public abstract class TileImage
 		int offsetY;
 
 		@Override
-		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
 		{
-			source.drawTo(gr, destX, destY, srcX+offsetX, srcY+offsetY);
+			source.drawWithTimeTo(gr, time, destX, destY, srcX+offsetX, srcY+offsetY);
 		}
 
 		@Override
@@ -82,7 +87,7 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
 		{
 			srcX = srcX * basisSize / STD_SIZE;
 			srcY = srcY * basisSize / STD_SIZE;

@@ -135,9 +135,12 @@ public class MakeTiles
 
 			if (m.dest instanceof Animation) {
 				Animation ani = (Animation) m.dest;
-				for (Animation.Frame f : ani.frames) {
+				int t = 0;
+				for (int i = 0; i < ani.frames.size(); i++) {
+					Animation.Frame f = ani.frames.get(i);
 					TileImageSprite s = (TileImageSprite) f.frame;
-					m.ref.drawTo(gr, s.offsetX, s.offsetY, 0, 0);
+					m.ref.drawWithTimeTo(gr, t, s.offsetX, s.offsetY, 0, 0);
+					t += f.duration;
 				}
 			}
 			else {
