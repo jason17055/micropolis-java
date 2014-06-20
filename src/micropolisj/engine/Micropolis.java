@@ -1889,7 +1889,7 @@ public class Micropolis
 
 		for (int x = xpos - 1; x < xpos + 3; x++) {
 			for (int y = ypos - 1; y < ypos + 3; y++) {
-				setTile(x, y, (char)(FIRE + PRNG.nextInt(4)));
+				setTile(x, y, FIRE);
 			}
 		}
 
@@ -2516,7 +2516,7 @@ public class Micropolis
 				if (PRNG.nextInt(4) != 0) {
 					setTile(x, y, (char)(RUBBLE + PRNG.nextInt(4)));
 				} else {
-					setTile(x, y, (char)(FIRE + PRNG.nextInt(8)));
+					setTile(x, y, FIRE);
 				}
 			}
 		}
@@ -2529,7 +2529,7 @@ public class Micropolis
 		int t = getTile(x, y);
 
 		if (isArsonable(t)) {
-			setTile(x, y, (char)(FIRE + PRNG.nextInt(8)));
+			setTile(x, y, FIRE);
 			crashLocation = new CityLocation(x, y);
 			sendMessageAt(MicropolisMessage.FIRE_REPORT, x, y);
 		}
@@ -2546,7 +2546,7 @@ public class Micropolis
 			if (!isZoneCenter(tile) && isCombustible(tile))
 			{
 				if (tile > 21 && tile < LASTZONE) {
-					setTile(x, y, (char)(FIRE + PRNG.nextInt(8)));
+					setTile(x, y, FIRE);
 					sendMessageAt(MicropolisMessage.FIRE_REPORT, x, y);
 					return;
 				}

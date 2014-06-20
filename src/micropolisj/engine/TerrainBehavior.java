@@ -86,7 +86,7 @@ class TerrainBehavior extends TileBehavior
 							city.makeExplosion(xtem, ytem);
 						}
 					}
-					city.setTile(xtem, ytem, (char)(FIRE + PRNG.nextInt(4)));
+					city.setTile(xtem, ytem, FIRE);
 				}
 			}
 		}
