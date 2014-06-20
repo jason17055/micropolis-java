@@ -221,7 +221,8 @@ public class TileImages
 			return new ImageInfo(sti.imageNumber, true);
 		}
 		else {
-			assert false;
+			assert ti != null : "no image for tile "+tileNumber;
+			assert false : "ti is a "+ti.getClass();
 			return new ImageInfo(0, false);
 		}
 	}
