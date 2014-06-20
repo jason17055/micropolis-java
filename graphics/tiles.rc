@@ -1000,10 +1000,10 @@
 950   misc_animation@0,1968  (bulldozable)(noburn)(overwater)(description=#20)
 951   misc_animation@0,1984  (bulldozable)(noburn)(overwater)(description=#20)
 # BEGIN NUCLEAR SWIRL #
-952   misc_animation@0,2000  (conducts)(description=#26)(becomes=953)(onshutdown=820)
-953   misc_animation@0,2016  (conducts)(description=#26)(becomes=954)(onshutdown=820)
-954   misc_animation@0,2032  (conducts)(description=#26)(becomes=955)(onshutdown=820)
-955   misc_animation@0,2048  (conducts)(description=#26)(becomes=952)(onshutdown=820)
+952   nuclear-swirl          (conducts)(description=#26)(onshutdown=820)
+953
+954
+955
 # unused #
 956   misc_animation@0,2064
 957   misc_animation@0,2080
