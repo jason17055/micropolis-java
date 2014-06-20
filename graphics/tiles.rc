@@ -869,14 +869,14 @@
 830   misc_animation@0,48   (bulldozable)(noburn)(overwater)(description=#20)
 831   misc_animation@0,64   (bulldozable)(noburn)(overwater)(description=#20)
 # BEGIN RADAR DISH #
-832   misc_animation@0,80   (conducts)(building-part=716,1,-1)(description=#21)   (becomes=833)(onshutdown=711)
-833   misc_animation@0,96   (conducts)(building-part=716,1,-1)(description=#21)   (becomes=834)(onshutdown=711)
-834   misc_animation@0,112  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=835)(onshutdown=711)
-835   misc_animation@0,128  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=836)(onshutdown=711)
-836   misc_animation@0,144  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=837)(onshutdown=711)
-837   misc_animation@0,160  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=838)(onshutdown=711)
-838   misc_animation@0,176  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=839)(onshutdown=711)
-839   misc_animation@0,192  (conducts)(building-part=716,1,-1)(description=#21)   (becomes=832)(onshutdown=711)
+832   radar                 (conducts)(building-part=716,1,-1)(description=#21)(onshutdown=711)
+833
+834
+835
+836
+837
+838
+839
 # BEGIN FOUNTAIN #
 840   fountain     (bulldozable)(description=#22)
 841
