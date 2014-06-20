@@ -196,7 +196,8 @@ public class MicropolisDrawingArea extends JComponent
 					}
 				}
 
-				gr.drawImage(tileImages.getTileImage(cell),
+				Image img = tileImages.getTileImage(cell, m.getAnimationCycle());
+				gr.drawImage(img,
 					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0),
 					y*TILE_HEIGHT,
 					null);

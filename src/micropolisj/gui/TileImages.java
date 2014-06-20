@@ -41,6 +41,11 @@ public class TileImages
 	static class AnimatedTile extends TileImage
 	{
 		SimpleTileImage [] frames;
+
+		public SimpleTileImage getFrameByTime(int acycle)
+		{
+			return frames[acycle % frames.length];
+		}
 	}
 
 	private TileImages(String name, int size)
@@ -181,6 +186,11 @@ public class TileImages
 
 	public int getTileImageNumber(int tileNumber)
 	{
+		return getTileImageNumber(tileNumber, 0);
+	}
+
+	public int getTileImageNumber(int tileNumber, int acycle)
+	{
 		assert (tileNumber & LOMASK) == tileNumber;
 		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
 
@@ -190,7 +200,7 @@ public class TileImages
 		}
 		else if (ti instanceof AnimatedTile) {
 			AnimatedTile anim = (AnimatedTile) ti;
-			return anim.frames[0].imageNumber;
+			return anim.getFrameByTime(acycle).imageNumber;
 		}
 		else {
 			assert false;
@@ -198,12 +208,17 @@ public class TileImages
 		}
 	}
 
-	public Image getTileImage(int tileNumber)
+	public Image getTileImage(int tile, int acycle)
 	{
 		assert images != null;
 
-		int imageNumber = getTileImageNumber(tileNumber);
+		int imageNumber = getTileImageNumber(tile, acycle);
 		return images[imageNumber];
+	}
+
+	public Image getTileImage(int tile)
+	{
+		return getTileImage(tile, 0);
 	}
 
 	private Image [] loadTileImages(String resourceName, int srcSize)

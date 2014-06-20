@@ -2956,4 +2956,9 @@ public class Micropolis
 	{
 		budget.totalFunds = totalFunds;
 	}
+
+	public int getAnimationCycle()
+	{
+		return acycle;
+	}
 }
