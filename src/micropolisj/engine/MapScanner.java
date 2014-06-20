@@ -851,7 +851,7 @@ class MapScanner extends TileBehavior
 				{
 					if (city.testBounds(x,y))
 					{
-						int loc = city.map[y][x] & LOMASK;
+						int loc = city.getTile(x, y);
 						if (loc >= LHTHR && loc <= HHTHR)
 						{ //little house
 							city.setTile(x, y, (char)(Brdr[z] + RESCLR - 4));
