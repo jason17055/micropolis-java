@@ -71,14 +71,14 @@
 54    terrain@0,864     (noburn)(description=#5)(behavior=RADIOACTIVE)(pollution=255)
 55    terrain@0,880     (noburn)(description=#5)(behavior=RADIOACTIVE)(pollution=255)
 # BEGIN FIRE ANIMATION #
-56    terrain@0,896                   (noburn)(description=#6)(behavior=FIRE)(becomes=57)(pollution=90)
-57    terrain@0,912                   (noburn)(description=#6)(behavior=FIRE)(becomes=58)(pollution=90)
-58    terrain@0,928                   (noburn)(description=#6)(behavior=FIRE)(becomes=59)(pollution=90)
-59    terrain@0,944                   (noburn)(description=#6)(behavior=FIRE)(becomes=60)(pollution=90)
-60    terrain@0,960                   (noburn)(description=#6)(behavior=FIRE)(becomes=61)(pollution=90)
-61    terrain@0,976                   (noburn)(description=#6)(behavior=FIRE)(becomes=62)(pollution=90)
-62    terrain@0,992                   (noburn)(description=#6)(behavior=FIRE)(becomes=63)(pollution=90)
-63    terrain@0,1008                  (noburn)(description=#6)(behavior=FIRE)(becomes=56)(pollution=90)
+56    fire              (noburn)(description=#6)(behavior=FIRE)(pollution=90)
+57
+58
+59
+60
+61
+62
+63
 # BEGIN ROADS WITH NO TRAFFIC #
 64    roads@0,0                       (bulldozable)(noburn)(overwater)(description=#7)(behavior=ROAD)
 65    roads@0,16                      (bulldozable)(noburn)(overwater)(description=#7)(behavior=ROAD)
