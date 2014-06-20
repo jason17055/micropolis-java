@@ -978,22 +978,22 @@
 931   coal@48,16|coal_smoke_frames@240,16 (conducts)(building-part=750,2,0) (becomes=928)(onshutdown=752)
 # BEGIN STADIUM PLAYFIELD #
 #   Note: the original source code made these unburnable, which doesn't make sense
-932   misc_animation@0,1680 (conducts)(description=#24)(becomes=933)
-933   misc_animation@0,1696 (conducts)(description=#24)(becomes=934)
-934   misc_animation@0,1712 (conducts)(description=#24)(becomes=935)
-935   misc_animation@0,1728 (conducts)(description=#24)(becomes=936)
-936   misc_animation@0,1744 (conducts)(description=#24)(becomes=937)
-937   misc_animation@0,1760 (conducts)(description=#24)(becomes=938)
-938   misc_animation@0,1776 (conducts)(description=#24)(becomes=939)
-939   misc_animation@0,1792 (conducts)(description=#24)(becomes=932)
-940   misc_animation@0,1808 (conducts)(description=#24)(becomes=941)
-941   misc_animation@0,1824 (conducts)(description=#24)(becomes=942)
-942   misc_animation@0,1840 (conducts)(description=#24)(becomes=943)
-943   misc_animation@0,1856 (conducts)(description=#24)(becomes=944)
-944   misc_animation@0,1872 (conducts)(description=#24)(becomes=945)
-945   misc_animation@0,1888 (conducts)(description=#24)(becomes=946)
-946   misc_animation@0,1904 (conducts)(description=#24)(becomes=947)
-947   misc_animation@0,1920 (conducts)(description=#24)(becomes=940)
+932   stadium_animation@0,0  (conducts)(description=#24)
+933
+934
+935
+936
+937
+938
+939
+940   stadium_animation@0,16 (conducts)(description=#24)
+941
+942
+943
+944
+945
+946
+947
 # BEGIN BRIDGE TILES #
 948   misc_animation@0,1936  (bulldozable)(noburn)(overwater)(description=#20)
 949   misc_animation@0,1952  (bulldozable)(noburn)(overwater)(description=#20)
