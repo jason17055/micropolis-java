@@ -186,39 +186,49 @@ public class TileImages
 
 	public int getTileImageNumber(int tileNumber)
 	{
-		return getTileImageNumber(tileNumber, 0);
+		return getTileImageInfo(tileNumber, 0).imageNumber;
 	}
 
-	public int getTileImageNumber(int tileNumber, int acycle)
+	public class ImageInfo
+	{
+		int imageNumber;
+		boolean animated;
+
+		ImageInfo(int imageNumber, boolean animated) {
+			this.imageNumber = imageNumber;
+			this.animated = animated;
+		}
+
+		Image getImage() { return images[imageNumber]; }
+		boolean isAnimated() { return animated; }
+	}
+
+	public ImageInfo getTileImageInfo(int tileNumber, int acycle)
 	{
 		assert (tileNumber & LOMASK) == tileNumber;
 		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
 
 		TileImage ti = tileImageMap[tileNumber];
 		if (ti instanceof SimpleTileImage) {
-			return ((SimpleTileImage) ti).imageNumber;
+			final SimpleTileImage sti = (SimpleTileImage) ti;
+
+			return new ImageInfo(sti.imageNumber, false);
 		}
 		else if (ti instanceof AnimatedTile) {
-			AnimatedTile anim = (AnimatedTile) ti;
-			return anim.getFrameByTime(acycle).imageNumber;
+			final AnimatedTile anim = (AnimatedTile) ti;
+			final SimpleTileImage sti = anim.getFrameByTime(acycle);
+
+			return new ImageInfo(sti.imageNumber, true);
 		}
 		else {
 			assert false;
-			return 0;
+			return new ImageInfo(0, false);
 		}
-	}
-
-	public Image getTileImage(int tile, int acycle)
-	{
-		assert images != null;
-
-		int imageNumber = getTileImageNumber(tile, acycle);
-		return images[imageNumber];
 	}
 
 	public Image getTileImage(int tile)
 	{
-		return getTileImage(tile, 0);
+		return getTileImageInfo(tile, 0).getImage();
 	}
 
 	private Image [] loadTileImages(String resourceName, int srcSize)

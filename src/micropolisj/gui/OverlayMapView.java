@@ -501,6 +501,11 @@ public class OverlayMapView extends JComponent
 	}
 
 	//implements MapListener
+	public void mapAnimation()
+	{
+	}
+
+	//implements MapListener
 	public void tileChanged(int xpos, int ypos)
 	{
 		Rectangle r = new Rectangle(xpos*TILE_WIDTH, ypos * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT);

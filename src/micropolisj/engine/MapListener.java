@@ -14,6 +14,9 @@ package micropolisj.engine;
  */
 public interface MapListener
 {
+	/** Called on every tick of the simulation. */
+	void mapAnimation();
+
 	/** Called whenever data for a specific overlay has changed. */
 	void mapOverlayDataChanged(MapState overlayDataType);
 

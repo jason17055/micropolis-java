@@ -27,6 +27,7 @@ public class MicropolisDrawingArea extends JComponent
 	Micropolis m;
 	boolean blinkUnpoweredZones = true;
 	HashSet<Point> unpoweredZones = new HashSet<Point>();
+	HashSet<CityLocation> animatedTiles = new HashSet<CityLocation>();
 	boolean blink;
 	Timer blinkTimer;
 	ToolCursor toolCursor;
@@ -196,11 +197,15 @@ public class MicropolisDrawingArea extends JComponent
 					}
 				}
 
-				Image img = tileImages.getTileImage(cell, m.getAnimationCycle());
-				gr.drawImage(img,
+				TileImages.ImageInfo imgInfo = tileImages.getTileImageInfo(cell, m.getAnimationCycle());
+				gr.drawImage(imgInfo.getImage(),
 					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0),
 					y*TILE_HEIGHT,
 					null);
+
+				if (imgInfo.isAnimated()) {
+					animatedTiles.add(new CityLocation(x, y));
+				}
 			}
 		}
 
@@ -385,6 +390,15 @@ public class MicropolisDrawingArea extends JComponent
 	{
 		repaint(getSpriteBounds(sprite, sprite.lastX, sprite.lastY));
 		repaint(getSpriteBounds(sprite, sprite.x, sprite.y));
+	}
+
+	//implements MapListener
+	public void mapAnimation()
+	{
+		for (CityLocation loc : animatedTiles) {
+			repaint(getTileBounds(loc.x, loc.y));
+		}
+		animatedTiles.clear();
 	}
 
 	//implements MapListener

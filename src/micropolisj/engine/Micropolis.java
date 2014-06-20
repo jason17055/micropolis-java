@@ -305,6 +305,13 @@ public class Micropolis
 		}
 	}
 
+	void fireMapAnimation()
+	{
+		for (MapListener l : mapListeners) {
+			l.mapAnimation();
+		}
+	}
+
 	void fireMapOverlayDataChanged(MapState overlayDataType)
 	{
 		for (MapListener l : mapListeners) {
@@ -2480,6 +2487,7 @@ public class Micropolis
 				}
 			}
 		}
+		fireMapAnimation();
 	}
 
 	public int getCityPopulation()
