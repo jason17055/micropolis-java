@@ -86,6 +86,11 @@ public class Tiles
 		return tilesByName.get(tileName);
 	}
 
+	public static TileSpec loadByOrdinal(int tileNumber)
+	{
+		return load(Integer.toString(tileNumber));
+	}
+
 	/**
 	 * Access a tile specification by index number.
 	 *

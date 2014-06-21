@@ -2137,7 +2137,7 @@ public class Micropolis
 			{
 				int z = dis.readShort();
 				z &= ~(1024 | 2048 | 4096 | 8192 | 16384); // clear ZONEBIT,ANIMBIT,BULLBIT,BURNBIT,CONDBIT on import
-				map[y][x] = (char) z;
+				map[y][x] = (char) Tiles.loadByOrdinal(z).tileNumber;
 			}
 		}
 	}
