@@ -170,7 +170,7 @@ class MapScanner extends TileBehavior
 		{
 			for (int x = xorg; x < xorg+bi.width; x++)
 			{
-				city.setTile(x, y, (char) bi.members[i]);
+				city.setTile(x, y, (char) bi.members[i].tileNumber);
 				i++;
 			}
 		}
@@ -406,7 +406,7 @@ class MapScanner extends TileBehavior
 				int xx = xorg + x;
 				int yy = yorg + y;
 
-				TileSpec ts = Tiles.get(bi.members[i]);
+				TileSpec ts = bi.members[i];
 				if (powerOn && ts.onPower != null) {
 					ts = ts.onPower;
 				}

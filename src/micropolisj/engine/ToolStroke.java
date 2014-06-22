@@ -164,7 +164,7 @@ public class ToolStroke
 		{
 			for (int columnNum = 0; columnNum < bi.width; columnNum++)
 			{
-				eff.setTile(columnNum, rowNum, (char) bi.members[i]);
+				eff.setTile(columnNum, rowNum, (char) bi.members[i].tileNumber);
 				i++;
 			}
 		}

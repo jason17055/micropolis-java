@@ -64,17 +64,17 @@ public class Tiles
 			TileSpec.BuildingInfo bi = tiles[i].getBuildingInfo();
 			if (bi != null) {
 				for (int j = 0; j < bi.members.length; j++) {
-					int tid = bi.members[j];
+					TileSpec memberTile = bi.members[j];
 					int offx = (bi.width >= 3 ? -1 : 0) + j % bi.width;
 					int offy = (bi.height >= 3 ? -1 : 0) + j / bi.width;
 
-					if (tiles[tid].owner == null &&
+					if (memberTile.owner == null &&
 						(offx != 0 || offy != 0)
 						)
 					{
-						tiles[tid].owner = tiles[i];
-						tiles[tid].ownerOffsetX = offx;
-						tiles[tid].ownerOffsetY = offy;
+						memberTile.owner = tiles[i];
+						memberTile.ownerOffsetX = offx;
+						memberTile.ownerOffsetY = offy;
 					}
 				}
 			}

@@ -60,7 +60,7 @@ public class TileSpec
 	{
 		int width;
 		int height;
-		short [] members;
+		TileSpec [] members;
 	}
 
 	public BuildingInfo getBuildingInfo()
@@ -79,14 +79,14 @@ public class TileSpec
 		bi.width = Integer.parseInt(p2[0]);
 		bi.height = Integer.parseInt(p2[1]);
 
-		bi.members = new short[bi.width*bi.height];
-		int startTile = tileNumber;
+		bi.members = new TileSpec[bi.width*bi.height];
+		int startTile = Integer.parseInt(name);
 		if (bi.width >= 3) { startTile--; }
 		if (bi.height >= 3) { startTile -= bi.width; }
 
 		for (int row = 0; row < bi.height; row++) {
 			for (int col = 0; col < bi.width; col++) {
-				bi.members[row*bi.width+col] = (short)startTile;
+				bi.members[row*bi.width+col] = tileMap.get(Integer.toString(startTile));
 				startTile++;
 			}
 		}
