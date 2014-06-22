@@ -32,25 +32,25 @@ class BuildingTool extends ToolStroke
 		switch (tool)
 		{
 		case FIRE:
-			return applyZone(eff, FIRESTATION);
+			return applyZone(eff, Tiles.loadByOrdinal(FIRESTATION));
 
 		case POLICE:
-			return applyZone(eff, POLICESTATION);
+			return applyZone(eff, Tiles.loadByOrdinal(POLICESTATION));
 
 		case POWERPLANT:
-			return applyZone(eff, POWERPLANT);
+			return applyZone(eff, Tiles.loadByOrdinal(POWERPLANT));
 
 		case STADIUM:
-			return applyZone(eff, STADIUM);
+			return applyZone(eff, Tiles.loadByOrdinal(STADIUM));
 
 		case SEAPORT:
-			return applyZone(eff, PORT);
+			return applyZone(eff, Tiles.loadByOrdinal(PORT));
 
 		case NUCLEAR:
-			return applyZone(eff, NUCLEAR);
+			return applyZone(eff, Tiles.loadByOrdinal(NUCLEAR));
 
 		case AIRPORT:
-			return applyZone(eff, AIRPORT);
+			return applyZone(eff, Tiles.loadByOrdinal(AIRPORT));
 
 		default:
 			// not expected

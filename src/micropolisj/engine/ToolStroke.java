@@ -69,13 +69,13 @@ public class ToolStroke
 			return applyParkTool(eff);
 
 		case RESIDENTIAL:
-			return applyZone(eff, RESCLR);
+			return applyZone(eff, Tiles.loadByOrdinal(RESCLR));
 
 		case COMMERCIAL:
-			return applyZone(eff, COMCLR);
+			return applyZone(eff, Tiles.loadByOrdinal(COMCLR));
 
 		case INDUSTRIAL:
-			return applyZone(eff, INDCLR);
+			return applyZone(eff, Tiles.loadByOrdinal(INDCLR));
 
 		default:
 			// not expected
@@ -125,11 +125,11 @@ public class ToolStroke
 		return new CityLocation(xpos, ypos);
 	}
 
-	boolean applyZone(ToolEffectIfc eff, int base)
+	boolean applyZone(ToolEffectIfc eff, TileSpec base)
 	{
-		assert isZoneCenter(base);
+		assert base.zone;
 
-		TileSpec.BuildingInfo bi = Tiles.get(base).getBuildingInfo();
+		TileSpec.BuildingInfo bi = base.getBuildingInfo();
 		if (bi == null) {
 			throw new Error("Cannot applyZone to #"+base);
 		}
