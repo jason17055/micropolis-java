@@ -138,11 +138,11 @@ class MapScanner extends TileBehavior
 	 * @param base The "zone" tile value for this zone.
 	 * @return true iff the zone was actually placed.
 	 */
-	boolean zonePlop(int base)
+	boolean zonePlop(TileSpec base)
 	{
-		assert isZoneCenter(base);
+		assert base.zone;
 
-		TileSpec.BuildingInfo bi = Tiles.get(base).getBuildingInfo();
+		TileSpec.BuildingInfo bi = base.getBuildingInfo();
 		assert bi != null;
 		if (bi == null)
 			return false;
@@ -324,14 +324,14 @@ class MapScanner extends TileBehavior
 	{
 		if (city.needHospital > 0)
 		{
-			zonePlop(HOSPITAL);
+			zonePlop(Tiles.loadByOrdinal(HOSPITAL));
 			city.needHospital = 0;
 		}
 
 //FIXME- should be 'else if'
 		if (city.needChurch > 0)
 		{
-			zonePlop(CHURCH);
+			zonePlop(Tiles.loadByOrdinal(CHURCH));
 			city.needChurch = 0;
 		}
 	}
@@ -355,7 +355,7 @@ class MapScanner extends TileBehavior
 			{
 				if (PRNG.nextInt(21) == 0)
 				{
-					zonePlop(RESCLR);
+					zonePlop(Tiles.loadByOrdinal(RESCLR));
 				}
 			}
 		}
@@ -371,7 +371,7 @@ class MapScanner extends TileBehavior
 			{
 				if (PRNG.nextInt(21) == 0)
 				{
-					zonePlop(RESCLR);
+					zonePlop(Tiles.loadByOrdinal(RESCLR));
 				}
 			}
 		}
@@ -751,19 +751,19 @@ class MapScanner extends TileBehavior
 	void comPlop(int density, int value)
 	{
 		int base = (value * 5 + density) * 9 + CZB;
-		zonePlop(base);
+		zonePlop(Tiles.loadByOrdinal(base));
 	}
 
 	void indPlop(int density, int value)
 	{
 		int base = (value * 4 + density) * 9 + IZB;
-		zonePlop(base);
+		zonePlop(Tiles.loadByOrdinal(base));
 	}
 
 	void residentialPlop(int density, int value)
 	{
 		int base = (value * 4 + density) * 9 + RZB;
-		zonePlop(base);
+		zonePlop(Tiles.loadByOrdinal(base));
 	}
 
 	private void doCommercialOut(int pop, int value)
@@ -775,7 +775,7 @@ class MapScanner extends TileBehavior
 		}
 		else if (pop == 1)
 		{
-			zonePlop(COMCLR);
+			zonePlop(Tiles.loadByOrdinal(COMCLR));
 			adjustROG(-8);
 		}
 	}
@@ -789,7 +789,7 @@ class MapScanner extends TileBehavior
 		}
 		else if (pop == 1)
 		{
-			zonePlop(INDCLR);
+			zonePlop(Tiles.loadByOrdinal(INDCLR));
 			adjustROG(-8);
 		}
 	}
