@@ -248,7 +248,7 @@
 # BEGIN RAILS #
 224   rails@0,0                 (bulldozable)(noburn)(overwater)(description=#9)(behavior=RAIL)
 225   rails@0,16                (bulldozable)(noburn)(overwater)(description=#9)(behavior=RAIL)
-226   rails@0,32                (bulldozable)(description=#9)(behavior=RAIL)
+226   clear |rails/rail000      (bulldozable)(description=#9)(behavior=RAIL)
 227   rails@0,48                (bulldozable)(description=#9)(behavior=RAIL)
 228   rails@0,64                (bulldozable)(description=#9)(behavior=RAIL)
 229   rails@0,80                (bulldozable)(description=#9)(behavior=RAIL)
