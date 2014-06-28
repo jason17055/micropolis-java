@@ -118,8 +118,8 @@ public class ShipSprite extends Sprite
 			}
 		}
 		if (!found) {
-			explodeSprite();
-			destroyTile(x/16, y/16);
+			//explodeSprite();
+			//destroyTile(x/16, y/16);
 		}
 	}
 
