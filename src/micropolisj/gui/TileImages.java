@@ -13,6 +13,7 @@ import java.awt.image.*;
 import java.net.URL;
 import java.io.*;
 import java.util.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.stream.*;
 
@@ -349,14 +350,16 @@ public class TileImages
 
 	static BufferedImage loadImage(String resourceName)
 	{
-		URL iconUrl = TileImages.class.getResource(resourceName);
-		Image refImage = new ImageIcon(iconUrl).getImage();
+		URL url = TileImages.class.getResource(resourceName);
+		try {
 
-		BufferedImage bi = new BufferedImage(refImage.getWidth(null), refImage.getHeight(null),
-					BufferedImage.TYPE_INT_RGB);
-		Graphics2D gr = bi.createGraphics();
-		gr.drawImage(refImage, 0, 0, null);
-
+		BufferedImage bi = ImageIO.read(url);
 		return bi;
+
+		}
+		catch (IOException e) {
+
+			throw new RuntimeException(e);
+		}
 	}
 }
