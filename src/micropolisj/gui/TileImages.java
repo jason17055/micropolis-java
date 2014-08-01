@@ -115,10 +115,10 @@ public class TileImages
 		//implements LoaderContext
 		public BufferedImage getImage(String fileName)
 		{
-			if (!images.containsKey(name)) {
-				images.put(name, loadImage("/"+name+"/"+fileName));
+			if (!images.containsKey(fileName)) {
+				images.put(fileName, loadImage("/"+name+"/"+fileName));
 			}
-			return images.get(name);
+			return images.get(fileName);
 		}
 	}
 
