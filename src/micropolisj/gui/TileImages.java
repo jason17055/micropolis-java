@@ -35,7 +35,7 @@ public class TileImages
 	static class SimpleTileImage extends TileImage
 	{
 		BufferedImage srcImage;
-		int imageNumber;
+		int offsetY;
 	}
 
 	static class AnimatedTile extends TileImage
@@ -80,7 +80,7 @@ public class TileImages
 			img.srcImage = ctx.getDefaultImage();
 		}
 		String tmp = in.getAttributeValue(null, "offsetY");
-		img.imageNumber = tmp != null ? Integer.parseInt(tmp) : 0;
+		img.offsetY = tmp != null ? Integer.parseInt(tmp) : 0;
 		return img;
 	}
 
@@ -211,12 +211,12 @@ public class TileImages
 	public class ImageInfo
 	{
 		BufferedImage srcImage;
-		int imageNumber;
+		int offsetY;
 		boolean animated;
 
-		ImageInfo(BufferedImage srcImage, int imageNumber, boolean animated) {
+		ImageInfo(BufferedImage srcImage, int offsetY, boolean animated) {
 			this.srcImage = srcImage;
-			this.imageNumber = imageNumber;
+			this.offsetY = offsetY;
 			this.animated = animated;
 		}
 
@@ -236,7 +236,7 @@ public class TileImages
 				for (int xx = 0; xx < TILE_WIDTH; xx++)
 				{
 					img.setRGB(x+xx,y+yy,
-						srcImage.getRGB(xx,imageNumber*TILE_HEIGHT+yy));
+						srcImage.getRGB(xx,offsetY+yy));
 				}
 			}
 		}
@@ -244,7 +244,7 @@ public class TileImages
 		public Image getImage()
 		{
 			return srcImage.getSubimage(
-				0, imageNumber*TILE_HEIGHT,
+				0, offsetY,
 				TILE_WIDTH, TILE_HEIGHT
 				);
 		}
@@ -264,13 +264,13 @@ public class TileImages
 		if (ti instanceof SimpleTileImage) {
 			final SimpleTileImage sti = (SimpleTileImage) ti;
 
-			return new ImageInfo(sti.srcImage, sti.imageNumber, false);
+			return new ImageInfo(sti.srcImage, sti.offsetY, false);
 		}
 		else if (ti instanceof AnimatedTile) {
 			final AnimatedTile anim = (AnimatedTile) ti;
 			final SimpleTileImage sti = anim.getFrameByTime(acycle);
 
-			return new ImageInfo(sti.srcImage, sti.imageNumber, true);
+			return new ImageInfo(sti.srcImage, sti.offsetY, true);
 		}
 		else {
 			throw new Error("no image for tile "+tileNumber);
