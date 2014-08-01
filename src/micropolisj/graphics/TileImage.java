@@ -208,6 +208,7 @@ public abstract class TileImage
 		public SourceImage srcImage;
 		public int offsetX;
 		public int offsetY;
+		public int oversized;
 
 		@Override
 		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight) {
@@ -256,6 +257,9 @@ public abstract class TileImage
 				throw new XMLStreamException("Invalid 'at' syntax");
 			}
 		}
+
+		String tmp1 = in.getAttributeValue(null, "oversized");
+		img.oversized = tmp1 != null ? Integer.parseInt(tmp1) : 0;
 
 		skipToEndElement(in);
 		return img;

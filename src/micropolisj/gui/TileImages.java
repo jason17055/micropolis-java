@@ -158,9 +158,20 @@ public class TileImages
 
 		public void drawTo(Graphics gr, int destX, int destY)
 		{
-			gr.drawImage(getImage(),
-				destX, destY,
-				null);
+			if (image.oversized == 0) {
+				gr.drawImage(getImage(),
+					destX, destY,
+					null);
+			}
+			else {
+				Image img = image.srcImage.getSubimage(
+					0, image.offsetY-image.oversized,
+					TILE_WIDTH+image.oversized,
+					TILE_HEIGHT+image.oversized);
+				gr.drawImage(img,
+					destX, destY-image.oversized,
+					null);
+			}
 		}
 
 		public void drawToBytes(BufferedImage img, int x, int y)
