@@ -198,10 +198,10 @@ public class MicropolisDrawingArea extends JComponent
 				}
 
 				TileImages.ImageInfo imgInfo = tileImages.getTileImageInfo(cell, m.getAnimationCycle());
-				gr.drawImage(imgInfo.getImage(),
+				imgInfo.drawTo(gr,
 					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0),
-					y*TILE_HEIGHT,
-					null);
+					y*TILE_HEIGHT
+					);
 
 				if (imgInfo.isAnimated()) {
 					animatedTiles.add(new CityLocation(x, y));
