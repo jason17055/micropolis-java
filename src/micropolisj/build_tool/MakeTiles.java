@@ -98,16 +98,21 @@ public class MakeTiles
 
 		void createBuffer()
 		{
-			this.buf = new BufferedImage(maxWidth,nextOffsetY,
-				useAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
-			this.gr = buf.createGraphics();
+			if (maxWidth != 0 && nextOffsetY != 0)
+			{
+				this.buf = new BufferedImage(maxWidth,nextOffsetY,
+					useAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+				this.gr = buf.createGraphics();
+			}
 		}
 
 		void writeFile()
 			throws IOException
 		{
-			System.out.println("Generating tiles array: "+outFile);
-			ImageIO.write(buf, "png", outFile);
+			if (buf != null) {
+				System.out.println("Generating tiles array: "+outFile);
+				ImageIO.write(buf, "png", outFile);
+			}
 		}
 
 		@Override
