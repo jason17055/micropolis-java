@@ -223,12 +223,15 @@ public abstract class TileImage
 			int aSrcWidth = srcWidth * basisSize / STD_SIZE;
 			int aSrcHeight = srcHeight * basisSize / STD_SIZE;
 
+			int aDestWidth = srcWidth * targetSize / STD_SIZE;
+			int aDestHeight = srcHeight * targetSize / STD_SIZE;
+
 			gr.drawImage(
 				image,
 				destX,
 				destY,
-				destX + targetSize,
-				destY + targetSize,
+				destX + aDestWidth,
+				destY + aDestHeight,
 				aSrcX,
 				aSrcY,
 				aSrcX + aSrcWidth,

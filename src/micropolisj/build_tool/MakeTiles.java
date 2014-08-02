@@ -572,4 +572,43 @@ public class MakeTiles
 			throw new IOException("XML Parse error", e);
 		}
 	}
+
+	//FIXME- unused code
+	static TileImage parseImageXml(XMLStreamReader in)
+		throws IOException, XMLStreamException
+	{
+		String src = in.getAttributeValue(null, "src");
+		TileImage img = loadAnimation(src);
+
+		int oversizeAmt = 0;
+		int offsetX = 0;
+		int offsetY = 0;
+
+		String t2 = in.getAttributeValue(null, "oversized");
+		if (t2 != null) {
+			oversizeAmt = Integer.parseInt(t2);
+		}
+
+		String tmp = in.getAttributeValue(null, "at");
+		if (tmp != null) {
+			String [] coords = tmp.split(",");
+			if (coords.length == 2) {
+				offsetX = Integer.parseInt(coords[0]);
+				offsetY = Integer.parseInt(coords[1]);
+			}
+			else {
+				throw new IOException("Invalid 'at' syntax");
+			}
+		}
+
+		if (oversizeAmt != 0 || offsetX != 0 || offsetY != 0)
+		{
+			TileImageSprite sprite = new TileImageSprite(img, TILE_SIZE);
+			sprite.offsetX = offsetX;
+			sprite.offsetY = offsetY;
+			img = sprite;
+		}
+
+		return img;
+	}
 }
