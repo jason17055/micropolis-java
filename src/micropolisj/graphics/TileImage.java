@@ -28,11 +28,11 @@ public abstract class TileImage
 	/**
 	 * Draws a part of this tile image to the given graphics context.
 	 */
-	public abstract void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY);
+	public abstract void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight);
 
 	public final void drawTo(Graphics2D gr, int destX, int destY)
 	{
-		this.drawFragment(gr, destX, destY, 0, 0);
+		this.drawFragment(gr, destX, destY, 0, 0, STD_SIZE, STD_SIZE);
 	}
 
 	/**
@@ -95,10 +95,10 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight)
 		{
-			below.drawFragment(gr, destX, destY, srcX, srcY);
-			above.drawFragment(gr, destX, destY, srcX, srcY);
+			below.drawFragment(gr, destX, destY, srcX, srcY, srcWidth, srcHeight);
+			above.drawFragment(gr, destX, destY, srcX, srcY, srcWidth, srcHeight);
 		}
 	}
 
@@ -140,9 +140,9 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight)
 		{
-			source.drawFragment(gr, destX, destY, srcX+offsetX, srcY+offsetY);
+			source.drawFragment(gr, destX, destY, srcX+offsetX, srcY+offsetY, srcWidth, srcHeight);
 		}
 	}
 
@@ -158,10 +158,10 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight)
 		{
 			gr.drawImage(
-				image.getSubimage(srcX, srcY, basisSize, basisSize),
+				image.getSubimage(srcX, srcY, srcWidth, srcHeight),
 				destX,
 				destY,
 				null);
@@ -182,17 +182,23 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight)
 		{
 			srcX = srcX * basisSize / STD_SIZE;
 			srcY = srcY * basisSize / STD_SIZE;
+			srcWidth = srcWidth * basisSize / STD_SIZE;
+			srcHeight = srcHeight * basisSize / STD_SIZE;
 
 			gr.drawImage(
 				image,
-				destX, destY,
-				destX+targetSize, destY+targetSize,
-				srcX, srcY,
-				srcX+basisSize, srcY+basisSize,
+				destX,
+				destY,
+				destX + targetSize,
+				destY + targetSize,
+				srcX,
+				srcY,
+				srcX + srcWidth,
+				srcY + srcHeight,
 				null);
 		}
 	}
@@ -204,9 +210,10 @@ public abstract class TileImage
 		public int offsetY;
 
 		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight) {
 			srcImage.drawFragment(gr, destX, destY,
-				srcX+offsetX, srcY+offsetY);
+				srcX+offsetX, srcY+offsetY,
+				srcWidth, srcHeight);
 		}
 	}
 
