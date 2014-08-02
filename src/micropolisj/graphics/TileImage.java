@@ -177,7 +177,6 @@ public abstract class TileImage
 	{
 		public final BufferedImage image;
 		public final int basisSize;
-		public int oversizeAmt;
 
 		public SourceImage(BufferedImage image, int basisSize)
 		{
@@ -219,31 +218,28 @@ public abstract class TileImage
 		@Override
 		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight)
 		{
-			srcX = srcX * basisSize / STD_SIZE;
-			srcY = srcY * basisSize / STD_SIZE;
-			srcWidth = (srcWidth + oversizeAmt) * basisSize / STD_SIZE;
-			srcHeight = (srcHeight + oversizeAmt) * basisSize / STD_SIZE;
+			int aSrcX = srcX * basisSize / STD_SIZE;
+			int aSrcY = srcY * basisSize / STD_SIZE;
+			int aSrcWidth = srcWidth * basisSize / STD_SIZE;
+			int aSrcHeight = srcHeight * basisSize / STD_SIZE;
 
 			gr.drawImage(
 				image,
 				destX,
-				destY - oversizeAmt*targetSize/STD_SIZE,
-				destX + (16+oversizeAmt)*targetSize/STD_SIZE,
+				destY,
+				destX + targetSize,
 				destY + targetSize,
-				srcX,
-				srcY - oversizeAmt*basisSize/STD_SIZE,
-				srcX + srcWidth,
-				srcY + srcHeight,
+				aSrcX,
+				aSrcY,
+				aSrcX + aSrcWidth,
+				aSrcY + aSrcHeight,
 				null);
 		}
 
 		@Override
 		public Dimension getBounds()
 		{
-			return new Dimension(
-				targetSize + oversizeAmt*targetSize/STD_SIZE,
-				targetSize + oversizeAmt*targetSize/STD_SIZE
-				);
+			return new Dimension(targetSize, targetSize);
 		}
 	}
 
