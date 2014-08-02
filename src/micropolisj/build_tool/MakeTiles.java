@@ -59,6 +59,19 @@ public class MakeTiles
 		}
 	}
 
+	static class Composer
+	{
+		int nextOffsetY = 0;
+
+		TileImageSprite prepareTile(int size)
+		{
+			TileImageSprite s = new TileImageSprite();
+			s.offsetY = nextOffsetY;
+			nextOffsetY += size;
+			return s;
+		}
+	}
+
 	static void generateFromRecipe(File recipeFile, File outputDir)
 		throws IOException
 	{
@@ -74,7 +87,7 @@ public class MakeTiles
 		int ntiles = COUNT_TILES == -1 ? tileNames.length : COUNT_TILES;
 
 		// prepare mapping data
-		int nextOffsetY = 0;
+		Composer c = new Composer();
 		ArrayList<TileMapping> mappings = new ArrayList<TileMapping>();
 
 		for (int i = 0; i < ntiles; i++) {
@@ -102,10 +115,7 @@ public class MakeTiles
 				int t = 0;
 				int n = ref.getFrameEndTime(t);
 				while (n > 0) {
-					TileImageSprite s = new TileImageSprite();
-					s.offsetY = nextOffsetY;
-					nextOffsetY += TILE_SIZE;
-
+					TileImageSprite s = c.prepareTile(TILE_SIZE);
 					Animation.Frame f = new Animation.Frame(s, n-t);
 
 					ani.addFrame(f);
@@ -115,10 +125,8 @@ public class MakeTiles
 				}
 				dest = ani;
 			}
-			else {			
-				TileImageSprite s = new TileImageSprite();
-				s.offsetY = nextOffsetY;
-				nextOffsetY += TILE_SIZE;
+			else {
+				TileImageSprite s = c.prepareTile(TILE_SIZE);
 				dest = s;
 			}
 
@@ -127,7 +135,7 @@ public class MakeTiles
 		}
 
 		// actually assemble the image
-		BufferedImage buf = new BufferedImage(TILE_SIZE,nextOffsetY,BufferedImage.TYPE_INT_RGB);
+		BufferedImage buf = new BufferedImage(TILE_SIZE,c.nextOffsetY,BufferedImage.TYPE_INT_RGB);
 		Graphics2D gr = buf.createGraphics();
 
 		for (TileMapping m : mappings) {
@@ -450,6 +458,30 @@ public class MakeTiles
 		}
 	}
 
+	static TileImage parseImageXml(XMLStreamReader in)
+		throws IOException, XMLStreamException
+	{
+		String src = in.getAttributeValue(null, "src");
+		TileImage img = loadAnimation(src);
+
+		String tmp = in.getAttributeValue(null, "at");
+		if (tmp != null) {
+			String [] coords = tmp.split(",");
+			if (coords.length == 2) {
+				TileImageSprite sprite = new TileImageSprite();
+				sprite.source = img;
+				sprite.offsetX = Integer.parseInt(coords[0]);
+				sprite.offsetY = Integer.parseInt(coords[1]);
+				img = sprite;
+			}
+			else {
+				throw new IOException("Invalid 'at' syntax");
+			}
+		}
+
+		return img;
+	}
+
 	static TileImage parseLayeredImageXml(XMLStreamReader in)
 		throws IOException, XMLStreamException
 	{
@@ -461,10 +493,9 @@ public class MakeTiles
 			String tagName = in.getLocalName();
 			if (tagName.equals("image")) {
 
-				String src = in.getAttributeValue(null, "src");
 				TileImageLayer rv = new TileImageLayer();
 				rv.below = result;
-				rv.above = loadAnimation(src);
+				rv.above = parseImageXml(in);
 				result = rv;
 
 				skipToEndElement(in);
