@@ -91,6 +91,8 @@ public class MakeTiles
 		{
 			TileImageSprite s = new ComposeFrame(this, refImage);
 			s.offsetY = this.nextOffsetY + size.height - TILE_SIZE;
+			s.overlapNorth = size.height - TILE_SIZE;
+			s.overlapEast = size.width - TILE_SIZE;
 			this.nextOffsetY += size.height;
 			this.maxWidth = Math.max(maxWidth, size.width);
 			return s;
@@ -269,6 +271,13 @@ public class MakeTiles
 			out.writeAttribute("src", cb.fileName);
 		}
 		out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
+
+		if (s.overlapNorth != 0) {
+			out.writeAttribute("overlap-north", Integer.toString(s.overlapNorth));
+		}
+		if (s.overlapEast != 0) {
+			out.writeAttribute("overlap-east", Integer.toString(s.overlapEast));
+		}
 	}
 
 	static void writeIndexFile(Collection<TileMapping> mappings, File indexFile)
@@ -580,13 +589,18 @@ public class MakeTiles
 		String src = in.getAttributeValue(null, "src");
 		TileImage img = loadAnimation(src);
 
-		int oversizeAmt = 0;
+		int overlapNorth = 0;
+		int overlapEast = 0;
 		int offsetX = 0;
 		int offsetY = 0;
 
-		String t2 = in.getAttributeValue(null, "oversized");
+		String t1 = in.getAttributeValue(null, "overlap-north");
+		if (t1 != null) {
+			overlapNorth = Integer.parseInt(t1);
+		}
+		String t2 = in.getAttributeValue(null, "overlap-east");
 		if (t2 != null) {
-			oversizeAmt = Integer.parseInt(t2);
+			overlapEast = Integer.parseInt(t2);
 		}
 
 		String tmp = in.getAttributeValue(null, "at");
@@ -601,11 +615,14 @@ public class MakeTiles
 			}
 		}
 
-		if (oversizeAmt != 0 || offsetX != 0 || offsetY != 0)
+		if (overlapNorth != 0 || overlapEast != 0 ||
+			offsetX != 0 || offsetY != 0)
 		{
 			TileImageSprite sprite = new TileImageSprite(img, TILE_SIZE);
 			sprite.offsetX = offsetX;
 			sprite.offsetY = offsetY;
+			sprite.overlapNorth = overlapNorth;
+			sprite.overlapEast = overlapEast;
 			img = sprite;
 		}
 

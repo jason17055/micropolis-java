@@ -128,6 +128,8 @@ public abstract class TileImage
 		public final int targetSize;
 		public int offsetX;
 		public int offsetY;
+		public int overlapNorth;
+		public int overlapEast;
 
 		public TileImageSprite(TileImage source, int targetSize)
 		{
@@ -164,12 +166,19 @@ public abstract class TileImage
 		@Override
 		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight)
 		{
-			source.drawFragment(gr, destX, destY, srcX+offsetX, srcY+offsetY, srcWidth, srcHeight);
+			source.drawFragment(gr,
+				destX, destY-overlapNorth*targetSize/STD_SIZE,
+				srcX+offsetX, srcY+offsetY-overlapNorth,
+				srcWidth + overlapEast, srcHeight + overlapNorth);
 		}
 
 		@Override
 		public Dimension getBounds() {
-			return source.getBounds();
+			Dimension d = source.getBounds();
+			return new Dimension(
+				d.width + overlapEast*targetSize/STD_SIZE,
+				d.height + overlapNorth*targetSize/STD_SIZE
+				);
 		}
 	}
 
@@ -306,7 +315,7 @@ public abstract class TileImage
 			}
 		}
 
-		String tmp1 = in.getAttributeValue(null, "oversized");
+		String tmp1 = in.getAttributeValue(null, "overlap-north");
 		img.oversized = tmp1 != null ? Integer.parseInt(tmp1) : 0;
 
 		skipToEndElement(in);
