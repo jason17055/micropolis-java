@@ -224,15 +224,15 @@ public class MicropolisDrawingArea extends JComponent
 			gr.drawLine(x1+3,y0-3,x1+3,y1+3);
 			gr.drawLine(x0-3,y1+3,x1+3,y1+3);
 
-			gr.setColor(Color.WHITE);
-			gr.drawLine(x0-4,y0-4,x1+3,y0-4);
-			gr.drawLine(x0-4,y0-4,x0-4,y1+3);
-			gr.drawLine(x1,  y0-1,x1,  y1  );
-			gr.drawLine(x0-1,y1,  x1,  y1  );
-
 			gr.setColor(toolCursor.borderColor);
 			gr.drawRect(x0-3,y0-3,x1-x0+5,y1-y0+5);
 			gr.drawRect(x0-2,y0-2,x1-x0+3,y1-y0+3);
+
+			gr.setColor(Color.WHITE);
+			gr.drawLine(x0-3,y0-3,x1+3,y0-3);
+			gr.drawLine(x0-3,y0-3,x0-3,y1+3);
+			gr.drawLine(x1,  y0-1,x1,  y1  );
+			gr.drawLine(x0-1,y1,  x1,  y1  );
 
 			if (toolCursor.fillColor != null) {
 				gr.setColor(toolCursor.fillColor);
