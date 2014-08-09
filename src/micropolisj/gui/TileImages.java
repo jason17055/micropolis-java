@@ -230,6 +230,46 @@ public class TileImages
 		}
 	}
 
+	public ImageInfo getTileImageInfo(Micropolis city, CityLocation loc, int acycle)
+	{
+		int tileNumber = city.getTile(loc.x, loc.y);
+
+		assert (tileNumber & LOMASK) == tileNumber;
+		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
+
+		TileImage ti = tileImageMap[tileNumber];
+		return refineTileImage(ti, city, loc, acycle);
+	}
+
+	ImageInfo refineTileImage(TileImage ti, Micropolis city, CityLocation loc, int acycle)
+	{
+		if (ti instanceof SimpleTileImage) {
+			final SimpleTileImage sti = (SimpleTileImage) ti;
+
+			return new ImageInfo(sti, false);
+		}
+		else if (ti instanceof SwitchTileImage) {
+
+			SwitchTileImage sw = (SwitchTileImage) ti;
+			for (SwitchTileImage.Case c : sw.cases) {
+
+				if (c.matches(city, loc)) {
+					return refineTileImage(c.img, city, loc, acycle);
+				}
+			}
+			return refineTileImage(sw.defaultCase.img, city, loc, acycle);
+		}
+		else if (ti instanceof AnimatedTile) {
+			final AnimatedTile anim = (AnimatedTile) ti;
+			final SimpleTileImage sti = anim.getFrameByTime(acycle);
+
+			return new ImageInfo(sti, true);
+		}
+		else {
+			throw new Error("unknown TileImage type: "+ti.getClass().getName());
+		}
+	}
+
 	public Image getTileImage(int tile)
 	{
 		return getTileImageInfo(tile).getImage();

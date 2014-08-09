@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.*;
 import javax.xml.stream.*;
 
+import micropolisj.engine.*;
 import static micropolisj.XML_Helper.*;
 
 public abstract class TileImage
@@ -332,6 +333,18 @@ public abstract class TileImage
 			public String key;
 			public String value;
 			public TileImage img;
+
+			public boolean matches(Micropolis city, CityLocation loc)
+			{
+				assert key.equals("tile-west"); //only supported one for now
+				CityLocation nloc = new CityLocation(loc.x-1,loc.y);
+				if (!city.testBounds(nloc.x, nloc.y)) {
+					return false;
+				}
+
+				TileSpec ts = Tiles.get(city.getTile(nloc.x, nloc.y));
+				return ts.name.equals(value);
+			}
 		}
 
 		@Override
