@@ -22,8 +22,14 @@ public abstract class TileImage
 
 	public static class TileImageLayer extends TileImage
 	{
-		public TileImageLayer below;
-		public TileImage above;
+		public final TileImageLayer below;
+		public final TileImage above;
+
+		public TileImageLayer(TileImageLayer below, TileImage above)
+		{
+			this.below = below;
+			this.above = above;
+		}
 
 		@Override
 		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)

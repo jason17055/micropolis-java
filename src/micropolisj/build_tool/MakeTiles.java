@@ -310,9 +310,10 @@ public class MakeTiles
 
 		for (String layerStr : layerStrings) {
 
-			TileImageLayer rv = new TileImageLayer();
-			rv.below = result;
-			rv.above = parseLayerSpec(layerStr);
+			TileImageLayer rv = new TileImageLayer(
+				result,
+				parseLayerSpec(layerStr)
+				);
 			result = rv;
 		}
 
@@ -554,9 +555,10 @@ public class MakeTiles
 			String tagName = in.getLocalName();
 			if (tagName.equals("image")) {
 
-				TileImageLayer rv = new TileImageLayer();
-				rv.below = result;
-				rv.above = parseImageXml(in);
+				TileImageLayer rv = new TileImageLayer(
+					result,            //below
+					parseImageXml(in)  //above
+					);
 				result = rv;
 
 				skipToEndElement(in);
