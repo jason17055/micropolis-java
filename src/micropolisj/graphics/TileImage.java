@@ -1,4 +1,4 @@
-package micropolisj.build_tool;
+package micropolisj.graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,10 +20,10 @@ public abstract class TileImage
 	public abstract int getFrameEndTime(int frameTime);
 
 
-	static class TileImageLayer extends TileImage
+	public static class TileImageLayer extends TileImage
 	{
-		TileImageLayer below;
-		TileImage above;
+		public TileImageLayer below;
+		public TileImage above;
 
 		@Override
 		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
@@ -56,11 +56,16 @@ public abstract class TileImage
 		}
 	}
 
-	static class TileImageSprite extends TileImage
+	public static class TileImageSprite extends TileImage
 	{
-		TileImage source;
-		int offsetX;
-		int offsetY;
+		public final TileImage source;
+		public int offsetX;
+		public int offsetY;
+
+		public TileImageSprite(TileImage source)
+		{
+			this.source = source;
+		}
 
 		@Override
 		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
@@ -74,13 +79,14 @@ public abstract class TileImage
 		}
 	}
 
-	static class SourceImage extends TileImage
+	public static class SourceImage extends TileImage
 	{
-		Image image;
-		int basisSize;
-		int targetSize;
+		public final Image image;
+		public final int basisSize;
+		public final int targetSize;
 
-		SourceImage(Image image, int basisSize, int targetSize) {
+		public SourceImage(Image image, int basisSize, int targetSize)
+		{
 			this.image = image;
 			this.basisSize = basisSize;
 			this.targetSize = targetSize;

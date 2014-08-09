@@ -1,5 +1,6 @@
 package micropolisj.build_tool;
 
+import micropolisj.graphics.TileImage;
 import java.awt.Graphics2D;
 import java.io.*;
 import java.util.*;

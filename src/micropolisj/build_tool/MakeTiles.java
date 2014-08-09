@@ -1,6 +1,7 @@
 package micropolisj.build_tool;
 
 import micropolisj.engine.TileSpec;
+import micropolisj.graphics.TileImage;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -11,7 +12,7 @@ import javax.swing.ImageIcon;
 import javax.xml.stream.*;
 
 import static micropolisj.engine.TileSpec.generateTileNames;
-import static micropolisj.build_tool.TileImage.*;
+import static micropolisj.graphics.TileImage.*;
 import static micropolisj.XML_Helper.*;
 
 public class MakeTiles
@@ -78,8 +79,7 @@ public class MakeTiles
 
 		TileImageSprite prepareTile(Dimension size)
 		{
-			TileImageSprite s = new TileImageSprite();
-			s.source = this;
+			TileImageSprite s = new TileImageSprite(this);
 			s.offsetY = this.nextOffsetY + size.height - TILE_SIZE;
 			this.nextOffsetY += size.height;
 			this.maxWidth = Math.max(maxWidth, size.width);
@@ -326,8 +326,7 @@ public class MakeTiles
 		TileImage img = loadAnimation(parts[0]);
 
 		if (parts.length >= 2) {
-			TileImageSprite sprite = new TileImageSprite();
-			sprite.source = img;
+			TileImageSprite sprite = new TileImageSprite(img);
 
 			String offsetInfo = parts[1];
 			parts = offsetInfo.split(",");
@@ -531,8 +530,7 @@ public class MakeTiles
 		if (tmp != null) {
 			String [] coords = tmp.split(",");
 			if (coords.length == 2) {
-				TileImageSprite sprite = new TileImageSprite();
-				sprite.source = img;
+				TileImageSprite sprite = new TileImageSprite(img);
 				sprite.offsetX = Integer.parseInt(coords[0]);
 				sprite.offsetY = Integer.parseInt(coords[1]);
 				img = sprite;
