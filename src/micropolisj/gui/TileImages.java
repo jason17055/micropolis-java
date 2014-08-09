@@ -82,6 +82,8 @@ public class TileImages
 		}
 		String tmp = in.getAttributeValue(null, "offsetY");
 		img.offsetY = tmp != null ? Integer.parseInt(tmp) : 0;
+
+		skipToEndElement(in);
 		return img;
 	}
 
@@ -101,6 +103,33 @@ public class TileImages
 		AnimatedTile anim = new AnimatedTile();
 		anim.frames = frames.toArray(new SimpleTileImage[0]);
 		return anim;
+	}
+
+	static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		TileImage img = null;
+
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			assert in.isStartElement();
+			if (in.getLocalName().equals("image")) {
+				img = readSimpleImage(in, ctx);
+			}
+			else if (in.getLocalName().equals("animation")) {
+				img = readAnimation(in, ctx);
+			}
+			else {
+				skipToEndElement(in);
+			}
+		}
+
+		if (img == null) {
+			throw new XMLStreamException(
+				"missing image descriptor"
+				);
+		}
+
+		return img;
 	}
 
 	class MyLoaderContext implements LoaderContext
@@ -158,18 +187,7 @@ public class TileImages
 			}
 
 			String tileName = in.getAttributeValue(null, "name");
-			TileImage img = null;
-
-			while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
-				assert in.isStartElement();
-				if (in.getLocalName().equals("image")) {
-					img = readSimpleImage(in, ctx);
-				}
-				else if (in.getLocalName().equals("animation")) {
-					img = readAnimation(in, ctx);
-				}
-				skipToEndElement(in);
-			}
+			TileImage img = readTileImage(in, ctx);
 
 			assert tileName != null;
 			assert img != null;
