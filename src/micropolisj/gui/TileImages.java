@@ -13,6 +13,7 @@ import java.awt.image.*;
 import java.net.URL;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.stream.*;
@@ -209,6 +210,10 @@ public class TileImages
 		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
 
 		TileImage ti = tileImageMap[tileNumber];
+		if (ti instanceof SwitchTileImage) {
+			ti = ((SwitchTileImage) ti).defaultCase.img;
+		}
+
 		if (ti instanceof SimpleTileImage) {
 			final SimpleTileImage sti = (SimpleTileImage) ti;
 

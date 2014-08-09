@@ -157,7 +157,7 @@ public abstract class TileImage
 
 		private TileImageSprite sameTransformFor(TileImage img)
 		{
-			TileImageSprite m = new TileImageSprite(img);
+			TileImageSprite m = new TileImageSprite(img, this.targetSize);
 			m.offsetX = this.offsetX;
 			m.offsetY = this.offsetY;
 			return m;
@@ -322,6 +322,64 @@ public abstract class TileImage
 		return img;
 	}
 
+	public static class SwitchTileImage extends TileImage
+	{
+		public ArrayList<Case> cases = new ArrayList<Case>();
+		public Case defaultCase;
+
+		public static class Case
+		{
+			public String key;
+			public String value;
+			public TileImage img;
+		}
+
+		@Override
+		public Dimension getBounds() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight) {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	static TileImage readSwitchImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		SwitchTileImage img = new SwitchTileImage();
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			String tagName = in.getLocalName();
+			if (tagName.equals("case")) {
+				img.cases.add(readSwitchImageCase(in, ctx));
+			}
+			else if (tagName.equals("default")) {
+				img.defaultCase = readSwitchImageCase(in, ctx);
+			}
+			else {
+				skipToEndElement(in);
+			}
+		}
+		return img;
+	}
+
+	static SwitchTileImage.Case readSwitchImageCase(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		SwitchTileImage.Case c = new SwitchTileImage.Case();
+
+		String s;
+		s = in.getAttributeValue(null, "tile-west");
+		if (s != null) {
+			c.key = "tile-west";
+			c.value = s;
+		}
+
+		c.img = readTileImageM(in, ctx);
+		return c;
+	}
+
 	static TileImage readLayeredImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
@@ -361,6 +419,9 @@ public abstract class TileImage
 		else if (tagName.equals("animation")) {
 			return Animation.read(in, ctx);
 		}
+		else if (tagName.equals("switch")) {
+			return readSwitchImage(in, ctx);
+		}
 		else if (tagName.equals("layered-image")) {
 			return readLayeredImage(in, ctx);
 		}
@@ -383,6 +444,7 @@ public abstract class TileImage
 			String tagName = in.getLocalName();
 			if (tagName.equals("image") ||
 				tagName.equals("animation") ||
+				tagName.equals("switch") ||
 				tagName.equals("layered-image"))
 			{
 				img = readTileImage(in, ctx);
