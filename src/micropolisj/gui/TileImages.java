@@ -259,9 +259,9 @@ public class TileImages
 			}
 			return refineTileImage(sw.defaultCase.img, city, loc, acycle);
 		}
-		else if (ti instanceof AnimatedTile) {
-			final AnimatedTile anim = (AnimatedTile) ti;
-			final SimpleTileImage sti = anim.getFrameByTime(acycle);
+		else if (ti instanceof Animation) {
+			final Animation anim = (Animation) ti;
+			final SimpleTileImage sti = (SimpleTileImage) anim.getFrameByTime(acycle);
 
 			return new ImageInfo(sti, true);
 		}

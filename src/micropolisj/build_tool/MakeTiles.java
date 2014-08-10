@@ -120,7 +120,7 @@ public class MakeTiles
 		@Override
 		public Dimension getBounds() { throw new Error("not implemented"); }
 		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight) { throw new UnsupportedOperationException(); }
+		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) { throw new UnsupportedOperationException(); }
 	}
 
 	static class Composer
