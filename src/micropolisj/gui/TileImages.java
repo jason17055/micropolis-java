@@ -159,20 +159,15 @@ public class TileImages
 
 		public void drawTo(Graphics gr, int destX, int destY)
 		{
-			if (image.oversized == 0) {
-				gr.drawImage(getImage(),
-					destX, destY,
-					null);
-			}
-			else {
-				Image img = image.srcImage.image.getSubimage(
-					0, image.offsetY-image.oversized,
-					TILE_WIDTH+image.oversized,
-					TILE_HEIGHT+image.oversized);
-				gr.drawImage(img,
-					destX, destY-image.oversized,
-					null);
-			}
+			BufferedImage srcImage = image.srcImage.image;
+			Image img = srcImage.getSubimage(
+				0,
+				image.offsetY-image.overlapNorth,
+				TILE_WIDTH+image.overlapNorth,
+				TILE_HEIGHT+image.overlapEast);
+			gr.drawImage(img,
+				destX, destY-image.overlapNorth,
+				null);
 		}
 
 		public void drawToBytes(BufferedImage img, int x, int y)

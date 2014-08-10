@@ -262,11 +262,21 @@ public abstract class TileImage
 		public SourceImage srcImage;
 		public int offsetX;
 		public int offsetY;
-		public int oversized;
+		public int overlapNorth;
+		public int overlapEast;
 
 		@Override
 		public Dimension getBounds() {
-			return srcImage.getBounds();
+			Dimension b = srcImage.getBounds();
+			if (overlapEast != 0 || overlapNorth != 0) {
+				return new Dimension(
+					b.width + overlapEast,
+					b.height + overlapNorth
+					);
+			}
+			else {
+				return b;
+			}
 		}
 
 		@Override
@@ -318,7 +328,10 @@ public abstract class TileImage
 		}
 
 		String tmp1 = in.getAttributeValue(null, "overlap-north");
-		img.oversized = tmp1 != null ? Integer.parseInt(tmp1) : 0;
+		img.overlapNorth = tmp1 != null ? Integer.parseInt(tmp1) : 0;
+
+		String tmp2 = in.getAttributeValue(null, "overlap-east");
+		img.overlapEast = tmp2 != null ? Integer.parseInt(tmp2) : 0;
 
 		skipToEndElement(in);
 		return img;
