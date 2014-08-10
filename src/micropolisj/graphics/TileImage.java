@@ -87,4 +87,10 @@ public abstract class TileImage
 				null);
 		}
 	}
+
+	public interface LoaderContext
+	{
+		BufferedImage getDefaultImage();
+		BufferedImage getImage(String name);
+	}
 }

@@ -21,6 +21,7 @@ import micropolisj.engine.*;
 import micropolisj.graphics.TileImage;
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.XML_Helper.*;
+import static micropolisj.graphics.TileImage.LoaderContext;
 
 public class TileImages
 {
@@ -68,12 +69,6 @@ public class TileImages
 	String getResourceName()
 	{
 		return "/" + name + "/tiles.png";
-	}
-
-	interface LoaderContext
-	{
-		BufferedImage getDefaultImage();
-		BufferedImage getImage(String name);
 	}
 
 	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
