@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.xml.stream.*;
 
 import micropolisj.engine.*;
+import micropolisj.graphics.TileImage;
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.XML_Helper.*;
 
@@ -29,14 +30,15 @@ public class TileImages
 	TileImage [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
 
-	static abstract class TileImage
-	{
-	}
-
 	static class SimpleTileImage extends TileImage
 	{
 		BufferedImage srcImage;
 		int offsetY;
+
+		@Override
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	static class AnimatedTile extends TileImage
@@ -46,6 +48,11 @@ public class TileImages
 		public SimpleTileImage getFrameByTime(int acycle)
 		{
 			return frames[acycle % frames.length];
+		}
+
+		@Override
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
+			throw new UnsupportedOperationException();
 		}
 	}
 
