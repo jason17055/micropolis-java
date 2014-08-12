@@ -655,7 +655,7 @@ class MapScanner extends TileBehavior
 		city.comPop += tpop;
 
         int trafficGood = 0;
-        for (int i=0;i<tpop;i++) {
+        for (int i=0;i<Math.max(Math.log10(tpop), 1);i++) {//cut down # of A*-runs
             trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
         }
         //TODO add workbase etc
@@ -703,7 +703,7 @@ class MapScanner extends TileBehavior
 		city.indPop += tpop;
 
         int trafficGood = 0;
-        for (int i=0;i<tpop;i++) {
+        for (int i=0;i<Math.max(Math.log10(tpop), 1);i++) {//cut down # of A*-runs
             trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
         }
 
@@ -752,7 +752,7 @@ class MapScanner extends TileBehavior
 		int trafficGood = 0;
 		int d=2;
 		if (tile == RESCLR) d-=2;
-		for (int i=d;i<city.rd(tpop,8);i++) {
+		for (int i=d;i<Math.max(Math.log10(city.rd(tpop,8)), 1);i++) {//cut down # of A*-runs
 			trafficGood = traffic.genTraffic(new CityLocation(xpos,ypos));
 		}
 		//TODO add workbase etc

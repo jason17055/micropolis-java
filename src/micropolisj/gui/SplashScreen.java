@@ -56,12 +56,12 @@ public class SplashScreen extends JFrame{
 	public SplashScreen(){
 		super("WELCOME");
 		try{
-			image = ImageIO.read(new File("graphics/splash.png"));
-			jlStartNewGame = new JLabel(new ImageIcon(ImageIO.read(new File("graphics/splash_1.png"))));
-			jlPreviousCity = new JLabel(new ImageIcon(ImageIO.read(new File("graphics/splash_2.png"))));
-			jlLoadCity = new JLabel(new ImageIcon(ImageIO.read(new File("graphics/splash_3.png"))));
-			jlScenario = new JLabel(new ImageIcon(ImageIO.read(new File("graphics/splash_4.png"))));
-			jlLeaveGame = new JLabel(new ImageIcon(ImageIO.read(new File("graphics/splash_5.png"))));
+			image = ImageIO.read(SplashScreen.class.getResource("/splash.png"));
+			jlStartNewGame = new JLabel(new ImageIcon(ImageIO.read(SplashScreen.class.getResource("/splash_1.png"))));
+			jlPreviousCity = new JLabel(new ImageIcon(ImageIO.read(SplashScreen.class.getResource("/splash_2.png"))));
+			jlLoadCity = new JLabel(new ImageIcon(ImageIO.read(SplashScreen.class.getResource("/splash_3.png"))));
+			jlScenario = new JLabel(new ImageIcon(ImageIO.read(SplashScreen.class.getResource("/splash_4.png"))));
+			jlLeaveGame = new JLabel(new ImageIcon(ImageIO.read(SplashScreen.class.getResource("/splash_5.png"))));
 		} catch(IOException e){
 			e.printStackTrace();
 		}

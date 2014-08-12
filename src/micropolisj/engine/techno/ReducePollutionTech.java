@@ -19,7 +19,7 @@ public class ReducePollutionTech extends GeneralTechnology {
     public boolean tryToApply(){
         if(super.tryToApply() == true){
             engine.pollutionsccount +=1;// do some fancy street Upgrade stuff
-            System.out.println("reduce polltion");
+            System.out.println("reduce pollution");
             return true;
         }
         return false;

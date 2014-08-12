@@ -15,6 +15,11 @@ import micropolisj.engine.techno.*;
 import java.io.*;
 import java.util.*;
 
+// for XML load/save
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import javax.xml.stream.*;
+
 import micropolisj.engine.techno.BuildingTechnology;
 
 import micropolisj.engine.techno.GeneralTechnology;
@@ -118,7 +123,7 @@ public class Micropolis
 	public Speed simSpeed = Speed.NORMAL;
     public boolean isPaused;
     public Speed oldSpeed = simSpeed;
-    public boolean noDisasters = false;
+    public boolean noDisasters = true;
 
 	public int gameLevel;
 
@@ -172,6 +177,7 @@ public class Micropolis
 
 	int totalPop;
 	int lastCityPop;
+	boolean [] cityPopReached;
 
 	// used in generateBudget()
 	int lastRoadTotal;
@@ -196,7 +202,7 @@ public class Micropolis
 	int pollutionMaxLocationX;
 	int pollutionMaxLocationY;
 	int crimeMaxLocationX;
-    int crimeMaxLocationY;
+	int crimeMaxLocationY;
 	public int centerMassX;
 	public int centerMassY;
 	CityLocation meltdownLocation;  //may be null
@@ -206,8 +212,8 @@ public class Micropolis
 	int needChurch;   // -1 too many already, 0 just right, 1 not enough
 
 	int crimeAverage;
-    int cultureAverage;
-    int educationAverage;
+	int cultureAverage;
+	int educationAverage;
 	int pollutionAverage;
 	int landValueAverage;
 	int trafficAverage;
@@ -375,13 +381,12 @@ public class Micropolis
 		fireRate = new int[height][width];
 		comRate = new int[height][width];
 		lastWay = new int[height][width];
+		cityPopReached = new boolean[5];
 
-        technologyEEPoints = 0;
-        technologyInfraPoints = 0;
+		technologyEEPoints = 0;
+		technologyInfraPoints = 0;
 
-
-        initTechs();
-
+		initTechs();
 
 	}
 
@@ -1120,7 +1125,8 @@ public class Micropolis
 			{
 				trfDensity[y][x]*=3;
 				trfDensity[y][x]/=4;
-				/*original functionint z = trfDensity[y][x];
+				/*original function
+				int z = trfDensity[y][x];
 				if (z != 0)
 				{
 					
@@ -1130,7 +1136,7 @@ public class Micropolis
 						trfDensity[y][x] = z - 24;
 					else
 						trfDensity[y][x] = 0;
-				}*/
+				}//*/
 			}
 		}
 	}
@@ -1299,7 +1305,7 @@ public class Micropolis
     }
 	
 	public void putVisits(CityLocation loc) {
-		visitNew.put(loc,(dummySearch(visitNew,loc)+(1+lastCityPop/25000)));
+		visitNew.put(loc,(dummySearch(visitNew,loc)+(1+lastCityPop/15000)));
 	}
 	
 	public static CityLocation goToAdj(CityLocation loc, int dir)
@@ -1615,31 +1621,57 @@ public class Micropolis
 		double normResPop = (double)resPop / 8.0;
 		totalPop = (int) (normResPop + comPop + indPop);
 		double employment;
-		if (normResPop != 0.0)
+		/*if (normResPop != 0.0)
 		{
 			employment = 2*(history.com[1] + history.ind[1]) / (normResPop+history.com[1] + history.ind[1]);
 		}
 		else
 		{
 			employment = 2;
-		}
+		}*/
+                if (normResPop != 0.0)
+                {
+                        employment = (history.com[1] + history.ind[1]) / normResPop;
+                }
+                else
+                {
+                        employment = 1;
+                }
 
 		double migration = normResPop * (employment - 1);
 		final double BIRTH_RATE = 0.02;
 		double births = (double)normResPop * BIRTH_RATE;
 		double projectedResPop = normResPop + migration + births;
 
+                double temp = (history.com[1] + history.ind[1]);
+                double laborBase;
+                if (temp != 0.0)
+                {
+                        laborBase = history.res[1] / temp;
+                }
+                else
+                {
+                        laborBase = 1;
+                }
+
 		// clamp laborBase to between 0.0 and 1.3
-		employment = Math.max(0.0, Math.min(1.3, employment));
+		laborBase = Math.max(0.0, Math.min(1.3, laborBase));
+
+                double internalMarket = (double)(normResPop + comPop + indPop) / 3.7;
+                double projectedComPop = internalMarket * laborBase;
 
 		int z = gameLevel;
-		double temp = 1.0;
+		temp = 1.0;
 		switch (z)
 		{
 		case 0: temp = 1.2; break;
 		case 1: temp = 1.1; break;
-		case 2: temp = 1; break;
+		case 2: temp = 0.98; break;
 		}
+
+                double projectedIndPop = indPop * laborBase * temp;
+                if (projectedIndPop < 5.0)
+                        projectedIndPop = 5.0;
 
 		double resRatio;
 		if (normResPop != 0) {
@@ -1649,7 +1681,7 @@ public class Micropolis
 			resRatio = 1.3;
 		}
 
-		double comRatio;
+		/*double comRatio;
 		if (comPop != 0)
 			comRatio = 2*employment*(2-employment);
 		else
@@ -1664,7 +1696,18 @@ public class Micropolis
 		if (indPop != 0)
 			indRatio = (2*temp-employment);
 		else
-			indRatio = (temp*2-employment);
+			indRatio = (temp*2-employment);*/
+                double comRatio;
+                if (comPop != 0)
+                        comRatio = (double)projectedComPop / (double)comPop;
+                else
+                        comRatio = projectedComPop;
+
+                double indRatio;
+                if (indPop != 0)
+                        indRatio = (double)projectedIndPop / (double)indPop;
+                else
+                        indRatio = projectedIndPop;
 
 		if (resRatio > 2.0)
 			resRatio = 2.0;
@@ -1674,10 +1717,17 @@ public class Micropolis
 
 		if (indRatio > 2.0)
 			indRatio = 2.0;
-		
-		resRatio = (resRatio - 1) * 600+100;
+
+                int z2 = taxEffect + gameLevel;
+                if (z2 > 20)
+                        z2 = 20;
+
+                resRatio = (resRatio - 1) * 600 + TaxTable[z2];
+                comRatio = (comRatio - 1) * 600 + TaxTable[z2];
+                indRatio = (indRatio - 1) * 600 + TaxTable[z2];		
+		/*resRatio = (resRatio - 1) * 600+100;
 		comRatio = (comRatio - 1) * 600;
-		indRatio = (indRatio - 1) * 600;
+		indRatio = (indRatio - 1) * 600;*/
 
 		// ratios are velocity changes to valves
 		resValve += (int) resRatio;
@@ -2016,12 +2066,11 @@ public class Micropolis
 		int comMax = 0;
 		int indMax = 0;
 
-        // inertia for education and cultur  
-        educationValue *= 5.0/8.0;
-        cultureValue *= 5.0/8.0;
-        updateEducationAverage(1);
-        updateCultureAverage(1);
-
+		// inertia for education and culture
+		educationValue *= 5.0/8.0;
+		cultureValue *= 5.0/8.0;
+		updateEducationAverage(1);
+		updateCultureAverage(1);
 
 		for (int i = 118; i >= 0; i--)
 		{
@@ -2036,8 +2085,8 @@ public class Micropolis
 			history.com[i + 1] = history.com[i];
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
-            history.education[i + 1] = history.education[i];
-            history.culture[i + 1] = history.culture[i];
+			history.education[i + 1] = history.education[i];
+			history.culture[i + 1] = history.culture[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -2058,10 +2107,10 @@ public class Micropolis
 		polluteRamp = pollutionAverage;
 		history.pollution[0] = Math.min(255, polluteRamp);
 
-        educationRamp = (educationAverage);
-        history.education[0] = Math.min(255, educationRamp);
+		educationRamp = (educationAverage);
+		history.education[0] = Math.min(255, educationRamp);
 
-        history.culture[0] = Math.min(255, cultureAverage);
+		history.culture[0] = Math.min(255, cultureAverage);
 
 		int moneyScaled = cashFlow / 20 + 128;
 		if (moneyScaled < 0)
@@ -2119,8 +2168,8 @@ public class Micropolis
 			history.com[i + 1] = history.com[i];
 			history.ind[i + 1] = history.ind[i];
 			history.crime[i + 1] = history.crime[i];
-            history.education[i + 1] = history.education[i];
-            history.culture[i + 1] = history.culture[i];
+			history.education[i + 1] = history.education[i];
+			history.culture[i + 1] = history.culture[i];
 			history.pollution[i + 1] = history.pollution[i];
 			history.money[i + 1] = history.money[i];
 		}
@@ -2129,8 +2178,8 @@ public class Micropolis
 		history.com[120] = comPop;
 		history.ind[120] = indPop;
 		history.crime[120] = history.crime[0];
-        history.education[120] = history.education[0];
-        history.culture[120] = history.culture[0];
+		history.education[120] = history.education[0];
+		history.culture[120] = history.culture[0];
 		history.pollution[120] = history.pollution[0];
 		history.money[120] = history.money[0];
 	}
@@ -2398,7 +2447,8 @@ public class Micropolis
 
 	static final int [] MltdwnTab = { 30000, 20000, 10000 };
 
-	void loadHistoryArray(int [] array, DataInputStream dis)
+
+	void loadHistoryArray_v1(int [] array, DataInputStream dis)
 		throws IOException
 	{
 		for (int i = 0; i < 240; i++)
@@ -2407,16 +2457,157 @@ public class Micropolis
 		}
 	}
 
-	void writeHistoryArray(int [] array, DataOutputStream out)
-		throws IOException
+	void loadHistoryArray_v2(int [] array, XMLStreamReader in)
+		throws XMLStreamException
 	{
+		Reader r = XML_Helper.readElementText(in);
+		Scanner s = new Scanner(r);
 		for (int i = 0; i < 240; i++)
 		{
-			out.writeShort(array[i]);
+			array[i] = s.nextShort();
+		}
+		s.close();
+	}
+
+	void writeHistoryArray(String tagName, int [] array, XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		out.writeStartElement(tagName);
+		out.writeStartElement("shortTerm");
+		for (int i = 0; i < 120; i++)
+		{
+			out.writeCharacters(" " + Integer.toString(array[i]));
+		}
+		out.writeEndElement(); //shortTerm
+		out.writeStartElement("longTerm");
+		for (int i = 120; i < 240; i++)
+		{
+			out.writeCharacters(" " + Integer.toString(array[i]));
+		}
+		out.writeEndElement(); //longTerm
+		out.writeEndElement();
+	}
+
+	void loadBudget_v2(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		budget.totalFunds = Integer.parseInt(in.getAttributeValue(null, "funds"));
+		cityTax = Integer.parseInt(in.getAttributeValue(null, "cityTax"));
+		policePercent = Double.parseDouble(in.getAttributeValue(null, "policePercent")) / 100.0;
+		firePercent = Double.parseDouble(in.getAttributeValue(null, "firePercent")) / 100.0;
+		roadPercent = Double.parseDouble(in.getAttributeValue(null, "roadPercent")) / 100.0;
+		XML_Helper.skipToEndElement(in);
+
+		if (cityTax < 0 || cityTax > 20) { cityTax = 7; }
+		if (policePercent < 0.0) { policePercent = 0.0; }
+		if (policePercent > 1.0) { policePercent = 1.0; }
+		if (firePercent < 0.0) { firePercent = 0.0; }
+		if (firePercent > 1.0) { firePercent = 1.0; }
+		if (roadPercent < 0.0) { roadPercent = 0.0; }
+		if (roadPercent > 1.0) { roadPercent = 1.0; }
+	}
+
+	static String nvl(String x, String d)
+	{
+		return x != null ? x : d;
+	}
+
+	void loadCityTime_v2(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		cityTime = Integer.parseInt(in.getAttributeValue(null, "time"));
+		fcycle = Integer.parseInt(in.getAttributeValue(null, "fcycle"));
+		acycle = Integer.parseInt(in.getAttributeValue(null, "acycle"));
+		XML_Helper.skipToEndElement(in);
+
+		if (cityTime < 0) {
+			cityTime = 0;
 		}
 	}
 
-	void loadMisc(DataInputStream dis)
+	void loadMisc_v2(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		crimeRamp = Integer.parseInt(in.getAttributeValue(null, "crimeRamp"));
+		polluteRamp = Integer.parseInt(in.getAttributeValue(null, "polluteRamp"));
+		landValueAverage = Integer.parseInt(in.getAttributeValue(null, "landValueAverage"));
+		crimeAverage = Integer.parseInt(in.getAttributeValue(null, "crimeAverage"));
+		pollutionAverage = Integer.parseInt(in.getAttributeValue(null, "pollutionAverage"));
+		gameLevel = Integer.parseInt(in.getAttributeValue(null, "gameLevel"));
+		autoBulldoze = Boolean.parseBoolean(in.getAttributeValue(null, "autoBulldoze"));
+		autoBudget = Boolean.parseBoolean(in.getAttributeValue(null, "autoBudget"));
+		autoGo = Boolean.parseBoolean(in.getAttributeValue(null, "autoGo"));
+		noDisasters = !Boolean.parseBoolean(nvl(in.getAttributeValue(null, "allowDisasters"), "true"));
+		simSpeed = Speed.valueOf(in.getAttributeValue(null, "simSpeed"));
+		XML_Helper.skipToEndElement(in);
+
+		if (gameLevel < 0 || gameLevel > 2) { gameLevel = 0; }
+
+		resCap = false;
+		comCap = false;
+		indCap = false;
+	}
+
+	void loadTechPoints(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		String nameEETech = in.getAttributeValue(null, "selectedEETech");
+		String nameInfraTech = in.getAttributeValue(null, "selectedInfraTech");
+		double pointsEETech = Double.parseDouble(in.getAttributeValue(null, "selectedEETechPoints"));
+		double pointsInfraTech = Double.parseDouble(in.getAttributeValue(null, "selectedInfraTechPoints"));
+		XML_Helper.skipToEndElement(in);
+
+		if (!nameEETech.equals("none")) {
+			boolean eefound = false;
+			for (int i = 0; i < eetechs.size() && !eefound; i++) {
+				if (eetechs.get(i).getName().equals(nameEETech)) {
+					setSelectedEETech(eetechs.get(i));
+					selectedEETech.addResearchPoints(pointsEETech);
+					eefound = true;
+				}
+			}
+		} else {
+			selectedEETech = null;
+		}
+
+		if (!nameInfraTech.equals("none")) {
+			boolean infrafound = false;
+			for (int i = 0; i < infraTechs.size() && !infrafound; i++) {
+				if (infraTechs.get(i).getName().equals(nameInfraTech)) {
+					setSelectedInfraTech(infraTechs.get(i));
+					selectedInfraTech.addResearchPoints(pointsInfraTech);
+					infrafound = true;
+				}
+			}
+		} else {
+			selectedInfraTech = null;
+		}
+	}
+
+	void loadTech(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		windTech.isResearched = Boolean.parseBoolean(in.getAttributeValue(null, "windResearched"));
+		solarTech.isResearched = Boolean.parseBoolean(in.getAttributeValue(null, "solarResearched"));
+		airportTech.isResearched = Boolean.parseBoolean(in.getAttributeValue(null, "airportResearched"));
+		twoLaneRoadTech.isResearched = Boolean.parseBoolean(in.getAttributeValue(null, "twoLaneRoadResearched"));
+		XML_Helper.skipToEndElement(in);
+	}
+
+	void loadUpgradeCounts(XMLStreamReader in)
+		throws XMLStreamException
+	{
+		firesccount = Integer.parseInt(in.getAttributeValue(null, "fire"));
+		policesccount = Integer.parseInt(in.getAttributeValue(null, "police"));
+		windsolarsccount = Integer.parseInt(in.getAttributeValue(null, "windsolar"));
+		pollutionsccount = Integer.parseInt(in.getAttributeValue(null, "pollution"));
+		streetsccount = Integer.parseInt(in.getAttributeValue(null, "street"));
+		railsccount = Integer.parseInt(in.getAttributeValue(null, "rail"));
+		meltdownsccount = Integer.parseInt(in.getAttributeValue(null, "meltdown"));
+		XML_Helper.skipToEndElement(in);
+	}
+
+	void loadMisc_v1(DataInputStream dis)
 		throws IOException
 	{
 		dis.readShort(); //[0]... ignored?
@@ -2481,55 +2672,105 @@ public class Micropolis
 		indCap = false;
 	}
 
-	void writeMisc(DataOutputStream out)
-		throws IOException
+	void writeTechPoints(XMLStreamWriter out)
+		throws XMLStreamException
 	{
-		out.writeShort(0);
-		out.writeShort(0);
-		out.writeShort(resPop);
-		out.writeShort(comPop);
-		out.writeShort(indPop);
-		out.writeShort(resValve);
-		out.writeShort(comValve);
-		out.writeShort(indValve);
-		//8
-		out.writeInt(cityTime);
-		out.writeShort(crimeRamp);
-		out.writeShort(polluteRamp);
-		//12
-		out.writeShort(landValueAverage);
-		out.writeShort(crimeAverage);
-		out.writeShort(pollutionAverage);
-		out.writeShort(gameLevel);
-		//16
-		out.writeShort(evaluation.cityClass);
-		out.writeShort(evaluation.cityScore);
-		//18
-		for (int i = 18; i < 50; i++) {
-			out.writeShort(0);
-		}
-		//50
-		out.writeInt(budget.totalFunds);
-		out.writeShort(autoBulldoze ? 1 : 0);
-		out.writeShort(autoBudget ? 1 : 0);
-		//54
-		out.writeShort(autoGo ? 1 : 0);
-		out.writeShort(1); //userSoundOn
-		out.writeShort(cityTax);
-		out.writeShort(simSpeed.ordinal());
+		out.writeStartElement("techPoints");
 
-		//58
-		out.writeInt((int)(policePercent * 65536));
-		out.writeInt((int)(firePercent * 65536));
-		out.writeInt((int)(roadPercent * 65536));
-
-		//64
-		for (int i = 64; i < 120; i++) {
-			out.writeShort(0);
+		if (selectedEETech != null) {		
+			out.writeAttribute("selectedEETech", selectedEETech.getName());
+			out.writeAttribute("selectedEETechPoints", Double.toString(selectedEETech.getPointsUsed()));
+		} else {
+			out.writeAttribute("selectedEETech", "none");
+			out.writeAttribute("selectedEETechPoints", Double.toString(0));
 		}
+
+		if (selectedInfraTech != null) {
+			out.writeAttribute("selectedInfraTech", selectedInfraTech.getName());
+			out.writeAttribute("selectedInfraTechPoints", Double.toString(selectedInfraTech.getPointsUsed()));
+		} else {
+			out.writeAttribute("selectedInfraTech", "none");
+			out.writeAttribute("selectedInfraTechPoints", Double.toString(0));
+		}
+
+		out.writeEndElement();
 	}
 
-	void loadMap(DataInputStream dis)
+	void writeTech(XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		out.writeStartElement("techResearch");
+		out.writeAttribute("windResearched", Boolean.toString(windTech.getIsResearched()));
+		out.writeAttribute("solarResearched", Boolean.toString(solarTech.getIsResearched()));
+		out.writeAttribute("airportResearched", Boolean.toString(airportTech.getIsResearched()));
+		out.writeAttribute("twoLaneRoadResearched", Boolean.toString(twoLaneRoadTech.getIsResearched()));
+		out.writeEndElement();
+	}
+
+	void writeUpgradeCounts(XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		out.writeStartElement("upgradeCounts");
+		out.writeAttribute("fire", Integer.toString(firesccount));
+		out.writeAttribute("police", Integer.toString(policesccount));
+		out.writeAttribute("windsolar", Integer.toString(windsolarsccount));
+		out.writeAttribute("pollution", Integer.toString(pollutionsccount));
+		out.writeAttribute("street", Integer.toString(streetsccount));
+		out.writeAttribute("rail", Integer.toString(railsccount));
+		out.writeAttribute("meltdown", Integer.toString(meltdownsccount));
+		out.writeEndElement();
+	}
+
+	void writeMisc(XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		out.writeStartElement("population");
+		out.writeAttribute("resPop", Integer.toString(resPop));
+		out.writeAttribute("comPop", Integer.toString(comPop));
+		out.writeAttribute("indPop", Integer.toString(indPop));
+		out.writeEndElement();
+
+		out.writeStartElement("valves");
+		out.writeAttribute("resValve", Integer.toString(resValve));
+		out.writeAttribute("comValve", Integer.toString(comValve));
+		out.writeAttribute("indValve", Integer.toString(indValve));
+		out.writeEndElement();
+
+		out.writeStartElement("cityTime");
+		out.writeAttribute("time", Integer.toString(cityTime));
+		out.writeAttribute("fcycle", Integer.toString(fcycle));
+		out.writeAttribute("acycle", Integer.toString(acycle));
+		out.writeEndElement();
+
+		out.writeStartElement("misc");
+		out.writeAttribute("crimeRamp", Integer.toString(crimeRamp));
+		out.writeAttribute("polluteRamp", Integer.toString(polluteRamp));
+		out.writeAttribute("landValueAverage", Integer.toString(landValueAverage));
+		out.writeAttribute("crimeAverage", Integer.toString(crimeAverage));
+		out.writeAttribute("pollutionAverage", Integer.toString(pollutionAverage));
+		out.writeAttribute("gameLevel", Integer.toString(gameLevel));
+		out.writeAttribute("autoBulldoze", Boolean.toString(autoBulldoze));
+		out.writeAttribute("autoBudget", Boolean.toString(autoBudget));
+		out.writeAttribute("autoGo", Boolean.toString(autoGo));
+		out.writeAttribute("simSpeed", simSpeed.name());
+		out.writeAttribute("allowDisasters", Boolean.toString(!noDisasters));
+		out.writeEndElement();
+
+		out.writeStartElement("evaluation");
+		out.writeAttribute("cityClass", Integer.toString(evaluation.cityClass));
+		out.writeAttribute("cityScore", Integer.toString(evaluation.cityScore));
+		out.writeEndElement();
+
+		out.writeStartElement("budget");
+		out.writeAttribute("funds", Integer.toString(budget.totalFunds));
+		out.writeAttribute("cityTax", Integer.toString(cityTax));
+		out.writeAttribute("policePercent", Double.toString(policePercent*100));
+		out.writeAttribute("firePercent", Double.toString(firePercent*100));
+		out.writeAttribute("roadPercent", Double.toString(roadPercent*100));
+		out.writeEndElement();
+	}
+
+	void loadMap_v1(DataInputStream dis)
 		throws IOException
 	{
 		for (int x = 0; x < DEFAULT_WIDTH; x++)
@@ -2543,38 +2784,79 @@ public class Micropolis
 		}
 	}
 
-	void writeMap(DataOutputStream out)
-		throws IOException
+	void loadMap_v2(XMLStreamReader in)
+		throws XMLStreamException
 	{
-		for (int x = 0; x < DEFAULT_WIDTH; x++)
+		ArrayList< char [] > mapList = new ArrayList< char[] >();
+		while (in.next() != XMLStreamConstants.END_ELEMENT) {
+			if (!in.isStartElement()) {
+				continue;
+			}
+			if (!in.getLocalName().equals("mapRow")) {
+				XML_Helper.skipToEndElement(in);
+				continue;
+			}
+
+			ArrayList<String> tmp = new ArrayList<String>();
+			Scanner s = new Scanner(
+				XML_Helper.readElementText(in)
+				);
+			while (s.hasNext()) {
+				tmp.add(s.next());
+			}
+			s.close();
+
+			char[] row = new char[tmp.size()];
+			for (int i = 0; i < row.length; i++) {
+				row[i] = (char)Integer.parseInt(tmp.get(i));
+			}
+
+			mapList.add(row);
+		}
+
+		map = mapList.toArray(new char[0][]);
+	}
+
+	void writeMap(XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		out.writeStartElement("map");
+		for (int y = 0; y < DEFAULT_HEIGHT; y++)
 		{
-			for (int y = 0; y < DEFAULT_HEIGHT; y++)
+			out.writeStartElement("mapRow");
+			for (int x = 0; x < DEFAULT_WIDTH; x++)
 			{
 				int z = map[y][x];
-				if (isConductive(z & LOMASK)) {
-					z |= 16384;  //synthesize CONDBIT on export
+				if (x != 0) {
+					out.writeCharacters(" ");
 				}
-				if (isCombustible(z & LOMASK)) {
-					z |= 8192;   //synthesize BURNBIT on export
-				}
-				if (isTileDozeable(x, y)) {
-					z |= 4096;   //synthesize BULLBIT on export
-				}
-				if (isAnimated(z & LOMASK)) {
-					z |= 2048;   //synthesize ANIMBIT on export
-				}
-				if (isZoneCenter(z & LOMASK)) {
-					z |= 1024;   //synthesize ZONEBIT
-				}
-				out.writeShort(z);
+				out.writeCharacters(Integer.toString(z));
 			}
+			out.writeEndElement(); //mapRow
 		}
+		out.writeEndElement(); //map
 	}
 
 	public void load(File filename)
 		throws IOException
 	{
 		FileInputStream fis = new FileInputStream(filename);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+
+		// peek at magic bits
+		bis.mark(2);
+		int b1 = bis.read();
+		int b2 = bis.read();
+		bis.reset();
+
+		if (b1 == 0x1f && b2 == 0x8b) {
+			// new file format (gzipped)
+			load_v2(bis);
+			return;
+		}
+		else {
+			// old file format
+
 		if (fis.getChannel().size() > 27120) {
 			// some editions of the classic Simcity game
 			// start the file off with a 128-byte header,
@@ -2584,7 +2866,176 @@ public class Micropolis
 			byte [] bbHeader = new byte[128];
 			fis.read(bbHeader);
 		}
-		load(fis);
+
+			load_v1(bis);
+		}
+	}
+
+	public void load_v2(InputStream inStream)
+		throws IOException
+	{
+		try {
+		GZIPInputStream z_in = new GZIPInputStream(inStream);
+		XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(z_in, "UTF-8");
+
+		in.nextTag();
+		if (!(in.getEventType() == XMLStreamConstants.START_ELEMENT &&
+			in.getLocalName().equals("micropolis"))) {
+			throw new IOException("Unrecognized file format");
+		}
+
+		while (in.next() != XMLStreamConstants.END_ELEMENT) {
+			if (!in.isStartElement()) {
+				// skip over comments, text, etc.
+				continue;
+			}
+
+			String tagName = in.getLocalName();
+			if (tagName.equals("res-history")) {
+				loadHistoryArray_v2(history.res, in);
+			}
+			else if (tagName.equals("com-history")) {
+				loadHistoryArray_v2(history.com, in);
+			}
+			else if (tagName.equals("ind-history")) {
+				loadHistoryArray_v2(history.ind, in);
+			}
+			else if (tagName.equals("crime-history")) {
+				loadHistoryArray_v2(history.crime, in);
+			}
+			else if (tagName.equals("pollution-history")) {
+				loadHistoryArray_v2(history.pollution, in);
+			}
+			else if (tagName.equals("money-history")) {
+				loadHistoryArray_v2(history.money, in);
+			}
+			else if (tagName.equals("education-history")) {
+				loadHistoryArray_v2(history.education, in);
+			}
+			else if (tagName.equals("culture-history")) {
+				loadHistoryArray_v2(history.culture, in);
+			}
+			else if (tagName.equals("population")) {
+				resPop = Integer.parseInt(in.getAttributeValue(null, "resPop"));
+				comPop = Integer.parseInt(in.getAttributeValue(null, "comPop"));
+				indPop = Integer.parseInt(in.getAttributeValue(null, "indPop"));
+				XML_Helper.skipToEndElement(in);
+			}
+			else if (tagName.equals("valves")) {
+				resValve = Integer.parseInt(in.getAttributeValue(null, "resValve"));
+				comValve = Integer.parseInt(in.getAttributeValue(null, "comValve"));
+				indValve = Integer.parseInt(in.getAttributeValue(null, "indValve"));
+				XML_Helper.skipToEndElement(in);
+			}
+			else if (tagName.equals("cityTime")) {
+				loadCityTime_v2(in);
+			}
+			else if (tagName.equals("misc")) {
+				loadMisc_v2(in);
+			}
+			else if (tagName.equals("techPoints")) {
+				loadTechPoints(in);
+			}
+			else if (tagName.equals("techResearch")) {
+				loadTech(in);
+			}
+			else if (tagName.equals("upgradeCounts")) {
+				loadUpgradeCounts(in);
+			}
+			else if (tagName.equals("evaluation")) {
+				evaluation.cityClass = Integer.parseInt(in.getAttributeValue(null, "cityClass"));
+				evaluation.cityScore = Integer.parseInt(in.getAttributeValue(null, "cityScore"));
+				if (evaluation.cityClass < 0 || evaluation.cityClass > 5) { evaluation.cityClass = 0; }
+				if (evaluation.cityScore < 1 || evaluation.cityScore > 999) { evaluation.cityScore = 500; }
+				XML_Helper.skipToEndElement(in);
+			}
+			else if (tagName.equals("budget")) {
+				loadBudget_v2(in);
+			}
+			else if (tagName.equals("map")) {
+				loadMap_v2(in);
+			}
+			else {
+				// unrecognized tag
+				XML_Helper.skipToEndElement(in);
+			}
+		}
+		in.close();
+		} catch (XMLStreamException e) {
+			throw new IOException(e);
+		}
+
+		checkPowerMap();
+
+		fireWholeMapChanged();
+		fireDemandChanged();
+		fireFundsChanged();
+		resetNCheats();
+
+		for (int i = 0; i < 5; i++) {
+			cityPopReached[i] = false;
+		}
+	}
+
+	public void load_v1(InputStream inStream)
+		throws IOException
+	{
+		DataInputStream dis = new DataInputStream(inStream);
+		loadHistoryArray_v1(history.res, dis);
+		loadHistoryArray_v1(history.com, dis);
+		loadHistoryArray_v1(history.ind, dis);
+		loadHistoryArray_v1(history.crime, dis);
+		loadHistoryArray_v1(history.pollution, dis);
+		loadHistoryArray_v1(history.money, dis);
+		loadMisc_v1(dis);
+		loadMap_v1(dis);
+		dis.close();
+
+		checkPowerMap();
+
+		fireWholeMapChanged();
+		fireDemandChanged();
+		fireFundsChanged();
+		resetNCheats();
+	}
+
+	public void save(File filename)
+		throws IOException
+	{
+		save(new FileOutputStream(filename));
+	}
+
+	public void save(OutputStream outStream)
+		throws IOException
+	{
+		try{
+
+		GZIPOutputStream z_out = new GZIPOutputStream(outStream);
+		XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(z_out, "UTF-8");
+		out.writeStartDocument();
+		out.writeStartElement("micropolis");
+		writeHistoryArray("res-history", history.res, out);
+		writeHistoryArray("com-history", history.com, out);
+		writeHistoryArray("ind-history", history.ind, out);
+		writeHistoryArray("crime-history", history.crime, out);
+		writeHistoryArray("pollution-history", history.pollution, out);
+		writeHistoryArray("money-history", history.money, out);
+		writeHistoryArray("education-history", history.education, out);
+		writeHistoryArray("culture-history", history.culture, out);
+
+		writeMisc(out);
+		writeTechPoints(out);
+		writeTech(out);
+		writeUpgradeCounts(out);
+		writeMap(out);
+		out.writeEndElement(); //micropolis
+		out.writeEndDocument();
+		out.close();
+		z_out.close(); //because XMLStreamWriter does not call it for us
+		}
+		catch (XMLStreamException e) {
+			throw new IOException(e);
+		}
 	}
 
 	void checkPowerMap()
@@ -2619,49 +3070,6 @@ public class Micropolis
 
 		powerScan();
 		newPower = true;
-	}
-
-	public void load(InputStream inStream)
-		throws IOException
-	{
-		DataInputStream dis = new DataInputStream(inStream);
-		loadHistoryArray(history.res, dis);
-		loadHistoryArray(history.com, dis);
-		loadHistoryArray(history.ind, dis);
-		loadHistoryArray(history.crime, dis);
-		loadHistoryArray(history.pollution, dis);
-		loadHistoryArray(history.money, dis);
-		loadMisc(dis);
-		loadMap(dis);
-		dis.close();
-
-		checkPowerMap();
-
-		fireWholeMapChanged();
-		fireDemandChanged();
-		fireFundsChanged();
-        resetNCheats();
-    }
-
-    public void save(File filename)
-		throws IOException
-	{
-		save(new FileOutputStream(filename));
-	}
-
-	public void save(OutputStream outStream)
-		throws IOException
-	{
-		DataOutputStream out = new DataOutputStream(outStream);
-		writeHistoryArray(history.res, out);
-		writeHistoryArray(history.com, out);
-		writeHistoryArray(history.ind, out);
-		writeHistoryArray(history.crime, out);
-		writeHistoryArray(history.pollution, out);
-		writeHistoryArray(history.money, out);
-		writeMisc(out);
-		writeMap(out);
-		out.close();
 	}
 
 	public void toggleAutoBudget()
@@ -3024,19 +3432,33 @@ public class Micropolis
 			int newPop = (resPop + comPop * 8 + indPop * 8) * 20;
 			if (lastCityPop != 0) {
 				MicropolisMessage z = null;
+				boolean showAt = false;
 				if (lastCityPop < 500000 && newPop >= 500000) {
 					z = MicropolisMessage.POP_500K_REACHED;
+					showAt = !cityPopReached[4];
+					cityPopReached[4] = true;
 				} else if (lastCityPop < 100000 && newPop >= 100000) {
 					z = MicropolisMessage.POP_100K_REACHED;
+					showAt = !cityPopReached[3];
+					cityPopReached[3] = true;
 				} else if (lastCityPop < 50000 && newPop >= 50000) {
 					z = MicropolisMessage.POP_50K_REACHED;
+					showAt = !cityPopReached[2];
+					cityPopReached[2] = true;
 				} else if (lastCityPop < 10000 && newPop >= 10000) {
 					z = MicropolisMessage.POP_10K_REACHED;
+					showAt = !cityPopReached[1];
+					cityPopReached[1] = true;
 				} else if (lastCityPop < 2000 && newPop >= 2000) {
 					z = MicropolisMessage.POP_2K_REACHED;
+					showAt = !cityPopReached[0];
+					cityPopReached[0] = true;
 				}
 				if (z != null) {
-					sendMessage(z);
+					if (showAt)
+						sendMessageAt(z, centerMassX, centerMassY);
+					else
+						sendMessage(z);
 				}
 			}
             lastCityPop = newPop + cheatedPopulation;
@@ -3112,12 +3534,12 @@ public class Micropolis
 			break;
 		case 35:
 			if (pollutionAverage > 95) {
-				sendMessage(MicropolisMessage.HIGH_POLLUTION);
+				sendMessageAt(MicropolisMessage.HIGH_POLLUTION, pollutionMaxLocationX, pollutionMaxLocationY);
 			}
 			break;
 		case 42:
 			if (crimeAverage > 100) {
-				sendMessage(MicropolisMessage.HIGH_CRIME);
+				sendMessageAt(MicropolisMessage.HIGH_CRIME, crimeMaxLocationX, crimeMaxLocationY);
 			}
 			break;
 		case 45:
@@ -3157,7 +3579,7 @@ public class Micropolis
 			break;
 		case 63:
 			if (trafficAverage > 60) {
-				sendMessage(MicropolisMessage.HIGH_TRAFFIC);
+				sendMessageAt(MicropolisMessage.HIGH_TRAFFIC, trafficMaxLocationX, trafficMaxLocationY);
 			}
 		case 67:
 			if (educationEffect < 700 && totalPop > 20) {

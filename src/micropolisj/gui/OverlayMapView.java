@@ -177,7 +177,7 @@ public class OverlayMapView extends JComponent
             Iterator pathPoints = curPath.iterator();
             while(pathPoints.hasNext()){
                 l = (CityLocation) pathPoints.next();
-                maybeDrawRect(gr, PATHCOLOR, l.x*3,l.y*3, 4,4);
+                maybeDrawRect(gr, PATHCOLOR, l.x*3, l.y*3, 6, 6);
             }
         }
 
@@ -193,7 +193,7 @@ public class OverlayMapView extends JComponent
                     //System.out.println("draw visit at: " + visitloc.x + ", " + visitloc.y);
                     // getCI determines color, see above. so i multiply with 100 to get some colors
 
-                        maybeDrawRect(gr, getCI(10 + visits*50), visitloc.x*3, visitloc.y*3, 4, 4);
+                        maybeDrawRect(gr, getCI(10 + visits*50), visitloc.x*3-1, visitloc.y*3-1, 6, 6);
 
                 }
             }
@@ -424,8 +424,8 @@ public class OverlayMapView extends JComponent
 		switch (mapState) {
 		case POLICE_OVERLAY:
 			drawPoliceRadius(gr); break;
-        case VISIT_OVERLAY:
-            drawVisitOverlay(gr); break;
+		case VISIT_OVERLAY:
+			drawVisitOverlay(gr); break;
 		case FIRE_OVERLAY:
 			drawFireRadius(gr); break;
 		case CRIME_OVERLAY:

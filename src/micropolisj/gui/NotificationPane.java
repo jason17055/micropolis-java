@@ -144,9 +144,9 @@ public class NotificationPane extends JPanel
 		c1.insets = new Insets(0,0,0,8);
 		c2.weightx = 1.0;
 
-        p.add(new JLabel("tile location"), c1);
-        p.add(new JLabel(zone.location.x + ", " + zone.location.y) , c2);
-        c1.gridy = ++c2.gridy;
+        //p.add(new JLabel("tile location"), c1);
+        //p.add(new JLabel(zone.location.x + ", " + zone.location.y) , c2);
+        //c1.gridy = ++c2.gridy;
 
 		p.add(new JLabel(strings.getString("notification.zone_lbl")), c1);
 		p.add(new JLabel(buildingStr), c2);

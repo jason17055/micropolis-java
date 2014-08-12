@@ -169,8 +169,8 @@ class RoadLikeTool extends ToolStroke
 
 	private boolean layRail(ToolEffectIfc eff)
 	{
-		final int RAIL_COST = 20;
-		final int TUNNEL_COST = 100;
+		final int RAIL_COST = 25;
+		final int TUNNEL_COST = 125;
 
 		int cost = RAIL_COST;
 
@@ -406,8 +406,8 @@ class RoadLikeTool extends ToolStroke
 	
 	private boolean layBigRoad(ToolEffectIfc eff)
 	{
-		final int BIGROAD_COST = 10;
-		final int BRIDGE_COST = 50;
+		final int BIGROAD_COST = 20;
+		final int BRIDGE_COST = 100;
 
 		int cost = BIGROAD_COST;
 

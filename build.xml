@@ -8,7 +8,7 @@
 // it under the terms of the GNU GPLv3, with additional terms.
 // See the README file, included in this distribution, for details.
 -->
-<project name="micropolisj" default="all">
+<project name="divercity" default="all">
 
 <property name="package-version" value="1.7" />
 
@@ -31,7 +31,11 @@
 <target name="copy-resources" depends="init-builddir">
 <copy todir="${builddir}">
 	<fileset dir="resources"
-		excludes="**/*.xcf **/Thumbs.db"
+		excludes="**/*.xcf **/Thumbs.db */*.png"
+		includes="demandg.png **/gr*.png **/ic*.png **/legend*.png micropolism.png **/obj*.png **/sounds/*.wav"
+		/>
+	<fileset dir="graphics"
+		includes="**/splash*.png"
 		/>
 </copy>
 <native2ascii encoding="UTF-8" ext=".properties"
@@ -91,8 +95,8 @@
 </pathconvert>
 
 <jar destfile="${distfile}" basedir="${builddir}" excludes="/micropolisj/build_tool/**">
-    <fileset dir="graphics" />
-    <fileset dir="resources" />
+    <!--<fileset dir="graphics" />-->
+    <!--<fileset dir="resources" />-->
 	<manifest>
 		<attribute name="Main-Class" value="micropolisj.Main" />
 		<attribute name="Class-Path" value="${runtime-classpath}" />
@@ -116,8 +120,8 @@
 <target name="dist" depends="build">
 <zip destfile="${zipfile}">
 	<fileset dir="." includes="${distfile}, ${ant.project.name}.ico, README, COPYING" />
-    <fileset dir="graphics" />
-    <fileset dir="resources" />
+    <!--<fileset dir="graphics" />-->
+    <!--<fileset dir="resources" />-->
 	<zipfileset dir="resources" includes="micropolism.png" fullpath="${ant.project.name}-icon.png"/>
 </zip>
 </target>
