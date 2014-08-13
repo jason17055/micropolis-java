@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<layered-image>
+	<image src="trees_turf2" />
+	<image src="trees_trees2" at="0,8" overlap-north="8" overlap-east="8"/>
+</layered-image>
