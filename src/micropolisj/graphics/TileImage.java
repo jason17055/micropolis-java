@@ -2,6 +2,9 @@ package micropolisj.graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.xml.stream.*;
+
+import static micropolisj.XML_Helper.*;
 
 public abstract class TileImage
 {
@@ -88,9 +91,38 @@ public abstract class TileImage
 		}
 	}
 
+	public static class SimpleTileImage extends TileImage
+	{
+		public BufferedImage srcImage;
+		public int offsetY;
+
+		@Override
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
+			throw new UnsupportedOperationException();
+		}
+	}
+
 	public interface LoaderContext
 	{
 		BufferedImage getDefaultImage();
 		BufferedImage getImage(String name);
+	}
+
+	public static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		SimpleTileImage img = new SimpleTileImage();
+		String srcImageName = in.getAttributeValue(null, "src");
+		if (srcImageName != null) {
+			img.srcImage = ctx.getImage(srcImageName);
+		}
+		else {
+			img.srcImage = ctx.getDefaultImage();
+		}
+		String tmp = in.getAttributeValue(null, "offsetY");
+		img.offsetY = tmp != null ? Integer.parseInt(tmp) : 0;
+
+		skipToEndElement(in);
+		return img;
 	}
 }

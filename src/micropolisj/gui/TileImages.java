@@ -21,7 +21,7 @@ import micropolisj.engine.*;
 import micropolisj.graphics.TileImage;
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.XML_Helper.*;
-import static micropolisj.graphics.TileImage.LoaderContext;
+import static micropolisj.graphics.TileImage.*;
 
 public class TileImages
 {
@@ -30,17 +30,6 @@ public class TileImages
 	final int TILE_HEIGHT;
 	TileImage [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
-
-	static class SimpleTileImage extends TileImage
-	{
-		BufferedImage srcImage;
-		int offsetY;
-
-		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
-			throw new UnsupportedOperationException();
-		}
-	}
 
 	static class AnimatedTile extends TileImage
 	{
@@ -69,24 +58,6 @@ public class TileImages
 	String getResourceName()
 	{
 		return "/" + name + "/tiles.png";
-	}
-
-	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException
-	{
-		SimpleTileImage img = new SimpleTileImage();
-		String srcImageName = in.getAttributeValue(null, "src");
-		if (srcImageName != null) {
-			img.srcImage = ctx.getImage(srcImageName);
-		}
-		else {
-			img.srcImage = ctx.getDefaultImage();
-		}
-		String tmp = in.getAttributeValue(null, "offsetY");
-		img.offsetY = tmp != null ? Integer.parseInt(tmp) : 0;
-
-		skipToEndElement(in);
-		return img;
 	}
 
 	static AnimatedTile readAnimation(XMLStreamReader in, LoaderContext ctx)
