@@ -100,7 +100,7 @@ public class TileImages
 			}
 
 			String tileName = in.getAttributeValue(null, "name");
-			TileImage img = readTileImage(in, ctx);
+			TileImage img = readTileImageM(in, ctx);
 
 			assert tileName != null;
 			assert img != null;

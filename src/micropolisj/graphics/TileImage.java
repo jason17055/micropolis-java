@@ -109,7 +109,7 @@ public abstract class TileImage
 		BufferedImage getImage(String name);
 	}
 
-	public static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
+	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
 		SimpleTileImage img = new SimpleTileImage();
@@ -142,7 +142,7 @@ public abstract class TileImage
 		}
 	}
 
-	public static AnimatedTile readAnimation(XMLStreamReader in, LoaderContext ctx)
+	static AnimatedTile readAnimation(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
 		assert in.getLocalName().equals("animation");
@@ -162,7 +162,11 @@ public abstract class TileImage
 		return anim;
 	}
 
-	public static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
+	/**
+	 * @param in an XML stream reader with the parent tag of the tag to be read
+	 *  still selected
+	 */
+	public static TileImage readTileImageM(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
 		TileImage img = null;
