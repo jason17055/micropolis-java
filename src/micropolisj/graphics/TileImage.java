@@ -382,7 +382,7 @@ public abstract class TileImage
 				img.cases.add(readSwitchImageCase(in, ctx));
 			}
 			else if (tagName.equals("default")) {
-				img.defaultCase = readTileImage(in, ctx);
+				img.defaultCase = readTileImageM(in, ctx);
 			}
 			else {
 				skipToEndElement(in);
