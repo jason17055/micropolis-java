@@ -340,7 +340,7 @@ public abstract class TileImage
 	public static class SwitchTileImage extends TileImage
 	{
 		public ArrayList<Case> cases = new ArrayList<Case>();
-		public Case defaultCase;
+		public TileImage defaultCase;
 
 		public static class Case
 		{
@@ -382,7 +382,7 @@ public abstract class TileImage
 				img.cases.add(readSwitchImageCase(in, ctx));
 			}
 			else if (tagName.equals("default")) {
-				img.defaultCase = readSwitchImageCase(in, ctx);
+				img.defaultCase = readTileImage(in, ctx);
 			}
 			else {
 				skipToEndElement(in);
