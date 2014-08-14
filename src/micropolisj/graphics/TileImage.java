@@ -2,6 +2,7 @@ package micropolisj.graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.*;
 import javax.xml.stream.*;
 
 import static micropolisj.XML_Helper.*;
@@ -124,5 +125,40 @@ public abstract class TileImage
 
 		skipToEndElement(in);
 		return img;
+	}
+
+	public static class AnimatedTile extends TileImage
+	{
+		public SimpleTileImage [] frames;
+
+		public SimpleTileImage getFrameByTime(int acycle)
+		{
+			return frames[acycle % frames.length];
+		}
+
+		@Override
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	public static AnimatedTile readAnimation(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		assert in.getLocalName().equals("animation");
+
+		ArrayList<SimpleTileImage> frames = new ArrayList<SimpleTileImage>();
+
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			String tagName = in.getLocalName();
+			if (tagName.equals("frame")) {
+				frames.add(readSimpleImage(in, ctx));
+			}
+			skipToEndElement(in);
+		}
+
+		AnimatedTile anim = new AnimatedTile();
+		anim.frames = frames.toArray(new SimpleTileImage[0]);
+		return anim;
 	}
 }

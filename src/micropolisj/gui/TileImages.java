@@ -31,21 +31,6 @@ public class TileImages
 	TileImage [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
 
-	static class AnimatedTile extends TileImage
-	{
-		SimpleTileImage [] frames;
-
-		public SimpleTileImage getFrameByTime(int acycle)
-		{
-			return frames[acycle % frames.length];
-		}
-
-		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
-			throw new UnsupportedOperationException();
-		}
-	}
-
 	private TileImages(String name, int size)
 	{
 		this.name = name;
@@ -58,24 +43,6 @@ public class TileImages
 	String getResourceName()
 	{
 		return "/" + name + "/tiles.png";
-	}
-
-	static AnimatedTile readAnimation(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException
-	{
-		ArrayList<SimpleTileImage> frames = new ArrayList<SimpleTileImage>();
-
-		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
-			String tagName = in.getLocalName();
-			if (tagName.equals("frame")) {
-				frames.add(readSimpleImage(in, ctx));
-			}
-			skipToEndElement(in);
-		}
-
-		AnimatedTile anim = new AnimatedTile();
-		anim.frames = frames.toArray(new SimpleTileImage[0]);
-		return anim;
 	}
 
 	static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
