@@ -441,13 +441,23 @@ public class MakeTiles
 
 		if (!loadedImages.containsKey(fileName)) {
 			loadedImages.put(fileName,
-				loadImageReal(fileName));
+				loadImageNoCache(fileName));
 		}
 
 		return loadedImages.get(fileName);
 	}
 
-	static SourceImage loadImageReal(String fileName)
+	static SourceImage loadImageReal(File pngFile, int basisSize)
+		throws IOException
+	{
+		BufferedImage bi = ImageIO.read(pngFile);
+		return new SourceImage(
+			bi,
+			basisSize,
+			TILE_SIZE);
+	}
+
+	static SourceImage loadImageNoCache(String fileName)
 		throws IOException
 	{
 		File svgFile, pngFile = null;
@@ -465,40 +475,24 @@ public class MakeTiles
 		}
 
 		if (pngFile != null && pngFile.exists()) {
-			ImageIcon ii = new ImageIcon(pngFile.toString());
-			return new SourceImage(
-				ii.getImage(),
-				TILE_SIZE,
-				TILE_SIZE);
+			return loadImageReal(pngFile, TILE_SIZE);
 		}
 
 		pngFile = new File(fileName+"_"+TILE_SIZE+"x"+TILE_SIZE+".png");
 		if (pngFile.exists()) {
-			ImageIcon ii = new ImageIcon(pngFile.toString());
-			return new SourceImage(
-				ii.getImage(),
-				TILE_SIZE,
-				TILE_SIZE);
+			return loadImageReal(pngFile, TILE_SIZE);
 		}
 
 		if (TILE_SIZE < 128) {
 		pngFile = new File(fileName+"_128x128.png");
 		if (pngFile.exists()) {
-			ImageIcon ii = new ImageIcon(pngFile.toString());
-			return new SourceImage(
-				ii.getImage(),
-				128,
-				TILE_SIZE);
+			return loadImageReal(pngFile, 128);
 		}
 		}
 
 		pngFile = new File(fileName+".png");
 		if (pngFile.exists()) {
-			ImageIcon ii = new ImageIcon(pngFile.toString());
-			return new SourceImage(
-				ii.getImage(),
-				STD_SIZE,
-				TILE_SIZE);
+			return loadImageReal(pngFile, STD_SIZE);
 		}
 
 		throw new IOException("File not found: "+fileName+".{svg,png}");
