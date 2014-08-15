@@ -2,6 +2,7 @@ package micropolisj.graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 import javax.xml.stream.*;
 
@@ -125,20 +126,27 @@ public abstract class TileImage
 
 	public interface LoaderContext
 	{
-		SourceImage getDefaultImage();
-		SourceImage getImage(String name);
+		SourceImage getDefaultImage()
+			throws IOException;
+		SourceImage getImage(String name)
+			throws IOException;
 	}
 
 	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
 		SimpleTileImage img = new SimpleTileImage();
-		String srcImageName = in.getAttributeValue(null, "src");
-		if (srcImageName != null) {
-			img.srcImage = ctx.getImage(srcImageName);
+		try {
+			String srcImageName = in.getAttributeValue(null, "src");
+			if (srcImageName != null) {
+				img.srcImage = ctx.getImage(srcImageName);
+			}
+			else {
+				img.srcImage = ctx.getDefaultImage();
+			}
 		}
-		else {
-			img.srcImage = ctx.getDefaultImage();
+		catch (IOException e) {
+			throw new XMLStreamException("image source not found", e);
 		}
 		String tmp = in.getAttributeValue(null, "offsetY");
 		img.offsetY = tmp != null ? Integer.parseInt(tmp) : 0;

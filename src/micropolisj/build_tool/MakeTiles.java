@@ -18,7 +18,6 @@ import static micropolisj.XML_Helper.*;
 public class MakeTiles
 {
 	static HashMap<String,String> tileData = new HashMap<String,String>();
-	static HashMap<String,SourceImage> loadedImages = new HashMap<String,SourceImage>();
 
 	static final Charset UTF8 = Charset.forName("UTF-8");
 	static int SKIP_TILES = 0;
@@ -431,6 +430,30 @@ public class MakeTiles
 		}
 	}
 
+	static class MyLoaderContext implements LoaderContext
+	{
+		HashMap<String,SourceImage> loadedImages = new HashMap<String,SourceImage>();
+
+		//implements LoaderContext
+		public SourceImage getDefaultImage()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		//implements LoaderContext
+		public SourceImage getImage(String fileName)
+			throws IOException
+		{
+			if (!loadedImages.containsKey(fileName)) {
+				loadedImages.put(fileName,
+					loadImageNoCache(fileName));
+			}
+
+			return loadedImages.get(fileName);
+		}
+	}
+	static MyLoaderContext loaderContext = new MyLoaderContext();
+
 	static TileImage loadImage(String fileName)
 		throws IOException
 	{
@@ -439,12 +462,7 @@ public class MakeTiles
 			return loadImageXml(xmlFile);
 		}
 
-		if (!loadedImages.containsKey(fileName)) {
-			loadedImages.put(fileName,
-				loadImageNoCache(fileName));
-		}
-
-		return loadedImages.get(fileName);
+		return loaderContext.getImage(fileName);
 	}
 
 	static SourceImage loadImageReal(File pngFile, int basisSize)
