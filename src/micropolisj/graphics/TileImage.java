@@ -268,7 +268,7 @@ public abstract class TileImage
 		@Override
 		public Dimension getBounds() {
 			Dimension b = srcImage.getBounds();
-			if (overlapEast != 0 || overlapNorth != 0) {
+			if (overlapNorth != 0 || overlapEast != 0) {
 				return new Dimension(
 					b.width + overlapEast,
 					b.height + overlapNorth
@@ -281,9 +281,11 @@ public abstract class TileImage
 
 		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) {
-			srcImage.drawFragment(gr,
-				srcX+offsetX, srcY+offsetY,
-				srcWidth, srcHeight);
+			Graphics2D g1 = (Graphics2D) gr.create();
+			g1.translate(0, overlapNorth);
+			srcImage.drawFragment(g1,
+				srcX+offsetX, srcY+offsetY-overlapNorth,
+				srcWidth + overlapEast, srcHeight + overlapNorth);
 		}
 	}
 
