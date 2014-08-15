@@ -60,21 +60,31 @@ public abstract class TileImage
 		}
 	}
 
-	/**
-	 * Supports rescaling of tile images.
-	 */
-	public static abstract class SourceImage extends TileImage
+	public static class SourceImage extends TileImage
 	{
 		public final BufferedImage image;
 		public final int basisSize;
 
-		protected SourceImage(BufferedImage image, int basisSize)
+		public SourceImage(BufferedImage image, int basisSize)
 		{
 			this.image = image;
 			this.basisSize = basisSize;
 		}
+
+		@Override
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+		{
+			gr.drawImage(
+				image.getSubimage(srcX, srcY, basisSize, basisSize),
+				destX,
+				destY,
+				null);
+		}
 	}
 
+	/**
+	 * Supports rescaling of tile images.
+	 */
 	public static class ScaledSourceImage extends SourceImage
 	{
 		public final int targetSize;
@@ -103,7 +113,8 @@ public abstract class TileImage
 
 	public static class SimpleTileImage extends TileImage
 	{
-		public BufferedImage srcImage;
+		public SourceImage srcImage;
+		public int offsetX;
 		public int offsetY;
 
 		@Override
@@ -114,8 +125,8 @@ public abstract class TileImage
 
 	public interface LoaderContext
 	{
-		BufferedImage getDefaultImage();
-		BufferedImage getImage(String name);
+		SourceImage getDefaultImage();
+		SourceImage getImage(String name);
 	}
 
 	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)

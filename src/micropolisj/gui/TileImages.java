@@ -47,19 +47,19 @@ public class TileImages
 
 	class MyLoaderContext implements LoaderContext
 	{
-		Map<String,BufferedImage> images = new HashMap<String,BufferedImage>();
+		Map<String,SourceImage> images = new HashMap<String,SourceImage>();
 
 		//implements LoaderContext
-		public BufferedImage getDefaultImage()
+		public SourceImage getDefaultImage()
 		{
 			return getImage("tiles.png");
 		}
 
 		//implements LoaderContext
-		public BufferedImage getImage(String fileName)
+		public SourceImage getImage(String fileName)
 		{
 			if (!images.containsKey(fileName)) {
-				images.put(fileName, loadImage("/"+name+"/"+fileName));
+				images.put(fileName, loadImage("/"+name+"/"+fileName, TILE_HEIGHT));
 			}
 			return images.get(fileName);
 		}
@@ -161,7 +161,7 @@ public class TileImages
 
 		public void drawToBytes(BufferedImage img, int x, int y)
 		{
-			BufferedImage srcImage = image.srcImage;
+			BufferedImage srcImage = image.srcImage.image;
 			int offsetY = image.offsetY;
 
 			for (int yy = 0; yy < TILE_HEIGHT; yy++)
@@ -176,7 +176,7 @@ public class TileImages
 
 		public Image getImage()
 		{
-			return image.srcImage.getSubimage(
+			return image.srcImage.image.getSubimage(
 				0, image.offsetY,
 				TILE_WIDTH, TILE_HEIGHT
 				);
@@ -280,13 +280,13 @@ public class TileImages
 		return bi;
 	}
 
-	static BufferedImage loadImage(String resourceName)
+	static SourceImage loadImage(String resourceName, int basisSize)
 	{
 		URL url = TileImages.class.getResource(resourceName);
 		try {
 
 		BufferedImage bi = ImageIO.read(url);
-		return bi;
+		return new SourceImage(bi, basisSize);
 
 		}
 		catch (IOException e) {
