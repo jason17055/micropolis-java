@@ -451,7 +451,7 @@ public class MakeTiles
 		throws IOException
 	{
 		BufferedImage bi = ImageIO.read(pngFile);
-		return new SourceImage(
+		return new ScaledSourceImage(
 			bi,
 			basisSize,
 			TILE_SIZE);

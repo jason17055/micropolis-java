@@ -63,16 +63,25 @@ public abstract class TileImage
 	/**
 	 * Supports rescaling of tile images.
 	 */
-	public static class SourceImage extends TileImage
+	public static abstract class SourceImage extends TileImage
 	{
 		public final BufferedImage image;
 		public final int basisSize;
-		public final int targetSize;
 
-		public SourceImage(BufferedImage image, int basisSize, int targetSize)
+		protected SourceImage(BufferedImage image, int basisSize)
 		{
 			this.image = image;
 			this.basisSize = basisSize;
+		}
+	}
+
+	public static class ScaledSourceImage extends SourceImage
+	{
+		public final int targetSize;
+
+		public ScaledSourceImage(BufferedImage image, int basisSize, int targetSize)
+		{
+			super(image, basisSize);
 			this.targetSize = targetSize;
 		}
 
