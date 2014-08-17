@@ -208,8 +208,12 @@ public abstract class TileImage
 		@Override
 		public Dimension getBounds()
 		{
-			//FIXME- incorporate oversizeAmt?
 			return new Dimension(basisSize, basisSize);
+		}
+
+		public int getTargetSize()
+		{
+			return STD_SIZE;
 		}
 	}
 
@@ -224,6 +228,12 @@ public abstract class TileImage
 		{
 			super(image, basisSize);
 			this.targetSize = targetSize;
+		}
+
+		@Override
+		public int getTargetSize()
+		{
+			return targetSize;
 		}
 
 		@Override
@@ -269,9 +279,10 @@ public abstract class TileImage
 		public Dimension getBounds() {
 			Dimension b = srcImage.getBounds();
 			if (overlapNorth != 0 || overlapEast != 0) {
+				int targetSize = srcImage.getTargetSize();
 				return new Dimension(
-					b.width + overlapEast,
-					b.height + overlapNorth
+					b.width + overlapEast*targetSize/STD_SIZE,
+					b.height + overlapNorth*targetSize/STD_SIZE
 					);
 			}
 			else {
@@ -281,8 +292,9 @@ public abstract class TileImage
 
 		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) {
+			int targetSize = srcImage.getTargetSize();
 			Graphics2D g1 = (Graphics2D) gr.create();
-			g1.translate(0, overlapNorth);
+			g1.translate(0, -overlapNorth*targetSize/STD_SIZE);
 			srcImage.drawFragment(g1,
 				srcX+offsetX, srcY+offsetY-overlapNorth,
 				srcWidth + overlapEast, srcHeight + overlapNorth);
