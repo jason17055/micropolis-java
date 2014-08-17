@@ -358,20 +358,25 @@ public abstract class TileImage
 
 		public static class Case
 		{
-			public String key;
-			public String value;
-			public TileImage img;
+			public final TileCondition condition;
+			public final TileImage img;
+
+			public Case(TileCondition cond, TileImage img)
+			{
+				this.condition = cond;
+				this.img = img;
+			}
 
 			public boolean matches(Micropolis city, CityLocation loc)
 			{
-				assert key.equals("tile-west"); //only supported one for now
+				assert condition.key.equals("tile-west"); //only supported one for now
 				CityLocation nloc = new CityLocation(loc.x-1,loc.y);
 				if (!city.testBounds(nloc.x, nloc.y)) {
 					return false;
 				}
 
 				TileSpec ts = Tiles.get(city.getTile(nloc.x, nloc.y));
-				return ts.name.equals(value);
+				return ts.name.equals(condition.value);
 			}
 		}
 
@@ -408,7 +413,7 @@ public abstract class TileImage
 	static SwitchTileImage.Case readSwitchImageCase(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
-		SwitchTileImage.Case c = new SwitchTileImage.Case();
+		TileCondition c = new TileCondition();
 
 		String s;
 		s = in.getAttributeValue(null, "tile-west");
@@ -417,8 +422,7 @@ public abstract class TileImage
 			c.value = s;
 		}
 
-		c.img = readTileImageM(in, ctx);
-		return c;
+		return new SwitchTileImage.Case(c, readTileImageM(in, ctx));
 	}
 
 	static TileImage readLayeredImage(XMLStreamReader in, LoaderContext ctx)
