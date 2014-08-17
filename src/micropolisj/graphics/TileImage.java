@@ -453,6 +453,7 @@ public abstract class TileImage
 
 		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) {
+			// Warning: drawing an unrealized image
 			getDefaultImage().drawFragment(gr, srcX, srcY, srcWidth, srcHeight);
 		}
 
@@ -464,7 +465,7 @@ public abstract class TileImage
 					return c.img.realize(dc);
 				}
 			}
-			throw new Error("Oops, no default case apparently");
+			throw new Error("Oops, no default case (apparently)");
 		}
 	}
 

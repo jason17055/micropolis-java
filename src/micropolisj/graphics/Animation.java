@@ -164,7 +164,8 @@ public class Animation extends TileImage implements TileImage.MultiPart
 	@Override
 	public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight)
 	{
-		// Warning: drawing without considering the animation
+		// Warning: drawing without context specified...
+		// Use realize() first to get the right frame.
 		getDefaultImage().drawFragment(gr, srcX, srcY, srcWidth, srcHeight);
 	}
 
