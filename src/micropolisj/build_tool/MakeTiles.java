@@ -118,6 +118,8 @@ public class MakeTiles
 		}
 
 		@Override
+		public TileImage realize(DrawContext dc) { throw new UnsupportedOperationException(); }
+		@Override
 		public Dimension getBounds() { throw new Error("not implemented"); }
 		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) { throw new UnsupportedOperationException(); }

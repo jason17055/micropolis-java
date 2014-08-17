@@ -13,6 +13,13 @@ public abstract class TileImage
 {
 	public static final int STD_SIZE = 16;
 
+	public static class DrawContext
+	{
+		public int time;
+		public Micropolis city;
+		public CityLocation location;
+	}
+
 	interface MultiPart
 	{
 		MultiPart makeEmptyCopy();
@@ -44,6 +51,12 @@ public abstract class TileImage
 	public abstract Dimension getBounds();
 
 	/**
+	 * @return a concrete TileImage (no switches) to be drawn for the
+	 * specified context.
+	 */
+	public abstract TileImage realize(DrawContext dc);
+
+	/**
 	 * Brings any internal Animation object to the top of the hierarchy.
 	 */
 	public TileImage normalForm()
@@ -64,6 +77,17 @@ public abstract class TileImage
 
 			this.below = below;
 			this.above = above;
+		}
+
+		@Override
+		public TileImageLayer realize(DrawContext dc)
+		{
+			TileImageLayer below_r = below.realize(dc);
+			TileImage above_r = above.realize(dc);
+			if (below_r == below && above_r == above) {
+				return this;
+			}
+			return new TileImageLayer(below_r, above_r);
 		}
 
 		@Override
@@ -141,6 +165,21 @@ public abstract class TileImage
 		}
 
 		@Override
+		public TileImageSprite realize(DrawContext dc)
+		{
+			TileImage source_r = source.realize(dc);
+			if (source_r == source) {
+				return this;
+			}
+			TileImageSprite me_r = new TileImageSprite(source_r, targetSize);
+			me_r.offsetX = this.offsetX;
+			me_r.offsetY = this.offsetY;
+			me_r.overlapNorth = this.overlapNorth;
+			me_r.overlapEast = this.overlapEast;
+			return me_r;
+		}
+
+		@Override
 		public TileImage normalForm()
 		{
 			TileImage source_n = source.normalForm();
@@ -198,11 +237,19 @@ public abstract class TileImage
 		}
 
 		@Override
+		public TileImage realize(DrawContext dc)
+		{
+			return this;
+		}
+
+		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight)
 		{
 			gr.drawImage(
 				image.getSubimage(srcX, srcY, srcWidth, srcHeight),
-				0, 0, null);
+				0,
+				0,
+				null);
 		}
 
 		@Override
@@ -274,6 +321,12 @@ public abstract class TileImage
 		public int offsetY;
 		public int overlapNorth;
 		public int overlapEast;
+
+		@Override
+		public TileImage realize(DrawContext dc)
+		{
+			return this;
+		}
 
 		@Override
 		public Dimension getBounds() {
@@ -388,13 +441,30 @@ public abstract class TileImage
 		}
 
 		@Override
+		public TileImage realize(DrawContext dc)
+		{
+			return frames[dc.time % frames.length];
+		}
+
+		@Override
 		public Dimension getBounds() {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) {
-			throw new UnsupportedOperationException();
+			getDefaultImage().drawFragment(gr, srcX, srcY, srcWidth, srcHeight);
+		}
+
+		@Override
+		public TileImage realize(DrawContext dc)
+		{
+			for (Case c : cases) {
+				if (c.condition.test(dc)) {
+					return c.img.realize(dc);
+				}
+			}
+			throw new Error("Oops, no default case apparently");
 		}
 	}
 

@@ -139,6 +139,23 @@ public class Animation extends TileImage implements TileImage.MultiPart
 		}
 	}
 
+	@Override
+	public TileImage realize(DrawContext dc)
+	{
+		int t = 0;
+		for (int i = 0; i < frames.size(); i++) {
+			Frame f = frames.get(i);
+			int d = t + f.duration;
+			if (dc.time < d) {
+				return f.frame.realize(dc);
+			}
+			t = d;
+		}
+
+		// time not found
+		return getDefaultImage().realize(dc);
+	}
+
 	private TileImage getDefaultImage()
 	{
 		return frames.get(0).frame;
