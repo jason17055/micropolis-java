@@ -354,7 +354,6 @@ public abstract class TileImage
 	public static class SwitchTileImage extends TileImage
 	{
 		public ArrayList<Case> cases = new ArrayList<Case>();
-		public TileImage defaultCase;
 
 		public static class Case
 		{
@@ -369,15 +368,23 @@ public abstract class TileImage
 
 			public boolean matches(Micropolis city, CityLocation loc)
 			{
-				assert condition.key.equals("tile-west"); //only supported one for now
-				CityLocation nloc = new CityLocation(loc.x-1,loc.y);
-				if (!city.testBounds(nloc.x, nloc.y)) {
-					return false;
-				}
-
-				TileSpec ts = Tiles.get(city.getTile(nloc.x, nloc.y));
-				return ts.name.equals(condition.value);
+				return condition.matches(city, loc);
 			}
+		}
+
+		private Case getDefaultCase()
+		{
+			assert !cases.isEmpty();
+			Case c = cases.get(cases.size()-1);
+			assert c.condition == TileCondition.ALWAYS;
+
+			return c;
+		}
+
+		public TileImage getDefaultImage()
+		{
+			assert !cases.isEmpty();
+			return getDefaultCase().img;
 		}
 
 		@Override
@@ -395,17 +402,24 @@ public abstract class TileImage
 		throws XMLStreamException
 	{
 		SwitchTileImage img = new SwitchTileImage();
+		TileImage defaultImg = null;
 		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 			String tagName = in.getLocalName();
 			if (tagName.equals("case")) {
 				img.cases.add(readSwitchImageCase(in, ctx));
 			}
 			else if (tagName.equals("default")) {
-				img.defaultCase = readTileImageM(in, ctx);
+				defaultImg = readTileImageM(in, ctx);
 			}
 			else {
 				skipToEndElement(in);
 			}
+		}
+		if (defaultImg != null) {
+			img.cases.add(new SwitchTileImage.Case(TileCondition.ALWAYS, defaultImg));
+		}
+		else {
+			throw new XMLStreamException("default case is required in switch image");
 		}
 		return img;
 	}

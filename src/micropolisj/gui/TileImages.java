@@ -206,7 +206,7 @@ public class TileImages
 
 		TileImage ti = tileImageMap[tileNumber];
 		if (ti instanceof SwitchTileImage) {
-			ti = ((SwitchTileImage) ti).defaultCase;
+			ti = ((SwitchTileImage) ti).getDefaultImage();
 		}
 
 		if (ti instanceof SimpleTileImage) {
@@ -252,7 +252,7 @@ public class TileImages
 					return refineTileImage(c.img, city, loc, acycle);
 				}
 			}
-			return refineTileImage(sw.defaultCase, city, loc, acycle);
+			return refineTileImage(sw.getDefaultImage(), city, loc, acycle);
 		}
 		else if (ti instanceof Animation) {
 			final Animation anim = (Animation) ti;
