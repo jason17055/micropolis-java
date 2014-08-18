@@ -79,7 +79,7 @@ public class Animation extends TileImage implements TileImage.MultiPart
 	public void addFrame(TileImage img, int duration)
 	{
 		totalDuration += duration;
-		Frame f = new Frame(img, duration);
+		Frame f = new Frame(img, totalDuration, duration);
 		frames.add(f);
 	}
 
@@ -125,11 +125,13 @@ public class Animation extends TileImage implements TileImage.MultiPart
 	public class Frame implements Part
 	{
 		public final TileImage frame;
+		public final int endTime;
 		public final int duration;
 
-		public Frame(TileImage frame, int duration)
+		public Frame(TileImage frame, int endTime, int duration)
 		{
 			this.frame = frame;
+			this.endTime = endTime;
 			this.duration = duration;
 		}
 
@@ -145,7 +147,7 @@ public class Animation extends TileImage implements TileImage.MultiPart
 		int t = 0;
 		for (int i = 0; i < frames.size(); i++) {
 			Frame f = frames.get(i);
-			int d = t + f.duration;
+			int d = f.endTime;
 			if (dc.time < d) {
 				return f.frame.realize(dc);
 			}
@@ -154,6 +156,12 @@ public class Animation extends TileImage implements TileImage.MultiPart
 
 		// time not found
 		return getDefaultImage().realize(dc);
+	}
+
+	@Override
+	protected Iterator<SwitchTileImage.Case> realizeAll_iterator()
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	private TileImage getDefaultImage()

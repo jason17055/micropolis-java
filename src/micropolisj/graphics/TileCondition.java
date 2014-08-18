@@ -39,4 +39,30 @@ public class TileCondition
 			return true;
 		}
 		};
+
+	public static TileCondition and(TileCondition a, TileCondition b)
+	{
+		return new And(a,b);
+	}
+
+	private static class And extends TileCondition
+	{
+		TileCondition a;
+		TileCondition b;
+
+		And(TileCondition a, TileCondition b)
+		{
+			this.a = a;
+			this.b = b;
+		}
+
+		@Override
+		public boolean matches(Micropolis city, CityLocation loc) {
+			return a.matches(city,loc) && b.matches(city,loc);
+		}
+		@Override
+		public boolean test(DrawContext dc) {
+			return a.test(dc) && b.test(dc);
+		}
+	}
 }
