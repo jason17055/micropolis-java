@@ -24,11 +24,14 @@ public abstract class TileImage
 
 	public static class TileImageLayer extends TileImage
 	{
-		public final TileImageLayer below;
+		public final TileImage below;
 		public final TileImage above;
 
-		public TileImageLayer(TileImageLayer below, TileImage above)
+		public TileImageLayer(TileImage below, TileImage above)
 		{
+			assert below != null;
+			assert above != null;
+
 			this.below = below;
 			this.above = above;
 		}
@@ -36,9 +39,7 @@ public abstract class TileImage
 		@Override
 		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 		{
-			if (below != null) {
-				below.drawFragment(gr, destX, destY, srcX, srcY);
-			}
+			below.drawFragment(gr, destX, destY, srcX, srcY);
 			above.drawFragment(gr, destX, destY, srcX, srcY);
 		}
 	}
@@ -204,25 +205,28 @@ public abstract class TileImage
 	static TileImage readLayeredImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
-		TileImageLayer result = null;
+		TileImage result = null;
 
 		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 			assert in.isStartElement();
 
 			TileImage newImg = readTileImage(in, ctx);
-			TileImageLayer rv = new TileImageLayer(
-				result,            //below
-				newImg             //above
+			if (result == null) {
+				result = newImg;
+			}
+			else {
+				result = new TileImageLayer(
+					result,            //below
+					newImg             //above
 				);
-			result = rv;
+			}
 		}
 
-		if (result != null && result.below == null) {
-			return result.above;
+		if (result == null) {
+			throw new XMLStreamException("layer must have at least one image");
 		}
-		else {
-			return result;
-		}
+
+		return result;
 	}
 
 	public static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)

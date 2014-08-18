@@ -49,6 +49,7 @@
 	fork="true" failonerror="true" dir="graphics" inputstring="">
 	<arg file="graphics/tiles.rc" />
 	<arg file="${builddir}/16x16" />
+	<assertions><enable/></assertions>
 </java>
 <java classname="micropolisj.build_tool.MakeTiles" classpath="${builddir}"
 	fork="true" failonerror="true" dir="graphics" inputstring="">

@@ -308,19 +308,19 @@ public class MakeTiles
 	static TileImage parseFrameSpec(String [] layerStrings)
 		throws IOException
 	{
-		if (layerStrings.length == 1) {
-			return parseLayerSpec(layerStrings[0]);
-		}
-
-		TileImageLayer result = null;
+		TileImage result = null;
 
 		for (String layerStr : layerStrings) {
 
-			TileImageLayer rv = new TileImageLayer(
-				result,
-				parseLayerSpec(layerStr)
-				);
-			result = rv;
+			TileImage newLayer = parseLayerSpec(layerStr);
+			if (result == null) {
+				result = newLayer;
+			}
+			else {
+				result = new TileImageLayer(
+					result,
+					newLayer);
+			}
 		}
 
 		return result;
