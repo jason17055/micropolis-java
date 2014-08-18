@@ -103,10 +103,6 @@ public abstract class TileImage
 		@Override
 		protected Iterator<SwitchTileImage.Case> realizeAll_iterator()
 		{
-			if (below == null) {
-				return above.realizeAll().iterator();
-			}
-
 			final Iterator<SwitchTileImage.Case> major_it = below.realizeAll().iterator();
 			class MyIt implements Iterator<SwitchTileImage.Case> {
 
@@ -195,10 +191,6 @@ public abstract class TileImage
 		@Override
 		public Dimension getBounds()
 		{
-			if (below == null) {
-				return above.getBounds();
-			}
-
 			Dimension belowBounds = below.getBounds();
 			Dimension aboveBounds = above.getBounds();
 			return new Dimension(
