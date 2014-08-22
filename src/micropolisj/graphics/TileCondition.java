@@ -1,13 +1,21 @@
 package micropolisj.graphics;
 
+import javax.xml.stream.*;
 import micropolisj.engine.*;
 
 import static micropolisj.graphics.TileImage.DrawContext;
 
 public class TileCondition
 {
-	String key;
-	String value;
+	public String key;
+	public String value;
+
+	public void asCaseStartElement(XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		out.writeStartElement("case");
+		out.writeAttribute("tile-west", this.value);
+	}
 
 	public boolean matches(Micropolis city, CityLocation loc)
 	{
@@ -38,10 +46,16 @@ public class TileCondition
 		public boolean test(DrawContext dc) {
 			return true;
 		}
+		@Override
+		public String toString() {
+			return "ALWAYS";
+		}
 		};
 
 	public static TileCondition and(TileCondition a, TileCondition b)
 	{
+		if (a == ALWAYS) { return b; }
+		if (b == ALWAYS) { return a; }
 		return new And(a,b);
 	}
 
@@ -63,6 +77,12 @@ public class TileCondition
 		@Override
 		public boolean test(DrawContext dc) {
 			return a.test(dc) && b.test(dc);
+		}
+
+		@Override
+		public String toString()
+		{
+			return "AND("+a.toString()+","+b.toString()+")";
 		}
 	}
 }

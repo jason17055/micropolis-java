@@ -130,13 +130,14 @@ public abstract class TileImage
 				public SwitchTileImage.Case next()
 				{
 					SwitchTileImage.Case above_c = above_it.next();
+					SwitchTileImage.Case rv = new SwitchTileImage.Case(
+						TileCondition.and(major_c.condition, above_c.condition),
+						new TileImageLayer(major_c.img, above_c.img)
+						);
 					if (!above_it.hasNext()) {
 						nextMajor();
 					}
-					return new SwitchTileImage.Case(
-						TileCondition.and(major_c.condition, above_c.condition),
-						new TileImageLayer((TileImageLayer)major_c.img, above_c.img)
-						);
+					return rv;
 				}
 				public void remove() {
 					throw new UnsupportedOperationException();
@@ -534,6 +535,11 @@ public abstract class TileImage
 			}
 		}
 
+		public void addCase(TileCondition condition, TileImage image)
+		{
+			cases.add(new Case(condition, image));
+		}
+
 		private Case getDefaultCase()
 		{
 			assert !cases.isEmpty();
@@ -547,6 +553,11 @@ public abstract class TileImage
 		{
 			assert !cases.isEmpty();
 			return getDefaultCase().img;
+		}
+
+		public boolean hasMultipleCases()
+		{
+			return cases.size() > 1;
 		}
 
 		@Override
@@ -601,13 +612,14 @@ public abstract class TileImage
 				public Case next()
 				{
 					Case c = it.next();
-					if (!it.hasNext()) {
-						nextMajor();
-					}
-					return new Case(
+					Case rv = new Case(
 						TileCondition.and(major_c.condition, c.condition),
 						c.img
 						);
+					if (!it.hasNext()) {
+						nextMajor();
+					}
+					return rv;
 				}
 				public void remove() {
 					throw new UnsupportedOperationException();

@@ -143,6 +143,7 @@ public class MakeTiles
 		TileImageSprite prepareTile(TileImage refImage)
 		{
 			Dimension size = refImage.getBounds();
+
 			if (size.width == TILE_SIZE && size.height == TILE_SIZE) {
 				return stanTiles.prepareTile(size, refImage);
 			}
@@ -236,7 +237,25 @@ public class MakeTiles
 
 	static TileImage prepareFrames(TileImage ref, Composer c)
 	{
-		if (ref instanceof Animation) {
+		if (ref instanceof SwitchTileImage) {
+			SwitchTileImage dest = new SwitchTileImage();
+
+			for (SwitchTileImage.Case k : ref.realizeAll())
+			{
+				TileImageSprite s = c.prepareTile(k.img);
+				dest.addCase(k.condition, s);
+			}
+
+			if (dest.hasMultipleCases()) {
+
+				return dest;
+			}
+			else {
+
+				return dest.getDefaultImage();
+			}
+		}
+		else if (ref instanceof Animation) {
 
 			Animation mc = (Animation) ref;
 			Animation dest = new Animation();
@@ -254,7 +273,13 @@ public class MakeTiles
 
 	static void drawFrames(TileImage dest, Composer c)
 	{
-		if (dest instanceof Animation) {
+		if (dest instanceof SwitchTileImage) {
+			SwitchTileImage sti = (SwitchTileImage) dest;
+			for (SwitchTileImage.Case k : sti.cases) {
+				drawFrames(k.img, c);
+			}
+		}
+		else if (dest instanceof Animation) {
 			Animation ani = (Animation) dest;
 			for (Animation.Frame f : ani.frames) {
 				drawFrames(f.frame, c);
@@ -284,6 +309,12 @@ public class MakeTiles
 		if (s.overlapEast != 0) {
 			out.writeAttribute("overlap-east", Integer.toString(s.overlapEast));
 		}
+	}
+
+	static void writeCaseStartElement(TileCondition cond, XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		cond.asCaseStartElement(out);
 	}
 
 	static void writeIndexFile(Collection<TileMapping> mappings, File indexFile)
@@ -329,6 +360,24 @@ public class MakeTiles
 				out.writeEndElement();
 			}
 			out.writeEndElement();
+		}
+		else if (dest instanceof SwitchTileImage) {
+
+			SwitchTileImage s = (SwitchTileImage) dest;
+			out.writeStartElement("switch");
+			for (SwitchTileImage.Case k : s.cases) {
+				if (k.condition == TileCondition.ALWAYS) {
+					out.writeStartElement("default");
+				}
+				else {
+					writeCaseStartElement(k.condition, out);
+				}
+				out.writeStartElement("image");
+				writeImageAttributes((TileImageSprite) k.img, out);
+				out.writeEndElement(); //image
+				out.writeEndElement(); //case/default
+			}
+			out.writeEndElement(); //switch
 		}
 		else { //assume it is a simple sprite
 
