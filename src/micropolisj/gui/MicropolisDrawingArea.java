@@ -18,8 +18,10 @@ import javax.swing.event.*;
 import javax.swing.Timer;
 
 import micropolisj.engine.*;
+import micropolisj.graphics.*;
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.gui.ColorParser.parseColor;
+import static micropolisj.graphics.TileImage.DrawContext;
 
 public class MicropolisDrawingArea extends JComponent
 	implements Scrollable, MapListener
@@ -197,13 +199,13 @@ public class MicropolisDrawingArea extends JComponent
 					}
 				}
 
-				TileImages.ImageInfo imgInfo = tileImages.getTileImageInfo(m, new CityLocation(x,y), m.getAnimationCycle());
-				imgInfo.drawTo(gr,
+				TileImage img = tileImages.getTileImage(m, new CityLocation(x,y), m.getAnimationCycle());
+				img.drawTo((Graphics2D) gr,
 					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0),
 					y*TILE_HEIGHT
 					);
 
-				if (imgInfo.isAnimated()) {
+				if (img.isAnimated()) {
 					animatedTiles.add(new CityLocation(x, y));
 				}
 			}

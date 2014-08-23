@@ -66,6 +66,11 @@ public abstract class TileImage
 		};
 	}
 
+	public boolean isAnimated()
+	{
+		return false;
+	}
+
 	/**
 	 * Brings any internal Animation object to the top of the hierarchy.
 	 */
@@ -752,4 +757,5 @@ public abstract class TileImage
 
 		return img;
 	}
+
 }

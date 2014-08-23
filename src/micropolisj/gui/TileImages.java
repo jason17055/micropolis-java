@@ -225,15 +225,20 @@ public class TileImages
 		}
 	}
 
-	public ImageInfo getTileImageInfo(Micropolis city, CityLocation loc, int acycle)
+	public TileImage getTileImage(Micropolis city, CityLocation loc, int acycle)
 	{
 		int tileNumber = city.getTile(loc.x, loc.y);
 
 		assert (tileNumber & LOMASK) == tileNumber;
 		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
 
+		DrawContext dc = new DrawContext();
+		dc.city = city;
+		dc.location = loc;
+		dc.time = acycle;
+
 		TileImage ti = tileImageMap[tileNumber];
-		return refineTileImage(ti, city, loc, acycle);
+		return ti.realize(dc);
 	}
 
 	ImageInfo refineTileImage(TileImage ti, Micropolis city, CityLocation loc, int acycle)

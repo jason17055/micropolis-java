@@ -372,9 +372,7 @@ public class MakeTiles
 				else {
 					writeCaseStartElement(k.condition, out);
 				}
-				out.writeStartElement("image");
-				writeImageAttributes((TileImageSprite) k.img, out);
-				out.writeEndElement(); //image
+				writeImageTags(out, k.img);
 				out.writeEndElement(); //case/default
 			}
 			out.writeEndElement(); //switch
