@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="com_sym.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="14.75"
+     inkscape:cx="8"
+     inkscape:cy="2.9378154"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="864"
+     inkscape:window-height="608"
+     inkscape:window-x="177"
+     inkscape:window-y="47"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1036.3622)">
+    <g
+       id="g3276"
+       transform="translate(2.779661,-1.4915254)">
+      <g
+         id="flowRoot2985-1"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Segoe UI;-inkscape-font-specification:Segoe UI Bold"
+         transform="matrix(0.99995707,0,0,1,2.4842683,1048.0537)">
+        <path
+           sodipodi:nodetypes="cssssscccccssssccc"
+           inkscape:connector-curvature="0"
+           id="path3274"
+           d="M 6.25,3.7147012 C 5.4322832,4.1105345 4.3645759,4.308451 3.046875,4.3084512 1.3281206,4.308451 -0.02344054,3.8032432 -1.0078125,2.7928262 -1.9921886,1.7824119 -2.4843744,0.43605903 -2.484375,-1.2462363 c -5e-7,-1.436869 0.3559181,-2.6560031 1.0677564,-3.6574044 0.1757665,-0.2472652 0.92007885,-1.0853317 1.62314212,-1.7326686 0.35712897,-0.3288221 1.51222168,-0.6411656 3.27785148,-0.641177 1.0937424,1.14e-5 2.0156164,0.1380321 2.765625,0.4140625 L 7.2328008,-5.4471766 6.25,-4.4337363 C 5.4999914,-4.881644 4.6458256,-5.1056021 3.6875,-5.1056113 c -1.052089,9.2e-6 -1.9010465,0.330738 -2.546875,0.9921875 -0.64583689,0.6614659 -0.96875323,1.5572983 -0.96875,2.6875 -3.23e-6,1.08333778 0.30468396,1.94661816 0.9140625,2.5898437 0.6093702,0.6432315 1.4296819,0.9648458 2.4609375,0.9648438 0.9843674,2e-6 1.8854082,-0.2395811 2.703125,-0.71875 l 0.95883,1.3164847 z" />
+      </g>
+      <flowRoot
+         transform="translate(3.484375,1047.0537)"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000080;fill-opacity:1;stroke:none;font-family:Segoe UI;-inkscape-font-specification:Segoe UI Bold"
+         id="flowRoot2985-1-4"
+         xml:space="preserve"><flowRegion
+           id="flowRegion2987-7-2"><rect
+             style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000080;font-family:Segoe UI;-inkscape-font-specification:Segoe UI Bold"
+             y="-9.4915257"
+             x="-3.0508475"
+             height="18.372889"
+             width="20.474577"
+             id="rect2989-4-3" /></flowRegion><flowPara
+           id="flowPara2991-0-2">C</flowPara></flowRoot>    </g>
+  </g>
+</svg>

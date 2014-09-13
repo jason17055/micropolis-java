@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="res_sym.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="20.85965"
+     inkscape:cx="4.3186441"
+     inkscape:cy="7.8658742"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="864"
+     inkscape:window-height="608"
+     inkscape:window-x="177"
+     inkscape:window-y="47"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1036.3622)">
+    <g
+       id="g3208"
+       transform="translate(3.1160638,-1.5000387)">
+      <g
+         id="flowRoot2985-1"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Segoe UI;-inkscape-font-specification:Segoe UI Bold"
+         transform="translate(1.78125,1048.2491)">
+        <path
+           sodipodi:nodetypes="cccccccccccccscccscccccccccccccsc"
+           inkscape:connector-curvature="0"
+           id="path3206"
+           d="m 7.6171875,4.1131387 -2.8984375,0 L 2.9765625,1.2303262 C 2.8463483,1.0115793 2.7213484,0.81626698 2.6015625,0.64438869 2.4817653,0.47251733 2.3606717,0.32538206 2.2382813,0.20298244 2.1158802,0.08059064 1.9882762,-0.01315927 1.8554687,-0.07826756 1.7226515,-0.14336747 1.5781204,-0.17591952 1.421875,-0.17592381 l -0.6796875,0 L 1.74175,3.1131 0.7421875,4.1131387 l -2.5234375,0 0,-11.203125 1,-0.9999137 3,0.9999137 c 2.5792474,0.8596749 4.0781156,1.0156352 4.078125,3.046875 -9.4e-6,0.3906328 0.3396575,0.7513095 0.219875,1.0820312 -0.2977668,0.3646342 -0.586939,0.6204381 -0.907375,0.8945313 -0.2187585,0.2656309 -0.4830811,0.4947973 -0.7929688,0.6875 -0.3099034,0.1927136 -0.6549551,0.3437551 -1.0351562,0.45312499 l 0,0.03125 c 0.1666597,0.0520883 0.3281178,0.13672362 0.484375,0.25390625 0.1562425,0.11719213 0.307284,0.25391075 0.453125,0.41015625 0.1458254,0.15625418 0.2851482,0.32422277 0.4179687,0.50390625 C 5.2695229,0.4529861 5.3906165,0.62876717 5.5,0.80063869 L 8.5806566,3.1170565 z m -6.875,-9.3125 0,3.1171875 1.09375,0 c 0.5416612,6.2e-6 0.9765566,-0.1562437 1.3046875,-0.46875 0.3333268,-0.3177014 0.4999933,-0.7109301 0.5,-1.1796875 -6.7e-6,-0.9791579 -0.5859436,-1.4687407 -1.7578125,-1.46875 z" />
+      </g>
+      <flowRoot
+         transform="translate(2.78125,1047.2491)"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#00ff00;fill-opacity:1;stroke:none;font-family:Segoe UI;-inkscape-font-specification:Segoe UI Bold"
+         id="flowRoot2985-1-2"
+         xml:space="preserve"><flowRegion
+           id="flowRegion2987-7-7"><rect
+             style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#00ff00;font-family:Segoe UI;-inkscape-font-specification:Segoe UI Bold"
+             y="-9.4915257"
+             x="-3.0508475"
+             height="18.372889"
+             width="20.474577"
+             id="rect2989-4-6" /></flowRegion><flowPara
+           id="flowPara2991-0-1">R</flowPara></flowRoot>    </g>
+  </g>
+</svg>
