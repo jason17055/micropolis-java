@@ -223,6 +223,12 @@ public abstract class TileImage
 		{
 			return below.getSize();
 		}
+
+		@Override
+		public String toString()
+		{
+			return "(layered-image "+below.toString()+" "+above.toString()+")";
+		}
 	}
 
 	public static class TileImageSprite extends TileImage
@@ -391,6 +397,16 @@ public abstract class TileImage
 	{
 		public final int targetSize;
 
+		@Override
+		public String toString()
+		{
+			return String.format("(scaled-source-image %dx%d %d -> %d)",
+				image.getWidth(),
+				image.getHeight(),
+				basisSize,
+				targetSize);
+		}
+
 		public ScaledSourceImage(BufferedImage image, int basisSize, int targetSize)
 		{
 			super(image, basisSize);
@@ -506,6 +522,15 @@ public abstract class TileImage
 					throw new UnsupportedOperationException();
 				}
 			};
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.format("(simple %s offset %d,%d overlap %d,%d)",
+				srcImage.toString(),
+				offsetX, offsetY,
+				overlapEast, overlapNorth);
 		}
 	}
 
