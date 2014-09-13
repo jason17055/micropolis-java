@@ -101,7 +101,7 @@ public abstract class TileImage
 		{
 			assert below != null;
 			assert above != null;
-			assert below.getSize().equals(above.getSize());
+			assert below.getSize().equals(above.getSize()) : "cannot layer images of differing standard sizes";
 
 			this.below = below;
 			this.above = above;
@@ -429,6 +429,12 @@ public abstract class TileImage
 
 		@Override
 		public Dimension getBounds()
+		{
+			return new Dimension(targetSize, targetSize);
+		}
+
+		@Override
+		public Dimension getSize()
 		{
 			return new Dimension(targetSize, targetSize);
 		}
