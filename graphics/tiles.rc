@@ -43,7 +43,7 @@
 31    terrain@0,496			(bulldozable)(description=#2)
 32    terrain@0,512			(bulldozable)(description=#2)
 33    terrain@0,528			(bulldozable)(description=#2)
-34    terrain@0,544			(bulldozable)(description=#2)
+34    clear|trees/border_ne		(bulldozable)(description=#2)
 35    terrain@0,560			(bulldozable)(description=#2)
 36    terrain@0,576			(bulldozable)(description=#2)
 37    trees        			(bulldozable)(description=#2)
