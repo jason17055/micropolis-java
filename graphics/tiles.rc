@@ -38,14 +38,14 @@
 26
 27
 28
-29    terrain@0,464			(bulldozable)(description=#2)
-30    terrain@0,480			(bulldozable)(description=#2)
-31    terrain@0,496			(bulldozable)(description=#2)
-32    terrain@0,512			(bulldozable)(description=#2)
-33    terrain@0,528			(bulldozable)(description=#2)
+29   
+30    clear|trees/border_sw		(bulldozable)(description=#2)
+31  
+32    clear|trees/border_nw		(bulldozable)(description=#2)
+33 
 34    clear|trees/border_ne		(bulldozable)(description=#2)
-35    terrain@0,560			(bulldozable)(description=#2)
-36    terrain@0,576			(bulldozable)(description=#2)
+35
+36    clear|trees/border_se		(bulldozable)(description=#2)
 37    trees        			(bulldozable)(description=#2)
 # unused
 38    

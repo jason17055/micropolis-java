@@ -497,9 +497,9 @@ public class MapGenerator
 	static final int [] DY = new int[] { 0, 1, 0, -1 };
 	static final char [] TEdTab = new char[] {
 			0, 0, 0, 34,
-			0, 0, 36, 35,
-			0, 32, 0, 33,
-			30, 31, 29, 37
+			0, 0, 36, 37,
+			0, 32, 0, 37,
+			30, 37, 37, 37
 		};
 
 	private void smoothTrees()
