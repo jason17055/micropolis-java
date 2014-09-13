@@ -4,6 +4,15 @@
 # that tile will be mapped to <new-name> automatically.
 #
 
+# old trees
+21 29
+22 30
+23 31
+24 32
+25 33
+26 34
+27 35
+28 36
 # old fire animation
 57 56
 58 56

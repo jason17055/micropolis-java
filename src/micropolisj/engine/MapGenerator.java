@@ -523,21 +523,7 @@ public class MapGenerator
 						}
 					}
 					char temp = TEdTab[bitindex & 15];
-					if (temp != 0)
-					{
-						if (temp != WOODS)
-						{
-							if (((mapX + mapY) & 1) != 0)
-							{
-								temp -= 8;
-							}
-						}
-						map[mapY][mapX] = temp;
-					}
-					else
-					{
-						map[mapY][mapX] = temp;
-					}
+					map[mapY][mapX] = temp;
 				}
 			}
 		}
