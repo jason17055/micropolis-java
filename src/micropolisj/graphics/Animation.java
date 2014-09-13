@@ -188,4 +188,10 @@ public class Animation extends TileImage implements TileImage.MultiPart
 		}
 		return new Dimension(width, height);
 	}
+
+	@Override
+	public Dimension getSize()
+	{
+		return getDefaultImage().getSize();
+	}
 }

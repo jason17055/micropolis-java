@@ -124,6 +124,10 @@ public class MakeTiles
 		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) { throw new UnsupportedOperationException(); }
 		@Override
+		public Dimension getSize() {
+			throw new UnsupportedOperationException();
+		}
+		@Override
 		protected Iterator<SwitchTileImage.Case> realizeAll_iterator() {
 			throw new UnsupportedOperationException();
 		}

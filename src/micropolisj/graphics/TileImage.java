@@ -40,15 +40,27 @@ public abstract class TileImage
 
 	public final void drawTo(Graphics2D gr, int destX, int destY)
 	{
+		final Dimension sz = getSize();
+
 		Graphics2D g1 = (Graphics2D) gr.create();
 		g1.translate(destX, destY);
-		this.drawFragment(gr, 0, 0, STD_SIZE, STD_SIZE);
+		this.drawFragment(g1, 0, 0, sz.width, sz.height);
 	}
 
 	/**
-	 * @return the width and height needed for this tile image.
+	 * @return the total width and height needed for this tile image.
 	 */
 	public abstract Dimension getBounds();
+
+	/**
+	 * Get the standard size of this tile image. This is the distance between
+	 * adjacent tiles. It is usually also the size of the image itself,
+	 * but is sometimes smaller than the actual image since the image may
+	 * have parts that overlap its neighbors.
+	 *
+	 * @return the standard width and height of this tile image.
+	 */
+	public abstract Dimension getSize();
 
 	/**
 	 * @return a concrete TileImage (no switches) to be drawn for the
@@ -89,6 +101,7 @@ public abstract class TileImage
 		{
 			assert below != null;
 			assert above != null;
+			assert below.getSize().equals(above.getSize());
 
 			this.below = below;
 			this.above = above;
@@ -204,6 +217,12 @@ public abstract class TileImage
 				Math.max(belowBounds.height, aboveBounds.height)
 				);
 		}
+
+		@Override
+		public Dimension getSize()
+		{
+			return below.getSize();
+		}
 	}
 
 	public static class TileImageSprite extends TileImage
@@ -304,6 +323,11 @@ public abstract class TileImage
 				d.height + overlapNorth*targetSize/STD_SIZE
 				);
 		}
+
+		@Override
+		public Dimension getSize() {
+			return new Dimension(targetSize, targetSize);
+		}
 	}
 
 	public static class SourceImage extends TileImage
@@ -344,6 +368,12 @@ public abstract class TileImage
 
 		@Override
 		public Dimension getBounds()
+		{
+			return new Dimension(basisSize, basisSize);
+		}
+
+		@Override
+		public Dimension getSize()
 		{
 			return new Dimension(basisSize, basisSize);
 		}
@@ -428,6 +458,10 @@ public abstract class TileImage
 		}
 
 		@Override
+		public Dimension getSize() {
+			return srcImage.getSize();
+		}
+
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) {
 			int targetSize = srcImage.getTargetSize();
 			Graphics2D g1 = (Graphics2D) gr.create();
@@ -568,6 +602,11 @@ public abstract class TileImage
 		@Override
 		public Dimension getBounds() {
 			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Dimension getSize() {
+			return getDefaultImage().getSize();
 		}
 
 		@Override
