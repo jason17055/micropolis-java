@@ -128,7 +128,7 @@ public class MakeTiles
 			throw new UnsupportedOperationException();
 		}
 		@Override
-		protected Iterator<SwitchTileImage.Case> realizeAll_iterator() {
+		protected Iterator<RealImage> realizeAll_iterator() {
 			throw new UnsupportedOperationException();
 		}
 	}
@@ -244,9 +244,9 @@ public class MakeTiles
 		if (ref instanceof SwitchTileImage) {
 			SwitchTileImage dest = new SwitchTileImage();
 
-			for (SwitchTileImage.Case k : ref.realizeAll())
+			for (RealImage k : ref.realizeAll())
 			{
-				TileImageSprite s = c.prepareTile(k.img);
+				TileImageSprite s = c.prepareTile(k.image);
 				dest.addCase(k.condition, s);
 			}
 

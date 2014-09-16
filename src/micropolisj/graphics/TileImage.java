@@ -33,6 +33,19 @@ public abstract class TileImage
 		TileImage getImage();
 	}
 
+	public static class RealImage
+	{
+		public final TileImage image;
+		public final TileCondition condition;
+		//public final AnimatedTime animationTime;
+
+		public RealImage(TileCondition condition, TileImage image)
+		{
+			this.image = image;
+			this.condition = condition;
+		}
+	}
+
 	/**
 	 * Draws a part of this tile image to the given graphics context.
 	 */
@@ -68,11 +81,11 @@ public abstract class TileImage
 	 */
 	public abstract TileImage realize(DrawContext dc);
 
-	protected abstract Iterator<SwitchTileImage.Case> realizeAll_iterator();
+	protected abstract Iterator<RealImage> realizeAll_iterator();
 
-	public final Iterable<SwitchTileImage.Case> realizeAll() {
-		return new Iterable<SwitchTileImage.Case>() {
-			public Iterator<SwitchTileImage.Case> iterator() {
+	public final Iterable<RealImage> realizeAll() {
+		return new Iterable<RealImage>() {
+			public Iterator<RealImage> iterator() {
 				return realizeAll_iterator();
 			}
 		};
@@ -119,13 +132,13 @@ public abstract class TileImage
 		}
 
 		@Override
-		protected Iterator<SwitchTileImage.Case> realizeAll_iterator()
+		protected Iterator<RealImage> realizeAll_iterator()
 		{
-			final Iterator<SwitchTileImage.Case> major_it = below.realizeAll().iterator();
-			class MyIt implements Iterator<SwitchTileImage.Case> {
+			final Iterator<RealImage> major_it = below.realizeAll().iterator();
+			class MyIt implements Iterator<RealImage> {
 
-				SwitchTileImage.Case major_c;
-				Iterator<SwitchTileImage.Case> above_it;
+				RealImage major_c;
+				Iterator<RealImage> above_it;
 
 				MyIt() {
 					nextMajor();
@@ -145,12 +158,12 @@ public abstract class TileImage
 				public boolean hasNext() {
 					return above_it != null && above_it.hasNext();
 				}
-				public SwitchTileImage.Case next()
+				public RealImage next()
 				{
-					SwitchTileImage.Case above_c = above_it.next();
-					SwitchTileImage.Case rv = new SwitchTileImage.Case(
+					RealImage above_c = above_it.next();
+					RealImage rv = new RealImage(
 						TileCondition.and(major_c.condition, above_c.condition),
-						new TileImageLayer(major_c.img, above_c.img)
+						new TileImageLayer(major_c.image, above_c.image)
 						);
 					if (!above_it.hasNext()) {
 						nextMajor();
@@ -262,22 +275,22 @@ public abstract class TileImage
 		}
 
 		@Override
-		protected Iterator<SwitchTileImage.Case> realizeAll_iterator()
+		protected Iterator<RealImage> realizeAll_iterator()
 		{
-			final Iterator<SwitchTileImage.Case> it = source.realizeAll().iterator();
-			return new Iterator<SwitchTileImage.Case>()
+			final Iterator<RealImage> it = source.realizeAll().iterator();
+			return new Iterator<RealImage>()
 			{
 				public boolean hasNext() {
 					return it.hasNext();
 				}
-				public SwitchTileImage.Case next() {
-					SwitchTileImage.Case c = it.next();
-					TileImageSprite me_r = new TileImageSprite(c.img, targetSize);
+				public RealImage next() {
+					RealImage c = it.next();
+					TileImageSprite me_r = new TileImageSprite(c.image, targetSize);
 					me_r.offsetX = offsetX;
 					me_r.offsetY = offsetY;
 					me_r.overlapNorth = overlapNorth;
 					me_r.overlapEast = overlapEast;
-					return new SwitchTileImage.Case(c.condition, me_r);
+					return new RealImage(c.condition, me_r);
 				}
 				public void remove() {
 					throw new UnsupportedOperationException();
@@ -354,10 +367,10 @@ public abstract class TileImage
 		}
 
 		@Override
-		protected Iterator<SwitchTileImage.Case> realizeAll_iterator()
+		protected Iterator<RealImage> realizeAll_iterator()
 		{
 			return Collections.singletonList(
-				new SwitchTileImage.Case(
+				new RealImage(
 					TileCondition.ALWAYS,
 					this)).iterator();
 		}
@@ -500,23 +513,23 @@ public abstract class TileImage
 		}
 
 		@Override
-		protected Iterator<SwitchTileImage.Case> realizeAll_iterator()
+		protected Iterator<RealImage> realizeAll_iterator()
 		{
-			final Iterator<SwitchTileImage.Case> it = srcImage.realizeAll().iterator();
-			return new Iterator<SwitchTileImage.Case>()
+			final Iterator<RealImage> it = srcImage.realizeAll().iterator();
+			return new Iterator<RealImage>()
 			{
 				public boolean hasNext() {
 					return it.hasNext();
 				}
-				public SwitchTileImage.Case next() {
-					SwitchTileImage.Case c = it.next();
+				public RealImage next() {
+					RealImage c = it.next();
 					SimpleTileImage me_r = new SimpleTileImage();
 					me_r.srcImage = srcImage;
 					me_r.offsetX = offsetX;
 					me_r.offsetY = offsetY;
 					me_r.overlapNorth = overlapNorth;
 					me_r.overlapEast = overlapEast;
-					return new SwitchTileImage.Case(c.condition, me_r);
+					return new RealImage(c.condition, me_r);
 				}
 				public void remove() {
 					throw new UnsupportedOperationException();
@@ -658,13 +671,13 @@ public abstract class TileImage
 		}
 
 		@Override
-		protected Iterator<Case> realizeAll_iterator()
+		protected Iterator<RealImage> realizeAll_iterator()
 		{
 			final Iterator<Case> major_it = cases.iterator();
-			class MyIt implements Iterator<Case> {
+			class MyIt implements Iterator<RealImage> {
 
 				Case major_c;
-				Iterator<Case> it;
+				Iterator<RealImage> it;
 
 				MyIt() {
 					nextMajor();
@@ -684,12 +697,12 @@ public abstract class TileImage
 				public boolean hasNext() {
 					return it != null && it.hasNext();
 				}
-				public Case next()
+				public RealImage next()
 				{
-					Case c = it.next();
-					Case rv = new Case(
+					RealImage c = it.next();
+					RealImage rv = new RealImage(
 						TileCondition.and(major_c.condition, c.condition),
-						c.img
+						c.image
 						);
 					if (!it.hasNext()) {
 						nextMajor();

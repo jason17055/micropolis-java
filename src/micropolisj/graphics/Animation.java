@@ -159,7 +159,7 @@ public class Animation extends TileImage implements TileImage.MultiPart
 	}
 
 	@Override
-	protected Iterator<SwitchTileImage.Case> realizeAll_iterator()
+	protected Iterator<RealImage> realizeAll_iterator()
 	{
 		throw new UnsupportedOperationException();
 	}
