@@ -241,35 +241,6 @@ public class TileImages
 		return ti.realize(dc);
 	}
 
-	ImageInfo refineTileImage(TileImage ti, Micropolis city, CityLocation loc, int acycle)
-	{
-		if (ti instanceof SimpleTileImage) {
-			final SimpleTileImage sti = (SimpleTileImage) ti;
-
-			return new ImageInfo(sti, false);
-		}
-		else if (ti instanceof SwitchTileImage) {
-
-			SwitchTileImage sw = (SwitchTileImage) ti;
-			for (SwitchTileImage.Case c : sw.cases) {
-
-				if (c.matches(city, loc)) {
-					return refineTileImage(c.img, city, loc, acycle);
-				}
-			}
-			return refineTileImage(sw.getDefaultImage(), city, loc, acycle);
-		}
-		else if (ti instanceof Animation) {
-			final Animation anim = (Animation) ti;
-			final SimpleTileImage sti = (SimpleTileImage) anim.getFrameByTime(acycle);
-
-			return new ImageInfo(sti, true);
-		}
-		else {
-			throw new Error("unknown TileImage type: "+ti.getClass().getName());
-		}
-	}
-
 	public Image getTileImage(int tile)
 	{
 		return getTileImageInfo(tile).getImage();
