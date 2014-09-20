@@ -156,12 +156,6 @@ public class Animation extends TileImage implements TileImage.MultiPart
 		return getDefaultImage().realize(dc);
 	}
 
-	@Override
-	protected Iterator<RealImage> realizeAll_iterator()
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	private TileImage getDefaultImage()
 	{
 		return frames.get(0).frame;

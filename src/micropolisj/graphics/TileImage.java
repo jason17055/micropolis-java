@@ -33,19 +33,6 @@ public abstract class TileImage
 		TileImage getImage();
 	}
 
-	public static class RealImage
-	{
-		public final TileImage image;
-		public final TileCondition condition;
-		//public final AnimatedTime animationTime;
-
-		public RealImage(TileCondition condition, TileImage image)
-		{
-			this.image = image;
-			this.condition = condition;
-		}
-	}
-
 	/**
 	 * Draws a part of this tile image to the given graphics context.
 	 */
@@ -81,21 +68,6 @@ public abstract class TileImage
 	 */
 	public abstract TileImage realize(DrawContext dc);
 
-	protected abstract Iterator<RealImage> realizeAll_iterator();
-
-	public final Iterable<RealImage> realizeAll() {
-		return new Iterable<RealImage>() {
-			public Iterator<RealImage> iterator() {
-				return realizeAll_iterator();
-			}
-		};
-	}
-
-	public boolean isAnimated()
-	{
-		return false;
-	}
-
 	/**
 	 * Brings any internal SwitchImage or Animation objects to
 	 * the top of the hierarchy.
@@ -130,52 +102,6 @@ public abstract class TileImage
 				return this;
 			}
 			return new TileImageLayer(below_r, above_r);
-		}
-
-		@Override
-		protected Iterator<RealImage> realizeAll_iterator()
-		{
-			final Iterator<RealImage> major_it = below.realizeAll().iterator();
-			class MyIt implements Iterator<RealImage> {
-
-				RealImage major_c;
-				Iterator<RealImage> above_it;
-
-				MyIt() {
-					nextMajor();
-				}
-				private void nextMajor()
-				{
-					if (major_it.hasNext()) {
-						major_c = major_it.next();
-						above_it = above.realizeAll().iterator();
-					}
-					else {
-						major_c = null;
-						above_it = null;
-					}
-				}
-
-				public boolean hasNext() {
-					return above_it != null && above_it.hasNext();
-				}
-				public RealImage next()
-				{
-					RealImage above_c = above_it.next();
-					RealImage rv = new RealImage(
-						TileCondition.and(major_c.condition, above_c.condition),
-						new TileImageLayer(major_c.image, above_c.image)
-						);
-					if (!above_it.hasNext()) {
-						nextMajor();
-					}
-					return rv;
-				}
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-			}
-			return new MyIt();
 		}
 
 		@Override
@@ -276,30 +202,6 @@ public abstract class TileImage
 		}
 
 		@Override
-		protected Iterator<RealImage> realizeAll_iterator()
-		{
-			final Iterator<RealImage> it = source.realizeAll().iterator();
-			return new Iterator<RealImage>()
-			{
-				public boolean hasNext() {
-					return it.hasNext();
-				}
-				public RealImage next() {
-					RealImage c = it.next();
-					TileImageSprite me_r = new TileImageSprite(c.image, targetSize);
-					me_r.offsetX = offsetX;
-					me_r.offsetY = offsetY;
-					me_r.overlapNorth = overlapNorth;
-					me_r.overlapEast = overlapEast;
-					return new RealImage(c.condition, me_r);
-				}
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-			};
-		}
-
-		@Override
 		public TileImage normalForm()
 		{
 			TileImage source_n = source.normalForm();
@@ -319,9 +221,11 @@ public abstract class TileImage
 
 		private TileImageSprite sameTransformFor(TileImage img)
 		{
-			TileImageSprite m = new TileImageSprite(img, this.targetSize);
+			TileImageSprite m = new TileImageSprite(img, targetSize);
 			m.offsetX = this.offsetX;
 			m.offsetY = this.offsetY;
+			m.overlapNorth = this.overlapNorth;
+			m.overlapEast = this.overlapEast;
 			return m;
 		}
 
@@ -365,15 +269,6 @@ public abstract class TileImage
 		public TileImage realize(DrawContext dc)
 		{
 			return this;
-		}
-
-		@Override
-		protected Iterator<RealImage> realizeAll_iterator()
-		{
-			return Collections.singletonList(
-				new RealImage(
-					TileCondition.ALWAYS,
-					this)).iterator();
 		}
 
 		@Override
@@ -511,31 +406,6 @@ public abstract class TileImage
 		public TileImage realize(DrawContext dc)
 		{
 			return this;
-		}
-
-		@Override
-		protected Iterator<RealImage> realizeAll_iterator()
-		{
-			final Iterator<RealImage> it = srcImage.realizeAll().iterator();
-			return new Iterator<RealImage>()
-			{
-				public boolean hasNext() {
-					return it.hasNext();
-				}
-				public RealImage next() {
-					RealImage c = it.next();
-					SimpleTileImage me_r = new SimpleTileImage();
-					me_r.srcImage = srcImage;
-					me_r.offsetX = offsetX;
-					me_r.offsetY = offsetY;
-					me_r.overlapNorth = overlapNorth;
-					me_r.overlapEast = overlapEast;
-					return new RealImage(c.condition, me_r);
-				}
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-			};
 		}
 
 		@Override

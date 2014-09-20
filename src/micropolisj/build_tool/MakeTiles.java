@@ -127,10 +127,6 @@ public class MakeTiles
 		public Dimension getSize() {
 			throw new UnsupportedOperationException();
 		}
-		@Override
-		protected Iterator<RealImage> realizeAll_iterator() {
-			throw new UnsupportedOperationException();
-		}
 	}
 
 	static class Composer
