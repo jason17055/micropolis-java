@@ -241,8 +241,8 @@ public class MakeTiles
 
 	static TileImage prepareFrames(TileImage ref, Composer c)
 	{
-		if (ref instanceof SwitchTileImage) {
-			SwitchTileImage dest = new SwitchTileImage();
+		if (ref instanceof SwitchImage) {
+			SwitchImage dest = new SwitchImage();
 
 			for (RealImage k : ref.realizeAll())
 			{
@@ -277,9 +277,9 @@ public class MakeTiles
 
 	static void drawFrames(TileImage dest, Composer c)
 	{
-		if (dest instanceof SwitchTileImage) {
-			SwitchTileImage sti = (SwitchTileImage) dest;
-			for (SwitchTileImage.Case k : sti.cases) {
+		if (dest instanceof SwitchImage) {
+			SwitchImage sti = (SwitchImage) dest;
+			for (SwitchImage.Case k : sti.cases) {
 				drawFrames(k.img, c);
 			}
 		}
@@ -365,11 +365,11 @@ public class MakeTiles
 			}
 			out.writeEndElement();
 		}
-		else if (dest instanceof SwitchTileImage) {
+		else if (dest instanceof SwitchImage) {
 
-			SwitchTileImage s = (SwitchTileImage) dest;
+			SwitchImage s = (SwitchImage) dest;
 			out.writeStartElement("switch");
-			for (SwitchTileImage.Case k : s.cases) {
+			for (SwitchImage.Case k : s.cases) {
 				if (k.condition == TileCondition.ALWAYS) {
 					out.writeStartElement("default");
 				}

@@ -205,8 +205,8 @@ public class TileImages
 		assert tileNumber >= 0 && tileNumber < tileImageMap.length;
 
 		TileImage ti = tileImageMap[tileNumber];
-		if (ti instanceof SwitchTileImage) {
-			ti = ((SwitchTileImage) ti).getDefaultImage();
+		if (ti instanceof SwitchImage) {
+			ti = ((SwitchImage) ti).getDefaultImage();
 		}
 
 		if (ti instanceof SimpleTileImage) {
