@@ -618,6 +618,11 @@ public abstract class TileImage
 		if (defaultImg != null) {
 			img.cases.add(new SwitchImage.Case(TileCondition.ALWAYS, defaultImg));
 		}
+		else if (in.getLocalName().equals("animation") ||
+			in.getLocalName().equals("micropolis-animation"))
+		{
+			return Animation.read(in, ctx);
+		}
 		else {
 			throw new XMLStreamException("default case is required in switch image");
 		}
