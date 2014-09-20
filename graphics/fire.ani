@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <micropolis-animation>
-<frame>terrain@0,896</frame>
-<frame>terrain@0,912</frame>
-<frame>terrain@0,928</frame>
-<frame>terrain@0,944</frame>
-<frame>terrain@0,960</frame>
-<frame>terrain@0,976</frame>
-<frame>terrain@0,992</frame>
-<frame>terrain@0,1008</frame>
+<frame><image src="terrain" at="0,896"/></frame>
+<frame><image src="terrain" at="0,912"/></frame>
+<frame><image src="terrain" at="0,928"/></frame>
+<frame><image src="terrain" at="0,944"/></frame>
+<frame><image src="terrain" at="0,960"/></frame>
+<frame><image src="terrain" at="0,976"/></frame>
+<frame><image src="terrain" at="0,992"/></frame>
+<frame><image src="terrain" at="0,1008"/></frame>
 </micropolis-animation>

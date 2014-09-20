@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <micropolis-animation>
-<frame>misc_animation@0,208</frame>
-<frame>misc_animation@0,224</frame>
-<frame>misc_animation@0,240</frame>
-<frame>misc_animation@0,256</frame>
+<frame><image src="misc_animation" at="0,208"/></frame>
+<frame><image src="misc_animation" at="0,224"/></frame>
+<frame><image src="misc_animation" at="0,240"/></frame>
+<frame><image src="misc_animation" at="0,256"/></frame>
 </micropolis-animation>

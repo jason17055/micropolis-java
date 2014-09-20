@@ -71,15 +71,7 @@ public class Animation extends TileImage
 				String tmp = in.getAttributeValue(null, "duration");
 				int duration = tmp != null ? Integer.parseInt(tmp) : DEFAULT_DURATION;
 
-				String text = in.getElementText();
-				TileImage frameImage;
-				try {
-					frameImage = ctx.parseFrameSpec(text);
-				}
-				catch (IOException e) {
-					throw new XMLStreamException("Unable to load frame image: "+text, e);
-				}
-
+				TileImage frameImage = TileImage.readTileImageM(in, ctx);
 				addFrame( frameImage, duration );
 			}
 			else {

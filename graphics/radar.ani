@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <micropolis-animation>
-<frame>misc_animation@0,80</frame>
-<frame>misc_animation@0,96</frame>
-<frame>misc_animation@0,112</frame>
-<frame>misc_animation@0,128</frame>
-<frame>misc_animation@0,144</frame>
-<frame>misc_animation@0,160</frame>
-<frame>misc_animation@0,176</frame>
-<frame>misc_animation@0,192</frame>
+<frame><image src="misc_animation" at="0,80"/></frame>
+<frame><image src="misc_animation" at="0,96"/></frame>
+<frame><image src="misc_animation" at="0,112"/></frame>
+<frame><image src="misc_animation" at="0,128"/></frame>
+<frame><image src="misc_animation" at="0,144"/></frame>
+<frame><image src="misc_animation" at="0,160"/></frame>
+<frame><image src="misc_animation" at="0,176"/></frame>
+<frame><image src="misc_animation" at="0,192"/></frame>
 </micropolis-animation>

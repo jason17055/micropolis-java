@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <micropolis-animation>
-<frame>stadium_animation_gfx@0,0</frame>
-<frame>stadium_animation_gfx@16,0</frame>
-<frame>stadium_animation_gfx@32,0</frame>
-<frame>stadium_animation_gfx@48,0</frame>
-<frame>stadium_animation_gfx@64,0</frame>
-<frame>stadium_animation_gfx@80,0</frame>
-<frame>stadium_animation_gfx@96,0</frame>
-<frame>stadium_animation_gfx@112,0</frame>
+<frame><image src="stadium_animation_gfx" at="0,0"/></frame>
+<frame><image src="stadium_animation_gfx" at="16,0"/></frame>
+<frame><image src="stadium_animation_gfx" at="32,0"/></frame>
+<frame><image src="stadium_animation_gfx" at="48,0"/></frame>
+<frame><image src="stadium_animation_gfx" at="64,0"/></frame>
+<frame><image src="stadium_animation_gfx" at="80,0"/></frame>
+<frame><image src="stadium_animation_gfx" at="96,0"/></frame>
+<frame><image src="stadium_animation_gfx" at="112,0"/></frame>
 </micropolis-animation>
