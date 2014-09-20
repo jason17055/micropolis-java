@@ -241,26 +241,19 @@ public class MakeTiles
 
 	static TileImage prepareFrames(TileImage ref, Composer c)
 	{
-		if (ref instanceof SwitchImage) {
+		if (ref instanceof SwitchImage)
+		{
+			SwitchImage mc = (SwitchImage) ref;
 			SwitchImage dest = new SwitchImage();
 
-			for (RealImage k : ref.realizeAll())
-			{
-				TileImageSprite s = c.prepareTile(k.image);
-				dest.addCase(k.condition, s);
+			for (SwitchImage.Case k : mc.cases) {
+				TileImage m = prepareFrames(k.img, c);
+				dest.addCase(k.condition, m);
 			}
-
-			if (dest.hasMultipleCases()) {
-
-				return dest;
-			}
-			else {
-
-				return dest.getDefaultImage();
-			}
+			return dest;
 		}
-		else if (ref instanceof Animation) {
-
+		else if (ref instanceof Animation)
+		{
 			Animation mc = (Animation) ref;
 			Animation dest = new Animation();
 			for (Animation.Frame f : mc.frames) {
@@ -269,10 +262,11 @@ public class MakeTiles
 			}
 			return dest;
 		}
-		else {
-			TileImageSprite s = c.prepareTile(ref);
-			return s;
-		}
+		else
+		{
+			TileImageSprite dest = c.prepareTile(ref);
+			return dest;
+		}		
 	}
 
 	static void drawFrames(TileImage dest, Composer c)

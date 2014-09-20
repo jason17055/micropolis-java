@@ -97,7 +97,8 @@ public abstract class TileImage
 	}
 
 	/**
-	 * Brings any internal Animation object to the top of the hierarchy.
+	 * Brings any internal SwitchImage or Animation objects to
+	 * the top of the hierarchy.
 	 */
 	public TileImage normalForm()
 	{
