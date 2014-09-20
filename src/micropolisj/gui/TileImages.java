@@ -63,6 +63,10 @@ public class TileImages
 			}
 			return images.get(fileName);
 		}
+
+		public TileImage parseFrameSpec(String tmp) {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	void initTileImageMap()

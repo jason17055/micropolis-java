@@ -132,6 +132,9 @@ public abstract class TileImage
 			throws IOException;
 		SourceImage getImage(String name)
 			throws IOException;
+
+		TileImage parseFrameSpec(String tmp)
+			throws IOException;
 	}
 
 	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)

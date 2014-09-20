@@ -1,24 +1,25 @@
-package micropolisj.build_tool;
+package micropolisj.graphics;
 
-import micropolisj.graphics.TileImage;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.io.*;
 import java.util.*;
 import javax.xml.stream.*;
 import static micropolisj.XML_Helper.*;
 
-class Animation extends TileImage
+public class Animation extends TileImage
 {
 	static final int DEFAULT_DURATION = 125;
-	List<Frame> frames = new ArrayList<Frame>();
-	int totalDuration;
 
-	public static Animation load(File aniFile)
+	public List<Frame> frames = new ArrayList<Frame>();
+	public int totalDuration;
+
+	public static Animation load(File aniFile, LoaderContext ctx)
 		throws IOException
 	{
 		FileInputStream fis = new FileInputStream(aniFile);
 		Animation self = new Animation();
-		self.load(fis);
+		self.load(fis, ctx);
 		return self;
 	}
 
@@ -29,7 +30,7 @@ class Animation extends TileImage
 		frames.add(f);
 	}
 
-	void load(InputStream inStream)
+	void load(InputStream inStream, LoaderContext ctx)
 		throws IOException
 	{
 		try {
@@ -51,7 +52,7 @@ class Animation extends TileImage
 				int duration = tmp != null ? Integer.parseInt(tmp) : DEFAULT_DURATION;
 
 				tmp = in.getElementText();
-				addFrame( MakeTiles.parseFrameSpec(tmp), duration );
+				addFrame( ctx.parseFrameSpec(tmp), duration );
 			}
 			else {
 				// unrecognized element
@@ -68,10 +69,10 @@ class Animation extends TileImage
 		}
 	}
 
-	static class Frame
+	public class Frame
 	{
-		TileImage frame;
-		int duration;
+		public final TileImage frame;
+		public final int duration;
 
 		public Frame(TileImage frame, int duration)
 		{

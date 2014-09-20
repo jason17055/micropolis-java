@@ -1,7 +1,7 @@
 package micropolisj.build_tool;
 
 import micropolisj.engine.TileSpec;
-import micropolisj.graphics.TileImage;
+import micropolisj.graphics.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -423,7 +423,7 @@ public class MakeTiles
 	{
 		File f = new File(fileName + ".ani");
 		if (f.exists()) {
-			return Animation.load(f);
+			return Animation.load(f, loaderContext);
 		}
 		else {
 			return loadImage(fileName);
@@ -450,6 +450,12 @@ public class MakeTiles
 			}
 
 			return loadedImages.get(fileName);
+		}
+
+		public TileImage parseFrameSpec(String tmp)
+			throws IOException
+		{
+			return MakeTiles.parseFrameSpec(tmp);
 		}
 	}
 	static MyLoaderContext loaderContext = new MyLoaderContext();
