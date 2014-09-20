@@ -91,10 +91,8 @@ public class Animation extends TileImage implements TileImage.MultiPart
 		int t = (acycle*125) % totalDuration;
 		int nframesLessOne = frames.size() - 1;
 		for (int i = 0; i < nframesLessOne; i++) {
-			Frame f = frames.get(i);
-			t -= f.duration;
-			if (t < 0) {
-				return f.frame;
+			if (t < frames.get(i).endTime) {
+				return frames.get(i).frame;
 			}
 		}
 		return frames.get(nframesLessOne).frame;

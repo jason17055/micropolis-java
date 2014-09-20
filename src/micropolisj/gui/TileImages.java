@@ -241,11 +241,6 @@ public class TileImages
 		return ti.realize(dc);
 	}
 
-	public Image getTileImage(int tile)
-	{
-		return getTileImageInfo(tile).getImage();
-	}
-
 	public Image getSpriteImage(SpriteKind kind, int frameNumber)
 	{
 		assert spriteImages != null;
