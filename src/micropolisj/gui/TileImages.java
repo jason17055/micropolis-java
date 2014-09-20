@@ -18,7 +18,7 @@ import javax.swing.*;
 import javax.xml.stream.*;
 
 import micropolisj.engine.*;
-import micropolisj.graphics.TileImage;
+import micropolisj.graphics.*;
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.XML_Helper.*;
 import static micropolisj.graphics.TileImage.*;
@@ -203,9 +203,9 @@ public class TileImages
 
 			return new ImageInfo(sti, false);
 		}
-		else if (ti instanceof AnimatedTile) {
-			final AnimatedTile anim = (AnimatedTile) ti;
-			final SimpleTileImage sti = anim.getFrameByTime(acycle);
+		else if (ti instanceof Animation) {
+			final Animation anim = (Animation) ti;
+			final SimpleTileImage sti = (SimpleTileImage) anim.getFrameByTime(acycle);
 
 			return new ImageInfo(sti, true);
 		}

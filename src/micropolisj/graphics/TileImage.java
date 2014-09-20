@@ -170,41 +170,6 @@ public abstract class TileImage
 		return img;
 	}
 
-	public static class AnimatedTile extends TileImage
-	{
-		public SimpleTileImage [] frames;
-
-		public SimpleTileImage getFrameByTime(int acycle)
-		{
-			return frames[acycle % frames.length];
-		}
-
-		@Override
-		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
-			throw new UnsupportedOperationException();
-		}
-	}
-
-	static AnimatedTile readAnimation(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException
-	{
-		assert in.getLocalName().equals("animation");
-
-		ArrayList<SimpleTileImage> frames = new ArrayList<SimpleTileImage>();
-
-		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
-			String tagName = in.getLocalName();
-			if (tagName.equals("frame")) {
-				frames.add(readSimpleImage(in, ctx));
-			}
-			skipToEndElement(in);
-		}
-
-		AnimatedTile anim = new AnimatedTile();
-		anim.frames = frames.toArray(new SimpleTileImage[0]);
-		return anim;
-	}
-
 	static TileImage readLayeredImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
@@ -242,7 +207,7 @@ public abstract class TileImage
 			return readSimpleImage(in, ctx);
 		}
 		else if (tagName.equals("animation")) {
-			return readAnimation(in, ctx);
+			return Animation.read(in, ctx);
 		}
 		else if (tagName.equals("layered-image")) {
 			return readLayeredImage(in, ctx);

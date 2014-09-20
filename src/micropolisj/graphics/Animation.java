@@ -59,6 +59,23 @@ public class Animation extends TileImage
 		frames.add(f);
 	}
 
+	public TileImage getFrameByTime(int acycle)
+	{
+		assert frames.size() >= 1;
+		assert totalDuration > 0;
+
+		int t = (acycle*125) % totalDuration;
+		int nframesLessOne = frames.size() - 1;
+		for (int i = 0; i < nframesLessOne; i++) {
+			Frame f = frames.get(i);
+			t -= f.duration;
+			if (t < 0) {
+				return f.frame;
+			}
+		}
+		return frames.get(nframesLessOne).frame;
+	}
+
 	void load(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
