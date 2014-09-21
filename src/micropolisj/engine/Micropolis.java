@@ -442,7 +442,7 @@ public class Micropolis
 		return (char)(map[ypos][xpos] & LOMASK);
 	}
 
-	public char getTileRaw(int xpos, int ypos)
+	private char getTileRaw(int xpos, int ypos)
 	{
 		return map[ypos][xpos];
 	}
