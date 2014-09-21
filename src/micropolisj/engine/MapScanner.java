@@ -147,9 +147,12 @@ class MapScanner extends TileBehavior
 		if (bi == null)
 			return false;
 
-		for (int y = ypos-1; y < ypos-1+bi.height; y++)
+		int xorg = xpos-1;
+		int yorg = ypos-1;
+
+		for (int y = yorg; y < yorg+bi.height; y++)
 		{
-			for (int x = xpos-1; x < xpos-1+bi.width; x++)
+			for (int x = xorg; x < xorg+bi.width; x++)
 			{
 				if (!city.testBounds(x, y)) {
 					return false;
@@ -163,9 +166,9 @@ class MapScanner extends TileBehavior
 
 		assert bi.members.length == bi.width * bi.height;
 		int i = 0;
-		for (int y = ypos-1; y < ypos-1+bi.height; y++)
+		for (int y = yorg; y < yorg+bi.height; y++)
 		{
-			for (int x = xpos-1; x < xpos-1+bi.width; x++)
+			for (int x = xorg; x < xorg+bi.width; x++)
 			{
 				city.setTile(x, y, (char) bi.members[i]);
 				i++;
@@ -184,7 +187,7 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.coalCount++;
 		if ((city.cityTime % 8) == 0) {
-			repairZone(POWERPLANT, 4);
+			repairZone(POWERPLANT);
 		}
 
 		city.powerPlants.add(new CityLocation(xpos,ypos));
@@ -200,7 +203,7 @@ class MapScanner extends TileBehavior
 
 		city.nuclearCount++;
 		if ((city.cityTime % 8) == 0) {
-			repairZone(NUCLEAR, 4);
+			repairZone(NUCLEAR);
 		}
 
 		city.powerPlants.add(new CityLocation(xpos, ypos));
@@ -211,7 +214,7 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.fireStationCount++;
 		if ((city.cityTime % 8) == 0) {
-			repairZone(FIRESTATION, 3);
+			repairZone(FIRESTATION);
 		}
 
 		int z;
@@ -235,7 +238,7 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.policeCount++;
 		if ((city.cityTime % 8) == 0) {
-			repairZone(POLICESTATION, 3);
+			repairZone(POLICESTATION);
 		}
 
 		int z;
@@ -259,7 +262,7 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.stadiumCount++;
 		if ((city.cityTime % 16) == 0) {
-			repairZone(STADIUM, 4);
+			repairZone(STADIUM);
 		}
 
 		if (powerOn)
@@ -286,7 +289,7 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.airportCount++;
 		if ((city.cityTime % 8) == 0) {
-			repairZone(AIRPORT, 6);
+			repairZone(AIRPORT);
 		}
 
 		if (powerOn) {
@@ -306,7 +309,7 @@ class MapScanner extends TileBehavior
 		boolean powerOn = checkZonePower();
 		city.seaportCount++;
 		if ((city.cityTime % 16) == 0) {
-			repairZone(PORT, 4);
+			repairZone(PORT);
 		}
 
 		if (powerOn && !city.hasSprite(SpriteKind.SHI)) {
@@ -346,7 +349,7 @@ class MapScanner extends TileBehavior
 
 			if (city.cityTime % 16 == 0)
 			{
-				repairZone(HOSPITAL, 3);
+				repairZone(HOSPITAL);
 			}
 			if (city.needHospital == -1)  //too many hospitals
 			{
@@ -362,7 +365,7 @@ class MapScanner extends TileBehavior
 
 			if (city.cityTime % 16 == 0)
 			{
-				repairZone(CHURCH, 3);
+				repairZone(CHURCH);
 			}
 			if (city.needChurch == -1) //too many churches
 			{
@@ -375,26 +378,38 @@ class MapScanner extends TileBehavior
 	}
 
 	/**
-	 * Regenerate the tiles that make up the zone, repairing from
-	 * fire, etc.
+	 * Regenerate the tiles that make up a building zone,
+	 * repairing from fire, etc.
 	 * Only tiles that are not rubble, radioactive, flooded, or
 	 * on fire will be regenerated.
-	 * @param zoneCenter the tile value for the "center" tile of the zone
-	 * @param zoneSize integer (3-6) indicating the width/height of
-	 * the zone.
+	 *
+	 * @param base The "zone" tile spec for this zone.
 	 */
-	void repairZone(char zoneCenter, int zoneSize)
+	void repairZone(int base)
 	{
-		// from the given center tile, figure out what the
-		// northwest tile should be
-		int zoneBase = zoneCenter - 1 - zoneSize;
+		assert isZoneCenter(base);
 
-		for (int y = 0; y < zoneSize; y++)
+		boolean powerOn = city.isTilePowered(xpos, ypos);
+
+		TileSpec.BuildingInfo bi = Tiles.get(base).getBuildingInfo();
+		assert bi != null;
+
+		int xorg = xpos-1;
+		int yorg = ypos-1;
+
+		assert bi.members.length == bi.width * bi.height;
+		int i = 0;
+		for (int y = 0; y < bi.height; y++)
 		{
-			for (int x = 0; x < zoneSize; x++, zoneBase++)
+			for (int x = 0; x < bi.width; x++, i++)
 			{
-				int xx = xpos - 1 + x;
-				int yy = ypos - 1 + y;
+				int xx = xorg + x;
+				int yy = yorg + y;
+
+				TileSpec ts = Tiles.get(bi.members[i]);
+				if (powerOn && ts.onPower != null) {
+					ts = ts.onPower;
+				}
 
 				if (city.testBounds(xx, yy))
 				{
@@ -409,7 +424,7 @@ class MapScanner extends TileBehavior
 					if (!isIndestructible(thCh))
 					{  //not rubble, radiactive, on fire or flooded
 
-						city.setTile(xx,yy,(char) zoneBase);
+						city.setTile(xx,yy,(char) ts.tileNumber);
 					}
 				}
 			}
