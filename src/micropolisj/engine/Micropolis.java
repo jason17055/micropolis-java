@@ -16,6 +16,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.xml.stream.*;
 
+import micropolisj.XML_Helper;
+
 import static micropolisj.engine.TileConstants.*;
 
 /**
