@@ -252,9 +252,10 @@ public class MakeTiles
 		{
 			Animation mc = (Animation) ref;
 			Animation dest = new Animation();
+
 			for (Animation.Frame f : mc.frames) {
-				TileImage s = prepareFrames(f.frame, c);
-				dest.addFrame(s, f.duration);
+				TileImage m = prepareFrames(f.frame, c);
+				dest.addFrame(m, f.duration);
 			}
 			return dest;
 		}
