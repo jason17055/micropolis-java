@@ -179,28 +179,28 @@ public abstract class Sprite
 			return;
 
 		int t = city.getTile(xpos, ypos);
+		if (isOverWater(t)) {
+			// becomes water
+			city.setTile(xpos, ypos, RIVER);
+			return;
+		}
 
-		if (t >= TREEBASE) {
-			if (isBridge(t)) {
-				city.setTile(xpos, ypos, RIVER);
+		if (!isCombustible(t)) {
+			// cannot destroy it
+			return;
+		}
+
+		if (isZoneCenter(t)) {
+			city.killZone(xpos, ypos, t);
+
+			CityDimension d = getZoneSizeFor(t);
+			if (d.width >= 3 && d.height >= 3) {
+				city.makeExplosion(xpos, ypos);
 				return;
 			}
-			if (!isCombustible(t)) {
-				return; //cannot destroy it
-			}
-			if (isZoneCenter(t)) {
-				city.killZone(xpos, ypos, t);
-				if (t > RZB) {
-					city.makeExplosion(xpos, ypos);
-				}
-			}
-			if (isOverWater(t)) {
-				city.setTile(xpos, ypos, RIVER);
-			}
-			else {
-				city.setTile(xpos, ypos, TINYEXP);
-			}
 		}
+
+		city.setTile(xpos, ypos, TINYEXP);
 	}
 
 	/**
