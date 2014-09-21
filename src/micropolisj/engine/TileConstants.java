@@ -352,18 +352,6 @@ public class TileConstants
 		}
 	}
 
-	public static boolean checkWet(int tile)
-	{
-		assert (tile & LOMASK) == tile;
-
-		return (tile == POWERBASE ||
-			tile == POWERBASE+1 ||
-			tile == RAILBASE ||
-			tile == RAILBASE + 1 ||
-			tile == BRWH ||
-			tile == BRWV);
-	}
-
 	public static CityDimension getZoneSizeFor(int tile)
 	{
 		assert isZoneCenter(tile);

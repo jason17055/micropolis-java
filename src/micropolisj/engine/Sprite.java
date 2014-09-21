@@ -194,7 +194,7 @@ public abstract class Sprite
 					city.makeExplosion(xpos, ypos);
 				}
 			}
-			if (checkWet(t)) {
+			if (isOverWater(t)) {
 				city.setTile(xpos, ypos, RIVER);
 			}
 			else {
