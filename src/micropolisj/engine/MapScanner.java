@@ -157,7 +157,7 @@ class MapScanner extends TileBehavior
 				if (!city.testBounds(x, y)) {
 					return false;
 				}
-				if (isIndestructible2(city.getTile(x,y))) {
+				if (isIndestructible(city.getTile(x,y))) {
 					// radioactive, on fire, or flooded
 					return false;
 				}
@@ -421,8 +421,11 @@ class MapScanner extends TileBehavior
 					if (isAnimated(thCh))
 						continue;
 
+					if (isRubble(thCh))
+						continue;
+
 					if (!isIndestructible(thCh))
-					{  //not rubble, radiactive, on fire or flooded
+					{  //not radiactive, on fire or flooded
 
 						city.setTile(xx,yy,(char) ts.tileNumber);
 					}

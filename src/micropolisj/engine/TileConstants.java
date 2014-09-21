@@ -291,16 +291,10 @@ public class TileConstants
 		return spec != null && spec.canConduct;
 	}
 
-	/** Used in repairZone(). */
+	/** Used in repairZone, zonePlop().
+	 * @return true if the tile is flood, fire, or radioactive fall-out.
+	 */
 	public static boolean isIndestructible(int tile)
-	{
-		assert (tile & LOMASK) == tile;
-
-		return tile >= RUBBLE && tile < ROADBASE;
-	}
-
-	/** Used in zonePlop(). */
-	public static boolean isIndestructible2(int tile)
 	{
 		assert (tile & LOMASK) == tile;
 
