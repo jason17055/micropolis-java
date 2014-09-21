@@ -199,15 +199,18 @@ public class MicropolisDrawingArea extends JComponent
 					}
 				}
 
-				TileImage img = tileImages.getTileImage(m, new CityLocation(x,y), m.getAnimationCycle());
+				CityLocation l = new CityLocation(x, y);
+				TileImage img = tileImages.getTileImage(m, l);
+				if (img instanceof Animation) {
+
+					animatedTiles.add(l);
+					img = ((Animation) img).getFrameByTime(m.getAnimationCycle());
+				}
+
 				img.drawTo((Graphics2D) gr,
 					x*TILE_WIDTH + (shakeStep != 0 ? getShakeModifier(y) : 0),
 					y*TILE_HEIGHT
 					);
-
-				if (img.isAnimated()) {
-					animatedTiles.add(new CityLocation(x, y));
-				}
 			}
 		}
 

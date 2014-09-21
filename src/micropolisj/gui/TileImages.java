@@ -225,7 +225,7 @@ public class TileImages
 		}
 	}
 
-	public TileImage getTileImage(Micropolis city, CityLocation loc, int acycle)
+	public TileImage getTileImage(Micropolis city, CityLocation loc)
 	{
 		int tileNumber = city.getTile(loc.x, loc.y);
 
@@ -235,10 +235,18 @@ public class TileImages
 		DrawContext dc = new DrawContext();
 		dc.city = city;
 		dc.location = loc;
-		dc.time = acycle;
 
 		TileImage ti = tileImageMap[tileNumber];
-		return ti.realize(dc);
+		if (ti instanceof SwitchImage) {
+			SwitchImage sw = (SwitchImage) ti;
+			for (SwitchImage.Case c : sw.cases) {
+				if (c.condition.test(dc)) {
+					return c.img;
+				}
+			}
+		}
+
+		return ti;
 	}
 
 	public Image getSpriteImage(SpriteKind kind, int frameNumber)
