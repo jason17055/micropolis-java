@@ -180,7 +180,7 @@ public abstract class Sprite
 
 		int t = city.getTile(xpos, ypos);
 		if (isOverWater(t)) {
-			if (isRoad(t)) {
+			if (isRoadAny(t)) {
 				// becomes water
 				city.setTile(xpos, ypos, RIVER);
 			}

@@ -384,17 +384,6 @@ public class TileConstants
 		return (tile == DIRT || (isDozeable(tile) && isCombustible(tile)));
 	}
 
-	/**
-	 * Note: does not include rail/road tiles.
-	 * @see #isRoadAny
-	 */
-	public static boolean isRoad(int tile)
-	{
-		assert (tile & LOMASK) == tile;
-
-		return (tile >= ROADBASE && tile < POWERBASE);
-	}
-
 	public static boolean isRoadAny(int tile)
 	{
 		assert (tile & LOMASK) == tile;
@@ -456,13 +445,6 @@ public class TileConstants
 			(tile != VROADPOWER) &&
 			(tile != HRAILROAD) &&
 			(tile != VBRIDGE));
-	}
-
-	public static boolean isRail(int tile)
-	{
-		assert (tile & LOMASK) == tile;
-
-		return (tile >= RAILBASE && tile < RESBASE);
 	}
 
 	public static boolean isRailAny(int tile)
