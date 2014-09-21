@@ -180,8 +180,11 @@ public abstract class Sprite
 
 		int t = city.getTile(xpos, ypos);
 		if (isOverWater(t)) {
-			// becomes water
-			city.setTile(xpos, ypos, RIVER);
+			if (isRoad(t)) {
+				// becomes water
+				city.setTile(xpos, ypos, RIVER);
+			}
+			// wires and tunnels cannot be destroyed
 			return;
 		}
 
