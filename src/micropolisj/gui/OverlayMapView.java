@@ -345,8 +345,8 @@ public class OverlayMapView extends JComponent
 				case TRANSPORT:
 				case TRAFFIC_OVERLAY:
 					if (isConstructed(tile)
-						&& !isRoadAny(tile)
-						&& !isRailAny(tile))
+						&& !isRoad(tile)
+						&& !isRail(tile))
 					{
 						tile = DIRT;
 					}

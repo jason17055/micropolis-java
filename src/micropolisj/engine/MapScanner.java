@@ -615,7 +615,7 @@ class MapScanner extends TileBehavior
 			// look for road
 			if (city.testBounds(xx, yy)) {
 				int tmp = city.getTile(xx, yy);
-				if (isRoadAny(tmp) || isRailAny(tmp))
+				if (isRoad(tmp) || isRail(tmp))
 				{
 					score++;
 				}

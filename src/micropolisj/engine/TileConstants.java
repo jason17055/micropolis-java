@@ -384,7 +384,7 @@ public class TileConstants
 		return (tile == DIRT || (isDozeable(tile) && isCombustible(tile)));
 	}
 
-	public static boolean isRoadAny(int tile)
+	public static boolean isRoad(int tile)
 	{
 		assert (tile & LOMASK) == tile;
 
@@ -447,7 +447,7 @@ public class TileConstants
 			(tile != VBRIDGE));
 	}
 
-	public static boolean isRailAny(int tile)
+	public static boolean isRail(int tile)
 	{
 		assert (tile & LOMASK) == tile;
 
