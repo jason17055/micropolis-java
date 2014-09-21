@@ -556,14 +556,6 @@ public class TileConstants
 		return false;
 	}
 
-	public static boolean isHospitalOrChurch(int tile)
-	{
-		assert (tile & LOMASK) == tile;
-
-		return tile >= HOSPITAL &&
-			tile < COMBASE;
-	}
-
 	/**
 	 * Checks whether the tile is defined with the "industrial-zone" attribute.
 	 * Note: the old version of this function erroneously included the coal power
