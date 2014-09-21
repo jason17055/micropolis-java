@@ -15,7 +15,6 @@ public abstract class TileImage
 
 	public static class DrawContext
 	{
-		public int time;
 		public Micropolis city;
 		public CityLocation location;
 	}
@@ -63,12 +62,6 @@ public abstract class TileImage
 	public abstract Dimension getSize();
 
 	/**
-	 * @return a concrete TileImage (no switches) to be drawn for the
-	 * specified context.
-	 */
-	public abstract TileImage realize(DrawContext dc);
-
-	/**
 	 * Brings any internal SwitchImage or Animation objects to
 	 * the top of the hierarchy.
 	 */
@@ -91,17 +84,6 @@ public abstract class TileImage
 
 			this.below = below;
 			this.above = above;
-		}
-
-		@Override
-		public TileImageLayer realize(DrawContext dc)
-		{
-			TileImage below_r = below.realize(dc);
-			TileImage above_r = above.realize(dc);
-			if (below_r == below && above_r == above) {
-				return this;
-			}
-			return new TileImageLayer(below_r, above_r);
 		}
 
 		@Override
@@ -187,21 +169,6 @@ public abstract class TileImage
 		}
 
 		@Override
-		public TileImageSprite realize(DrawContext dc)
-		{
-			TileImage source_r = source.realize(dc);
-			if (source_r == source) {
-				return this;
-			}
-			TileImageSprite me_r = new TileImageSprite(source_r, targetSize);
-			me_r.offsetX = this.offsetX;
-			me_r.offsetY = this.offsetY;
-			me_r.overlapNorth = this.overlapNorth;
-			me_r.overlapEast = this.overlapEast;
-			return me_r;
-		}
-
-		@Override
 		public TileImage normalForm()
 		{
 			TileImage source_n = source.normalForm();
@@ -263,12 +230,6 @@ public abstract class TileImage
 		{
 			this.image = image;
 			this.basisSize = basisSize;
-		}
-
-		@Override
-		public TileImage realize(DrawContext dc)
-		{
-			return this;
 		}
 
 		@Override
@@ -400,12 +361,6 @@ public abstract class TileImage
 			srcImage.drawFragment(g1,
 				srcX+offsetX, srcY+offsetY-overlapNorth,
 				srcWidth + overlapEast, srcHeight + overlapNorth);
-		}
-
-		@Override
-		public TileImage realize(DrawContext dc)
-		{
-			return this;
 		}
 
 		@Override

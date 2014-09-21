@@ -66,15 +66,4 @@ public class SwitchImage extends TileImage
 		// Warning: drawing an unrealized image
 		getDefaultImage().drawFragment(gr, srcX, srcY, srcWidth, srcHeight);
 	}
-
-	@Override
-	public TileImage realize(DrawContext dc)
-	{
-		for (Case c : cases) {
-			if (c.condition.test(dc)) {
-				return c.img.realize(dc);
-			}
-		}
-		throw new Error("Oops, no default case (apparently)");
-	}
 }
