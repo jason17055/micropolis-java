@@ -181,15 +181,6 @@ public abstract class TileImage
 				}
 				return rv.asTileImage();
 			}
-			else if (source_n instanceof Animation) {
-
-				Animation rv = new Animation();
-				for (Animation.Frame k : ((Animation) source_n).frames) {
-					TileImageSprite m = sameTransformFor(k.frame);
-					rv.addFrame(m, k.duration);
-				}
-				return rv;
-			}
 			else {
 				return sameTransformFor(source_n);
 			}

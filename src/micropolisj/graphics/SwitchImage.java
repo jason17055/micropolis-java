@@ -5,11 +5,11 @@ import java.awt.Graphics2D;
 import java.util.*;
 import micropolisj.engine.*;
 
-public class SwitchImage extends TileImage
+public class SwitchImage extends TileImage implements TileImage.MultiPart
 {
 	public ArrayList<Case> cases = new ArrayList<Case>();
 
-	public static class Case
+	public static class Case implements Part
 	{
 		public final TileCondition condition;
 		public final TileImage img;
@@ -24,6 +24,35 @@ public class SwitchImage extends TileImage
 		{
 			return condition.matches(city, loc);
 		}
+
+		//implements TileImage.Part
+		public TileImage getImage() {
+			return img;
+		}
+	}
+
+	//implements MultiPart
+	public MultiPart makeEmptyCopy()
+	{
+		return new SwitchImage();
+	}
+
+	//implements MultiPart
+	public Iterable<? extends Part> parts()
+	{
+		return cases;
+	}
+
+	//implements MultiPart
+	public void addPartLike(TileImage image, Part refPart)
+	{
+		addCase(((Case)refPart).condition, image);
+	}
+
+	//implements MultiPart
+	public TileImage asTileImage()
+	{
+		return this;
 	}
 
 	public void addCase(TileCondition condition, TileImage image)
