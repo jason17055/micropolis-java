@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<micropolis-animation>
+<frame><image src="traffic_frames" at="64,0"/></frame>
+<frame><image src="traffic_frames" at="80,0"/></frame>
+<frame><image src="traffic_frames" at="96,0"/></frame>
+<frame><image src="traffic_frames" at="112,0"/></frame>
+</micropolis-animation>
