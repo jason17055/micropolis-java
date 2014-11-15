@@ -82,8 +82,8 @@
 # BEGIN ROADS WITH NO TRAFFIC #
 64    roads@0,0                       (bulldozable)(noburn)(overwater)(description=#7)(behavior=ROAD)
 65    roads@0,16                      (bulldozable)(noburn)(overwater)(description=#7)(behavior=ROAD)
-66    roads@0,32                      (bulldozable)(description=#7)(behavior=ROAD)
-67    roads@0,48                      (bulldozable)(description=#7)(behavior=ROAD)
+66    clear |roads/0                  (bulldozable)(description=#7)(behavior=ROAD)
+67    clear |roads/1                  (bulldozable)(description=#7)(behavior=ROAD)
 68    roads@0,64                      (bulldozable)(description=#7)(behavior=ROAD)
 69    roads@0,80                      (bulldozable)(description=#7)(behavior=ROAD)
 70    roads@0,96                      (bulldozable)(description=#7)(behavior=ROAD)
