@@ -448,6 +448,10 @@ class MapScanner extends TileBehavior
 		int tpop = commercialZonePop(tile);
 		city.comPop += tpop;
 
+		if (tpop != 0) {
+			city.addCommodity(xpos, ypos, Commodity.SERVICE, 1);
+		}
+
 		int trafficModifier;
 		if (isTrafficCycle())
 		{
@@ -498,6 +502,10 @@ class MapScanner extends TileBehavior
 
 		int tpop = industrialZonePop(tile);
 		city.indPop += tpop;
+
+		if (tpop != 0) {
+			city.addCommodity(xpos, ypos, Commodity.GOODS, 1);
+		}
 
 		int trafficModifier;
 		if (isTrafficCycle())
