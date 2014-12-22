@@ -166,11 +166,34 @@ public class NotificationPane extends JPanel
 		p.add(new JLabel(strings.getString("notification.growth_lbl")), c1);
 		p.add(new JLabel(growthRateStr), c2);
 
+		c1.gridy = ++c2.gridy;
+		p.add(new JLabel(strings.getString("notification.stock_lbl")), c1);
+		p.add(makeStockPanel(engine, xpos, ypos), c2);
+
 		c1.gridy++;
 		c1.gridwidth = 2;
 		c1.weighty = 1.0;
 		p.add(new JLabel(), c1);
 
 		setVisible(true);
+	}
+
+	JPanel makeStockPanel(Micropolis city, int xpos, int ypos)
+	{
+		JPanel p = new JPanel();
+		p.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
+
+		Tile t = city.getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof CommodityTile) {
+				CommodityTile ct = (CommodityTile) t;
+				ImageIcon ii = new ImageIcon(MainWindow.class.getResource(String.format("/commodity_icons/%s.png", ct.commodity.name().toLowerCase())));
+				JLabel lbl1 = new JLabel(ii);
+				p.add(lbl1);
+				p.add(new JLabel(String.format("x%d", ct.quantity)));
+			}
+			t = t.next;
+		}
+		return p;
 	}
 }
