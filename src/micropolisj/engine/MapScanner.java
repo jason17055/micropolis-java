@@ -557,6 +557,10 @@ class MapScanner extends TileBehavior
 			tpop = residentialZonePop(tile);
 		}
 
+		if (tpop != 0) {
+			city.addCommodity(xpos, ypos, Commodity.LABOR, 1);
+		}
+
 		city.resPop += tpop;
 
 		int trafficModifier;

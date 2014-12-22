@@ -33,6 +33,7 @@ public class Micropolis
 	// full size arrays
 	char [][] map;
 	boolean [][] powerMap;
+	Tile [][] tiles;
 
 	// half-size arrays
 
@@ -409,6 +410,7 @@ public class Micropolis
 		map = new char[height][width];
 		powerMap = new boolean[height][width];
 		trfDensity = new int[height][width];
+		tiles = new Tile[height][width];
 
 		int hX = (width+1)/2;
 		int hY = (height+1)/2;
@@ -626,6 +628,31 @@ public class Micropolis
 		return map[ypos][xpos];
 	}
 
+	public Tile getTileStack(int xpos, int ypos)
+	{
+		return tiles[ypos][xpos];
+	}
+
+	public void addCommodity(int xpos, int ypos, Commodity c, int quantity)
+	{
+		assert quantity > 0;
+
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof CommodityTile) {
+				CommodityTile ct = (CommodityTile) t;
+				if (ct.commodity == c) {
+					ct.quantity += quantity;
+					return;
+				}
+			}
+			t = t.next;
+		}
+
+		CommodityTile ct = new CommodityTile(c, quantity, tiles[ypos][xpos]);
+		tiles[ypos][xpos] = ct;
+	}
+
 	boolean isTileDozeable(ToolEffectIfc eff)
 	{
 		int myTile = eff.getTile(0, 0);
@@ -701,6 +728,7 @@ public class Micropolis
 		if (map[ypos][xpos] != newTile)
 		{
 			map[ypos][xpos] = newTile;
+			tiles[ypos][xpos] = null;
 			extraData.remove(new CityLocation(xpos, ypos));
 			removeTrafficWithEndpoint(new CityLocation(xpos, ypos));
 			fireTileChanged(xpos, ypos);
