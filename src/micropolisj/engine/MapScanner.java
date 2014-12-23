@@ -450,6 +450,7 @@ class MapScanner extends TileBehavior
 
 		if (tpop != 0) {
 			city.addCommodity(xpos, ypos, Commodity.SERVICE, 1);
+			city.setPrice(xpos, ypos, Commodity.SERVICE, 60);
 		}
 
 		int trafficModifier;
@@ -505,6 +506,7 @@ class MapScanner extends TileBehavior
 
 		if (tpop != 0) {
 			city.addCommodity(xpos, ypos, Commodity.GOODS, 1);
+			city.setPrice(xpos, ypos, Commodity.GOODS, 60);
 		}
 
 		int trafficModifier;
@@ -567,6 +569,7 @@ class MapScanner extends TileBehavior
 
 		if (tpop != 0) {
 			city.addCommodity(xpos, ypos, Commodity.LABOR, 1);
+			city.setPrice(xpos, ypos, Commodity.LABOR, 60);
 		}
 
 		city.resPop += tpop;

@@ -178,22 +178,51 @@ public class NotificationPane extends JPanel
 		setVisible(true);
 	}
 
+	static class StockInfo
+	{
+		Map<Commodity,Integer> quantities = new HashMap<Commodity,Integer>();
+		Map<Commodity,Integer> prices = new HashMap<Commodity,Integer>();
+	}
+
 	JPanel makeStockPanel(Micropolis city, int xpos, int ypos)
 	{
 		JPanel p = new JPanel();
 		p.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
+		StockInfo si = new StockInfo();
+
 		Tile t = city.getTileStack(xpos, ypos);
 		while (t != null) {
 			if (t instanceof CommodityTile) {
 				CommodityTile ct = (CommodityTile) t;
-				ImageIcon ii = new ImageIcon(MainWindow.class.getResource(String.format("/commodity_icons/%s.png", ct.commodity.name().toLowerCase())));
-				JLabel lbl1 = new JLabel(ii);
-				p.add(lbl1);
-				p.add(new JLabel(String.format("x%d", ct.quantity)));
+				si.quantities.put(ct.commodity, ct.quantity);
+			}
+			else if (t instanceof PriceTile) {
+				PriceTile pt = (PriceTile) t;
+				si.prices.put(pt.commodity, pt.price);
+
+				if (!si.quantities.containsKey(pt.commodity)) {
+					si.quantities.put(pt.commodity, 0);
+				}
 			}
 			t = t.next;
 		}
+
+		for (Commodity c : si.quantities.keySet()) {
+
+			ImageIcon ii = new ImageIcon(MainWindow.class.getResource(String.format("/commodity_icons/%s.png", c.name().toLowerCase())));
+			JLabel lbl1 = new JLabel(ii);
+			lbl1.setToolTipText(c.name().toLowerCase());
+			p.add(lbl1);
+
+			p.add(new JLabel(String.format("x%d ", si.quantities.get(c))));
+			if (si.prices.containsKey(c)) {
+				p.add(new JLabel(String.format("($%d) ",
+					si.prices.get(c)
+					)));
+			}
+		}
+
 		return p;
 	}
 }

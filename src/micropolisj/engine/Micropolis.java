@@ -655,6 +655,24 @@ public class Micropolis
 		tiles[ypos][xpos] = ct;
 	}
 
+	public void setPrice(int xpos, int ypos, Commodity c, int price)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof PriceTile) {
+				PriceTile pt = (PriceTile) t;
+				if (pt.commodity == c) {
+					pt.price = price;
+					return;
+				}
+			}
+			t = t.next;
+		}
+
+		PriceTile pt = new PriceTile(c, price, tiles[ypos][xpos]);
+		tiles[ypos][xpos] = pt;
+	}
+
 	boolean isTileDozeable(ToolEffectIfc eff)
 	{
 		int myTile = eff.getTile(0, 0);
