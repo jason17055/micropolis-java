@@ -655,6 +655,54 @@ public class Micropolis
 		tiles[ypos][xpos] = ct;
 	}
 
+	public int getPrice(int xpos, int ypos, Commodity c, int defPrice)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof PriceTile) {
+				PriceTile pt = (PriceTile) t;
+				if (pt.commodity == c) {
+					return pt.price;
+				}
+			}
+			t = t.next;
+		}
+
+		return defPrice;
+	}
+
+	public boolean hasPrice(int xpos, int ypos, Commodity c)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof PriceTile) {
+				PriceTile pt = (PriceTile) t;
+				if (pt.commodity == c) {
+					return true;
+				}
+			}
+			t = t.next;
+		}
+		return false;
+	}
+
+	private Tile removePriceHelper(Tile t, Commodity c)
+	{
+		if (t == null) { return t; }
+		if (t instanceof PriceTile) {
+			PriceTile pt = (PriceTile) t;
+			if (pt.commodity == c) {
+				return t.next;
+			}
+		}
+		return t.alterNext(removePriceHelper(t.next, c));
+	}
+
+	public void removePrice(int xpos, int ypos, Commodity c)
+	{
+		tiles[ypos][xpos] = removePriceHelper(tiles[ypos][xpos], c);
+	}
+
 	public void setPrice(int xpos, int ypos, Commodity c, int price)
 	{
 		Tile t = getTileStack(xpos, ypos);

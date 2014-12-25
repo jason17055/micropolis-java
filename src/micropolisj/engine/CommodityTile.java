@@ -19,4 +19,10 @@ public class CommodityTile extends Tile
 		this.quantity = quantity;
 		this.next = next;
 	}
+
+	@Override
+	public Tile alterNext(Tile newNext)
+	{
+		return new CommodityTile(this.commodity, this.quantity, newNext);
+	}
 }

@@ -11,4 +11,6 @@ package micropolisj.engine;
 public abstract class Tile
 {
 	public Tile next;
+
+	public abstract Tile alterNext(Tile next);
 }

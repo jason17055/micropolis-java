@@ -19,4 +19,10 @@ public class PriceTile extends Tile
 		this.price = price;
 		this.next = next;
 	}
+
+	@Override
+	public Tile alterNext(Tile newNext)
+	{
+		return new PriceTile(this.commodity, this.price, newNext);
+	}
 }

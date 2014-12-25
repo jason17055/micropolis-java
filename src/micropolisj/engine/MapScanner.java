@@ -450,7 +450,6 @@ class MapScanner extends TileBehavior
 
 		if (tpop != 0) {
 			city.addCommodity(xpos, ypos, Commodity.SERVICE, 1);
-			city.setPrice(xpos, ypos, Commodity.SERVICE, 60);
 		}
 
 		int trafficModifier;
@@ -506,7 +505,6 @@ class MapScanner extends TileBehavior
 
 		if (tpop != 0) {
 			city.addCommodity(xpos, ypos, Commodity.GOODS, 1);
-			city.setPrice(xpos, ypos, Commodity.GOODS, 60);
 		}
 
 		int trafficModifier;
@@ -569,7 +567,6 @@ class MapScanner extends TileBehavior
 
 		if (tpop != 0) {
 			city.addCommodity(xpos, ypos, Commodity.LABOR, 1);
-			city.setPrice(xpos, ypos, Commodity.LABOR, 60);
 		}
 
 		city.resPop += tpop;
@@ -633,9 +630,9 @@ class MapScanner extends TileBehavior
 	void adjustPrices(int tpop)
 	{
 		if (tpop == 0) {
-			city.setTileExtra(xpos, ypos, "laborPrice", null);
-			city.setTileExtra(xpos, ypos, "goodsPrice", null);
-			city.setTileExtra(xpos, ypos, "resourcePrice", null);
+			city.removePrice(xpos, ypos, Commodity.LABOR);
+			city.removePrice(xpos, ypos, Commodity.SERVICE);
+			city.removePrice(xpos, ypos, Commodity.GOODS);
 			city.setTileExtra(xpos, ypos, "earnings", null);
 			return;
 		}
@@ -649,9 +646,9 @@ class MapScanner extends TileBehavior
 			int supply = tpop;
 			if (demand != supply) {
 				int adj = supply < demand ? 1 : -1;
-				int price = city.getTileExtraInt(xpos, ypos, "laborPrice", 0);
+				int price = city.getPrice(xpos, ypos, Commodity.LABOR, 0);
 				price += adj;
-				city.setTileExtra(xpos, ypos, "laborPrice", Integer.toString(price));
+				city.setPrice(xpos, ypos, Commodity.LABOR, price);
 			}
 		}
 		if (behavior == B.COMMERCIAL) {
@@ -659,9 +656,9 @@ class MapScanner extends TileBehavior
 			int supply = tpop*COM_FACTOR;
 			if (demand != supply) {
 				int adj = supply < demand ? 1 : -1;
-				int price = city.getTileExtraInt(xpos, ypos, "goodsPrice", 0);
+				int price = city.getPrice(xpos, ypos, Commodity.SERVICE, 0);
 				price += adj;
-				city.setTileExtra(xpos, ypos, "goodsPrice", Integer.toString(price));
+				city.setPrice(xpos, ypos, Commodity.SERVICE, price);
 			}
 		}
 		if (behavior == B.INDUSTRIAL) {
@@ -669,9 +666,9 @@ class MapScanner extends TileBehavior
 			int supply = tpop;
 			if (demand != supply) {
 				int adj = supply < demand ? 1 : -1;
-				int price = city.getTileExtraInt(xpos, ypos, "resourcePrice", 0);
+				int price = city.getPrice(xpos, ypos, Commodity.GOODS, 0);
 				price += adj;
-				city.setTileExtra(xpos, ypos, "resourcePrice", Integer.toString(price));
+				city.setPrice(xpos, ypos, Commodity.GOODS, price);
 			}
 		}
 	}
@@ -822,37 +819,37 @@ class MapScanner extends TileBehavior
 
 	void comPlop(int density, int value)
 	{
-		int oldPrice = city.getTileExtraInt(xpos, ypos, "goodsPrice", 0);
+		int oldPrice = city.getPrice(xpos, ypos, Commodity.SERVICE, 0);
 		int oldEarnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
 
 		int base = (value * 5 + density) * 9 + CZB;
 		zonePlop(Tiles.loadByOrdinal(base));
 
-		city.setTileExtra(xpos, ypos, "goodsPrice", Integer.toString(oldPrice));
+		city.setPrice(xpos, ypos, Commodity.SERVICE, oldPrice);
 		city.setTileExtra(xpos, ypos, "earnings", Integer.toString(oldEarnings));
 	}
 
 	void indPlop(int density, int value)
 	{
-		int oldPrice = city.getTileExtraInt(xpos, ypos, "resourcePrice", 0);
+		int oldPrice = city.getPrice(xpos, ypos, Commodity.GOODS, 0);
 		int oldEarnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
 
 		int base = (value * 4 + density) * 9 + IZB;
 		zonePlop(Tiles.loadByOrdinal(base));
 
-		city.setTileExtra(xpos, ypos, "resourcePrice", Integer.toString(oldPrice));
+		city.setPrice(xpos, ypos, Commodity.GOODS, oldPrice);
 		city.setTileExtra(xpos, ypos, "earnings", Integer.toString(oldEarnings));
 	}
 
 	void residentialPlop(int density, int value)
 	{
-		int oldPrice = city.getTileExtraInt(xpos, ypos, "laborPrice", 0);
+		int oldPrice = city.getPrice(xpos, ypos, Commodity.LABOR, 0);
 		int oldEarnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
 
 		int base = (value * 4 + density) * 9 + RZB;
 		zonePlop(Tiles.loadByOrdinal(base));
 
-		city.setTileExtra(xpos, ypos, "laborPrice", Integer.toString(oldPrice));
+		city.setPrice(xpos, ypos, Commodity.LABOR, oldPrice);
 		city.setTileExtra(xpos, ypos, "earnings", Integer.toString(oldEarnings));
 	}
 
@@ -1055,7 +1052,7 @@ class MapScanner extends TileBehavior
 
 	boolean hasResources(int x, int y)
 	{
-		return city.getTileExtra(x, y, "resourcePrice") != null;
+		return city.hasPrice(x, y, Commodity.GOODS);
 	}
 
 	int getResourcePrice(int x, int y)
@@ -1063,12 +1060,12 @@ class MapScanner extends TileBehavior
 		int tile = city.getTile(x, y);
 		assert (isZoneCenter(tile) && isIndustrialZone(tile));
 
-		return city.getTileExtraInt(x, y, "resourcePrice", 0);
+		return city.getPrice(x, y, Commodity.GOODS, 0);
 	}
 
 	boolean hasLabor(int x, int y)
 	{
-		return city.getTileExtra(x, y, "laborPrice") != null;
+		return city.hasPrice(x, y, Commodity.LABOR);
 	}
 
 	int getLaborPrice(int x, int y)
@@ -1076,12 +1073,12 @@ class MapScanner extends TileBehavior
 		int tile = city.getTile(x, y);
 		assert (isZoneCenter(tile) && isResidentialZoneAny(tile));
 
-		return city.getTileExtraInt(x, y, "laborPrice", 0);
+		return city.getPrice(x, y, Commodity.LABOR, 0);
 	}
 
 	boolean hasGoods(int x, int y)
 	{
-		return city.getTileExtra(x, y, "goodsPrice") != null;
+		return city.hasPrice(x, y, Commodity.SERVICE);
 	}
 
 	int getGoodsPrice(int x, int y)
@@ -1089,7 +1086,7 @@ class MapScanner extends TileBehavior
 		int tile = city.getTile(x, y);
 		assert (isZoneCenter(tile) && isCommercialZone(tile));
 
-		return city.getTileExtraInt(x, y, "goodsPrice", 0);
+		return city.getPrice(x, y, Commodity.SERVICE, 0);
 	}
 
 	/**
