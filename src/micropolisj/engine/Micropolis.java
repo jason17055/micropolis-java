@@ -19,7 +19,6 @@ import javax.xml.stream.*;
 import micropolisj.XML_Helper;
 
 import static micropolisj.engine.TileConstants.*;
-import static micropolisj.engine.Traffic.TrafficType;
 
 /**
  * The main simulation engine for Micropolis.
@@ -352,7 +351,7 @@ public class Micropolis
 		}
 	}
 
-	public Collection<Traffic> enumIncomingConnections(CityLocation destLoc, TrafficType type)
+	public Collection<Traffic> enumIncomingConnections(CityLocation destLoc, Commodity type)
 	{
 		ArrayList<Traffic> rv = new ArrayList<Traffic>();
 
@@ -372,7 +371,7 @@ public class Micropolis
 		return rv;
 	}
 
-	public Traffic findConnection(CityLocation srcLoc, TrafficType type, int slot)
+	public Traffic findConnection(CityLocation srcLoc, Commodity type, int slot)
 	{
 		Collection<Traffic> col = trafficByOrigin.get(srcLoc);
 		if (col != null) {

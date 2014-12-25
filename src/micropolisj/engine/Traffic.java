@@ -15,16 +15,9 @@ public class Traffic
 	static final int WEST = 2;
 	static final int NORTH = 3;
 
-	static enum TrafficType
-	{
-		EMPLOYMENT,  // connects RES to a job-providing zone
-		RETAIL,      // connects COM to customers
-		WHOLESALE;   // connects IND to commercial zones
-	}
-
 	final CityLocation from;
 	final CityLocation to;
-	TrafficType type;
+	Commodity type;
 	int slot;
 	int count;
 	int [] pathTaken;

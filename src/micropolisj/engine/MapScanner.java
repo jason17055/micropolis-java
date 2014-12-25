@@ -13,7 +13,6 @@ import java.util.*;
 import static micropolisj.engine.TileConstants.*;
 import static micropolisj.engine.TrafficGen.ZoneType;
 import static micropolisj.engine.TrafficGen2.*;
-import static micropolisj.engine.Traffic.TrafficType;
 
 /**
  * Process individual tiles of the map for each cycle.
@@ -615,7 +614,7 @@ class MapScanner extends TileBehavior
 		adjustPrices(tpop);
 	}
 
-	int countIncomingTraffic(TrafficType type)
+	int countIncomingTraffic(Commodity type)
 	{
 		int sum = 0;
 		for (Traffic c : city.enumIncomingConnections(
@@ -642,7 +641,7 @@ class MapScanner extends TileBehavior
 		}
 
 		if (behavior == B.RESIDENTIAL) {
-			int demand = countIncomingTraffic(TrafficType.EMPLOYMENT);
+			int demand = countIncomingTraffic(Commodity.LABOR);
 			int supply = tpop;
 			if (demand != supply) {
 				int adj = supply < demand ? 1 : -1;
@@ -652,7 +651,7 @@ class MapScanner extends TileBehavior
 			}
 		}
 		if (behavior == B.COMMERCIAL) {
-			int demand = countIncomingTraffic(TrafficType.RETAIL);
+			int demand = countIncomingTraffic(Commodity.SERVICE);
 			int supply = tpop*COM_FACTOR;
 			if (demand != supply) {
 				int adj = supply < demand ? 1 : -1;
@@ -662,7 +661,7 @@ class MapScanner extends TileBehavior
 			}
 		}
 		if (behavior == B.INDUSTRIAL) {
-			int demand = countIncomingTraffic(TrafficType.WHOLESALE);
+			int demand = countIncomingTraffic(Commodity.GOODS);
 			int supply = tpop;
 			if (demand != supply) {
 				int adj = supply < demand ? 1 : -1;
@@ -1105,18 +1104,18 @@ class MapScanner extends TileBehavior
 		case RESIDENTIAL:
 			earnings += getLaborPrice(xpos, ypos);
 			int resPop = city.history.res[0] * 8;
-			earnings -= seekJob(traffic, TrafficType.RETAIL, slot, count, Math.min(resPop * 3 / 8, MAX_COST));
+			earnings -= seekJob(traffic, Commodity.SERVICE, slot, count, Math.min(resPop * 3 / 8, MAX_COST));
 			break;
 
 		case COMMERCIAL:
 			earnings += COM_FACTOR * getGoodsPrice(xpos, ypos);
-			earnings -= seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
-			earnings -= seekJob(traffic, TrafficType.WHOLESALE, slot, count);
+			earnings -= seekJob(traffic, Commodity.LABOR, slot, count);
+			earnings -= seekJob(traffic, Commodity.GOODS, slot, count);
 			break;
 
 		case INDUSTRIAL:
 			earnings += getResourcePrice(xpos, ypos);
-			earnings -= seekJob(traffic, TrafficType.EMPLOYMENT, slot, count);
+			earnings -= seekJob(traffic, Commodity.LABOR, slot, count);
 			break;
 		}
 
@@ -1128,8 +1127,7 @@ class MapScanner extends TileBehavior
 
 	static final int MAX_COST = 256;
 
-	private int seekJob(TrafficGen2 traffic, TrafficType connType,
-			int slot, int count)
+	private int seekJob(TrafficGen2 traffic, Commodity connType, int slot, int count)
 	{
 		return seekJob(traffic, connType, slot, count, MAX_COST);
 	}
@@ -1140,12 +1138,12 @@ class MapScanner extends TileBehavior
 	 * @param maxCost the maximum destination cost tolerated
 	 * @return the COST of the route (or maxCost if no route found)
 	 */
-	private int seekJob(TrafficGen2 traffic, TrafficType connType,
+	private int seekJob(TrafficGen2 traffic, Commodity connType,
 			int slot, int count, int maxCost)
 	{
 		TrafficGen2.FitnessFunction f;
 		switch (connType) {
-		case EMPLOYMENT:
+		case LABOR:
 			f = new TrafficGen2.FitnessFunction() {
 			public double fitness(int xpos, int ypos, int dist) {
 				return hasLabor(xpos, ypos) ?
@@ -1153,7 +1151,7 @@ class MapScanner extends TileBehavior
 					0.0;
 			}};
 			break;
-		case RETAIL:
+		case SERVICE:
 			f = new TrafficGen2.FitnessFunction() {
 			public double fitness(int xpos, int ypos, int dist) {
 				return hasGoods(xpos, ypos) ?
@@ -1163,7 +1161,7 @@ class MapScanner extends TileBehavior
 					0.0;
 			}};
 			break;
-		case WHOLESALE:
+		case GOODS:
 			f = new TrafficGen2.FitnessFunction() {
 			public double fitness(int xpos, int ypos, int dist) {
 				return hasResources(xpos, ypos) ?
@@ -1217,7 +1215,7 @@ class MapScanner extends TileBehavior
 	static final int JOB_SLOT_COUNT = 3;
 	static final int TRAFFIC_CYCLE = 11;
 
-	void setJob(TrafficType connType, int slot, int count, CityLocation dest, int [] pathTaken)
+	void setJob(Commodity connType, int slot, int count, CityLocation dest, int [] pathTaken)
 	{
 		if (count != 0 && dest != null && pathTaken != null) {
 
