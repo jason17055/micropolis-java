@@ -488,8 +488,6 @@ class MapScanner extends TileBehavior
 				return;
 			}
 		}
-
-		adjustPrices(tpop*8);
 	}
 
 	/**
@@ -545,8 +543,6 @@ class MapScanner extends TileBehavior
 				return;
 			}
 		}
-
-		adjustPrices(tpop*8);
 	}
 
 	/**
@@ -616,8 +612,6 @@ class MapScanner extends TileBehavior
 				return;
 			}
 		}
-
-		adjustPrices(tpop);
 	}
 
 	void shuffleArray(Traffic [] A)
@@ -640,18 +634,14 @@ class MapScanner extends TileBehavior
 				.toArray(new Traffic[0]);
 		shuffleArray(trafConnections);
 
+		int totalDemand = 0;
 		for (Traffic traf : trafConnections)
 		{
+			totalDemand += traf.demand;
 			int amt = Math.min(traf.demand, count);
 			city.adjustTrafficLevelTo(traf, amt);
 
 			if (amt != 0) {
-			System.out.printf("%s: sent %d %s to %s\n",
-					traf.from.toString(),
-					amt,
-					type.name(),
-					traf.to.toString()
-				);
 				count -= amt;
 				city.addCommodity(traf.from.x, traf.from.y, type, amt);
 			}
@@ -660,6 +650,8 @@ class MapScanner extends TileBehavior
 		if (count != origCount) {
 			city.subtractCommodity(xpos, ypos, type, origCount-count);
 		}
+
+		adjustPrices(type, origCount, totalDemand);
 	}
 
 	int countIncomingTraffic(Commodity type)
@@ -674,49 +666,13 @@ class MapScanner extends TileBehavior
 		return sum;
 	}
 
-	void adjustPrices(int tpop)
+	void adjustPrices(Commodity type, int supply, int demand)
 	{
-		if (tpop == 0) {
-			city.removePrice(xpos, ypos, Commodity.LABOR);
-			city.removePrice(xpos, ypos, Commodity.SERVICE);
-			city.removePrice(xpos, ypos, Commodity.GOODS);
-			city.setTileExtra(xpos, ypos, "earnings", null);
-			return;
-		}
-
-		if (PRNG.nextInt(4) != 0) {
-			return;
-		}
-
-		if (behavior == B.RESIDENTIAL) {
-			int demand = countIncomingTraffic(Commodity.LABOR);
-			int supply = tpop;
-			if (demand != supply) {
-				int adj = supply < demand ? 1 : -1;
-				int price = city.getPrice(xpos, ypos, Commodity.LABOR, 0);
-				price += adj;
-				city.setPrice(xpos, ypos, Commodity.LABOR, price);
-			}
-		}
-		if (behavior == B.COMMERCIAL) {
-			int demand = countIncomingTraffic(Commodity.SERVICE);
-			int supply = tpop*COM_FACTOR;
-			if (demand != supply) {
-				int adj = supply < demand ? 1 : -1;
-				int price = city.getPrice(xpos, ypos, Commodity.SERVICE, 0);
-				price += adj;
-				city.setPrice(xpos, ypos, Commodity.SERVICE, price);
-			}
-		}
-		if (behavior == B.INDUSTRIAL) {
-			int demand = countIncomingTraffic(Commodity.GOODS);
-			int supply = tpop;
-			if (demand != supply) {
-				int adj = supply < demand ? 1 : -1;
-				int price = city.getPrice(xpos, ypos, Commodity.GOODS, 0);
-				price += adj;
-				city.setPrice(xpos, ypos, Commodity.GOODS, price);
-			}
+		int price = city.getPrice(xpos, ypos, type, 0);
+		int adj = demand-supply;
+		int newPrice = Math.max(1, price+adj);
+		if (newPrice != price) {
+			city.setPrice(xpos, ypos, type, newPrice);
 		}
 	}
 
