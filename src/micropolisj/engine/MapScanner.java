@@ -668,6 +668,11 @@ class MapScanner extends TileBehavior
 	{
 		CityLocation loc = new CityLocation(xpos, ypos);
 		int count = city.getCommodityQuantity(xpos, ypos, type);
+		int price = city.getPrice(xpos, ypos, type, 0);
+		if (price == 0) {
+			//don't sell anything for zero
+			count = 0;
+		}
 		int origCount = count;
 
 		Traffic [] trafConnections = city.enumIncomingConnections(loc, type)
@@ -684,11 +689,14 @@ class MapScanner extends TileBehavior
 			if (amt != 0) {
 				count -= amt;
 				city.addCommodity(traf.from.x, traf.from.y, type, amt);
+				city.adjustFunds(traf.from.x, traf.from.y, -price*amt);
 			}
 		}
 
-		if (count != origCount) {
-			city.subtractCommodity(xpos, ypos, type, origCount-count);
+		int numSold = origCount - count;
+		if (numSold != 0) {
+			city.subtractCommodity(xpos, ypos, type, numSold);
+			city.adjustFunds(xpos, ypos, price*numSold);
 		}
 
 		adjustPrices(type, origCount, totalDemand);

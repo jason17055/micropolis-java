@@ -662,6 +662,35 @@ public class Micropolis
 		tiles[ypos][xpos] = ct;
 	}
 
+	public void adjustFunds(int xpos, int ypos, int adj)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof BusinessTile) {
+				BusinessTile tt = (BusinessTile) t;
+				tt.funds += adj;
+				return;
+			}
+			t = t.next;
+		}
+
+		BusinessTile tt = new BusinessTile(adj, tiles[ypos][xpos]);
+		tiles[ypos][xpos] = tt;
+	}
+
+	public int getFunds(int xpos, int ypos)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof BusinessTile) {
+				BusinessTile tt = (BusinessTile) t;
+				return tt.funds;
+			}
+			t = t.next;
+		}
+		return 0;
+	}
+
 	public int getCommodityQuantity(int xpos, int ypos, Commodity c)
 	{
 		Tile t = getTileStack(xpos, ypos);

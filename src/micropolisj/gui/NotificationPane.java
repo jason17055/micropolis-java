@@ -202,6 +202,10 @@ public class NotificationPane extends JPanel
 		p.add(new JLabel(strings.getString("notification.offers_lbl")), c1);
 		p.add(makeStockPanel(engine, xpos, ypos, StockPanelType.OFFERS), c2);
 
+		c1.gridy = ++c2.gridy;
+		p.add(new JLabel(strings.getString("notification.funds_lbl")), c1);
+		p.add(new JLabel(MainWindow.formatFunds(engine.getFunds(xpos, ypos))), c2);
+
 		c1.gridy++;
 		c1.gridwidth = 2;
 		c1.weighty = 1.0;
