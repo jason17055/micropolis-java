@@ -168,7 +168,11 @@ public class NotificationPane extends JPanel
 
 		c1.gridy = ++c2.gridy;
 		p.add(new JLabel(strings.getString("notification.stock_lbl")), c1);
-		p.add(makeStockPanel(engine, xpos, ypos), c2);
+		p.add(makeStockPanel(engine, xpos, ypos, StockPanelType.STOCK), c2);
+
+		c1.gridy = ++c2.gridy;
+		p.add(new JLabel(strings.getString("notification.offers_lbl")), c1);
+		p.add(makeStockPanel(engine, xpos, ypos, StockPanelType.OFFERS), c2);
 
 		c1.gridy++;
 		c1.gridwidth = 2;
@@ -184,7 +188,13 @@ public class NotificationPane extends JPanel
 		Map<Commodity,Integer> prices = new HashMap<Commodity,Integer>();
 	}
 
-	JPanel makeStockPanel(Micropolis city, int xpos, int ypos)
+	static enum StockPanelType
+	{
+		STOCK,
+		OFFERS;
+	}
+
+	JPanel makeStockPanel(Micropolis city, int xpos, int ypos, StockPanelType type)
 	{
 		JPanel p = new JPanel();
 		p.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
@@ -209,6 +219,9 @@ public class NotificationPane extends JPanel
 		}
 
 		for (Commodity c : si.quantities.keySet()) {
+
+			if (si.prices.containsKey(c) && type != StockPanelType.OFFERS) { continue; }
+			if (!si.prices.containsKey(c) && type != StockPanelType.STOCK) { continue; }
 
 			ImageIcon ii = new ImageIcon(MainWindow.class.getResource(String.format("/commodity_icons/%s.png", c.name().toLowerCase())));
 			JLabel lbl1 = new JLabel(ii);
