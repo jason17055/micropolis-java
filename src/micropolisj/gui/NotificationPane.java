@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.event.*;
 
 import micropolisj.engine.*;
 import static micropolisj.gui.ColorParser.parseColor;
@@ -109,6 +110,33 @@ public class NotificationPane extends JPanel
 		setVisible(true);
 	}
 
+	static class ZoneStatusPane extends JPanel implements AncestorListener
+	{
+		final Micropolis city;
+
+		ZoneStatusPane(Micropolis city)
+		{
+			super(new GridBagLayout());
+			this.city = city;
+			this.addAncestorListener(this);
+		}
+
+		//implements AncestorListener
+		public void ancestorAdded(AncestorEvent evt)
+		{
+			System.out.printf("%s: ancestor added\n", toString());
+		}
+
+		//implements AncestorListener
+		public void ancestorRemoved(AncestorEvent evt)
+		{
+			System.out.printf("%s: ancestor removed\n", toString());
+		}
+
+		//implements AncestorListener
+		public void ancestorMoved(AncestorEvent evt) {}
+	}
+
 	public void showZoneStatus(Micropolis engine, int xpos, int ypos, ZoneStatus zone)
 	{
 		headerLbl.setText(strings.getString("notification.query_hdr"));
@@ -128,7 +156,7 @@ public class NotificationPane extends JPanel
 			infoPane = null;
 		}
 
-		JPanel p = new JPanel(new GridBagLayout());
+		ZoneStatusPane p = new ZoneStatusPane(engine);
 		mainPane.add(p, BorderLayout.CENTER);
 		infoPane = p;
 
@@ -194,7 +222,7 @@ public class NotificationPane extends JPanel
 		OFFERS;
 	}
 
-	JPanel makeStockPanel(Micropolis city, int xpos, int ypos, StockPanelType type)
+	static JPanel makeStockPanel(Micropolis city, int xpos, int ypos, StockPanelType type)
 	{
 		JPanel p = new JPanel();
 		p.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
