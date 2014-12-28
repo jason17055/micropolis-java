@@ -450,7 +450,18 @@ class MapScanner extends TileBehavior
 		city.comPop += tpop;
 
 		if (tpop != 0) {
-			city.addCommodity(xpos, ypos, Commodity.SERVICE, 1);
+			int supplies = city.getCommodityQuantity(xpos, ypos, Commodity.GOODS);
+			int labor = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
+			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.SERVICE);
+			int maxOutput = tpop*8*3;
+
+			int workDone = Math.min(tpop*8, Math.min(supplies, labor));
+			workDone = Math.min(workDone, (maxOutput-curOutput)/2);
+			if (workDone != 0) {
+				city.subtractCommodity(xpos, ypos, Commodity.LABOR, workDone);
+				city.subtractCommodity(xpos, ypos, Commodity.GOODS, workDone);
+				city.addCommodity(xpos, ypos, Commodity.SERVICE, workDone*2);
+			}
 		}
 
 		int trafficModifier;
@@ -505,7 +516,16 @@ class MapScanner extends TileBehavior
 		city.indPop += tpop;
 
 		if (tpop != 0) {
-			city.addCommodity(xpos, ypos, Commodity.GOODS, 1);
+			int labor = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
+			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.GOODS);
+			int maxOutput = tpop*8*6;
+
+			int workDone = Math.min(tpop*8, labor);
+			workDone = Math.min(workDone, maxOutput-curOutput);
+			if (workDone != 0) {
+				city.subtractCommodity(xpos, ypos, Commodity.LABOR, workDone);
+				city.addCommodity(xpos, ypos, Commodity.GOODS, workDone);
+			}
 		}
 
 		int trafficModifier;
@@ -567,7 +587,20 @@ class MapScanner extends TileBehavior
 		}
 
 		if (tpop != 0) {
-			city.addCommodity(xpos, ypos, Commodity.LABOR, 1);
+			int food = city.getCommodityQuantity(xpos, ypos, Commodity.SERVICE);
+			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
+			int maxOutput = tpop*3;
+
+			int workDone = Math.min(tpop, food);
+			if (workDone != 0) {
+				city.subtractCommodity(xpos, ypos, Commodity.SERVICE, workDone);
+			}
+
+			workDone += tpop;
+			workDone = Math.min(workDone, maxOutput-curOutput);
+			if (workDone != 0) {
+				city.addCommodity(xpos, ypos, Commodity.LABOR, workDone);
+			}
 		}
 
 		city.resPop += tpop;
