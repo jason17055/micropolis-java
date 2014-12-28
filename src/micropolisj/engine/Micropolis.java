@@ -230,6 +230,14 @@ public class Micropolis
 		applyTraffic(conn.from, conn.pathTaken, conn.count);
 	}
 
+	public void adjustTrafficLevelTo(Traffic conn, int delta)
+	{
+		if (delta != 0) {
+			applyTraffic(conn.from, conn.pathTaken, delta);
+			conn.count += delta;
+		}
+	}
+
 	void applyTraffic(CityLocation srcLoc, int [] path, int delta)
 	{
 		int x = srcLoc.x;
@@ -652,6 +660,48 @@ public class Micropolis
 
 		CommodityTile ct = new CommodityTile(c, quantity, tiles[ypos][xpos]);
 		tiles[ypos][xpos] = ct;
+	}
+
+	public int getCommodityQuantity(int xpos, int ypos, Commodity c)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof CommodityTile) {
+				CommodityTile tt = (CommodityTile) t;
+				if (tt.commodity == c) {
+					return tt.quantity;
+				}
+			}
+			t = t.next;
+		}
+
+		return 0;
+	}
+
+	public void subtractCommodity(int xpos, int ypos, Commodity c, int amt)
+	{
+		assert amt > 0;
+
+		tiles[ypos][xpos] = subtractCommodityHelper(tiles[ypos][xpos], c, amt);
+	}
+
+	private Tile subtractCommodityHelper(Tile t, Commodity c, int amt)
+	{
+		if (t == null) { return t; }
+		if (t instanceof CommodityTile) {
+
+			CommodityTile ct = (CommodityTile) t;
+			if (ct.commodity == c) {
+				if (amt < ct.quantity) {
+					ct.quantity -= amt;
+					return t;
+				}
+				else {
+					return t.next;
+				}
+			}
+		}
+		return t.alterNext(subtractCommodityHelper(t.next, c, amt));
 	}
 
 	public int getPrice(int xpos, int ypos, Commodity c, int defPrice)

@@ -441,6 +441,8 @@ class MapScanner extends TileBehavior
 	 */
 	void doCommercial()
 	{
+		dispenseOutput(Commodity.SERVICE);
+
 		boolean powerOn = checkZonePower();
 		city.comZoneCount++;
 
@@ -496,6 +498,8 @@ class MapScanner extends TileBehavior
 	 */
 	void doIndustrial()
 	{
+		dispenseOutput(Commodity.GOODS);
+
 		boolean powerOn = checkZonePower();
 		city.indZoneCount++;
 
@@ -551,6 +555,8 @@ class MapScanner extends TileBehavior
 	 */
 	void doResidential()
 	{
+		dispenseOutput(Commodity.LABOR);
+
 		boolean powerOn = checkZonePower();
 		city.resZoneCount++;
 
@@ -612,6 +618,48 @@ class MapScanner extends TileBehavior
 		}
 
 		adjustPrices(tpop);
+	}
+
+	void shuffleArray(Traffic [] A)
+	{
+		for (int i = 0; i < A.length; i++) {
+			int j = PRNG.nextInt(A.length-i) + i;
+			Traffic tmp = A[i];
+			A[i] = A[j];
+			A[j] = tmp;
+		}
+	}
+
+	void dispenseOutput(Commodity type)
+	{
+		CityLocation loc = new CityLocation(xpos, ypos);
+		int count = city.getCommodityQuantity(xpos, ypos, type);
+		int origCount = count;
+
+		Traffic [] trafConnections = city.enumIncomingConnections(loc, type)
+				.toArray(new Traffic[0]);
+		shuffleArray(trafConnections);
+
+		for (Traffic traf : trafConnections)
+		{
+			int amt = Math.min(traf.demand, count);
+			city.adjustTrafficLevelTo(traf, amt);
+
+			if (amt != 0) {
+			System.out.printf("%s: sent %d %s to %s\n",
+					traf.from.toString(),
+					amt,
+					type.name(),
+					traf.to.toString()
+				);
+				count -= amt;
+				city.addCommodity(traf.from.x, traf.from.y, type, amt);
+			}
+		}
+
+		if (count != origCount) {
+			city.subtractCommodity(xpos, ypos, type, origCount-count);
+		}
 	}
 
 	int countIncomingTraffic(Commodity type)
@@ -1225,6 +1273,7 @@ class MapScanner extends TileBehavior
 			conn.type = connType;
 			conn.slot = slot;
 			conn.count = count;
+			conn.demand = count;
 			conn.pathTaken = pathTaken;
 
 			city.addConnection(conn);

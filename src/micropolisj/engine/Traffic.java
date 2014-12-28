@@ -20,6 +20,7 @@ public class Traffic
 	Commodity type;
 	int slot;
 	int count;
+	int demand;
 	int [] pathTaken;
 
 	public Traffic(CityLocation from, CityLocation to)
