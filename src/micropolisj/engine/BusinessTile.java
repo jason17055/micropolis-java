@@ -11,6 +11,8 @@ package micropolisj.engine;
 public class BusinessTile extends Tile
 {
 	public int funds;
+	///Unspent production points from previous week.
+	public int production;
 
 	public BusinessTile(int funds, Tile next)
 	{
@@ -23,6 +25,8 @@ public class BusinessTile extends Tile
 	{
 		if (newNext == next) { return this; }
 
-		return new BusinessTile(this.funds, newNext);
+		BusinessTile bt = new BusinessTile(this.funds, newNext);
+		bt.production = this.production;
+		return this;
 	}
 }

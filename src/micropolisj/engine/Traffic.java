@@ -20,7 +20,12 @@ public class Traffic
 	Commodity type;
 	int slot;
 	int count;
+	///number of commodities requested
 	int demand;
+	///price-per-commodity offered
+	int priceOffered;
+	///transport cost (in production points)
+	int transportCost;
 	int [] pathTaken;
 
 	public Traffic(CityLocation from, CityLocation to)

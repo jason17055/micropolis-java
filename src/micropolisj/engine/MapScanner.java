@@ -451,15 +451,22 @@ class MapScanner extends TileBehavior
 		city.comPop += tpop;
 
 		if (tpop != 0) {
-			int supplies = city.getCommodityQuantity(xpos, ypos, Commodity.GOODS);
+			BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
 			int labor = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
+			if (labor != 0) {
+				city.subtractCommodity(xpos, ypos, Commodity.LABOR, labor);
+				business.production += labor*PRODUCTION_PER_LABOR;
+			}
+
+			int supplies = city.getCommodityQuantity(xpos, ypos, Commodity.GOODS);
 			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.SERVICE);
 			int maxOutput = tpop*8*3;
 
-			int workDone = Math.min(tpop*8, Math.min(supplies, labor));
+			int workDone = Math.min(tpop*8, business.production/PRODUCTION_PER_LABOR);
+			workDone = Math.min(workDone, supplies);
 			workDone = Math.min(workDone, (maxOutput-curOutput)/2);
-			if (workDone != 0) {
-				city.subtractCommodity(xpos, ypos, Commodity.LABOR, workDone);
+			if (workDone > 0) {
+				business.production -= workDone*PRODUCTION_PER_LABOR;
 				city.subtractCommodity(xpos, ypos, Commodity.GOODS, workDone);
 				city.addCommodity(xpos, ypos, Commodity.SERVICE, workDone*2);
 			}
@@ -519,15 +526,21 @@ class MapScanner extends TileBehavior
 		city.indPop += tpop;
 
 		if (tpop != 0) {
+			BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
 			int labor = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
+			if (labor != 0) {
+				city.subtractCommodity(xpos, ypos, Commodity.LABOR, labor);
+				business.production += labor*PRODUCTION_PER_LABOR;
+			}
+
 			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.GOODS);
 			int maxOutput = tpop*8*6;
 
-			int workDone = Math.min(tpop*8, labor);
+			int workDone = Math.min(tpop*8, business.production/PRODUCTION_PER_LABOR);
 			workDone = Math.min(workDone, maxOutput-curOutput);
-			if (workDone != 0) {
-				city.subtractCommodity(xpos, ypos, Commodity.LABOR, workDone);
+			if (workDone > 0) {
 				city.addCommodity(xpos, ypos, Commodity.GOODS, workDone);
+				business.production -= workDone*PRODUCTION_PER_LABOR;
 			}
 		}
 
@@ -571,6 +584,13 @@ class MapScanner extends TileBehavior
 	}
 
 	/**
+	 * Number of production points each citizen generates naturally.
+	 */
+	static final int RESIDENT_PRODUCTION_RATE = 60;
+	static final int HUNGER_COST = 30;
+	static final int PRODUCTION_PER_LABOR = 30;
+
+	/**
 	 * Called when the current tile is the key tile of a
 	 * residential zone.
 	 */
@@ -592,19 +612,32 @@ class MapScanner extends TileBehavior
 		}
 
 		if (tpop != 0) {
+			int productionRate = tpop * RESIDENT_PRODUCTION_RATE;
+
+			BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
+			business.production = Math.min(business.production + productionRate, 2*productionRate);
+
+			// consume food, if any
+			int hunger = tpop;
 			int food = city.getCommodityQuantity(xpos, ypos, Commodity.SERVICE);
+			int foodConsumed = Math.min(hunger, food);
+			if (foodConsumed != 0) {
+				hunger -= foodConsumed;
+				city.subtractCommodity(xpos, ypos, Commodity.SERVICE, foodConsumed);
+			}
+			if (hunger != 0) {
+				// make up remaining hunger with production points
+				business.production -= hunger*HUNGER_COST;
+			}
+
+			// generate labor units (for sale) with remaining production
 			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
 			int maxOutput = tpop*3;
 
-			int workDone = Math.min(tpop, food);
-			if (workDone != 0) {
-				city.subtractCommodity(xpos, ypos, Commodity.SERVICE, workDone);
-			}
-
-			workDone += tpop;
-			workDone = Math.min(workDone, maxOutput-curOutput);
-			if (workDone != 0) {
+			int workDone = Math.min(business.production/PRODUCTION_PER_LABOR, maxOutput-curOutput);
+			if (workDone > 0) {
 				city.addCommodity(xpos, ypos, Commodity.LABOR, workDone);
+				business.production -= workDone*PRODUCTION_PER_LABOR;
 			}
 		}
 
@@ -678,6 +711,11 @@ class MapScanner extends TileBehavior
 		Traffic [] trafConnections = city.enumIncomingConnections(loc, type)
 				.toArray(new Traffic[0]);
 		shuffleArray(trafConnections);
+		Arrays.sort(trafConnections, new Comparator<Traffic>() {
+			public int compare(Traffic a, Traffic b) {
+				return Integer.compare(b.priceOffered, a.priceOffered);
+			}
+			});
 
 		int totalDemand = 0;
 		for (Traffic traf : trafConnections)
@@ -688,18 +726,32 @@ class MapScanner extends TileBehavior
 
 			if (amt != 0) {
 				count -= amt;
-				city.addCommodity(traf.from.x, traf.from.y, type, amt);
-				city.adjustFunds(traf.from.x, traf.from.y, -price*amt);
+				dispenseOutput(type, traf, amt);
 			}
 		}
 
-		int numSold = origCount - count;
-		if (numSold != 0) {
-			city.subtractCommodity(xpos, ypos, type, numSold);
-			city.adjustFunds(xpos, ypos, price*numSold);
-		}
-
 		adjustPrices(type, origCount, totalDemand);
+	}
+
+	void dispenseOutput(Commodity type, Traffic traf, int numSold)
+	{
+		assert xpos == traf.to.x;
+		assert ypos == traf.to.y;
+
+		System.out.printf("%s: %d %s sold to %s for %d/ea\n",
+				traf.to.toString(),
+				numSold,
+				type.name().toLowerCase(),
+				traf.from.toString(),
+				traf.priceOffered);
+
+		city.subtractCommodity(xpos, ypos, type, numSold);
+		city.addCommodity(traf.from.x, traf.from.y, type, numSold);
+		city.adjustFunds(traf.from.x, traf.from.y, -traf.priceOffered*numSold);
+		city.adjustFunds(xpos, ypos, traf.priceOffered*numSold);
+
+		BusinessTile buyer = city.getBusinessTile(traf.from);
+		buyer.production -= traf.transportCost*numSold;
 	}
 
 	int countIncomingTraffic(Commodity type)
@@ -717,7 +769,8 @@ class MapScanner extends TileBehavior
 	void adjustPrices(Commodity type, int supply, int demand)
 	{
 		int price = city.getPrice(xpos, ypos, type, 0);
-		int adj = demand-supply;
+		int adj = demand > supply ? 1 :
+			demand < supply ? -1 : 0;
 		int newPrice = Math.max(1, price+adj);
 		if (newPrice != price) {
 			city.setPrice(xpos, ypos, type, newPrice);
@@ -1240,6 +1293,7 @@ class MapScanner extends TileBehavior
 				// keep old job, but still update how to get there
 				city.applyTraffic(conn.from, conn.pathTaken, -conn.count);
 				conn.pathTaken = traffic.getPathTo(conn.to);
+				conn.transportCost = pathCost;
 				city.applyTraffic(conn.from, conn.pathTaken, conn.count);
 				return pathCost;
 			}
@@ -1255,7 +1309,7 @@ class MapScanner extends TileBehavior
 			double x = f.fitness(employer.x, employer.y, traffic.getDist(employer.x, employer.y));
 			int pathCost = (int)Math.round(Math.min(-Math.log(x), maxCost));
 			if (pathCost < maxCost) {
-				setJob(connType, slot, count, employer, traffic.getPathTo(employer));
+				setJob(connType, slot, count, employer, pathCost, traffic.getPathTo(employer));
 				return pathCost;
 			}
 		}
@@ -1267,7 +1321,7 @@ class MapScanner extends TileBehavior
 	static final int JOB_SLOT_COUNT = 3;
 	static final int TRAFFIC_CYCLE = 11;
 
-	void setJob(Commodity connType, int slot, int count, CityLocation dest, int [] pathTaken)
+	void setJob(Commodity connType, int slot, int count, CityLocation dest, int pathCost, int [] pathTaken)
 	{
 		if (count != 0 && dest != null && pathTaken != null) {
 
@@ -1278,6 +1332,8 @@ class MapScanner extends TileBehavior
 			conn.slot = slot;
 			conn.count = count;
 			conn.demand = count;
+			conn.priceOffered = city.getPrice(dest.x, dest.y, connType, 1);
+			conn.transportCost = pathCost;
 			conn.pathTaken = pathTaken;
 
 			city.addConnection(conn);

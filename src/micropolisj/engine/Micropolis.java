@@ -678,6 +678,38 @@ public class Micropolis
 		tiles[ypos][xpos] = tt;
 	}
 
+	public BusinessTile getBusinessTile(CityLocation loc)
+	{
+		return getBusinessTile(loc.x, loc.y);
+	}
+
+	public BusinessTile getBusinessTile(int xpos, int ypos)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof BusinessTile) {
+				return (BusinessTile) t;
+			}
+			t = t.next;
+		}
+		return null;
+	}
+
+	public BusinessTile getBusinessTileAutoCreate(int xpos, int ypos)
+	{
+		Tile t = getTileStack(xpos, ypos);
+		while (t != null) {
+			if (t instanceof BusinessTile) {
+				return (BusinessTile) t;
+			}
+			t = t.next;
+		}
+
+		BusinessTile bt = new BusinessTile(0, tiles[ypos][xpos]);
+		tiles[ypos][xpos] = bt;
+		return bt;
+	}
+
 	public int getFunds(int xpos, int ypos)
 	{
 		Tile t = getTileStack(xpos, ypos);
@@ -689,6 +721,17 @@ public class Micropolis
 			t = t.next;
 		}
 		return 0;
+	}
+
+	public int getProduction(int xpos, int ypos)
+	{
+		BusinessTile t = getBusinessTile(xpos, ypos);
+		if (t != null) {
+			return t.production;
+		}
+		else {
+			return 0;
+		}
 	}
 
 	public int getCommodityQuantity(int xpos, int ypos, Commodity c)
