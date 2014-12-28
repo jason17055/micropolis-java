@@ -22,6 +22,7 @@ import static micropolisj.engine.TrafficGen2.*;
 class MapScanner extends TileBehavior
 {
 	final B behavior;
+	static final boolean STATIC_ZONES = System.getProperty("micropolisj.static_zones","").length() != 0;
 
 	MapScanner(Micropolis city, B behavior)
 	{
@@ -476,6 +477,8 @@ class MapScanner extends TileBehavior
 			trafficModifier = earnings * 60;
 		}
 
+		if (STATIC_ZONES) { return; }
+
 		if (PRNG.nextInt(8) == 0)
 		{
 			int locValve = evalCommercial(trafficModifier);
@@ -539,6 +542,8 @@ class MapScanner extends TileBehavior
 			int earnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
 			trafficModifier = earnings * 60;
 		}
+
+		if (STATIC_ZONES) { return; }
 
 		if (PRNG.nextInt(8) == 0)
 		{
@@ -616,6 +621,8 @@ class MapScanner extends TileBehavior
 			int earnings = city.getTileExtraInt(xpos, ypos, "earnings", 0);
 			trafficModifier = earnings * 60;
 		}
+
+		if (STATIC_ZONES) { return; }
 
 		if (tile == RESCLR || PRNG.nextInt(8) == 0)
 		{
