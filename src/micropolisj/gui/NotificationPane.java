@@ -110,31 +110,56 @@ public class NotificationPane extends JPanel
 		setVisible(true);
 	}
 
-	static class ZoneStatusPane extends JPanel implements AncestorListener
+	static class ZoneStatusPane extends JPanel implements AncestorListener, MapListener
 	{
 		final Micropolis city;
+		final CityLocation loc;
+		JLabel fundsLbl = new JLabel();
+		JLabel productionLbl = new JLabel();
+		JPanel stockPnl = makeStockPanel();
+		JPanel offersPnl = makeStockPanel();
 
-		ZoneStatusPane(Micropolis city)
+		ZoneStatusPane(Micropolis city, CityLocation loc)
 		{
 			super(new GridBagLayout());
 			this.city = city;
+			this.loc = loc;
 			this.addAncestorListener(this);
 		}
 
 		//implements AncestorListener
 		public void ancestorAdded(AncestorEvent evt)
 		{
-			System.out.printf("%s: ancestor added\n", toString());
+			city.addMapListener(this);
 		}
 
 		//implements AncestorListener
 		public void ancestorRemoved(AncestorEvent evt)
 		{
-			System.out.printf("%s: ancestor removed\n", toString());
+			city.removeMapListener(this);
 		}
 
 		//implements AncestorListener
 		public void ancestorMoved(AncestorEvent evt) {}
+
+		//implements MapListener
+		public void mapAnimation() { reload(); }
+		public void mapOverlayDataChanged(MapState overlayDataType) {}
+		public void spriteMoved(Sprite sprite) {}
+		public void tileChanged(int xpos, int ypos) {}
+		public void wholeMapChanged() {}
+
+		void reload()
+		{
+			fundsLbl.setText(
+				MainWindow.formatFunds(city.getFunds(loc.x, loc.y))
+				);
+			productionLbl.setText(
+				String.format("%d", city.getProduction(loc.x, loc.y))
+				);
+			reloadStockPanel(stockPnl, city, loc.x, loc.y, StockPanelType.STOCK);
+			reloadStockPanel(offersPnl, city, loc.x, loc.y, StockPanelType.OFFERS);
+		}
 	}
 
 	public void showZoneStatus(Micropolis engine, int xpos, int ypos, ZoneStatus zone)
@@ -156,7 +181,7 @@ public class NotificationPane extends JPanel
 			infoPane = null;
 		}
 
-		ZoneStatusPane p = new ZoneStatusPane(engine);
+		ZoneStatusPane p = new ZoneStatusPane(engine, new CityLocation(xpos, ypos));
 		mainPane.add(p, BorderLayout.CENTER);
 		infoPane = p;
 
@@ -196,24 +221,26 @@ public class NotificationPane extends JPanel
 
 		c1.gridy = ++c2.gridy;
 		p.add(new JLabel(strings.getString("notification.stock_lbl")), c1);
-		p.add(makeStockPanel(engine, xpos, ypos, StockPanelType.STOCK), c2);
+		p.add(p.stockPnl, c2);
 
 		c1.gridy = ++c2.gridy;
 		p.add(new JLabel(strings.getString("notification.offers_lbl")), c1);
-		p.add(makeStockPanel(engine, xpos, ypos, StockPanelType.OFFERS), c2);
+		p.add(p.offersPnl, c2);
 
 		c1.gridy = ++c2.gridy;
 		p.add(new JLabel(strings.getString("notification.funds_lbl")), c1);
-		p.add(new JLabel(MainWindow.formatFunds(engine.getFunds(xpos, ypos))), c2);
+		p.add(p.fundsLbl, c2);
 
 		c1.gridy = ++c2.gridy;
 		p.add(new JLabel(strings.getString("notification.production_lbl")), c1);
-		p.add(new JLabel(String.format("%d", engine.getProduction(xpos, ypos))), c2);
+		p.add(p.productionLbl, c2);
 
 		c1.gridy++;
 		c1.gridwidth = 2;
 		c1.weighty = 1.0;
 		p.add(new JLabel(), c1);
+
+		p.reload();
 
 		setVisible(true);
 	}
@@ -230,10 +257,16 @@ public class NotificationPane extends JPanel
 		OFFERS;
 	}
 
-	static JPanel makeStockPanel(Micropolis city, int xpos, int ypos, StockPanelType type)
+	static JPanel makeStockPanel()
 	{
 		JPanel p = new JPanel();
 		p.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
+		return p;
+	}
+
+	static void reloadStockPanel(JPanel p, Micropolis city, int xpos, int ypos, StockPanelType type)
+	{
+		p.removeAll();
 
 		StockInfo si = new StockInfo();
 
@@ -271,7 +304,5 @@ public class NotificationPane extends JPanel
 					)));
 			}
 		}
-
-		return p;
 	}
 }
