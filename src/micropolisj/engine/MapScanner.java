@@ -442,21 +442,18 @@ class MapScanner extends TileBehavior
 	 */
 	void doCommercial()
 	{
-		dispenseOutput(Commodity.SERVICE);
-
 		boolean powerOn = checkZonePower();
 		city.comZoneCount++;
 
 		int tpop = commercialZonePop(tile);
 		city.comPop += tpop;
 
+		BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
+		consumeLabor(business);
+
+		dispenseOutput(Commodity.SERVICE);
+
 		if (tpop != 0) {
-			BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
-			int labor = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
-			if (labor != 0) {
-				city.subtractCommodity(xpos, ypos, Commodity.LABOR, labor);
-				business.production += labor*PRODUCTION_PER_LABOR;
-			}
 
 			int supplies = city.getCommodityQuantity(xpos, ypos, Commodity.GOODS);
 			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.SERVICE);
@@ -511,27 +508,33 @@ class MapScanner extends TileBehavior
 		}
 	}
 
+	void consumeLabor(BusinessTile business)
+	{
+		int labor = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
+		if (labor != 0) {
+			city.subtractCommodity(xpos, ypos, Commodity.LABOR, labor);
+			business.production += labor*PRODUCTION_PER_LABOR;
+		}
+	}
+
 	/**
 	 * Called when the current tile is the key tile of an
 	 * industrial zone.
 	 */
 	void doIndustrial()
 	{
-		dispenseOutput(Commodity.GOODS);
-
 		boolean powerOn = checkZonePower();
 		city.indZoneCount++;
 
 		int tpop = industrialZonePop(tile);
 		city.indPop += tpop;
 
+		BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
+		consumeLabor(business);
+
+		dispenseOutput(Commodity.GOODS);
+
 		if (tpop != 0) {
-			BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
-			int labor = city.getCommodityQuantity(xpos, ypos, Commodity.LABOR);
-			if (labor != 0) {
-				city.subtractCommodity(xpos, ypos, Commodity.LABOR, labor);
-				business.production += labor*PRODUCTION_PER_LABOR;
-			}
 
 			int curOutput = city.getCommodityQuantity(xpos, ypos, Commodity.GOODS);
 			int maxOutput = tpop*8*6;
@@ -596,8 +599,6 @@ class MapScanner extends TileBehavior
 	 */
 	void doResidential()
 	{
-		dispenseOutput(Commodity.LABOR);
-
 		boolean powerOn = checkZonePower();
 		city.resZoneCount++;
 
@@ -611,11 +612,18 @@ class MapScanner extends TileBehavior
 			tpop = residentialZonePop(tile);
 		}
 
+		BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
 		if (tpop != 0) {
+			//generate labor
 			int productionRate = tpop * RESIDENT_PRODUCTION_RATE;
+			int maxProduction = 2*productionRate;
 
-			BusinessTile business = city.getBusinessTileAutoCreate(xpos, ypos);
-			business.production = Math.min(business.production + productionRate, 2*productionRate);
+			business.production = Math.min(business.production + productionRate, maxProduction);
+		}
+
+		dispenseOutput(Commodity.LABOR);
+
+		if (tpop != 0) {
 
 			// consume food, if any
 			int hunger = tpop;
@@ -713,20 +721,24 @@ class MapScanner extends TileBehavior
 		shuffleArray(trafConnections);
 		Arrays.sort(trafConnections, new Comparator<Traffic>() {
 			public int compare(Traffic a, Traffic b) {
-				return Integer.compare(b.priceOffered, a.priceOffered);
+				return Integer.compare(b.priceOffered-b.transportCost, a.priceOffered-a.transportCost);
 			}
 			});
+
+		BusinessTile seller = city.getBusinessTile(loc);
 
 		int totalDemand = 0;
 		for (Traffic traf : trafConnections)
 		{
 			totalDemand += traf.demand;
 			int amt = Math.min(traf.demand, count);
+			amt = Math.min(amt, seller.production/traf.transportCost);
 			city.adjustTrafficLevelTo(traf, amt);
 
 			if (amt != 0) {
 				count -= amt;
 				dispenseOutput(type, traf, amt);
+				seller.production -= traf.transportCost*amt;
 			}
 		}
 
@@ -738,20 +750,18 @@ class MapScanner extends TileBehavior
 		assert xpos == traf.to.x;
 		assert ypos == traf.to.y;
 
-		System.out.printf("%s: %d %s sold to %s for %d/ea\n",
+		System.out.printf("%s: %d %s sold to %s for %d/ea (%d transport)\n",
 				traf.to.toString(),
 				numSold,
 				type.name().toLowerCase(),
 				traf.from.toString(),
-				traf.priceOffered);
+				traf.priceOffered,
+				traf.transportCost*numSold);
 
 		city.subtractCommodity(xpos, ypos, type, numSold);
 		city.addCommodity(traf.from.x, traf.from.y, type, numSold);
 		city.adjustFunds(traf.from.x, traf.from.y, -traf.priceOffered*numSold);
 		city.adjustFunds(xpos, ypos, traf.priceOffered*numSold);
-
-		BusinessTile buyer = city.getBusinessTile(traf.from);
-		buyer.production -= traf.transportCost*numSold;
 	}
 
 	int countIncomingTraffic(Commodity type)
