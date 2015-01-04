@@ -403,6 +403,17 @@ public class MakeTiles
 				TILE_SIZE);
 		}
 
+		if (TILE_SIZE < 128) {
+		pngFile = new File(fileName+"_128x128.png");
+		if (pngFile.exists()) {
+			ImageIcon ii = new ImageIcon(pngFile.toString());
+			return new SourceImage(
+				ii.getImage(),
+				128,
+				TILE_SIZE);
+		}
+		}
+
 		pngFile = new File(fileName+".png");
 		if (pngFile.exists()) {
 			ImageIcon ii = new ImageIcon(pngFile.toString());
