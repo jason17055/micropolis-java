@@ -12,6 +12,7 @@ import javax.xml.stream.*;
 
 import static micropolisj.engine.TileSpec.generateTileNames;
 import static micropolisj.build_tool.TileImage.*;
+import static micropolisj.XML_Helper.*;
 
 public class MakeTiles
 {
@@ -352,9 +353,14 @@ public class MakeTiles
 		}
 	}
 
-	static SourceImage loadImage(String fileName)
+	static TileImage loadImage(String fileName)
 		throws IOException
 	{
+		File xmlFile = new File(fileName + ".xml");
+		if (xmlFile.exists()) {
+			return loadImageXml(xmlFile);
+		}
+
 		if (!loadedImages.containsKey(fileName)) {
 			loadedImages.put(fileName,
 				loadImageReal(fileName));
@@ -407,5 +413,62 @@ public class MakeTiles
 		}
 
 		throw new IOException("File not found: "+fileName+".{svg,png}");
+	}
+
+	static TileImage loadImageXml(File xmlFile)
+		throws IOException
+	{
+		FileInputStream inStream = new FileInputStream(xmlFile);
+		try {
+
+		XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(inStream, "UTF-8");
+		in.nextTag();
+		if (in.getEventType() != XMLStreamConstants.START_ELEMENT) {
+			throw new IOException("Unrecognized file format");
+		}
+
+		if (!in.getLocalName().equals("layered-image")) {
+			throw new IOException("Unrecognized file format");
+		}
+
+		return parseLayeredImageXml(in);
+		}
+
+		catch (XMLStreamException e) {
+			throw new IOException("XML Parse error", e);
+		}
+	}
+
+	static TileImage parseLayeredImageXml(XMLStreamReader in)
+		throws IOException, XMLStreamException
+	{
+		TileImageLayer result = null;
+
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			assert in.isStartElement();
+
+			String tagName = in.getLocalName();
+			if (tagName.equals("image")) {
+
+				String src = in.getAttributeValue(null, "src");
+				TileImageLayer rv = new TileImageLayer();
+				rv.below = result;
+				rv.above = loadAnimation(src);
+				result = rv;
+
+				skipToEndElement(in);
+			}
+			else {
+				// unrecognized element
+				skipToEndElement(in);
+			}
+		}
+
+		if (result != null && result.below == null) {
+			return result.above;
+		}
+		else {
+			return result;
+		}
 	}
 }

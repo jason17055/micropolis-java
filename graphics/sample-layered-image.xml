@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<layered-image>
+	<image src="turf" />
+	<image src="trees"/>
+</layered-image>
