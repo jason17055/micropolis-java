@@ -65,14 +65,21 @@ public class TileImages
 	interface LoaderContext
 	{
 		BufferedImage getDefaultImage();
+		BufferedImage getImage(String name);
 	}
 
 	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
 		SimpleTileImage img = new SimpleTileImage();
+		String srcImageName = in.getAttributeValue(null, "src");
+		if (srcImageName != null) {
+			img.srcImage = ctx.getImage(srcImageName);
+		}
+		else {
+			img.srcImage = ctx.getDefaultImage();
+		}
 		String tmp = in.getAttributeValue(null, "offsetY");
-		img.srcImage = ctx.getDefaultImage();
 		img.imageNumber = tmp != null ? Integer.parseInt(tmp) : 0;
 		return img;
 	}
@@ -97,18 +104,21 @@ public class TileImages
 
 	class MyLoaderContext implements LoaderContext
 	{
-		BufferedImage defImage;
-
-		MyLoaderContext()
-		{
-			String resourceName = "/" + name + "/tiles.png";
-			defImage = loadImage(resourceName);
-		}
+		Map<String,BufferedImage> images = new HashMap<String,BufferedImage>();
 
 		//implements LoaderContext
 		public BufferedImage getDefaultImage()
 		{
-			return defImage;
+			return getImage("tiles.png");
+		}
+
+		//implements LoaderContext
+		public BufferedImage getImage(String fileName)
+		{
+			if (!images.containsKey(name)) {
+				images.put(name, loadImage("/"+name+"/"+fileName));
+			}
+			return images.get(name);
 		}
 	}
 
