@@ -119,21 +119,29 @@ public class MakeTiles
 	static class Composer
 	{
 		ComposeBuffer stanTiles;
+		ComposeBuffer tallTiles;
 
 		Composer(File outputDir)
 		{
 			this.stanTiles = new ComposeBuffer(outputDir, "tiles.png", false);
+			this.tallTiles = new ComposeBuffer(outputDir, "tall_tiles.png", true);
 		}
 
 		TileImageSprite prepareTile(TileImage refImage)
 		{
 			Dimension size = refImage.getBounds();
-			return stanTiles.prepareTile(size, refImage);
+			if (size.width == TILE_SIZE && size.height == TILE_SIZE) {
+				return stanTiles.prepareTile(size, refImage);
+			}
+			else {
+				return tallTiles.prepareTile(size, refImage);
+			}
 		}
 
 		void createBuffers()
 		{
 			stanTiles.createBuffer();
+			tallTiles.createBuffer();
 		}
 
 		Graphics2D getGr(TileImageSprite s)
@@ -146,6 +154,7 @@ public class MakeTiles
 			throws IOException
 		{
 			stanTiles.writeFile();
+			tallTiles.writeFile();
 		}
 	}
 
@@ -246,6 +255,17 @@ public class MakeTiles
 		}
 	}
 
+	static void writeImageAttributes(TileImageSprite s, XMLStreamWriter out)
+		throws XMLStreamException
+	{
+		ComposeBuffer cb = (ComposeBuffer) s.source;
+
+		if (!cb.fileName.equals("tiles.png")) {
+			out.writeAttribute("src", cb.fileName);
+		}
+		out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
+	}
+
 	static void writeIndexFile(Collection<TileMapping> mappings, File indexFile)
 		throws IOException
 	{
@@ -294,10 +314,11 @@ public class MakeTiles
 
 			TileImageSprite s = (TileImageSprite ) dest;
 			out.writeStartElement("image");
-			out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
+			writeImageAttributes(s, out);
 			out.writeEndElement();
 		}
 	}
+
 	static TileImage parseFrameSpec(TileSpec spec)
 		throws IOException
 	{
