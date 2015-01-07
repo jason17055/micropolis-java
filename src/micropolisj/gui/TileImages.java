@@ -25,7 +25,7 @@ public class TileImages
 	final String name;
 	final int TILE_WIDTH;
 	final int TILE_HEIGHT;
-	Image [] images;
+	BufferedImage tileImages;
 	TileImage [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
 
@@ -54,22 +54,13 @@ public class TileImages
 		this.TILE_WIDTH = size;
 		this.TILE_HEIGHT = size;
 
+		this.tileImages = loadImage(getResourceName());
 		initTileImageMap();
 	}
 
 	String getResourceName()
 	{
 		return "/" + name + "/tiles.png";
-	}
-
-	void initTileImages()
-	{
-		if (this.images != null) {
-			// already loaded
-			return;
-		}
-
-		this.images = loadTileImages(getResourceName(), TILE_HEIGHT);
 	}
 
 	SimpleTileImage readSimpleImage(XMLStreamReader in)
@@ -171,7 +162,6 @@ public class TileImages
 	public static TileImages getInstance(int size)
 	{
 		TileImages self = getInstance(String.format("%dx%d", size, size), size);
-		self.initTileImages();
 		self.loadSpriteImages();
 		return self;
 	}
@@ -184,11 +174,6 @@ public class TileImages
 		return savedInstances.get(size);
 	}
 
-	public int getTileImageNumber(int tileNumber)
-	{
-		return getTileImageInfo(tileNumber, 0).imageNumber;
-	}
-
 	public class ImageInfo
 	{
 		int imageNumber;
@@ -199,8 +184,32 @@ public class TileImages
 			this.animated = animated;
 		}
 
-		Image getImage() { return images[imageNumber]; }
 		boolean isAnimated() { return animated; }
+
+		public void drawToBytes(BufferedImage img, int x, int y)
+		{
+			for (int yy = 0; yy < TILE_HEIGHT; yy++)
+			{
+				for (int xx = 0; xx < TILE_WIDTH; xx++)
+				{
+					img.setRGB(x+xx,y+yy,
+						tileImages.getRGB(xx,imageNumber*TILE_HEIGHT+yy));
+				}
+			}
+		}
+
+		public Image getImage()
+		{
+			return tileImages.getSubimage(
+				0, imageNumber*TILE_HEIGHT,
+				TILE_WIDTH, TILE_HEIGHT
+				);
+		}
+	}
+
+	public ImageInfo getTileImageInfo(int tileNumber)
+	{
+		return getTileImageInfo(tileNumber, 0);
 	}
 
 	public ImageInfo getTileImageInfo(int tileNumber, int acycle)
@@ -230,30 +239,6 @@ public class TileImages
 	public Image getTileImage(int tile)
 	{
 		return getTileImageInfo(tile, 0).getImage();
-	}
-
-	private Image [] loadTileImages(String resourceName, int srcSize)
-	{
-		URL iconUrl = TileImages.class.getResource(resourceName);
-		Image refImage = new ImageIcon(iconUrl).getImage();
-
-		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice dev = env.getDefaultScreenDevice();
-		GraphicsConfiguration conf = dev.getDefaultConfiguration();
-
-		Image [] images = new Image[refImage.getHeight(null) / srcSize];
-		for (int i = 0; i < images.length; i++)
-		{
-			BufferedImage bi = conf.createCompatibleImage(TILE_WIDTH, TILE_HEIGHT, Transparency.OPAQUE);
-			Graphics2D gr = bi.createGraphics();
-			gr.drawImage(refImage, 0, 0, TILE_WIDTH, TILE_HEIGHT,
-				0, i * srcSize,
-				0 + srcSize, i * srcSize + srcSize,
-				null);
-			
-			images[i] = bi;
-		}
-		return images;
 	}
 
 	public Image getSpriteImage(SpriteKind kind, int frameNumber)
@@ -321,4 +306,16 @@ public class TileImages
 		return bi;
 	}
 
+	static BufferedImage loadImage(String resourceName)
+	{
+		URL iconUrl = TileImages.class.getResource(resourceName);
+		Image refImage = new ImageIcon(iconUrl).getImage();
+
+		BufferedImage bi = new BufferedImage(refImage.getWidth(null), refImage.getHeight(null),
+					BufferedImage.TYPE_INT_RGB);
+		Graphics2D gr = bi.createGraphics();
+		gr.drawImage(refImage, 0, 0, null);
+
+		return bi;
+	}
 }

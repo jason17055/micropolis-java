@@ -98,20 +98,6 @@ public class OverlayMapView extends JComponent
 	static final int TILE_HEIGHT = 3;
 	static final int TILE_OFFSET_Y = 3;
 	static TileImages tileArray = TileImages.getInstance("sm", TILE_HEIGHT);
-	static BufferedImage tileArrayImage = loadImage(tileArray.getResourceName());
-
-	static BufferedImage loadImage(String resourceName)
-	{
-		URL iconUrl = MicropolisDrawingArea.class.getResource(resourceName);
-		Image refImage = new ImageIcon(iconUrl).getImage();
-
-		BufferedImage bi = new BufferedImage(refImage.getWidth(null), refImage.getHeight(null),
-					BufferedImage.TYPE_INT_RGB);
-		Graphics2D gr = bi.createGraphics();
-		gr.drawImage(refImage, 0, 0, null);
-
-		return bi;
-	}
 
 	static final Color VAL_LOW       = new Color(0xbfbfbf);
 	static final Color VAL_MEDIUM    = new Color(0xffff00);
@@ -412,15 +398,8 @@ public class OverlayMapView extends JComponent
 	{
 		assert tile >= 0;
 
-		int imageNumber = tileArray.getTileImageNumber(tile);
-		for (int yy = 0; yy < TILE_HEIGHT; yy++)
-		{
-			for (int xx = 0; xx < TILE_WIDTH; xx++)
-			{
-				img.setRGB(x*TILE_WIDTH+xx,y*TILE_HEIGHT+yy,
-					tileArrayImage.getRGB(xx,imageNumber*TILE_OFFSET_Y+yy));
-			}
-		}
+		TileImages.ImageInfo tileImg = tileArray.getTileImageInfo(tile);
+		tileImg.drawToBytes(img, x*TILE_WIDTH, y*TILE_HEIGHT);
 	}
 
 	Rectangle getViewRect(ConnectedView cv)
