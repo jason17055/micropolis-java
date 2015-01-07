@@ -125,12 +125,14 @@ public abstract class TileImage
 	public static class TileImageSprite extends TileImage
 	{
 		public final TileImage source;
+		public final int targetSize;
 		public int offsetX;
 		public int offsetY;
 
-		public TileImageSprite(TileImage source)
+		public TileImageSprite(TileImage source, int targetSize)
 		{
 			this.source = source;
+			this.targetSize = targetSize;
 		}
 
 		@Override

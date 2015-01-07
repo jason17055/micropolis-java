@@ -65,7 +65,7 @@ public class MakeTiles
 
 		ComposeFrame(ComposeBuffer parentBuffer, TileImage refImage)
 		{
-			super(parentBuffer);
+			super(parentBuffer, TILE_SIZE);
 			this.refImage = refImage;
 		}
 	}
@@ -368,7 +368,7 @@ public class MakeTiles
 		TileImage img = loadAnimation(parts[0]);
 
 		if (parts.length >= 2) {
-			TileImageSprite sprite = new TileImageSprite(img);
+			TileImageSprite sprite = new TileImageSprite(img, TILE_SIZE);
 
 			String offsetInfo = parts[1];
 			parts = offsetInfo.split(",");
