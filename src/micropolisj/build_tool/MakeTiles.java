@@ -59,16 +59,82 @@ public class MakeTiles
 		}
 	}
 
+	static class ComposeBuffer extends TileImage
+	{
+		File outFile;
+		String fileName;
+		boolean useAlpha;
+		int maxWidth;
+		int nextOffsetY;
+		BufferedImage buf;
+		Graphics2D gr;
+
+		ComposeBuffer(File outputDir, String fileName, boolean useAlpha)
+		{
+			this.outFile = new File(outputDir, fileName);
+			this.fileName = fileName;
+			this.useAlpha = useAlpha;
+		}
+
+		TileImageSprite prepareTile(Dimension size)
+		{
+			TileImageSprite s = new TileImageSprite();
+			s.source = this;
+			s.offsetY = this.nextOffsetY + size.height - TILE_SIZE;
+			this.nextOffsetY += size.height;
+			this.maxWidth = Math.max(maxWidth, size.width);
+			return s;
+		}
+
+		void createBuffer()
+		{
+			this.buf = new BufferedImage(maxWidth,nextOffsetY,
+				useAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+			this.gr = buf.createGraphics();
+		}
+
+		void writeFile()
+			throws IOException
+		{
+			System.out.println("Generating tiles array: "+outFile);
+			ImageIO.write(buf, "png", outFile);
+		}
+
+		@Override
+		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY) { throw new Error("not implemented"); }
+		@Override
+		public int getFrameEndTime(int frameTime) { throw new Error("not implemented"); }
+	}
+
 	static class Composer
 	{
-		int nextOffsetY = 0;
+		ComposeBuffer stanTiles;
+
+		Composer(File outputDir)
+		{
+			this.stanTiles = new ComposeBuffer(outputDir, "tiles.png", false);
+		}
 
 		TileImageSprite prepareTile(int size)
 		{
-			TileImageSprite s = new TileImageSprite();
-			s.offsetY = nextOffsetY;
-			nextOffsetY += size;
-			return s;
+			return stanTiles.prepareTile(new Dimension(size, size));
+		}
+
+		void createBuffers()
+		{
+			stanTiles.createBuffer();
+		}
+
+		Graphics2D getGr(TileImageSprite s)
+		{
+			ComposeBuffer cb = (ComposeBuffer) s.source;
+			return cb.gr;
+		}
+
+		void writeFiles()
+			throws IOException
+		{
+			stanTiles.writeFile();
 		}
 	}
 
@@ -87,7 +153,7 @@ public class MakeTiles
 		int ntiles = COUNT_TILES == -1 ? tileNames.length : COUNT_TILES;
 
 		// prepare mapping data
-		Composer c = new Composer();
+		Composer c = new Composer(outputDir);
 		ArrayList<TileMapping> mappings = new ArrayList<TileMapping>();
 
 		for (int i = 0; i < ntiles; i++) {
@@ -135,8 +201,7 @@ public class MakeTiles
 		}
 
 		// actually assemble the image
-		BufferedImage buf = new BufferedImage(TILE_SIZE,c.nextOffsetY,BufferedImage.TYPE_INT_RGB);
-		Graphics2D gr = buf.createGraphics();
+		c.createBuffers();
 
 		for (TileMapping m : mappings) {
 
@@ -148,13 +213,13 @@ public class MakeTiles
 				for (int i = 0; i < ani.frames.size(); i++) {
 					Animation.Frame f = ani.frames.get(i);
 					TileImageSprite s = (TileImageSprite) f.frame;
-					m.ref.drawWithTimeTo(gr, t, s.offsetX, s.offsetY, 0, 0);
+					m.ref.drawWithTimeTo(c.getGr(s), t, s.offsetX, s.offsetY, 0, 0);
 					t += f.duration;
 				}
 			}
 			else {
 				TileImageSprite sprite = (TileImageSprite) m.dest;
-				m.ref.drawTo(gr, sprite.offsetX, sprite.offsetY, 0, 0);
+				m.ref.drawTo(c.getGr(sprite), sprite.offsetX, sprite.offsetY, 0, 0);
 			}
 		}
 
@@ -162,9 +227,7 @@ public class MakeTiles
 		outputDir.mkdirs();
 
 		// output the composed images
-		File outputFile = new File(outputDir, "tiles.png");
-		System.out.println("Generating tiles array: "+outputFile);
-		ImageIO.write(buf, "png", outputFile);
+		c.writeFiles();
 
 		// output an index of all tile names and their offset into
 		// the composed tile array
