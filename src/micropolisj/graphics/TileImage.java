@@ -36,6 +36,11 @@ public abstract class TileImage
 	}
 
 	/**
+	 * @return the width and height needed for this tile image.
+	 */
+	public abstract Dimension getBounds();
+
+	/**
 	 * Brings any internal Animation object to the top of the hierarchy.
 	 */
 	public TileImage normalForm()
@@ -100,6 +105,21 @@ public abstract class TileImage
 			below.drawFragment(gr, destX, destY, srcX, srcY, srcWidth, srcHeight);
 			above.drawFragment(gr, destX, destY, srcX, srcY, srcWidth, srcHeight);
 		}
+
+		@Override
+		public Dimension getBounds()
+		{
+			if (below == null) {
+				return above.getBounds();
+			}
+
+			Dimension belowBounds = below.getBounds();
+			Dimension aboveBounds = above.getBounds();
+			return new Dimension(
+				Math.max(belowBounds.width, aboveBounds.width),
+				Math.max(belowBounds.height, aboveBounds.height)
+				);
+		}
 	}
 
 	public static class TileImageSprite extends TileImage
@@ -144,6 +164,11 @@ public abstract class TileImage
 		{
 			source.drawFragment(gr, destX, destY, srcX+offsetX, srcY+offsetY, srcWidth, srcHeight);
 		}
+
+		@Override
+		public Dimension getBounds() {
+			return source.getBounds();
+		}
 	}
 
 	public static class SourceImage extends TileImage
@@ -165,6 +190,12 @@ public abstract class TileImage
 				destX,
 				destY,
 				null);
+		}
+
+		@Override
+		public Dimension getBounds()
+		{
+			return new Dimension(basisSize, basisSize);
 		}
 	}
 
@@ -201,6 +232,12 @@ public abstract class TileImage
 				srcY + srcHeight,
 				null);
 		}
+
+		@Override
+		public Dimension getBounds()
+		{
+			return new Dimension(targetSize, targetSize);
+		}
 	}
 
 	public static class SimpleTileImage extends TileImage
@@ -209,6 +246,11 @@ public abstract class TileImage
 		public int offsetX;
 		public int offsetY;
 		public int oversized;
+
+		@Override
+		public Dimension getBounds() {
+			return srcImage.getBounds();
+		}
 
 		@Override
 		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight) {

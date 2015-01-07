@@ -111,6 +111,8 @@ public class MakeTiles
 		}
 
 		@Override
+		public Dimension getBounds() { throw new Error("not implemented"); }
+		@Override
 		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight) { throw new UnsupportedOperationException(); }
 	}
 
@@ -125,7 +127,7 @@ public class MakeTiles
 
 		TileImageSprite prepareTile(TileImage refImage)
 		{
-			Dimension size = new Dimension(TILE_SIZE, TILE_SIZE);
+			Dimension size = refImage.getBounds();
 			return stanTiles.prepareTile(size, refImage);
 		}
 

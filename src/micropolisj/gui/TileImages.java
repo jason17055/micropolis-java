@@ -164,7 +164,7 @@ public class TileImages
 					null);
 			}
 			else {
-				Image img = image.srcImage.getSubimage(
+				Image img = image.srcImage.image.getSubimage(
 					0, image.offsetY-image.oversized,
 					TILE_WIDTH+image.oversized,
 					TILE_HEIGHT+image.oversized);

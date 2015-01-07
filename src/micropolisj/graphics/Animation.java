@@ -150,4 +150,16 @@ public class Animation extends TileImage implements TileImage.MultiPart
 		// Warning: drawing without considering the animation
 		getDefaultImage().drawFragment(gr, destX, destY, srcX, srcY, srcWidth, srcHeight);
 	}
+
+	@Override
+	public Dimension getBounds()
+	{
+		int width = 0, height = 0;
+		for (Frame f : frames) {
+			Dimension b = f.frame.getBounds();
+			width = Math.max(width, b.width);
+			height = Math.max(height, b.height);
+		}
+		return new Dimension(width, height);
+	}
 }
