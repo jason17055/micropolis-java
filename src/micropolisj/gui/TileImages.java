@@ -25,7 +25,6 @@ public class TileImages
 	final String name;
 	final int TILE_WIDTH;
 	final int TILE_HEIGHT;
-	BufferedImage tileImages;
 	TileImage [] tileImageMap;
 	Map<SpriteKind, Map<Integer, Image> > spriteImages;
 
@@ -35,6 +34,7 @@ public class TileImages
 
 	static class SimpleTileImage extends TileImage
 	{
+		BufferedImage srcImage;
 		int imageNumber;
 	}
 
@@ -54,7 +54,6 @@ public class TileImages
 		this.TILE_WIDTH = size;
 		this.TILE_HEIGHT = size;
 
-		this.tileImages = loadImage(getResourceName());
 		initTileImageMap();
 	}
 
@@ -63,16 +62,22 @@ public class TileImages
 		return "/" + name + "/tiles.png";
 	}
 
-	SimpleTileImage readSimpleImage(XMLStreamReader in)
+	interface LoaderContext
+	{
+		BufferedImage getDefaultImage();
+	}
+
+	static SimpleTileImage readSimpleImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
 		SimpleTileImage img = new SimpleTileImage();
 		String tmp = in.getAttributeValue(null, "offsetY");
+		img.srcImage = ctx.getDefaultImage();
 		img.imageNumber = tmp != null ? Integer.parseInt(tmp) : 0;
 		return img;
 	}
 
-	AnimatedTile readAnimation(XMLStreamReader in)
+	static AnimatedTile readAnimation(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
 		ArrayList<SimpleTileImage> frames = new ArrayList<SimpleTileImage>();
@@ -80,7 +85,7 @@ public class TileImages
 		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 			String tagName = in.getLocalName();
 			if (tagName.equals("frame")) {
-				frames.add(readSimpleImage(in));
+				frames.add(readSimpleImage(in, ctx));
 			}
 			skipToEndElement(in);
 		}
@@ -90,12 +95,31 @@ public class TileImages
 		return anim;
 	}
 
+	class MyLoaderContext implements LoaderContext
+	{
+		BufferedImage defImage;
+
+		MyLoaderContext()
+		{
+			String resourceName = "/" + name + "/tiles.png";
+			defImage = loadImage(resourceName);
+		}
+
+		//implements LoaderContext
+		public BufferedImage getDefaultImage()
+		{
+			return defImage;
+		}
+	}
+
 	void initTileImageMap()
 	{
 		if (this.spriteImages != null) {
 			// already loaded
 			return;
 		}
+
+		LoaderContext ctx = new MyLoaderContext();
 
 		try
 		{
@@ -128,10 +152,10 @@ public class TileImages
 			while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 				assert in.isStartElement();
 				if (in.getLocalName().equals("image")) {
-					img = readSimpleImage(in);
+					img = readSimpleImage(in, ctx);
 				}
 				else if (in.getLocalName().equals("animation")) {
-					img = readAnimation(in);
+					img = readAnimation(in, ctx);
 				}
 				skipToEndElement(in);
 			}
@@ -176,15 +200,24 @@ public class TileImages
 
 	public class ImageInfo
 	{
+		BufferedImage srcImage;
 		int imageNumber;
 		boolean animated;
 
-		ImageInfo(int imageNumber, boolean animated) {
+		ImageInfo(BufferedImage srcImage, int imageNumber, boolean animated) {
+			this.srcImage = srcImage;
 			this.imageNumber = imageNumber;
 			this.animated = animated;
 		}
 
 		boolean isAnimated() { return animated; }
+
+		public void drawTo(Graphics gr, int destX, int destY)
+		{
+			gr.drawImage(getImage(),
+				destX, destY,
+				null);
+		}
 
 		public void drawToBytes(BufferedImage img, int x, int y)
 		{
@@ -193,14 +226,14 @@ public class TileImages
 				for (int xx = 0; xx < TILE_WIDTH; xx++)
 				{
 					img.setRGB(x+xx,y+yy,
-						tileImages.getRGB(xx,imageNumber*TILE_HEIGHT+yy));
+						srcImage.getRGB(xx,imageNumber*TILE_HEIGHT+yy));
 				}
 			}
 		}
 
 		public Image getImage()
 		{
-			return tileImages.getSubimage(
+			return srcImage.getSubimage(
 				0, imageNumber*TILE_HEIGHT,
 				TILE_WIDTH, TILE_HEIGHT
 				);
@@ -221,24 +254,22 @@ public class TileImages
 		if (ti instanceof SimpleTileImage) {
 			final SimpleTileImage sti = (SimpleTileImage) ti;
 
-			return new ImageInfo(sti.imageNumber, false);
+			return new ImageInfo(sti.srcImage, sti.imageNumber, false);
 		}
 		else if (ti instanceof AnimatedTile) {
 			final AnimatedTile anim = (AnimatedTile) ti;
 			final SimpleTileImage sti = anim.getFrameByTime(acycle);
 
-			return new ImageInfo(sti.imageNumber, true);
+			return new ImageInfo(sti.srcImage, sti.imageNumber, true);
 		}
 		else {
-			assert ti != null : "no image for tile "+tileNumber;
-			assert false : "ti is a "+ti.getClass();
-			return new ImageInfo(0, false);
+			throw new Error("no image for tile "+tileNumber);
 		}
 	}
 
 	public Image getTileImage(int tile)
 	{
-		return getTileImageInfo(tile, 0).getImage();
+		return getTileImageInfo(tile).getImage();
 	}
 
 	public Image getSpriteImage(SpriteKind kind, int frameNumber)
