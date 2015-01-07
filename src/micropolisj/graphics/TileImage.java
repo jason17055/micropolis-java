@@ -175,6 +175,7 @@ public abstract class TileImage
 	{
 		public final BufferedImage image;
 		public final int basisSize;
+		public int oversizeAmt;
 
 		public SourceImage(BufferedImage image, int basisSize)
 		{
@@ -195,6 +196,7 @@ public abstract class TileImage
 		@Override
 		public Dimension getBounds()
 		{
+			//FIXME- incorporate oversizeAmt?
 			return new Dimension(basisSize, basisSize);
 		}
 	}
@@ -217,17 +219,17 @@ public abstract class TileImage
 		{
 			srcX = srcX * basisSize / STD_SIZE;
 			srcY = srcY * basisSize / STD_SIZE;
-			srcWidth = srcWidth * basisSize / STD_SIZE;
-			srcHeight = srcHeight * basisSize / STD_SIZE;
+			srcWidth = (srcWidth + oversizeAmt) * basisSize / STD_SIZE;
+			srcHeight = (srcHeight + oversizeAmt) * basisSize / STD_SIZE;
 
 			gr.drawImage(
 				image,
 				destX,
-				destY,
-				destX + targetSize,
+				destY - oversizeAmt*targetSize/STD_SIZE,
+				destX + (16+oversizeAmt)*targetSize/STD_SIZE,
 				destY + targetSize,
 				srcX,
-				srcY,
+				srcY - oversizeAmt*basisSize/STD_SIZE,
 				srcX + srcWidth,
 				srcY + srcHeight,
 				null);
@@ -236,7 +238,10 @@ public abstract class TileImage
 		@Override
 		public Dimension getBounds()
 		{
-			return new Dimension(targetSize, targetSize);
+			return new Dimension(
+				targetSize + oversizeAmt*targetSize/STD_SIZE,
+				targetSize + oversizeAmt*targetSize/STD_SIZE
+				);
 		}
 	}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <layered-image>
-	<image src="trees_turf1"/>
-	<image src="trees_trees"/>
+	<image src="trees_turf1" />
+	<image src="trees_trees" at="0,8" oversized="8" />
 </layered-image>

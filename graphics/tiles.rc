@@ -46,12 +46,12 @@
 34    terrain@0,544			(bulldozable)(description=#2)
 35    terrain@0,560			(bulldozable)(description=#2)
 36    terrain@0,576			(bulldozable)(description=#2)
-37    terrain@0,592			(bulldozable)(description=#2)
+37    trees        			(bulldozable)(description=#2)
 # unused
 38    terrain@0,608
 39    terrain@0,624
 # BEGIN WOODS (4 frames) #
-40    trees                             (bulldozable)(description=#2)
+40    terrain@0,640                     (bulldozable)(description=#2)
 41    terrain@0,656			(bulldozable)(description=#2)
 42    terrain@0,672			(bulldozable)(description=#2)
 43    terrain@0,688			(bulldozable)(description=#2)
