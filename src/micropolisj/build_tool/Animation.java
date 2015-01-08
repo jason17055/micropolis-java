@@ -11,6 +11,7 @@ class Animation extends TileImage
 {
 	static final int DEFAULT_DURATION = 125;
 	List<Frame> frames = new ArrayList<Frame>();
+	int totalDuration;
 
 	public static Animation load(File aniFile)
 		throws IOException
@@ -21,8 +22,10 @@ class Animation extends TileImage
 		return self;
 	}
 
-	public void addFrame(Frame f)
+	public void addFrame(TileImage img, int duration)
 	{
+		totalDuration += duration;
+		Frame f = new Frame(img, totalDuration);
 		frames.add(f);
 	}
 
@@ -48,11 +51,7 @@ class Animation extends TileImage
 				int duration = tmp != null ? Integer.parseInt(tmp) : DEFAULT_DURATION;
 
 				tmp = in.getElementText();
-				addFrame(
-					new Frame(
-						MakeTiles.parseFrameSpec(tmp),
-						duration
-					));
+				addFrame( MakeTiles.parseFrameSpec(tmp), duration );
 			}
 			else {
 				// unrecognized element
@@ -97,18 +96,5 @@ class Animation extends TileImage
 
 		// draw nothing
 		return;
-	}
-
-	@Override
-	public int getFrameEndTime(int frameTime)
-	{
-		int t = 0;
-		for (int i = 0; i < frames.size(); i++) {
-			t += frames.get(i).duration;
-			if (frameTime < t) {
-				return t;
-			}
-		}
-		return -1;
 	}
 }

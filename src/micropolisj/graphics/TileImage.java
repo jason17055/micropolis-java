@@ -13,13 +13,6 @@ public abstract class TileImage
 		drawWithTimeTo(gr, 0, destX, destY, srcX, srcY);
 	}
 
-	/**
-	 * @return the end-time of the animation frame identified by frameTime;
-	 *   -1 if not an animation, or if frameTime is past the end of the animation
-	 */
-	public abstract int getFrameEndTime(int frameTime);
-
-
 	public static class TileImageLayer extends TileImage
 	{
 		public final TileImageLayer below;
@@ -39,27 +32,6 @@ public abstract class TileImage
 			}
 			above.drawWithTimeTo(gr, time, destX, destY, srcX, srcY);
 		}
-
-		@Override
-		public int getFrameEndTime(int frameTime)
-		{
-			if (below == null) {
-				return above.getFrameEndTime(frameTime);
-			}
-
-			int belowEnd = below.getFrameEndTime(frameTime);
-			int aboveEnd = above.getFrameEndTime(frameTime);
-
-			if (belowEnd < 0) {
-				return aboveEnd;
-			}
-			else if (aboveEnd < 0 || belowEnd < aboveEnd) {
-				return belowEnd;
-			}
-			else {
-				return aboveEnd;
-			}
-		}
 	}
 
 	public static class TileImageSprite extends TileImage
@@ -77,11 +49,6 @@ public abstract class TileImage
 		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
 		{
 			source.drawWithTimeTo(gr, time, destX, destY, srcX+offsetX, srcY+offsetY);
-		}
-
-		@Override
-		public int getFrameEndTime(int frameTime) {
-			return source.getFrameEndTime(frameTime);
 		}
 	}
 
@@ -111,11 +78,6 @@ public abstract class TileImage
 				srcX, srcY,
 				srcX+basisSize, srcY+basisSize,
 				null);
-		}
-
-		@Override
-		public int getFrameEndTime(int frameTime) {
-			return -1;
 		}
 	}
 }

@@ -102,8 +102,6 @@ public class MakeTiles
 
 		@Override
 		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY) { throw new Error("not implemented"); }
-		@Override
-		public int getFrameEndTime(int frameTime) { throw new Error("not implemented"); }
 	}
 
 	static class Composer
@@ -216,21 +214,15 @@ public class MakeTiles
 
 	static TileImage prepareFrames(TileImage ref, Composer c)
 	{
-		if (ref.getFrameEndTime(0) > 0) {
+		if (ref instanceof Animation) {
 
-			Animation ani = new Animation();
-			int t = 0;
-			int n = ref.getFrameEndTime(t);
-			while (n > 0) {
-				TileImageSprite s = c.prepareTile(TILE_SIZE);
-				Animation.Frame f = new Animation.Frame(s, n-t);
-
-				ani.addFrame(f);
-
-				t = n;
-				n = ref.getFrameEndTime(t);
+			Animation mc = (Animation) ref;
+			Animation dest = new Animation();
+			for (Animation.Frame f : mc.frames) {
+				TileImage s = prepareFrames(f.frame, c);
+				dest.addFrame(s, f.duration);
 			}
-			return ani;
+			return dest;
 		}
 		else {
 			TileImageSprite s = c.prepareTile(TILE_SIZE);
