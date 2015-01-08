@@ -60,6 +60,17 @@ public class MakeTiles
 		}
 	}
 
+	static class ComposeFrame extends TileImageSprite
+	{
+		TileImage refImage;
+
+		ComposeFrame(ComposeBuffer parentBuffer, TileImage refImage)
+		{
+			super(parentBuffer);
+			this.refImage = refImage;
+		}
+	}
+
 	static class ComposeBuffer extends TileImage
 	{
 		File outFile;
@@ -77,9 +88,9 @@ public class MakeTiles
 			this.useAlpha = useAlpha;
 		}
 
-		TileImageSprite prepareTile(Dimension size)
+		TileImageSprite prepareTile(Dimension size, TileImage refImage)
 		{
-			TileImageSprite s = new TileImageSprite(this);
+			TileImageSprite s = new ComposeFrame(this, refImage);
 			s.offsetY = this.nextOffsetY + size.height - TILE_SIZE;
 			this.nextOffsetY += size.height;
 			this.maxWidth = Math.max(maxWidth, size.width);
@@ -113,9 +124,10 @@ public class MakeTiles
 			this.stanTiles = new ComposeBuffer(outputDir, "tiles.png", false);
 		}
 
-		TileImageSprite prepareTile(int size)
+		TileImageSprite prepareTile(TileImage refImage)
 		{
-			return stanTiles.prepareTile(new Dimension(size, size));
+			Dimension size = new Dimension(TILE_SIZE, TILE_SIZE);
+			return stanTiles.prepareTile(size, refImage);
 		}
 
 		void createBuffers()
@@ -225,7 +237,7 @@ public class MakeTiles
 			return dest;
 		}
 		else {
-			TileImageSprite s = c.prepareTile(TILE_SIZE);
+			TileImageSprite s = c.prepareTile(ref);
 			return s;
 		}
 	}
