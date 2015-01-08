@@ -173,29 +173,7 @@ public class MakeTiles
 				continue;
 			}
 
-			TileImage dest;
-
-			if (ref.getFrameEndTime(0) > 0) {
-
-				Animation ani = new Animation();
-				int t = 0;
-				int n = ref.getFrameEndTime(t);
-				while (n > 0) {
-					TileImageSprite s = c.prepareTile(TILE_SIZE);
-					Animation.Frame f = new Animation.Frame(s, n-t);
-
-					ani.addFrame(f);
-
-					t = n;
-					n = ref.getFrameEndTime(t);
-				}
-				dest = ani;
-			}
-			else {
-				TileImageSprite s = c.prepareTile(TILE_SIZE);
-				dest = s;
-			}
-
+			TileImage dest = prepareFrames(ref, c);
 			TileMapping m = new TileMapping(tileName, ref, dest);
 			mappings.add(m);
 		}
@@ -234,6 +212,30 @@ public class MakeTiles
 		File indexFile = new File(outputDir, "tiles.idx");
 		System.out.println("Generating tiles index: "+indexFile);
 		writeIndexFile(mappings, indexFile);
+	}
+
+	static TileImage prepareFrames(TileImage ref, Composer c)
+	{
+		if (ref.getFrameEndTime(0) > 0) {
+
+			Animation ani = new Animation();
+			int t = 0;
+			int n = ref.getFrameEndTime(t);
+			while (n > 0) {
+				TileImageSprite s = c.prepareTile(TILE_SIZE);
+				Animation.Frame f = new Animation.Frame(s, n-t);
+
+				ani.addFrame(f);
+
+				t = n;
+				n = ref.getFrameEndTime(t);
+			}
+			return ani;
+		}
+		else {
+			TileImageSprite s = c.prepareTile(TILE_SIZE);
+			return s;
+		}
 	}
 
 	static void writeIndexFile(Collection<TileMapping> mappings, File indexFile)
