@@ -193,22 +193,7 @@ public class MakeTiles
 
 		for (TileMapping m : mappings) {
 
-			assert (m.dest instanceof Animation) || (m.dest instanceof TileImageSprite);
-
-			if (m.dest instanceof Animation) {
-				Animation ani = (Animation) m.dest;
-				int t = 0;
-				for (int i = 0; i < ani.frames.size(); i++) {
-					Animation.Frame f = ani.frames.get(i);
-					TileImageSprite s = (TileImageSprite) f.frame;
-					m.ref.drawWithTimeTo(c.getGr(s), t, s.offsetX, s.offsetY, 0, 0);
-					t += f.duration;
-				}
-			}
-			else {
-				TileImageSprite sprite = (TileImageSprite) m.dest;
-				m.ref.drawTo(c.getGr(sprite), sprite.offsetX, sprite.offsetY, 0, 0);
-			}
+			drawFrames(m.dest, c);
 		}
 
 		// make parent directories if necessary
@@ -239,6 +224,22 @@ public class MakeTiles
 		else {
 			TileImageSprite s = c.prepareTile(ref);
 			return s;
+		}
+	}
+
+	static void drawFrames(TileImage dest, Composer c)
+	{
+		if (dest instanceof Animation) {
+			Animation ani = (Animation) dest;
+			for (Animation.Frame f : ani.frames) {
+				drawFrames(f.frame, c);
+			}
+		}
+		else {
+			assert dest instanceof ComposeFrame;
+
+			ComposeFrame f = (ComposeFrame) dest;
+			f.refImage.drawTo(c.getGr(f), f.offsetX, f.offsetY, 0, 0);
 		}
 	}
 
