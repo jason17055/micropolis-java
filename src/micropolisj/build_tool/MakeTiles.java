@@ -112,7 +112,7 @@ public class MakeTiles
 		}
 
 		@Override
-		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY) { throw new Error("not implemented"); }
+		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY) { throw new UnsupportedOperationException(); }
 	}
 
 	static class Composer

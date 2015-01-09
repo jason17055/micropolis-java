@@ -7,11 +7,7 @@ public abstract class TileImage
 {
 	public static final int STD_SIZE = 16;
 
-	public abstract void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY);
-	public final void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
-	{
-		drawWithTimeTo(gr, 0, destX, destY, srcX, srcY);
-	}
+	public abstract void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY);
 
 	public static class TileImageLayer extends TileImage
 	{
@@ -25,12 +21,12 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
+		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 		{
 			if (below != null) {
-				below.drawWithTimeTo(gr, time, destX, destY, srcX, srcY);
+				below.drawTo(gr, destX, destY, srcX, srcY);
 			}
-			above.drawWithTimeTo(gr, time, destX, destY, srcX, srcY);
+			above.drawTo(gr, destX, destY, srcX, srcY);
 		}
 	}
 
@@ -46,9 +42,9 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
+		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 		{
-			source.drawWithTimeTo(gr, time, destX, destY, srcX+offsetX, srcY+offsetY);
+			source.drawTo(gr, destX, destY, srcX+offsetX, srcY+offsetY);
 		}
 	}
 
@@ -66,7 +62,7 @@ public abstract class TileImage
 		}
 
 		@Override
-		public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
+		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 		{
 			srcX = srcX * basisSize / STD_SIZE;
 			srcY = srcY * basisSize / STD_SIZE;

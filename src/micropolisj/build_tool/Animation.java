@@ -80,21 +80,15 @@ class Animation extends TileImage
 		}
 	}
 
-	@Override
-	public void drawWithTimeTo(Graphics2D gr, int time, int destX, int destY, int srcX, int srcY)
+	private TileImage getDefaultImage()
 	{
-		int t = 0;
-		for (int i = 0; i < frames.size(); i++) {
-			Frame f = frames.get(i);
-			int d = t + f.duration;
-			if (time < d) {
-				f.frame.drawTo(gr, destX, destY, srcX, srcY);
-				return;
-			}
-			t = d;
-		}
+		return frames.get(0).frame;
+	}
 
-		// draw nothing
-		return;
+	@Override
+	public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+	{
+		// Warning: drawing without considering the animation
+		getDefaultImage().drawTo(gr, destX, destY, srcX, srcY);
 	}
 }
