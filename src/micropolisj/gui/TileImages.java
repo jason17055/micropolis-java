@@ -45,33 +45,6 @@ public class TileImages
 		return "/" + name + "/tiles.png";
 	}
 
-	static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException
-	{
-		TileImage img = null;
-
-		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
-			assert in.isStartElement();
-			if (in.getLocalName().equals("image")) {
-				img = readSimpleImage(in, ctx);
-			}
-			else if (in.getLocalName().equals("animation")) {
-				img = readAnimation(in, ctx);
-			}
-			else {
-				skipToEndElement(in);
-			}
-		}
-
-		if (img == null) {
-			throw new XMLStreamException(
-				"missing image descriptor"
-				);
-		}
-
-		return img;
-	}
-
 	class MyLoaderContext implements LoaderContext
 	{
 		Map<String,BufferedImage> images = new HashMap<String,BufferedImage>();

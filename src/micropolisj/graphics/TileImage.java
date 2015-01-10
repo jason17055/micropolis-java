@@ -161,4 +161,31 @@ public abstract class TileImage
 		anim.frames = frames.toArray(new SimpleTileImage[0]);
 		return anim;
 	}
+
+	public static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		TileImage img = null;
+
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			assert in.isStartElement();
+			if (in.getLocalName().equals("image")) {
+				img = readSimpleImage(in, ctx);
+			}
+			else if (in.getLocalName().equals("animation")) {
+				img = readAnimation(in, ctx);
+			}
+			else {
+				skipToEndElement(in);
+			}
+		}
+
+		if (img == null) {
+			throw new XMLStreamException(
+				"missing image descriptor"
+				);
+		}
+
+		return img;
+	}
 }
