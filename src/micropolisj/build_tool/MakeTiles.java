@@ -112,7 +112,7 @@ public class MakeTiles
 		}
 
 		@Override
-		public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY) { throw new UnsupportedOperationException(); }
+		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) { throw new UnsupportedOperationException(); }
 	}
 
 	static class Composer
@@ -239,7 +239,7 @@ public class MakeTiles
 			assert dest instanceof ComposeFrame;
 
 			ComposeFrame f = (ComposeFrame) dest;
-			f.refImage.drawTo(c.getGr(f), f.offsetX, f.offsetY, 0, 0);
+			f.refImage.drawTo(c.getGr(f), f.offsetX, f.offsetY);
 		}
 	}
 

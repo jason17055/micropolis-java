@@ -86,9 +86,9 @@ class Animation extends TileImage
 	}
 
 	@Override
-	public void drawTo(Graphics2D gr, int destX, int destY, int srcX, int srcY)
+	public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY)
 	{
 		// Warning: drawing without considering the animation
-		getDefaultImage().drawTo(gr, destX, destY, srcX, srcY);
+		getDefaultImage().drawFragment(gr, destX, destY, srcX, srcY);
 	}
 }
