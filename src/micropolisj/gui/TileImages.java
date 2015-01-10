@@ -142,13 +142,11 @@ public class TileImages
 
 	public class ImageInfo
 	{
-		BufferedImage srcImage;
-		int offsetY;
+		SimpleTileImage image;
 		boolean animated;
 
-		ImageInfo(BufferedImage srcImage, int offsetY, boolean animated) {
-			this.srcImage = srcImage;
-			this.offsetY = offsetY;
+		ImageInfo(SimpleTileImage image, boolean animated) {
+			this.image = image;
 			this.animated = animated;
 		}
 
@@ -163,6 +161,9 @@ public class TileImages
 
 		public void drawToBytes(BufferedImage img, int x, int y)
 		{
+			BufferedImage srcImage = image.srcImage;
+			int offsetY = image.offsetY;
+
 			for (int yy = 0; yy < TILE_HEIGHT; yy++)
 			{
 				for (int xx = 0; xx < TILE_WIDTH; xx++)
@@ -175,8 +176,8 @@ public class TileImages
 
 		public Image getImage()
 		{
-			return srcImage.getSubimage(
-				0, offsetY,
+			return image.srcImage.getSubimage(
+				0, image.offsetY,
 				TILE_WIDTH, TILE_HEIGHT
 				);
 		}
@@ -196,13 +197,13 @@ public class TileImages
 		if (ti instanceof SimpleTileImage) {
 			final SimpleTileImage sti = (SimpleTileImage) ti;
 
-			return new ImageInfo(sti.srcImage, sti.offsetY, false);
+			return new ImageInfo(sti, false);
 		}
 		else if (ti instanceof AnimatedTile) {
 			final AnimatedTile anim = (AnimatedTile) ti;
 			final SimpleTileImage sti = anim.getFrameByTime(acycle);
 
-			return new ImageInfo(sti.srcImage, sti.offsetY, true);
+			return new ImageInfo(sti, true);
 		}
 		else {
 			throw new Error("no image for tile "+tileNumber);
