@@ -190,6 +190,23 @@ public abstract class TileImage
 		return anim;
 	}
 
+	public static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		assert in.isStartElement();
+		String tagName = in.getLocalName();
+
+		if (tagName.equals("image")) {
+			return readSimpleImage(in, ctx);
+		}
+		else if (tagName.equals("animation")) {
+			return readAnimation(in, ctx);
+		}
+		else {
+			throw new XMLStreamException("unrecognized tag: "+tagName);
+		}
+	}
+
 	/**
 	 * @param in an XML stream reader with the parent tag of the tag to be read
 	 *  still selected
@@ -201,11 +218,11 @@ public abstract class TileImage
 
 		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 			assert in.isStartElement();
-			if (in.getLocalName().equals("image")) {
-				img = readSimpleImage(in, ctx);
-			}
-			else if (in.getLocalName().equals("animation")) {
-				img = readAnimation(in, ctx);
+			String tagName = in.getLocalName();
+			if (tagName.equals("image") ||
+				tagName.equals("animation"))
+			{
+				img = readTileImage(in, ctx);
 			}
 			else {
 				skipToEndElement(in);
