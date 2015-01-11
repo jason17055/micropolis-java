@@ -523,76 +523,12 @@ public class MakeTiles
 		try {
 
 		XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(inStream, "UTF-8");
-		in.nextTag();
-		if (in.getEventType() != XMLStreamConstants.START_ELEMENT) {
-			throw new IOException("Unrecognized file format");
-		}
-
-		if (!in.getLocalName().equals("layered-image")) {
-			throw new IOException("Unrecognized file format");
-		}
-
-		return parseLayeredImageXml(in);
+		in.nextTag(); // get document tag
+		return readTileImage(in, loaderContext);
 		}
 
 		catch (XMLStreamException e) {
 			throw new IOException("XML Parse error", e);
-		}
-	}
-
-	static TileImage parseImageXml(XMLStreamReader in)
-		throws IOException, XMLStreamException
-	{
-		String src = in.getAttributeValue(null, "src");
-		TileImage img = loadAnimation(src);
-
-		String tmp = in.getAttributeValue(null, "at");
-		if (tmp != null) {
-			String [] coords = tmp.split(",");
-			if (coords.length == 2) {
-				TileImageSprite sprite = new TileImageSprite(img);
-				sprite.offsetX = Integer.parseInt(coords[0]);
-				sprite.offsetY = Integer.parseInt(coords[1]);
-				img = sprite;
-			}
-			else {
-				throw new IOException("Invalid 'at' syntax");
-			}
-		}
-
-		return img;
-	}
-
-	static TileImage parseLayeredImageXml(XMLStreamReader in)
-		throws IOException, XMLStreamException
-	{
-		TileImageLayer result = null;
-
-		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
-			assert in.isStartElement();
-
-			String tagName = in.getLocalName();
-			if (tagName.equals("image")) {
-
-				TileImageLayer rv = new TileImageLayer(
-					result,            //below
-					parseImageXml(in)  //above
-					);
-				result = rv;
-
-				skipToEndElement(in);
-			}
-			else {
-				// unrecognized element
-				skipToEndElement(in);
-			}
-		}
-
-		if (result != null && result.below == null) {
-			return result.above;
-		}
-		else {
-			return result;
 		}
 	}
 }

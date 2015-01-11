@@ -120,7 +120,8 @@ public abstract class TileImage
 
 		@Override
 		public void drawFragment(Graphics2D gr, int destX, int destY, int srcX, int srcY) {
-			throw new UnsupportedOperationException();
+			srcImage.drawFragment(gr, destX, destY,
+				srcX+offsetX, srcY+offsetY);
 		}
 	}
 
@@ -200,6 +201,30 @@ public abstract class TileImage
 		return anim;
 	}
 
+	static TileImage readLayeredImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		TileImageLayer result = null;
+
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			assert in.isStartElement();
+
+			TileImage newImg = readTileImage(in, ctx);
+			TileImageLayer rv = new TileImageLayer(
+				result,            //below
+				newImg             //above
+				);
+			result = rv;
+		}
+
+		if (result != null && result.below == null) {
+			return result.above;
+		}
+		else {
+			return result;
+		}
+	}
+
 	public static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
@@ -211,6 +236,9 @@ public abstract class TileImage
 		}
 		else if (tagName.equals("animation")) {
 			return readAnimation(in, ctx);
+		}
+		else if (tagName.equals("layered-image")) {
+			return readLayeredImage(in, ctx);
 		}
 		else {
 			throw new XMLStreamException("unrecognized tag: "+tagName);
@@ -230,7 +258,8 @@ public abstract class TileImage
 			assert in.isStartElement();
 			String tagName = in.getLocalName();
 			if (tagName.equals("image") ||
-				tagName.equals("animation"))
+				tagName.equals("animation") ||
+				tagName.equals("layered-image"))
 			{
 				img = readTileImage(in, ctx);
 			}
