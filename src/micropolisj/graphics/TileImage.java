@@ -12,6 +12,19 @@ public abstract class TileImage
 {
 	public static final int STD_SIZE = 16;
 
+	interface MultiPart
+	{
+		MultiPart makeEmptyCopy();
+		Iterable<? extends Part> parts();
+		void addPartLike(TileImage m, Part p);
+		TileImage asTileImage();
+	}
+
+	interface Part
+	{
+		TileImage getImage();
+	}
+
 	/**
 	 * Draws a part of this tile image to the given graphics context.
 	 */
@@ -20,6 +33,15 @@ public abstract class TileImage
 	public final void drawTo(Graphics2D gr, int destX, int destY)
 	{
 		this.drawFragment(gr, destX, destY, 0, 0);
+	}
+
+	/**
+	 * Brings any internal Animation object to the top of the hierarchy.
+	 */
+	public TileImage normalForm()
+	{
+		// subclasses should override this behavior
+		return this;
 	}
 
 	public static class TileImageLayer extends TileImage
@@ -34,6 +56,42 @@ public abstract class TileImage
 
 			this.below = below;
 			this.above = above;
+		}
+
+		@Override
+		public TileImage normalForm()
+		{
+			TileImage below1 = below.normalForm();
+			TileImage above1 = above.normalForm();
+
+			if (above1 instanceof MultiPart) {
+
+				MultiPart rv = ((MultiPart)above1).makeEmptyCopy();
+				for (Part p : ((MultiPart)above1).parts()) {
+					TileImageLayer m = new TileImageLayer(
+						below1,
+						p.getImage()
+						);
+					rv.addPartLike(m, p);
+				}
+				return rv.asTileImage();
+			}
+			else if (below1 instanceof MultiPart) {
+
+				MultiPart rv = ((MultiPart)below1).makeEmptyCopy();
+				for (Part p : ((MultiPart)below1).parts()) {
+					TileImageLayer m = new TileImageLayer(
+						p.getImage(),
+						above1
+						);
+					rv.addPartLike(m, p);
+				}
+				return rv.asTileImage();
+			}
+			else {
+
+				return new TileImageLayer(below1, above1);
+			}
 		}
 
 		@Override
@@ -53,6 +111,32 @@ public abstract class TileImage
 		public TileImageSprite(TileImage source)
 		{
 			this.source = source;
+		}
+
+		@Override
+		public TileImage normalForm()
+		{
+			TileImage source_n = source.normalForm();
+			if (source_n instanceof MultiPart) {
+
+				MultiPart rv = ((MultiPart)source_n).makeEmptyCopy();
+				for (Part p : ((MultiPart)source_n).parts()) {
+					TileImageSprite m = sameTransformFor(p.getImage());
+					rv.addPartLike(m, p);
+				}
+				return rv.asTileImage();
+			}
+			else {
+				return sameTransformFor(source_n);
+			}
+		}
+
+		private TileImageSprite sameTransformFor(TileImage img)
+		{
+			TileImageSprite m = new TileImageSprite(img);
+			m.offsetX = this.offsetX;
+			m.offsetY = this.offsetY;
+			return m;
 		}
 
 		@Override
