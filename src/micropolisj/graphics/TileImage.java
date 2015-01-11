@@ -148,8 +148,18 @@ public abstract class TileImage
 		catch (IOException e) {
 			throw new XMLStreamException("image source not found", e);
 		}
-		String tmp = in.getAttributeValue(null, "offsetY");
-		img.offsetY = tmp != null ? Integer.parseInt(tmp) : 0;
+
+		String tmp = in.getAttributeValue(null, "at");
+		if (tmp != null) {
+			String [] coords = tmp.split(",");
+			if (coords.length == 2) {
+				img.offsetX = Integer.parseInt(coords[0]);
+				img.offsetY = Integer.parseInt(coords[1]);
+			}
+			else {
+				throw new XMLStreamException("Invalid 'at' syntax");
+			}
+		}
 
 		skipToEndElement(in);
 		return img;

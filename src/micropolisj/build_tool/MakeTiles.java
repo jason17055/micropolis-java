@@ -263,7 +263,7 @@ public class MakeTiles
 				for (Animation.Frame f : ani.frames) {
 					TileImageSprite s = (TileImageSprite) f.frame;
 					out.writeStartElement("frame");
-					out.writeAttribute("offsetY", Integer.toString(s.offsetY));
+					out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
 					out.writeEndElement();
 				}
 				out.writeEndElement();
@@ -272,7 +272,7 @@ public class MakeTiles
 
 				TileImageSprite s = (TileImageSprite ) m.dest;
 				out.writeStartElement("image");
-				out.writeAttribute("offsetY", Integer.toString(s.offsetY));
+				out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
 				out.writeEndElement();
 			}
 
