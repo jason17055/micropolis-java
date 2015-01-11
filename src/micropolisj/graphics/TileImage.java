@@ -423,79 +423,6 @@ public abstract class TileImage
 		return img;
 	}
 
-	static TileImage readSwitchImage(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException
-	{
-		SwitchImage img = new SwitchImage();
-		TileImage defaultImg = null;
-		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
-			String tagName = in.getLocalName();
-			if (tagName.equals("case")) {
-				img.cases.add(readSwitchImageCase(in, ctx));
-			}
-			else if (tagName.equals("default")) {
-				defaultImg = readTileImageM(in, ctx);
-			}
-			else {
-				skipToEndElement(in);
-			}
-		}
-		if (defaultImg != null) {
-			img.cases.add(new SwitchImage.Case(TileCondition.ALWAYS, defaultImg));
-		}
-		else if (in.getLocalName().equals("animation") ||
-			in.getLocalName().equals("micropolis-animation"))
-		{
-			return Animation.read(in, ctx);
-		}
-		else {
-			throw new XMLStreamException("default case is required in switch image");
-		}
-		return img;
-	}
-
-	static SwitchImage.Case readSwitchImageCase(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException
-	{
-		TileCondition c = new TileCondition();
-
-		String s;
-		s = in.getAttributeValue(null, "tile-west");
-		if (s != null) {
-			c.key = "tile-west";
-			c.value = s;
-		}
-
-		return new SwitchImage.Case(c, readTileImageM(in, ctx));
-	}
-
-	static TileImage readLayeredImage(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException
-	{
-		TileImage result = null;
-
-		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
-			assert in.isStartElement();
-
-			TileImage newImg = readTileImage(in, ctx);
-			if (result == null) {
-				result = newImg;
-			}
-			else {
-				result = new TileImageLayer(
-					result,            //below
-					newImg             //above
-				);
-			}
-		}
-
-		if (result == null) {
-			throw new XMLStreamException("layer must have at least one image");
-		}
-
-		return result;
-	}
-
 	public static TileImage readTileImage(XMLStreamReader in, LoaderContext ctx)
 		throws XMLStreamException
 	{
@@ -505,14 +432,16 @@ public abstract class TileImage
 		if (tagName.equals("image")) {
 			return readSimpleImage(in, ctx);
 		}
-		else if (tagName.equals("animation")) {
-			return Animation.read(in, ctx);
-		}
 		else if (tagName.equals("switch")) {
 			return readSwitchImage(in, ctx);
 		}
 		else if (tagName.equals("layered-image")) {
 			return readLayeredImage(in, ctx);
+		}
+		else if (tagName.equals("animation") ||
+			tagName.equals("micropolis-animation"))
+		{
+			return Animation.read(in, ctx);
 		}
 		else {
 			throw new XMLStreamException("unrecognized tag: "+tagName);
@@ -550,6 +479,74 @@ public abstract class TileImage
 		}
 
 		return img;
+	}
+
+	static TileImage readLayeredImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		TileImage result = null;
+
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			assert in.isStartElement();
+
+			TileImage newImg = readTileImage(in, ctx);
+			if (result == null) {
+				result = newImg;
+			}
+			else {
+				result = new TileImageLayer(
+					result,            //below
+					newImg             //above
+				);
+			}
+		}
+
+		if (result == null) {
+			throw new XMLStreamException("layer must have at least one image");
+		}
+
+		return result;
+	}
+
+	static TileImage readSwitchImage(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		SwitchImage img = new SwitchImage();
+		TileImage defaultImg = null;
+		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+			String tagName = in.getLocalName();
+			if (tagName.equals("case")) {
+				img.cases.add(readSwitchImageCase(in, ctx));
+			}
+			else if (tagName.equals("default")) {
+				defaultImg = readTileImageM(in, ctx);
+			}
+			else {
+				skipToEndElement(in);
+			}
+		}
+		if (defaultImg != null) {
+			img.cases.add(new SwitchImage.Case(TileCondition.ALWAYS, defaultImg));
+		}
+		else {
+			throw new XMLStreamException("default case is required in switch image");
+		}
+		return img;
+	}
+
+	static SwitchImage.Case readSwitchImageCase(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException
+	{
+		TileCondition c = new TileCondition();
+
+		String s;
+		s = in.getAttributeValue(null, "tile-west");
+		if (s != null) {
+			c.key = "tile-west";
+			c.value = s;
+		}
+
+		return new SwitchImage.Case(c, readTileImageM(in, ctx));
 	}
 
 }
