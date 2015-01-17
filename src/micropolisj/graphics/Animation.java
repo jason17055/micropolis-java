@@ -55,7 +55,7 @@ public class Animation extends TileImage
 	public void addFrame(TileImage img, int duration)
 	{
 		totalDuration += duration;
-		Frame f = new Frame(img, totalDuration);
+		Frame f = new Frame(img, duration);
 		frames.add(f);
 	}
 
