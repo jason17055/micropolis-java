@@ -255,26 +255,7 @@ public class MakeTiles
 			out.writeStartElement("tile");
 			out.writeAttribute("name", m.tileName);
 
-			assert (m.dest instanceof Animation) || (m.dest instanceof TileImageSprite);
-			if (m.dest instanceof Animation) {
-
-				Animation ani = (Animation) m.dest;
-				out.writeStartElement("animation");
-				for (Animation.Frame f : ani.frames) {
-					TileImageSprite s = (TileImageSprite) f.frame;
-					out.writeStartElement("frame");
-					out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
-					out.writeEndElement();
-				}
-				out.writeEndElement();
-			}
-			else { //assume it is a simple sprite
-
-				TileImageSprite s = (TileImageSprite ) m.dest;
-				out.writeStartElement("image");
-				out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
-				out.writeEndElement();
-			}
+			writeImageTags(out, m.dest);
 
 			out.writeEndElement();
 		}
@@ -289,6 +270,30 @@ public class MakeTiles
 		}
 	}
 
+	static void writeImageTags(XMLStreamWriter out, TileImage dest)
+		throws XMLStreamException
+	{
+		if (dest instanceof Animation) {
+
+			Animation ani = (Animation) dest;
+			out.writeStartElement("animation");
+			for (Animation.Frame f : ani.frames) {
+				TileImageSprite s = (TileImageSprite) f.frame;
+				out.writeStartElement("frame");
+				out.writeAttribute("duration", Integer.toString(f.duration));
+				writeImageTags(out, f.frame);
+				out.writeEndElement();
+			}
+			out.writeEndElement();
+		}
+		else { //assume it is a simple sprite
+
+			TileImageSprite s = (TileImageSprite ) dest;
+			out.writeStartElement("image");
+			out.writeAttribute("at", String.format("%d,%d", s.offsetX, s.offsetY));
+			out.writeEndElement();
+		}
+	}
 	static TileImage parseFrameSpec(TileSpec spec)
 		throws IOException
 	{
