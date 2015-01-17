@@ -18,9 +18,38 @@ public class Animation extends TileImage
 		throws IOException
 	{
 		FileInputStream fis = new FileInputStream(aniFile);
-		Animation self = new Animation();
-		self.load(fis, ctx);
-		return self;
+
+		try {
+
+			XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(fis, "UTF-8");
+			in.nextTag();
+			if (!(in.getEventType() == XMLStreamConstants.START_ELEMENT &&
+				in.getLocalName().equals("micropolis-animation"))) {
+				throw new IOException("Unrecognized file format");
+			}
+
+			Animation a = read(in, ctx);
+
+			in.close();
+
+			return a;
+		}
+		catch (XMLStreamException e)
+		{
+			throw new IOException(aniFile.toString()+": "+e.getMessage(), e);
+		}
+		finally
+		{
+			fis.close();
+		}
+	}
+
+	public static Animation read(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException, IOException
+	{
+		Animation a = new Animation();
+		a.load(in, ctx);
+		return a;
 	}
 
 	public void addFrame(TileImage img, int duration)
@@ -30,18 +59,9 @@ public class Animation extends TileImage
 		frames.add(f);
 	}
 
-	void load(InputStream inStream, LoaderContext ctx)
-		throws IOException
+	void load(XMLStreamReader in, LoaderContext ctx)
+		throws XMLStreamException, IOException
 	{
-		try {
-
-		XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(inStream, "UTF-8");
-		in.nextTag();
-		if (!(in.getEventType() == XMLStreamConstants.START_ELEMENT &&
-			in.getLocalName().equals("micropolis-animation"))) {
-			throw new IOException("Unrecognized file format");
-		}
-
 		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 			assert in.isStartElement();
 
@@ -58,14 +78,6 @@ public class Animation extends TileImage
 				// unrecognized element
 				skipToEndElement(in);
 			}
-		}
-
-		in.close();
-		inStream.close();
-
-		}
-		catch (XMLStreamException e) {
-			throw new IOException(e);
 		}
 	}
 
