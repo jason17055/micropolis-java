@@ -45,7 +45,7 @@ public class Animation extends TileImage
 	}
 
 	public static Animation read(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException, IOException
+		throws XMLStreamException
 	{
 		Animation a = new Animation();
 		a.load(in, ctx);
@@ -60,7 +60,7 @@ public class Animation extends TileImage
 	}
 
 	void load(XMLStreamReader in, LoaderContext ctx)
-		throws XMLStreamException, IOException
+		throws XMLStreamException
 	{
 		while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
 			assert in.isStartElement();
@@ -71,8 +71,16 @@ public class Animation extends TileImage
 				String tmp = in.getAttributeValue(null, "duration");
 				int duration = tmp != null ? Integer.parseInt(tmp) : DEFAULT_DURATION;
 
-				tmp = in.getElementText();
-				addFrame( ctx.parseFrameSpec(tmp), duration );
+				String text = in.getElementText();
+				TileImage frameImage;
+				try {
+					frameImage = ctx.parseFrameSpec(text);
+				}
+				catch (IOException e) {
+					throw new XMLStreamException("Unable to load frame image: "+text, e);
+				}
+
+				addFrame( frameImage, duration );
 			}
 			else {
 				// unrecognized element
