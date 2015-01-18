@@ -182,6 +182,8 @@ public class MakeTiles
 				continue;
 			}
 
+			ref = ref.normalForm();
+
 			TileImage dest = prepareFrames(ref, c);
 			TileMapping m = new TileMapping(tileName, ref, dest);
 			mappings.add(m);

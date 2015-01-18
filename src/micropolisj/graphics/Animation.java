@@ -7,7 +7,7 @@ import java.util.*;
 import javax.xml.stream.*;
 import static micropolisj.XML_Helper.*;
 
-public class Animation extends TileImage
+public class Animation extends TileImage implements TileImage.MultiPart
 {
 	static final int DEFAULT_DURATION = 125;
 
@@ -50,6 +50,30 @@ public class Animation extends TileImage
 		Animation a = new Animation();
 		a.load(in, ctx);
 		return a;
+	}
+
+	//implements MultiPart
+	public MultiPart makeEmptyCopy()
+	{
+		return new Animation();
+	}
+
+	//implements MultiPart
+	public Iterable<? extends Part> parts()
+	{
+		return frames;
+	}
+
+	//implements MultiPart
+	public void addPartLike(TileImage image, Part refPart)
+	{
+		addFrame(image, ((Frame)refPart).duration);
+	}
+
+	//implements MultiPart
+	public TileImage asTileImage()
+	{
+		return this;
 	}
 
 	public void addFrame(TileImage img, int duration)
@@ -98,7 +122,7 @@ public class Animation extends TileImage
 		}
 	}
 
-	public class Frame
+	public class Frame implements Part
 	{
 		public final TileImage frame;
 		public final int duration;
@@ -107,6 +131,11 @@ public class Animation extends TileImage
 		{
 			this.frame = frame;
 			this.duration = duration;
+		}
+
+		//implements TileImage.Part
+		public TileImage getImage() {
+			return frame;
 		}
 	}
 
