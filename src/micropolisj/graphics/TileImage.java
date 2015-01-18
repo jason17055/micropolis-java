@@ -354,6 +354,7 @@ public abstract class TileImage
 			return srcImage.getSize();
 		}
 
+		@Override
 		public void drawFragment(Graphics2D gr, int srcX, int srcY, int srcWidth, int srcHeight) {
 			int targetSize = srcImage.getTargetSize();
 			Graphics2D g1 = (Graphics2D) gr.create();
