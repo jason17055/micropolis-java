@@ -180,11 +180,43 @@ public class TileImages
 
 		public Image getImage()
 		{
-			return image.srcImage.image.getSubimage(
-				0, image.offsetY,
-				TILE_WIDTH, TILE_HEIGHT
-				);
+			return cacheSubImage(image.srcImage.image,
+				new Rectangle(0, image.offsetY,
+				TILE_WIDTH, TILE_HEIGHT));
 		}
+	}
+
+	static class ImageCache extends HashMap<Rectangle,Image>
+	{
+	}
+	IdentityHashMap<BufferedImage, ImageCache> subImageCache = new IdentityHashMap<BufferedImage,ImageCache>();
+
+	Image cacheSubImage(BufferedImage bi, Rectangle rect)
+	{
+		ImageCache ic = subImageCache.get(bi);
+		if (ic == null) {
+			ic = new ImageCache();
+			subImageCache.put(bi, ic);
+		}
+		Image i = ic.get(rect);
+		if (i == null) {
+
+			Image imageRef = bi.getSubimage(
+				rect.x, rect.y,
+				rect.width, rect.height);
+
+			GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsDevice dev = env.getDefaultScreenDevice();
+			GraphicsConfiguration conf = dev.getDefaultConfiguration();
+
+			BufferedImage bi2 = conf.createCompatibleImage(rect.width, rect.height, Transparency.OPAQUE);
+			Graphics2D gr = bi2.createGraphics();
+			gr.drawImage(imageRef, 0, 0, null);
+
+			i = bi2;
+			ic.put(rect, i);
+		}
+		return i;
 	}
 
 	public ImageInfo getTileImageInfo(int tileNumber)
