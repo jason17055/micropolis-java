@@ -62,6 +62,7 @@ public class MapGenerator
 	{
 		generateMap(r);
 		engine.fireWholeMapChanged();
+		engine.mapScanAll();
 	}
 
 	/**

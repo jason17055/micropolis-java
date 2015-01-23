@@ -22,6 +22,9 @@ class TerrainBehavior extends TileBehavior
 
 	static enum B
 	{
+		DIRT,
+		WATER,
+		TREES,
 		FIRE,
 		FLOOD,
 		RADIOACTIVE,
@@ -34,6 +37,15 @@ class TerrainBehavior extends TileBehavior
 	public void apply()
 	{
 		switch (behavior) {
+		case DIRT:
+			doDirt();
+			return;
+		case WATER:
+			doWater();
+			return;
+		case TREES:
+			doTrees();
+			return;
 		case FIRE:
 			doFire();
 			return;
@@ -55,6 +67,21 @@ class TerrainBehavior extends TileBehavior
 		default:
 			assert false;
 		}
+	}
+
+	void doDirt()
+	{
+		city.dirtTotal++;
+	}
+
+	void doWater()
+	{
+		city.waterTotal++;
+	}
+
+	void doTrees()
+	{
+		city.treesTotal++;
 	}
 
 	void doFire()

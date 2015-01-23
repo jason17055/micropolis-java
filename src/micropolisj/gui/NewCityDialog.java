@@ -26,6 +26,9 @@ public class NewCityDialog extends JDialog
 	Stack<Micropolis> nextMaps = new Stack<Micropolis>();
 	OverlayMapView mapPane;
 	HashMap<Integer,JRadioButton> levelBtns = new HashMap<Integer,JRadioButton>();
+	JLabel dirtLbl;
+	JLabel waterLbl;
+	JLabel treesLbl;
 
 	static final ResourceBundle strings = MainWindow.strings;
 
@@ -68,6 +71,19 @@ public class NewCityDialog extends JDialog
 			levelBox.add(radioBtn);
 			levelBtns.put(lev, radioBtn);
 		}
+
+		levelBox.add(new JPanel());
+		levelBox.add(new JLabel(strings.getString("overview.dirt")));
+		dirtLbl = new JLabel();
+		levelBox.add(dirtLbl);
+		levelBox.add(new JLabel(strings.getString("overview.water")));
+		waterLbl = new JLabel();
+		levelBox.add(waterLbl);
+		levelBox.add(new JLabel(strings.getString("overview.trees")));
+		treesLbl = new JLabel();
+		levelBox.add(treesLbl);
+		setStats();
+
 		levelBox.add(Box.createVerticalGlue());
 		setGameLevel(GameLevel.MIN_LEVEL);
 
@@ -142,6 +158,7 @@ public class NewCityDialog extends JDialog
 		nextMaps.push(engine);
 		engine = previousMaps.pop();
 		mapPane.setEngine(engine);
+		setStats();
 
 		previousMapBtn.setEnabled(!previousMaps.isEmpty());
 	}
@@ -158,6 +175,7 @@ public class NewCityDialog extends JDialog
 		previousMaps.push(engine);
 		engine = nextMaps.pop();
 		mapPane.setEngine(engine);
+		setStats();
 
 		previousMapBtn.setEnabled(true);
 	}
@@ -229,5 +247,19 @@ public class NewCityDialog extends JDialog
 		{
 			levelBtns.get(lev).setSelected(lev == level);
 		}
+	}
+
+	private void setStats()
+	{
+		dirtLbl.setText(getStatsString(engine.dirtTotal));
+		waterLbl.setText(getStatsString(engine.waterTotal));
+		treesLbl.setText(getStatsString(engine.treesTotal));
+	}
+
+	private String getStatsString(int total)
+	{
+		int tiles = engine.getWidth() * engine.getHeight();
+		float percentage = (float)total / (float)tiles * 100;
+		return String.format("%d %s (%.2f %%)", total, strings.getString("overview.tiles"), percentage);
 	}
 }

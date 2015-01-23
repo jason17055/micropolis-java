@@ -110,6 +110,9 @@ public class Micropolis
 	// census numbers, reset in phase 0 of each cycle, summed during map scan
 	int poweredZoneCount;
 	int unpoweredZoneCount;
+	public int dirtTotal;
+	public int waterTotal;
+	public int treesTotal;
 	int roadTotal;
 	int railTotal;
 	int firePop;
@@ -511,6 +514,9 @@ public class Micropolis
 	{
 		poweredZoneCount = 0;
 		unpoweredZoneCount = 0;
+		dirtTotal = 0;
+		waterTotal = 0;
+		treesTotal = 0;
 		firePop = 0;
 		roadTotal = 0;
 		railTotal = 0;
@@ -1440,6 +1446,9 @@ public class Micropolis
 		HashMap<String,TileBehavior> bb;
 		bb = new HashMap<String,TileBehavior>();
 
+		bb.put("DIRT", new TerrainBehavior(this, TerrainBehavior.B.DIRT));
+		bb.put("WATER", new TerrainBehavior(this, TerrainBehavior.B.WATER));
+		bb.put("TREES", new TerrainBehavior(this, TerrainBehavior.B.TREES));
 		bb.put("FIRE", new TerrainBehavior(this, TerrainBehavior.B.FIRE));
 		bb.put("FLOOD", new TerrainBehavior(this, TerrainBehavior.B.FLOOD));
 		bb.put("RADIOACTIVE", new TerrainBehavior(this, TerrainBehavior.B.RADIOACTIVE));
@@ -1460,6 +1469,11 @@ public class Micropolis
 		bb.put("SEAPORT", new MapScanner(this, MapScanner.B.SEAPORT));
 
 		this.tileBehaviors = bb;
+	}
+
+	public void mapScanAll()
+	{
+		mapScan(0, getWidth());
 	}
 
 	void mapScan(int x0, int x1)
