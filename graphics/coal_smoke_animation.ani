@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<micropolis-animation>
+<frame><image src="coal_smoke_frames" at="0,0"/></frame>
+<frame><image src="coal_smoke_frames" at="64,0"/></frame>
+<frame><image src="coal_smoke_frames" at="128,0"/></frame>
+<frame><image src="coal_smoke_frames" at="192,0"/></frame>
+</micropolis-animation>
