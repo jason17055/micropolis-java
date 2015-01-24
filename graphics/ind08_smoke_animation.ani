@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<micropolis-animation>
+<frame><image src="ind08_smoke_frames" at="0,0"/></frame>
+<frame><image src="ind08_smoke_frames" at="48,0"/></frame>
+<frame><image src="ind08_smoke_frames" at="96,0"/></frame>
+<frame><image src="ind08_smoke_frames" at="144,0"/></frame>
+</micropolis-animation>
