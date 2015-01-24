@@ -892,14 +892,14 @@
 850   misc_animation@0,368                                       (becomes=851)
 851   misc_animation@0,384                                       (becomes=844)
 # BEGIN INDUSTRIAL ANIMATION (8 frames) #
-852   misc_animation@0,400  (conducts)(building-part=625,-1,-1)      (becomes=853)(onshutdown=621)
-853   misc_animation@0,416  (conducts)(building-part=625,-1,-1)      (becomes=854)(onshutdown=621)
-854   misc_animation@0,432  (conducts)(building-part=625,-1,-1)      (becomes=855)(onshutdown=621)
-855   misc_animation@0,448  (conducts)(building-part=625,-1,-1)      (becomes=856)(onshutdown=621)
-856   misc_animation@0,464  (conducts)(building-part=625,-1,-1)      (becomes=857)(onshutdown=621)
-857   misc_animation@0,480  (conducts)(building-part=625,-1,-1)      (becomes=858)(onshutdown=621)
-858   misc_animation@0,496  (conducts)(building-part=625,-1,-1)      (becomes=859)(onshutdown=621)
-859   misc_animation@0,512  (conducts)(building-part=625,-1,-1)      (becomes=852)(onshutdown=621)
+852   ind01_pistons         (conducts)(building-part=625,-1,-1)      (onshutdown=621)
+853
+854
+855
+856
+857
+858
+859
 # BEGIN ZONE DESTRUCT & RUBBLIZE #
 860   misc_animation@0,528                      (bulldozable)(noburn)(description=#3)(becomes=861)
 861   misc_animation@0,544                      (bulldozable)(noburn)(description=#3)(becomes=862)

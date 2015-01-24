@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<micropolis-animation>
+<frame><image src="ind01_pistons_frames" at="0,0"/></frame>
+<frame><image src="ind01_pistons_frames" at="48,0"/></frame>
+<frame><image src="ind01_pistons_frames" at="96,0"/></frame>
+<frame><image src="ind01_pistons_frames" at="144,0"/></frame>
+<frame><image src="ind01_pistons_frames" at="192,0"/></frame>
+<frame><image src="ind01_pistons_frames" at="240,0"/></frame>
+<frame><image src="ind01_pistons_frames" at="288,0"/></frame>
+<frame><image src="ind01_pistons_frames" at="336,0"/></frame>
+</micropolis-animation>
