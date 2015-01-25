@@ -429,9 +429,18 @@ public class MainWindow extends JFrame
 		}
 		if (strings.containsKey(prefix+".shortcut")) {
 			String shortcut = strings.getString(prefix+".shortcut");
-			menuItem.setAccelerator(
-				KeyStroke.getKeyStroke(shortcut)
-				);
+			KeyStroke keyStroke;
+			if (shortcut.startsWith("command")) {
+				KeyStroke key = KeyStroke.getKeyStroke(shortcut.substring(8));
+				keyStroke = KeyStroke.getKeyStroke(key.getKeyCode(),
+					key.getModifiers() |
+					Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()
+					);
+			}
+			else {
+				keyStroke = KeyStroke.getKeyStroke(shortcut);
+			}
+			menuItem.setAccelerator(keyStroke);
 		}
 	}
 
