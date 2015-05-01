@@ -22,7 +22,8 @@ QUICK DOWNLOAD, COMPILE and RUN
 
 to get the dev branch:
 run this command in commandline in your favorite directory:
- `git clone git@github.com:Team--Rocket/divercity.git divercity ; cd divercity; ant`
+
+`git clone git@github.com:Team--Rocket/divercity.git divercity ; cd divercity; ant`
 
 then simply run (in divercity directory):
 `java -jar micropolisj.jar`
